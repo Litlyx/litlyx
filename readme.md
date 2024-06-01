@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/bg.png"/>
+  <img src="assets/devto1.png"/>
 </p>
 
 <h4 align="center">
@@ -53,7 +53,7 @@ Or import it directly into your JavaScript code:
 
 Importing Litlyx with a direct script already tracks 10 KPIs such as page visits, browsers, devices, OS, real-time online users, and many more.
 
-> - [!WARNING]
+> [!NOTE]
 > - If you want to track custom events, you need to import the library with `npm`, `yarn`, or `pnpm`. Continue reading to find out more!
 
 #### You can find the official documentation: [here](https://docs.litlyx.com).
