@@ -36,15 +36,28 @@ const prettyExpireDate = computed(() => {
     return dayjs(planData.value.billing_expire_at).format('DD/MM/YYYY');
 });
 
+
 const router = useRouter();
+const showPricingDrawer = ref<boolean>(false);
 function onPlanUpgradeClick() {
-    router.push('/book_demo');
+    showPricingDrawer.value = true;
 }
+
 </script>
 
 <template>
 
-    <div class="w-full h-full p-8 overflow-y-auto pb-40 lg:pb-0">
+    <div class="w-full h-full p-8 overflow-y-auto pb-40 lg:pb-0 relative overflow-x-hidden">
+
+        <Transition name="pdrawer">
+            <PricingDrawer class="bg-black absolute right-0 top-0 w-[60vw] min-w-[65rem] h-full z-[20]"
+                v-if=showPricingDrawer>
+            </PricingDrawer>
+        </Transition>
+
+        <div @click="showPricingDrawer = false" v-if="showPricingDrawer"
+            class="barrier absolute left-0 top-0 w-full h-full z-[19] bg-black/40 backdrop-blur-[1px]">
+        </div>
 
         <div class="poppins font-semibold text-[1.8rem]">
             Billing
@@ -147,6 +160,27 @@ function onPlanUpgradeClick() {
 
         <CardTitled title="Invoices" sub="No invoices yet" class="p-4 mt-8 max-w-[72rem]">
         </CardTitled>
+
+
     </div>
 
 </template>
+
+<style scoped lang="scss">
+.pdrawer-enter-active,
+.pdrawer-leave-active {
+    transition: all .5s ease-in-out;
+}
+
+.pdrawer-enter-from,
+.pdrawer-leave-to {
+    transform: translateX(100%)
+}
+
+.pdrawer-enter-to,
+.pdrawer-leave-from {
+    transform: translateX(0)
+}
+
+
+</style>

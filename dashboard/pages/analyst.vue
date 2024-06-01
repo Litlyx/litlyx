@@ -46,7 +46,10 @@ async function sendMessage() {
 
     } catch (ex: any) {
         if (ex.message.includes('CHAT_LIMIT_REACHED')) {
-            currentChatMessages.value.push({ role: 'assistant', content: 'You have reached your free tier chat limit.\n Upgrade to an higher tier.' });
+            currentChatMessages.value.push({
+                role: 'assistant',
+                content: 'You have reached your current tier chat limit.\n Upgrade to an higher tier. <a style="color: blue; text-decoration: underline;" href="/plans"> Upgrade now. </a>',
+            });
         }
     }
 

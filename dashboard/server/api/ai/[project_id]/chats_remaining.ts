@@ -1,6 +1,4 @@
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { ProjectCountModel } from "@schema/ProjectsCounts";
-
 import { checkProjectCount } from '@functions/UtilsProjectCounts';
 
 export async function getAiChatRemainings(project_id: string) {
