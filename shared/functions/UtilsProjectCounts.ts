@@ -42,7 +42,7 @@ export async function checkProjectCount(project_id: string) {
 
     const projectCounts = await ProjectCountModel.findOne({ project_id }, {}, { sort: { billing_expire_at: -1 } });
 
-    const billingExpireAt = new Date(projectCounts.billing_expire_at).getTime();
+    const billingExpireAt = projectCounts ? new Date(projectCounts.billing_expire_at).getTime() : -1;
 
     if (projectCounts && Date.now() < billingExpireAt) {
         if (projectCounts.ai_limit) return projectCounts.toJSON();
