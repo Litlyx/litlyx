@@ -1,58 +1,68 @@
 <script lang="ts" setup>
 
-
-type Prop = {
+export type PricingCardProp = {
     title: string,
-    icon: string,
-    list: { text: string, icon: string }[],
-    price: string,
+    cost: string,
+    features: string[],
+    desc: string,
+    active: boolean
 }
 
-const props = defineProps<Prop>();
+const props = defineProps<{ data: PricingCardProp }>();
+
+
+function onUpgradeClick() {
+    window.open('https://dashboard.litlyx.com/book_demo')
+}
 
 </script>
 
-
 <template>
-    <div class="bg-menu py-6 rounded-lg w-full h-full flex flex-col items-center justify-normal px-6 relative">
+    <div class="p-6 bg-[#303030] rounded-xl pricing-card flex flex-col">
 
-        <div
-            class="absolute rounded-full top-[-2.1rem] bg-accent w-[4.2rem] h-[4.2rem] flex items-center justify-center">
-            <i :class="icon" class="text-[2.5rem]"></i>
-        </div>
-
-        <div class="poppins mt-6 font-semibold text-[1.4rem]">
-            {{ title }}
-        </div>
-
-        <div class="bg-gray-400/50 h-[1px] w-full mt-6 mb-10"></div>
-
-        <div class="flex flex-col gap-4">
-            <div class="flex gap-3 items-center" v-for="element of list">
-
-                <div class="shrink-0 flex items-center bg-accent w-[2rem] h-[2rem] justify-center rounded-full">
-                    <i :class="element.icon" class="text-[.9rem]"></i>
+        <div class="flex flex-col">
+            <div class="text-[1.1rem] font-semibold mb-4">
+                {{ data.title }}
+            </div>
+            <div class="flex gap-1 items-end mb-2">
+                <div class="text-[1.1rem] font-semibold">
+                    €{{ data.cost }}
                 </div>
-
-                <div class="poppins">
-                    {{ element.text }}
+                <div class="text-text-sub text-[.9rem] mb-[.15rem]">
+                    per month
                 </div>
             </div>
-        </div>
-
-        <div class="bg-gray-400/50 h-[1px] w-full mt-10 mb-6"></div>
-
-        <div class="flex gap-2 justify-between w-full">
-            <div class="flex gap-2 items-end">
-                <div class="manrope text-[2.5rem] font-bold text-text"> {{ price }} </div>
-                <div class="poppins text-text-sub/90 mb-1">/month</div>
+            <div @click="onUpgradeClick()" v-if="data.active" class="cursor-pointer text-[1rem] font-semibold bg-[#3a3af5] rounded-md py-2 text-center">
+                Start now for FREE
             </div>
-
-            <div>
-                Tasto bello
+            <div @click="onUpgradeClick()" v-if="!data.active" class="cursor-pointer text-[1rem] font-semibold bg-[#4d4d4d] rounded-md py-2 text-center">
+                Upgrade
             </div>
         </div>
 
+        <div class="bg-gray-400 h-[1px] w-full my-4"></div>
+
+        <div class="flex flex-col gap-1 grow">
+            <div class="flex gap-2 items-center" v-for="feature of data.features">
+                <i class="fas fa-check"></i>
+                <div>
+                    {{ feature }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="bg-gray-400 h-[1px] w-full my-4"></div>
+
+        <div class="text-text-sub text-[.9rem] h-[20%]">
+            {{ data.desc }}
+        </div>
     </div>
-
 </template>
+
+
+<style scoped lang="scss">
+.pricing-card * {
+    font-family: "Poppins";
+}
+</style>
