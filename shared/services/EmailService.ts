@@ -222,7 +222,6 @@ const TemplateEmailWelcome = `
 </html>
 `
 
-
 class EmailService {
 
     private transport: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
