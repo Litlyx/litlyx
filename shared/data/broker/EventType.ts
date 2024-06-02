@@ -1,5 +1,5 @@
 
 export enum EventType {
-    VISIT = 1,
-    EVENT = 2
+    VISIT = 0,
+    EVENT = 1
 }
