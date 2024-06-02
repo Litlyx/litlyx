@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
+@import url('https://fonts.cdnfonts.com/css/brockmann');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+@import '../font-awesome/css/all.css';
+@import './utilities.scss';
+
+@import url('https://fonts.cdnfonts.com/css/geometric-sans-serif-v1');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+// @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css");
+
+.fas,
+.far,
+.fat {
+  font-family: "Font Awesome 6 Pro" !important;
+}
+
+.fab {
+  font-family: "Font Awesome 6 Brands" !important;
+}
+
+.brockmann {
+  font-family: "Brockmann" !important;
+}
+
+.nunito {
+  font-family: "Nunito" !important;
+}
+
+.inter {
+  font-family: "Inter" !important;
+}
+
+.geometric {
+  font-family: 'Geometric Sans Serif v1' !important;
+}
+
+.manrope {
+  font-family: 'Manrope' !important;
+}
+
+.lato {
+  font-family: 'Lato' !important;
+}
+
+.poppins {
+  font-family: 'Poppins' !important;
+}
+
+.poppins-childs {
+  font-family: 'Poppins' !important;
+
+  * {
+    font-family: 'Poppins' !important;
+  }
+}
+
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+      display: none;
+  }
+}
+
+.card-shadow {
+  box-shadow: 0 0 18px #00000033;
+}
+
+progress::-webkit-progress-value {
+  transition: all 0.5s ease-in-out;
+}
+
+progress::-moz-progress-bar {
+  transition: all 0.5s ease-in-out;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100dvw;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+* {
+  font-family: 'Nunito';
+}
