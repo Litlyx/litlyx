@@ -107,7 +107,7 @@ onMounted(() => {
             </div>
         </div>
 
-        <div class="flex justify-center">
+        <div class="flex justify-center z-[10] relative">
             <img :src="'carbon_1.png'">
         </div>
 

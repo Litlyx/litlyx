@@ -6,6 +6,8 @@
 .cache
 dist
 
+package-lock.json
+
 # Node dependencies
 node_modules
 
