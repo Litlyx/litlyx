@@ -1,14 +1,8 @@
 import nodemailer from 'nodemailer';
-import { requireEnv } from '../utilts/requireEnv';
+import type SMTPTransport from 'nodemailer/lib/smtp-transport';
 
-const transport = nodemailer.createTransport({
-    service: requireEnv('EMAIL_SERVICE'),
-    host: requireEnv('EMAIL_HOST'),
-    auth: {
-        user: requireEnv('EMAIL_USER'),
-        pass: requireEnv('EMAIL_PASS')
-    }
-});
+
+
 
 const TemplateEmail50 = `
 <!DOCTYPE html>
@@ -228,32 +222,50 @@ const TemplateEmailWelcome = `
 </html>
 `
 
-export async function sendLimitEmail50(target: string) {
-    try {
-        await transport.sendMail({
-            from: 'helplitlyx@gmail.com',
-            to: target,
-            subject: 'Project limit 50%',
-            html: TemplateEmail50
+
+class EmailService {
+
+    private transport: nodemailer.Transporter<SMTPTransport.SentMessageInfo>;
+
+    createTransport(service: string, host: string, user: string, pass: string) {
+        this.transport = nodemailer.createTransport({
+            service, host, auth: { user, pass }
         });
-        return true;
-    } catch (ex) {
-        console.error('ERROR SENDING EMAIL', ex);
-        return false;
     }
+
+    async sendLimitEmail50(target: string) {
+        try {
+            if (!this.transport) return console.error('Transport not created');
+            await this.transport.sendMail({
+                from: 'helplitlyx@gmail.com',
+                to: target,
+                subject: 'Project limit 50%',
+                html: TemplateEmail50
+            });
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    async sendWelcomeEmail(target: string) {
+        try {
+            if (!this.transport) return console.error('Transport not created');
+            await this.transport.sendMail({
+                from: 'helplitlyx@gmail.com',
+                to: target,
+                subject: 'Welcome to Litlyx',
+                html: TemplateEmailWelcome
+            });
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
 }
 
-export async function sendWelcomeEmail(target: string) {
-    try {
-        await transport.sendMail({
-            from: 'helplitlyx@gmail.com',
-            to: target,
-            subject: 'Welcome to Litlyx',
-            html: TemplateEmailWelcome
-        });
-        return true;
-    } catch (ex) {
-        console.error('ERROR SENDING EMAIL', ex);
-        return false;
-    }
-}
+const instance = new EmailService();
+export default instance;
