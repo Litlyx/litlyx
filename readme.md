@@ -35,7 +35,7 @@
 
 # Join Litlyx's Community Channel on Discord
 
-If you need more information, help, or want to provide general feedback, feel free to join us here: [Litlyx on Discord](https://litlyx.com)
+If you need more information, help, or want to provide general feedback, feel free to join us here: [Litlyx on Discord](https://discord.gg/9cQykjsmWX)
 
 # Installation
 
