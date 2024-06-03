@@ -15,6 +15,11 @@ export function getPlanFromPremiumType(premium_type?: number) {
     return plan;
 }
 
+export function getPlanFromPremiumTag(tag: PREMIUM_PLAN_TAG) {
+    const plan = PREMIUM_PLANS.find(e => e.tag === tag);
+    return plan;
+}
+
 export type PREMIUM_PLAN_TAG = typeof PREMIUM_PLANS[number]['tag'];
 
 export type PROJECT_LIMIT = {
@@ -42,5 +47,35 @@ export const PREMIUM_LIMITS: Record<PREMIUM_PLAN_TAG, PROJECT_LIMIT> = {
     PLAN_99: {
         COUNT_LIMIT: 10_000_000,
         AI_MESSAGE_LIMIT: 100_000
+    }
+}
+
+
+export type STRIPE_PLAN = {
+    price: string
+}
+
+export const STRIPE_PLANS: Record<PREMIUM_PLAN_TAG, STRIPE_PLAN> = {
+    FREE: {
+        price: 'price_1PNbHYB2lPUiVs9VZP32xglF'
+    },
+    PLAN_1: {
+        price: 'price_1PNZjVB2lPUiVs9VrsTbJL04'
+    },
+    PLAN_2: {
+        price: ''
+    },
+    PLAN_3: {
+        price: ''
+    },
+    PLAN_99: {
+        price: ''
+    }
+}
+
+export function getPlanTagFromStripePrice(price: string): PREMIUM_PLAN_TAG | undefined {
+    for (const plan of PREMIUM_PLANS.map(e => e.tag)) {
+        const stripePrice = STRIPE_PLANS[plan].price;
+        if (stripePrice === price) return plan;
     }
 }
