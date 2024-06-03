@@ -33,6 +33,12 @@ async function deleteProject(projectId: string, projectName: string) {
 
 }
 
+const router = useRouter();
+
+async function onProjectClick(pid: string) {
+    await setActiveProject(pid)
+    router.push('/')
+}
 
 </script>
 
@@ -66,7 +72,7 @@ async function deleteProject(projectId: string, projectName: string) {
             <div class="flex gap-12 flex-wrap" v-if="pid">
 
                 <div v-for="e of projects">
-                    <DashboardProjectSelectionCard @click="setActiveProject(e._id.toString())"
+                    <DashboardProjectSelectionCard @click="onProjectClick(e._id.toString())"
                         :active="pid == e._id.toString()" :title="e.name"
                         :subtitle="pid == e._id.toString() ? 'ATTIVO' : ''"
                         :chip="e.premium ? 'PREMIUM PLAN' : 'FREE PLAN'">
