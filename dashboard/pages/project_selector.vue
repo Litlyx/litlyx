@@ -2,26 +2,30 @@
 
 definePageMeta({ layout: 'dashboard' });
 
-const { data: projects, refresh } = useProjectsList();
-const activeProject = useActiveProject();
+const { projects, refresh } = useProjectsList();
+const { pid } = useActiveProjectId();
 
 async function deleteProject(projectId: string, projectName: string) {
     const sure = confirm(`Are you sure to delete the project ${projectName} ?`);
     if (!sure) return;
 
     try {
+
         await $fetch('/api/project/delete', {
             method: 'DELETE',
             ...signHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({ project_id: projectId })
         });
-        if (activeProject.value?._id.toString() == projectId) {
+
+        await refresh();
+
+        if (pid.value == projectId) {
             const firstProjectId = projects.value?.[0]?._id.toString();
             if (firstProjectId) {
                 await setActiveProject(firstProjectId);
             }
         }
-        await refresh();
+
     } catch (ex: any) {
         alert(ex.message);
     }
@@ -59,12 +63,12 @@ async function deleteProject(projectId: string, projectName: string) {
                 Create your first project...
             </div>
 
-            <div class="flex gap-12 flex-wrap" v-if="activeProject">
+            <div class="flex gap-12 flex-wrap" v-if="pid">
 
                 <div v-for="e of projects">
                     <DashboardProjectSelectionCard @click="setActiveProject(e._id.toString())"
-                        :active="activeProject._id == e._id" :title="e.name"
-                        :subtitle="activeProject._id == e._id ? 'ATTIVO' : ''"
+                        :active="pid == e._id.toString()" :title="e.name"
+                        :subtitle="pid == e._id.toString() ? 'ATTIVO' : ''"
                         :chip="e.premium ? 'PREMIUM PLAN' : 'FREE PLAN'">
                     </DashboardProjectSelectionCard>
                     <div @click="deleteProject(e._id.toString(), e.name)"

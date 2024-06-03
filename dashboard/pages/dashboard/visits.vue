@@ -19,7 +19,7 @@ const columns = [
     { key: 'created_at', label: 'Date', sortable: true }
 ]
 
-const sort = ref({
+const sort = ref<any>({
     column: 'created_at',
     direction: 'desc'
 })
@@ -67,8 +67,7 @@ onMounted(async () => {
             th: { color: 'text-text-sub' },
             tbody: 'divide-y divide-gray-300/20',
             divide: '',
-        }" v-model:sort="sort" :columns="selectedColumns" :rows="tableData" :loading="loadingData" sort-mode="manual"
-            :sortButton="{ color: '#000000' }">
+        }" v-model:sort="sort" :columns="selectedColumns" :rows="tableData" :loading="loadingData" sort-mode="manual">
 
             <template #metadata-data="{ row }">
                 <div v-if="row.metadata" class="flex flex-col gap-1">

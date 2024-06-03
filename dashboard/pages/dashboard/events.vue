@@ -14,7 +14,7 @@ const columns = [
     { key: 'created_at', label: 'Creation', sortable: true }
 ]
 
-const sort = ref({
+const sort = ref<any>({
     column: 'created_at',
     direction: 'desc'
 })

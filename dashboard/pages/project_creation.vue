@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-
 definePageMeta({ layout: 'dashboard' });
 
 const projectName = ref<string>("");
@@ -8,7 +7,7 @@ const creating = ref<boolean>(false);
 
 const router = useRouter();
 
-const { data: projects, refresh: refreshProjects } = useProjectsList();
+const { projects, refresh } = useProjectsList();
 
 const isFirstProject = computed(() => { return projects.value?.length == 0; })
 
@@ -37,15 +36,12 @@ async function createProject() {
             body: JSON.stringify({ name: projectName.value })
         });
 
-        await refreshProjects();
+        await refresh();
 
         const newActiveProjectId = projects.value?.[projects.value?.length - 1]._id.toString();
         if (newActiveProjectId) {
             await setActiveProject(newActiveProjectId);
         }
-
-
-        await refreshProjects();
 
 
         router.push('/');
