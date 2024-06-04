@@ -73,13 +73,25 @@ function onHideClicked() {
     isAdminHidden.value = true;
 }
 
+const activeProject = useActiveProject();
+
+async function payment() {
+    const res = await $fetch(`/api/pay/${activeProject.value?._id.toString()}/create`, {
+        ...signHeaders({ 'content-type': 'application/json' }),
+        method: 'POST',
+        body: JSON.stringify({ planId: 1 })
+    })
+    console.log(res);
+}
+
 </script>
 
 
 <template>
     <div class="bg-bg overflow-y-auto w-full h-dvh p-6 gap-6 flex flex-col">
 
-        <div @click="onHideClicked()" v-if="!isAdminHidden"
+
+        <div @click="payment()" v-if="!isAdminHidden"
             class="bg-menu hover:bg-menu/70 cursor-pointer flex gap-2 rounded-lg w-fit px-6 py-4 text-text-sub">
             <div class="text-text-sub/90"> <i class="far fa-eye"></i> </div>
             <div> Nascondi dalla barra </div>
