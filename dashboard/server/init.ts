@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Redis } from "~/server/services/CacheService";
 import EmailService from '@services/EmailService';
+import StripeService from '~/server/services/StripeService';
 
 const config = useRuntimeConfig();
 let connection: mongoose.Mongoose;
@@ -15,6 +16,8 @@ export default async () => {
         config.EMAIL_USER,
         config.EMAIL_PASS,
     );
+
+    StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET);
 
 
     if (!connection || connection.connection.readyState == mongoose.ConnectionStates.disconnected) {

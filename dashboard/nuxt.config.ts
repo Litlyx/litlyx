@@ -39,6 +39,8 @@ export default defineNuxtConfig({
     AUTH_JWT_SECRET: process.env.AUTH_JWT_SECRET,
     GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
     GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+    STRIPE_SECRET: process.env.STRIPE_SECRET,
+    STRIPE_WH_SECRET: process.env.STRIPE_WH_SECRET,
     public: {
       PAYPAL_CLIENT_ID: ''
     }
