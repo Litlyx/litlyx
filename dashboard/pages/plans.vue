@@ -37,10 +37,15 @@ const prettyExpireDate = computed(() => {
 });
 
 
-const router = useRouter();
+const { data: invoices } = await useFetch(`/api/pay/${activeProject.value?._id.toString()}/invoices`, signHeaders())
+
 const showPricingDrawer = ref<boolean>(false);
 function onPlanUpgradeClick() {
     showPricingDrawer.value = true;
+}
+
+function openInvoice(link: string) {
+    window.open(link, '_blank');
 }
 
 </script>
@@ -158,7 +163,30 @@ function onPlanUpgradeClick() {
         </div>
 
 
-        <CardTitled title="Invoices" sub="No invoices yet" class="p-4 mt-8 max-w-[72rem]">
+        <CardTitled title="Invoices" :sub="(invoices && invoices.length == 0) ? 'No invoices yet' : ''"
+            class="p-4 mt-8 max-w-[72rem]">
+
+            <div class="flex flex-col gap-2">
+
+                <div class="flex gap-10 bg-black p-4 rounded-lg" v-for="invoice of invoices">
+
+                    <div> <i class="far fa-file-invoice"></i> </div>
+
+                    <div> {{ new Date(invoice.date).toLocaleString() }} </div>
+                    <div> € {{ invoice.cost / 100 }} </div>
+                    <div> {{ invoice.id }} </div>
+                    <div
+                        class="flex items-center lato text-[.8rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-lg">
+                        {{ invoice.status }}
+                    </div>
+                    <div>
+                        <i @click="openInvoice(invoice.link)"
+                            class="far fa-download cursor-pointer hover:text-white/80"></i>
+                    </div>
+                </div>
+
+            </div>
+
         </CardTitled>
 
 
@@ -181,6 +209,4 @@ function onPlanUpgradeClick() {
 .pdrawer-leave-from {
     transform: translateX(0)
 }
-
-
 </style>

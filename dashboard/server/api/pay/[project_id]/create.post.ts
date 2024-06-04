@@ -29,6 +29,7 @@ export default defineEventHandler(async event => {
     const checkout = await StripeService.cretePayment(
         price,
         'https://dashboard.litlyx.com/payment_ok',
+        project_id,
         project.customer_id
     );
 
@@ -36,9 +37,6 @@ export default defineEventHandler(async event => {
         console.error('Cannot create payment', { plan, price });
         return setResponseStatus(event, 400, 'Cannot create payment');
     }
-
-    const customer = checkout.customer;
-    await ProjectModel.updateOne({ _id: project_id }, { customer_id: customer });
 
     return checkout.url;
 

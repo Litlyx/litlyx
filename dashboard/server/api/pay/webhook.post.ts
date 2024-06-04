@@ -8,30 +8,29 @@ import { ProjectCountModel } from '@schema/ProjectsCounts';
 async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
     if (event.data.object.status === 'paid') {
-        const customer = event.data.object.customer;
 
-        const project = await ProjectModel.findOne({ customer_id: customer });
+        const pid = event.data.object.subscription_details?.metadata?.pid;
+
+        const project = await ProjectModel.findById(pid);
         if (!project) return { error: 'Project not found' }
 
         const subscriptionId = event.data.object.subscription;
         if (!subscriptionId) return { error: 'SubscriptionId not found' }
 
-        const subscription = await StripeService.getSubscription(subscriptionId as string);
-        if (!subscription) return { error: 'Subscription not found' }
+        const price = event.data.object.lines.data[0].plan?.id;
+        if (!price) return { error: 'Price not found' }
 
-        const price = subscription.items.data[0].plan.id;
-
-        
         const premiumTag = getPlanTagFromStripePrice(price);
         if (!premiumTag) return { error: 'Premium tag not found' }
 
         const plan = getPlanFromPremiumTag(premiumTag);
         if (!plan) return { error: 'Plan not found' }
 
-        await ProjectModel.updateOne({ customer_id: customer }, {
+        await ProjectModel.updateOne({ _id: pid }, {
             premium: true,
+            customer_id: event.data.object.customer,
             premium_type: plan.id,
-            premium_expire_at: subscription.current_period_end
+            premium_expire_at: event.data.object.lines.data[0].period.end * 1000
         });
 
         const limits = PREMIUM_LIMITS[premiumTag];
@@ -43,8 +42,8 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
             ai_messages: 0,
             limit: limits.COUNT_LIMIT,
             ai_limit: limits.AI_MESSAGE_LIMIT,
-            billing_start_at: subscription.current_period_start,
-            billing_expire_at: subscription.current_period_end,
+            billing_start_at: event.data.object.lines.data[0].period.start * 1000,
+            billing_expire_at: event.data.object.lines.data[0].period.end * 1000,
         });
 
         return { ok: true }
@@ -61,9 +60,13 @@ async function onSubscriptionDeleted(event: Event.CustomerSubscriptionDeletedEve
     return { received: true }
 }
 
+async function onSubscriptionUpdated(event: Event.CustomerSubscriptionUpdatedEvent) {
+    return { received: true }
+}
+
 
 export default defineEventHandler(async event => {
-    
+
     const body = await readRawBody(event);
     const signature = getHeader(event, 'stripe-signature') || '';
 
@@ -72,6 +75,7 @@ export default defineEventHandler(async event => {
     if (eventData.type === 'invoice.paid') return await onPaymentSuccess(eventData);
     if (eventData.type === 'customer.subscription.deleted') return await onSubscriptionDeleted(eventData);
     if (eventData.type === 'customer.subscription.created') return await onSubscriptionCreated(eventData);
+    if (eventData.type === 'customer.subscription.updated') return await onSubscriptionUpdated(eventData);
 
     return { received: true }
 });

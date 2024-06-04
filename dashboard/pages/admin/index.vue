@@ -76,11 +76,13 @@ function onHideClicked() {
 const activeProject = useActiveProject();
 
 async function payment() {
-    const res = await $fetch(`/api/pay/${activeProject.value?._id.toString()}/create`, {
-        ...signHeaders({ 'content-type': 'application/json' }),
-        method: 'POST',
-        body: JSON.stringify({ planId: 1 })
-    })
+    // const res = await $fetch(`/api/pay/${activeProject.value?._id.toString()}/create`, {
+    //     ...signHeaders({ 'content-type': 'application/json' }),
+    //     method: 'POST',
+    //     body: JSON.stringify({ planId: 1 })
+    // })
+    // console.log(res);
+    const res = await $fetch(`/api/pay/${activeProject.value?._id.toString()}/invoices`, signHeaders())
     console.log(res);
 }
 
