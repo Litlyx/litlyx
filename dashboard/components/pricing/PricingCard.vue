@@ -5,16 +5,22 @@ export type PricingCardProp = {
     cost: string,
     features: string[],
     desc: string,
-    active: boolean
+    active: boolean,
+    planId: number
 }
 
 const props = defineProps<{ data: PricingCardProp }>();
 
+const activeProject = useActiveProject();
 
-const router = useRouter();
-
-function onUpgradeClick() {
-    router.push('/book_demo')
+async function onUpgradeClick() {
+    const res = await $fetch<string>(`/api/pay/${activeProject.value?._id.toString()}/create`, {
+        ...signHeaders({ 'content-type': 'application/json' }),
+        method: 'POST',
+        body: JSON.stringify({ planId: props.data.planId })
+    })
+    if (!res) alert('Something went wrong');
+    window.open(res);
 }
 
 </script>
@@ -37,7 +43,8 @@ function onUpgradeClick() {
             <div v-if="data.active" class="text-[1rem] bg-[#1f1f22] rounded-md py-2 text-center">
                 Current active plan
             </div>
-            <div @click="onUpgradeClick()" v-if="!data.active" class="cursor-pointer text-[1rem] font-semibold bg-[#3a3af5] rounded-md py-2 text-center">
+            <div @click="onUpgradeClick()" v-if="!data.active"
+                class="cursor-pointer text-[1rem] font-semibold bg-[#3a3af5] rounded-md py-2 text-center">
                 Upgrade
             </div>
         </div>

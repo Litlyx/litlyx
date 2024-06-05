@@ -1,5 +1,4 @@
-import { PREMIUM_PLANS, STRIPE_PLANS } from "@data/PREMIUM_LIMITS";
-import { ProjectModel } from "@schema/ProjectSchema";
+import { getPlanFromId } from "@data/PREMIUM";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import StripeService from '~/server/services/StripeService';
 
@@ -17,24 +16,22 @@ export default defineEventHandler(async event => {
 
     const { planId } = body;
 
-    const plan = PREMIUM_PLANS.find(e => e.id == planId);
+    const PLAN = getPlanFromId(planId);
 
-    if (!plan) {
+    if (!PLAN) {
         console.error('PLAN', planId, 'NOT EXIST');
         return setResponseStatus(event, 400, 'Plan not exist');
     }
 
-    const { price } = STRIPE_PLANS[plan.tag];
-
     const checkout = await StripeService.cretePayment(
-        price,
+        PLAN.PRICE,
         'https://dashboard.litlyx.com/payment_ok',
         project_id,
         project.customer_id
     );
 
     if (!checkout) {
-        console.error('Cannot create payment', { plan, price });
+        console.error('Cannot create payment', { plan: PLAN });
         return setResponseStatus(event, 400, 'Cannot create payment');
     }
 

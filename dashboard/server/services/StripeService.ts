@@ -1,3 +1,4 @@
+import { getPlanFromTag } from '@data/PREMIUM';
 import Stripe from 'stripe';
 
 class StripeService {
@@ -10,11 +11,9 @@ class StripeService {
         this.webhookSecret = webhookSecret;
         this.stripe = new Stripe(this.privateKey);
     }
+
     parseWebhook(body: any, sig: string) {
-        if (!this.stripe) {
-            console.error('Stripe not initialized')
-            return;
-        }
+        if (!this.stripe) throw Error('Stripe not initialized');
         if (!this.webhookSecret) {
             console.error('Stripe not initialized')
             return;
@@ -23,10 +22,7 @@ class StripeService {
     }
 
     async cretePayment(price: string, success_url: string, pid: string, customer?: string) {
-        if (!this.stripe) {
-            console.error('Stripe not initialized')
-            return;
-        }
+        if (!this.stripe) throw Error('Stripe not initialized');
 
         const checkout = await this.stripe.checkout.sessions.create({
             payment_method_types: ['card'],
@@ -44,11 +40,14 @@ class StripeService {
         return checkout;
     }
 
+    async deleteSubscription(subscriptionId: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const subscription = await this.stripe.subscriptions.cancel(subscriptionId);
+        return subscription;
+    }
+
     async getSubscription(subscriptionId: string) {
-        if (!this.stripe) {
-            console.error('Stripe not initialized')
-            return;
-        }
+        if (!this.stripe) throw Error('Stripe not initialized');
         const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
         return subscription;
     }
@@ -57,6 +56,45 @@ class StripeService {
         const invoices = await this.stripe?.invoices.list({ customer: customer_id });
         return invoices;
     }
+
+
+    async getCustomer(customer_id: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const customer = await this.stripe.customers.retrieve(customer_id, { expand: [] })
+        return customer;
+    }
+
+    async createCustomer(email: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const customer = await this.stripe.customers.create({ email });
+        return customer;
+    }
+
+    async deleteCustomer(customer_id: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const { deleted } = await this.stripe.customers.del(customer_id);
+        return deleted;
+    }
+
+
+
+
+    async createFreeSubscription(customer_id: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
+
+        const FREE_PLAN = getPlanFromTag('FREE');
+
+        const subscription = await this.stripe.subscriptions.create({
+            customer: customer_id,
+            items: [
+                { price: FREE_PLAN.PRICE, quantity: 1 }
+            ]
+        });
+
+        return subscription;
+
+    }
+
 }
 
 const instance = new StripeService();

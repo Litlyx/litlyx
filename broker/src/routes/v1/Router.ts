@@ -1,7 +1,6 @@
 
 import { Router, json } from "express";
 import { createSessionHash, getIPFromRequest } from "../../utils/Utils";
-import { checkProjectCount } from "@functions/UtilsProjectCounts";
 
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { EVENT_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
@@ -13,6 +12,8 @@ import { VisitModel } from "@schema/metrics/VisitSchema";
 import { EventModel } from "@schema/metrics/EventSchema";
 import { ProjectCountModel } from "@schema/ProjectsCounts";
 import { checkLimitsForEmail } from "../../Controller";
+import { ProjectLimitModel } from "@schema/ProjectsLimits";
+import { ProjectModel } from "@schema/ProjectSchema";
 
 const router = Router();
 
@@ -55,13 +56,21 @@ router.post('/metrics/push', json(jsonOptions), async (req, res) => {
 
         const { pid } = req.body;
 
-        const projectCounts = await checkProjectCount(pid);
+        const projectExist = await ProjectModel.exists({ _id: pid });
+        if (!projectExist) return res.status(400).json({ error: 'Project not exist' });
 
-        const TOTAL_COUNT = projectCounts.events + projectCounts.visits;
-        const LIMIT = projectCounts.limit;
-        if ((TOTAL_COUNT * EVENT_LOG_LIMIT_PERCENT) > LIMIT) return;
+        const projectLimits = await ProjectLimitModel.findOne({ project_id: pid });
 
-        await checkLimitsForEmail(projectCounts);
+        if (!projectLimits) return res.status(400).json({ error: 'No limits found' });
+
+        const TOTAL_COUNT = projectLimits.events + projectLimits.visits;
+        const COUNT_LIMIT = projectLimits.limit;
+        if ((TOTAL_COUNT * EVENT_LOG_LIMIT_PERCENT) > COUNT_LIMIT) {
+            return res.status(200).json({ error: 'Limit reached' });
+        };
+        await checkLimitsForEmail(projectLimits);
+
+
 
         const ip = getIPFromRequest(req);
 
@@ -113,7 +122,11 @@ router.post('/metrics/push', json(jsonOptions), async (req, res) => {
 
         const fieldToInc = type === EventType.VISIT ? 'visits' : 'events';
 
-        await ProjectCountModel.updateOne({ _id: projectCounts._id }, { $inc: { [fieldToInc]: 1 } });
+        await ProjectCountModel.updateOne({ project_id: pid }, { $inc: { [fieldToInc]: 1 } }, { upsert: true });
+
+        await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { [fieldToInc]: 1 } });
+
+
 
         return res.sendStatus(200);
 

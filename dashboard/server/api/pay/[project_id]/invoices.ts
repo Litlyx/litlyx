@@ -1,4 +1,5 @@
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
+import { Redis } from "~/server/services/CacheService";
 import StripeService from '~/server/services/StripeService';
 
 
@@ -21,17 +22,21 @@ export default defineEventHandler(async event => {
 
     if (!project.customer_id) return [];
 
-    const invoices = await StripeService.getInvoices(project.customer_id);
+    return await Redis.useCache({ key: `invoices:${project_id}`, exp: 10 }, async () => {
 
-    return invoices?.data.map(e => {
-        const result: InvoiceData = {
-            link: e.invoice_pdf || '',
-            id: e.number || '',
-            date: e.created * 1000,
-            status: e.status || 'NO_STATUS',
-            cost: e.amount_due
-        }
-        return result;
-    })
+        const invoices = await StripeService.getInvoices(project.customer_id);
+
+        return invoices?.data.map(e => {
+            const result: InvoiceData = {
+                link: e.invoice_pdf || '',
+                id: e.number || '',
+                date: e.created * 1000,
+                status: e.status || 'NO_STATUS',
+                cost: e.amount_due
+            }
+            return result;
+        });
+
+    });
 
 });

@@ -5,7 +5,7 @@ import OpenAI from "openai";
 import { AiChatModel } from '@schema/ai/AiChatSchema';
 import { AI_EventsFunctions, AI_EventsTools } from '../api/ai/functions/AI_Events';
 import { ProjectCountModel } from '@schema/ProjectsCounts';
-import { getCurrentProjectCountId } from '@functions/UtilsProjectCounts';
+import { ProjectLimitModel } from '@schema/ProjectsLimits';
 
 const { AI_ORG, AI_PROJECT, AI_KEY } = useRuntimeConfig();
 
@@ -135,9 +135,7 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
 
     }
 
-    const currentCountId = await getCurrentProjectCountId(pid);
-    if (!currentCountId) console.error('Project not exist');
-    await ProjectCountModel.updateOne({ _id: currentCountId }, { $inc: { ai_messages: 1 } })
+    await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { ai_messages: 1 } })
 
     return responseMessage.content;
 }

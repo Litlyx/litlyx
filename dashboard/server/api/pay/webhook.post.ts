@@ -2,67 +2,185 @@
 import StripeService from '~/server/services/StripeService';
 import type Event from 'stripe';
 import { ProjectModel } from '@schema/ProjectSchema';
-import { PREMIUM_LIMITS, getPlanFromPremiumTag, getPlanTagFromStripePrice } from '@data/PREMIUM_LIMITS';
+import { PREMIUM_PLAN, getPlanFromPrice } from '@data/PREMIUM';
 import { ProjectCountModel } from '@schema/ProjectsCounts';
+import { ProjectLimitModel } from '@schema/ProjectsLimits';
+import { UserModel } from '@schema/UserSchema';
 
 async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
-    if (event.data.object.status === 'paid') {
+    // if (event.data.object.status === 'paid') {
 
-        const pid = event.data.object.subscription_details?.metadata?.pid;
+    //     const data = event.data.object;
 
-        const project = await ProjectModel.findById(pid);
-        if (!project) return { error: 'Project not found' }
+    //     const pid = data.subscription_details?.metadata?.pid;
+    //     if (!pid) return { error: 'ProjectId not found' }
 
-        const subscriptionId = event.data.object.subscription;
-        if (!subscriptionId) return { error: 'SubscriptionId not found' }
+    //     const project = await ProjectModel.findById(pid);
+    //     if (!project) return { error: 'Project not found' }
 
-        const price = event.data.object.lines.data[0].plan?.id;
-        if (!price) return { error: 'Price not found' }
+    //     const price = data.lines.data[0].plan?.id;
+    //     if (!price) return { error: 'Price not found' }
 
-        const premiumTag = getPlanTagFromStripePrice(price);
-        if (!premiumTag) return { error: 'Premium tag not found' }
+    //     const PLAN = getPlanFromPrice(price);
+    //     if (!PLAN) return { error: 'Plan not found' }
 
-        const plan = getPlanFromPremiumTag(premiumTag);
-        if (!plan) return { error: 'Plan not found' }
+    //     await ProjectModel.updateOne({ _id: pid }, {
+    //         premium: true,
+    //         customer_id: data.customer,
+    //         premium_type: PLAN.ID,
+    //         premium_expire_at: data.lines.data[0].period.end * 1000
+    //     });
 
-        await ProjectModel.updateOne({ _id: pid }, {
-            premium: true,
-            customer_id: event.data.object.customer,
-            premium_type: plan.id,
-            premium_expire_at: event.data.object.lines.data[0].period.end * 1000
-        });
+    //     await ProjectCountModel.create({
+    //         project_id: project._id,
+    //         events: 0,
+    //         visits: 0,
+    //         ai_messages: 0,
+    //         limit: PLAN.COUNT_LIMIT,
+    //         ai_limit: PLAN.AI_MESSAGE_LIMIT,
+    //         billing_start_at: event.data.object.lines.data[0].period.start * 1000,
+    //         billing_expire_at: event.data.object.lines.data[0].period.end * 1000,
+    //     });
 
-        const limits = PREMIUM_LIMITS[premiumTag];
-
-        await ProjectCountModel.create({
-            project_id: project._id,
-            events: 0,
-            visits: 0,
-            ai_messages: 0,
-            limit: limits.COUNT_LIMIT,
-            ai_limit: limits.AI_MESSAGE_LIMIT,
-            billing_start_at: event.data.object.lines.data[0].period.start * 1000,
-            billing_expire_at: event.data.object.lines.data[0].period.end * 1000,
-        });
-
-        return { ok: true }
-    }
+    //     return { ok: true }
+    // }
 
     return { received: true }
 }
 
 async function onSubscriptionCreated(event: Event.CustomerSubscriptionCreatedEvent) {
-    return { received: true }
+
+    const project = await ProjectModel.findOne({ customer_id: event.data.object.customer });
+    if (!project) return { error: 'Project not found' }
+
+    const price = event.data.object.items.data[0].price.id;
+    if (!price) return { error: 'Price not found' }
+
+    const PLAN = getPlanFromPrice(price);
+    if (!PLAN) return { error: 'Plan not found' }
+
+
+    if (project.subscription_id != event.data.object.id) {
+        await StripeService.deleteSubscription(project.subscription_id);
+    }
+
+    project.premium = PLAN.ID != 0;
+    project.premium_type = PLAN.ID;
+    project.subscription_id = event.data.object.id;
+    project.premium_expire_at = new Date(event.data.object.current_period_end * 1000);
+
+    await Promise.all([
+
+        project.save(),
+
+        ProjectLimitModel.updateOne({ project_id: project._id }, {
+            events: 0,
+            visits: 0,
+            ai_messages: 0,
+            limit: PLAN.COUNT_LIMIT,
+            ai_limit: PLAN.AI_MESSAGE_LIMIT,
+            billing_start_at: event.data.object.current_period_start * 1000,
+            billing_expire_at: event.data.object.current_period_end * 1000,
+        }, { upsert: true })
+
+    ]);
+
+    return { ok: true }
 }
 
 async function onSubscriptionDeleted(event: Event.CustomerSubscriptionDeletedEvent) {
-    return { received: true }
+
+    const project = await ProjectModel.findOne({
+        customer_id: event.data.object.customer,
+        subscription_id: event.data.object.id
+    });
+
+    if (!project) return { error: 'Project not found' }
+
+    const PLAN = PREMIUM_PLAN['FREE'];
+
+    const targetCustomer = await StripeService.getCustomer(project.customer_id);
+
+    let customer: Event.Customer;
+
+    if (!targetCustomer.deleted) {
+        customer = targetCustomer;
+    } else {
+        const user = await UserModel.findById(project._id, { email: 1 });
+        if (!user) return { error: 'User not found' }
+        const newCustomer = await StripeService.createCustomer(user.email);
+        customer = newCustomer;
+    }
+
+    const freeSubscription = await StripeService.createFreeSubscription(customer.id);
+
+
+    project.premium = false;
+    project.premium_type = PLAN.ID;
+    project.subscription_id = freeSubscription.id;
+    project.premium_expire_at = new Date(freeSubscription.current_period_end * 1000);
+
+
+    await Promise.all([
+
+        project.save(),
+
+        ProjectLimitModel.updateOne({ project_id: project._id }, {
+            events: 0,
+            visits: 0,
+            ai_messages: 0,
+            limit: PLAN.COUNT_LIMIT,
+            ai_limit: PLAN.AI_MESSAGE_LIMIT,
+            billing_start_at: event.data.object.current_period_start * 1000,
+            billing_expire_at: event.data.object.current_period_end * 1000,
+        }, { upsert: true })
+
+    ]);
+
+    return { ok: true }
 }
 
 async function onSubscriptionUpdated(event: Event.CustomerSubscriptionUpdatedEvent) {
-    return { received: true }
+
+    const project = await ProjectModel.findOne({
+        customer_id: event.data.object.customer,
+        subscription_id: event.data.object.id
+    });
+
+    if (!project) return { error: 'Project not found' }
+
+    const price = event.data.object.items.data[0].price.id;
+    if (!price) return { error: 'Price not found' }
+
+    const PLAN = getPlanFromPrice(price);
+    if (!PLAN) return { error: 'Plan not found' }
+
+    project.premium = PLAN.ID != 0;
+    project.premium_type = PLAN.ID;
+    project.subscription_id = event.data.object.id;
+    project.premium_expire_at = new Date(event.data.object.current_period_end * 1000);
+
+    await Promise.all([
+
+        project.save(),
+
+        ProjectLimitModel.updateOne({ project_id: project._id }, {
+            events: 0,
+            visits: 0,
+            ai_messages: 0,
+            limit: PLAN.COUNT_LIMIT,
+            ai_limit: PLAN.AI_MESSAGE_LIMIT,
+            billing_start_at: event.data.object.current_period_start * 1000,
+            billing_expire_at: event.data.object.current_period_end * 1000,
+        }, { upsert: true })
+
+    ]);
+
+    return { ok: true }
 }
+
+
 
 
 export default defineEventHandler(async event => {

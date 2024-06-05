@@ -1,8 +1,7 @@
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
-import { ProjectCountModel } from "@schema/ProjectsCounts";
+import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectLimitModel } from "@schema/ProjectsLimits";
 import { UserSettingsModel } from "@schema/UserSettings";
-
-const { BROKER_UPDATE_EXPIRE_TIME_PATH } = useRuntimeConfig();
+import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {
 
@@ -17,25 +16,20 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
+    const subscription = await StripeService.getSubscription(project.subscription_id);
 
-    let projectCounts = await ProjectCountModel.findOne({ project_id }, {}, {
-        sort: { billing_expire_at: -1 }
-    });
+    const projectLimits = await ProjectLimitModel.findOne({ project_id });
+    if (!projectLimits) return setResponseStatus(event, 400, 'Project limits not found');
 
-    if (!projectCounts || Date.now() > new Date(projectCounts.billing_expire_at).getTime()) {
-        await fetch(BROKER_UPDATE_EXPIRE_TIME_PATH + project._id.toString());
-        projectCounts = await ProjectCountModel.findOne({ project_id }, {}, { sort: { billing_expire_at: -1 } });
-    }
-
-    if (!projectCounts) return setResponseStatus(event, 400, 'Project counts not found');
 
     const result = {
         premium: project.premium,
         premium_type: project.premium_type,
-        billing_start_at: projectCounts.billing_start_at,
-        billing_expire_at: projectCounts.billing_expire_at,
-        limit: projectCounts.limit,
-        count: projectCounts.events + projectCounts.visits,
+        billing_start_at: projectLimits.billing_start_at,
+        billing_expire_at: projectLimits.billing_expire_at,
+        limit: projectLimits.limit,
+        count: projectLimits.events + projectLimits.visits,
+        subscription_status: subscription.status
     }
 
     return result;

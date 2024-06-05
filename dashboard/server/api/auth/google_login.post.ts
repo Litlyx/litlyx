@@ -3,6 +3,8 @@ import { OAuth2Client } from 'google-auth-library';
 import { createUserJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
 import EmailService from '@services/EmailService';
+import { ProjectModel } from '@schema/ProjectSchema';
+import StripeService from '~/server/services/StripeService';
 
 const { GOOGLE_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig()
 
@@ -10,6 +12,8 @@ const client = new OAuth2Client({
     clientId: GOOGLE_AUTH_CLIENT_ID,
     clientSecret: GOOGLE_AUTH_CLIENT_SECRET
 });
+
+
 
 export default defineEventHandler(async event => {
     const body = await readBody(event)
@@ -33,7 +37,9 @@ export default defineEventHandler(async event => {
 
 
     const user = await UserModel.findOne({ email: payload.email });
+
     if (user) return { error: false, access_token: createUserJwt({ email: user.email, name: user.name }) }
+
 
     const newUser = new UserModel({
         email: payload.email,

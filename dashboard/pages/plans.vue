@@ -107,6 +107,9 @@ function openInvoice(link: string) {
                             </div>
                             <div class="poppins"> {{ daysLeft }} days left </div>
                         </div>
+                        <div class="flex justify-center">
+                            Subscription: {{ planData.subscription_status }}
+                        </div>
                     </div>
                 </div>
                 <div class="my-4 w-full bg-gray-400/30 h-[1px]">

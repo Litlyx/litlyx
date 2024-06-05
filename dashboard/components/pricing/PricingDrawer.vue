@@ -22,7 +22,8 @@ const starterTierCardData = ref<PricingCardProp>({
            can experience some data loss.To have a 
            dedicated server we suggest to upgrade the
            plan to an higher one!`,
-    active: activeProject.value?.premium === false
+    active: activeProject.value?.premium === false,
+    planId: 0
 });
 
 const accelerationTierCardData = ref<PricingCardProp>({
@@ -39,7 +40,8 @@ const accelerationTierCardData = ref<PricingCardProp>({
         "Low priority email support"
     ],
     desc: `Your project is entering a growth phase. We simplify data analysis for you. For more support, try our Expansion plan—it's worth it!`,
-    active: activeProject.value?.premium_type === 1
+    active: activeProject.value?.premium_type === 1,
+    planId: 1
 });
 
 const expansionTierCardData = ref<PricingCardProp>({
@@ -56,7 +58,8 @@ const expansionTierCardData = ref<PricingCardProp>({
         "high priority email support"
     ],
     desc: `We will support you with everything we can offer and give you the full power of our service. If you need more space and are growing, contact us for a custom offer!`,
-    active:   activeProject.value?.premium_type === 2
+    active: activeProject.value?.premium_type === 2,
+    planId: 2
 });
 
 </script>

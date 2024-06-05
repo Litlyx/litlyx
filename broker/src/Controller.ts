@@ -1,9 +1,9 @@
-import { TProjectCount } from "@schema/ProjectsCounts";
 import { ProjectModel } from "@schema/ProjectSchema";
 import { UserModel } from "@schema/UserSchema";
 import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
 import EmailService from '@services/EmailService';
 import { requireEnv } from "../../shared/utilts/requireEnv";
+import { TProjectLimit } from "@schema/ProjectsLimits";
 
 
 EmailService.createTransport(
@@ -13,7 +13,7 @@ EmailService.createTransport(
     requireEnv('EMAIL_PASS'),
 );
 
-export async function checkLimitsForEmail(projectCounts: TProjectCount) {
+export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
     if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit / 2)) {
         const notify = await LimitNotifyModel.findOne({ project_id: projectCounts._id });

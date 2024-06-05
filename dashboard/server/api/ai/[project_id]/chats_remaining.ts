@@ -1,10 +1,10 @@
+import { ProjectLimitModel } from "@schema/ProjectsLimits";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { checkProjectCount } from '@functions/UtilsProjectCounts';
 
 export async function getAiChatRemainings(project_id: string) {
-    const counts = await checkProjectCount(project_id)
-    if (!counts) return 0;
-    const chatsRemaining = counts.ai_limit - counts.ai_messages;
+    const limits = await ProjectLimitModel.findOne({ _id: project_id })
+    if (!limits) return 0;
+    const chatsRemaining = limits.ai_limit - limits.ai_messages;
     if (isNaN(chatsRemaining)) return 0;
     return chatsRemaining;
 }
