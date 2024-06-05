@@ -30,14 +30,14 @@ onMounted(() => {
                 <div class="poppins text-center font-bold text-text lg:leading-[5rem] text-[1.7rem] lg:text-[4rem]">
                     Boost Analytics Collection
                     <br>
-                    with <span class="text-accent"> minimal setup </span>
+                    with <span class="text-accent"> Minimal Setup </span>
                 </div>
 
                 <div class="flex gap-4 flex-col lg:flex-row lg:gap-10">
 
                     <div class="flex items-center gap-2">
                         <i class="fas fa-check text-[1.5rem]"></i>
-                        <div class="poppins text-[1.2rem]"> One-line code event </div>
+                        <div class="poppins text-[1.2rem]"> One-Line Code Setup </div>
                     </div>
 
                     <div class="flex items-center gap-2">
@@ -48,6 +48,11 @@ onMounted(() => {
                     <div class="flex items-center gap-2">
                         <i class="fas fa-check text-[1.5rem]"></i>
                         <div class="poppins text-[1.2rem]"> High customization </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check text-[1.5rem]"></i>
+                        <div class="poppins text-[1.2rem]"> GDPR Compliance </div>
                     </div>
 
                 </div>
@@ -114,7 +119,7 @@ onMounted(() => {
         <div class="flex flex-col items-center justify-center gap-2">
             <div
                 class="poppins font-semibold text-[1.5rem] z-[10] lg:text-[1.85rem] text-text-sub text-center w-[75%] lg:w-[40%]">
-                This one-line code Collect 9 KPI
+                This One-Line Code Collect 9 KPIs
             </div>
             <div class="poppins text-[1.35rem] text-text-sub text-center w-[90%] lg:w-[60%] z-[10]">
                 Websites visits, Custom events, Referrers, Browsers, Devices, OS, Countries, SearchTerms, User Unique
@@ -159,96 +164,40 @@ onMounted(() => {
             </div>
         </div>
 
-        <!-- <div class="flex justify-center mt-20 z-[20] relative">
-            <div class="flex gap-6 items-center flex-col lg:flex-row">
-                <NuxtLink to="https://dashboard.litlyx.com"
-                    class="hover:bg-white/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-text text-bg-light px-8 py-3 rounded-2xl text-black">
-                    <div class="poppins"> Get started for free </div>
-                    <i class="fas fa-arrow-right"></i>
-                </NuxtLink>
-
-                <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
-                    class="hover:bg-accent/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-accent text-bg-light px-16 py-3 rounded-2xl text-text">
-                    <div class="poppins"> Live demo </div>
-                </NuxtLink>
-            </div>
-        </div> -->
 
         <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
             <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why use litlyx </div>
-            <!-- <div class="poppins text-[1.2rem] text-text-sub text-center w-[40%]">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            </div> -->
             <div ref="autoscroll"
                 class="flex gap-8 flex-row lg:flex-col overflow-x-auto overflow-y-hidden lg:overflow-hidden w-full hide-scroll px-6">
                 <div class="flex justify-center gap-8">
                     <HomeCard title="1-Minute Setup"
-                        text="Effortlessly set up and start collecting analytics & KPIs within seconds."
+                        text="Effortlessly set up and start collecting KPIs in seconds."
                         icon="far fa-clock">
                     </HomeCard>
                     <HomeCard title="Real-time Insights"
-                        text="Instantly visualize events on your Project Dashboard in real-time."
+                        text="Instantly visualize events and visits on your Project Dashboard."
                         icon="far fa-line-chart">
                     </HomeCard>
-                    <HomeCard title="Custom events" text="Tailor your user experience tracking with custom events, now."
+                    <HomeCard title="Custom events" text="Tailor your user experience tracking with custom events."
                         icon="far fa-tools">
                     </HomeCard>
                 </div>
                 <div class="flex justify-center gap-8">
                     <HomeCard title="Start for Free"
-                        text="Explore Litlyx dashboard with 3.000 free visits and events for your website."
+                        text="Try Litlyx with 3k FREE Visits & Events for your website."
                         icon="far fa-gift">
+                    </HomeCard>
+                    <HomeCard title="Open-Source"
+                        text="Litlyx is transparent, Self-Hostable & Open-Source. Share same ❤️."
+                        icon="far fa-globe">
                     </HomeCard>
                     <HomeCard title="Cost-Effective"
                         text="Get more for less with Litlyx, maximizing value without breaking the bank."
                         icon="far fa-wallet">
                     </HomeCard>
-                    <HomeCard title="<4kb"
-                        text="Litlyx imports seamlessly, optimizing code resources and enhancing modular efficiency."
-                        icon="far fa-temperature-quarter">
-                    </HomeCard>
                 </div>
             </div>
-
         </div>
-
-        <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
-            <!-- <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text text-center">
-                Signup for LitLyx updates
-            </div> -->
-            <!-- <div class="poppins text-[1.2rem] text-text-sub text-center w-[40%]">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            </div> -->
-
-
-            <!-- <div class="flex flex-col items-center justify-center py-6">
-                <div class="flex items-center">
-                    <div class="w-full bg-menu px-12 py-8 rounded-lg flex flex-col gap-1">
-                        <div class="text-[1.5rem] poppins font-semibold text-text">
-                            Subscribe for Updates
-                        </div>
-                        <div class="text-[1rem] poppins text-text-sub">
-                            Get the latest news straight to your inbox
-                        </div>
-                        <div class="flex items-center mt-4">
-                            <input type="email" placeholder="Enter your email"
-                                class="poppins flex-1 px-4 py-2 placeholder:text-text-sub/70 rounded-l-lg focus:outline-none">
-                            <button class="poppins px-4 py-2 bg-accent text-white rounded-r-lg">
-                                Subscribe
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-
-
-        </div>
-
-
-
     </div>
 
 </template>

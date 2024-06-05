@@ -24,7 +24,7 @@ const starterTierCardData = ref<any>({
 
 const accelerationTierCardData = ref<any>({
     title: 'ACCELERATION',
-    cost: '9.99',
+    cost: '9,99',
     features: [
         "150K visits/events per month",
         "100 AI Interaction per month",
@@ -41,7 +41,7 @@ const accelerationTierCardData = ref<any>({
 
 const expansionTierCardData = ref<any>({
     title: 'EXPANSION',
-    cost: '39.99',
+    cost: '39,99',
     features: [
         "500K visits/events per month",
         "5000 AI Interaction per month",
@@ -76,6 +76,22 @@ definePageMeta({ layout: 'header' });
             <div class="flex justify-between items-center mt-10">
                 <div class="flex flex-col gap-2">
                     <div class="poppins text-[2rem] font-semibold">
+                        Book a demo with me!
+                    </div>
+                    <div class="poppins text-[1.2rem] text-text/90">
+                       Take a slot & talk with <span class="text-accent font-semibold " > Antonio | CEO at Litlyx.</span>
+                    </div>
+                </div>
+                <div class="py-4 px-20 bg-[#303030] rounded-lg">
+                    <a href="https://cal.com/litlyx/15min" target="_blank" class="poppins text-[1.3rem]">
+                        Schedule now!
+                    </a>
+                </div>
+            </div>
+
+            <!-- <div class="flex justify-between items-center mt-10">
+                <div class="flex flex-col gap-2">
+                    <div class="poppins text-[2rem] font-semibold">
                         Do you need help ?
                     </div>
                     <div class="poppins text-[1.2rem] text-text/90">
@@ -87,7 +103,7 @@ definePageMeta({ layout: 'header' });
                         helplitlyx@gmail.com
                     </a>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- <Vue3Lottie height="16rem" animation-link="pricing_lottie.json"></Vue3Lottie>

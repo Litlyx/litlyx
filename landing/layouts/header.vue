@@ -25,7 +25,7 @@ nuxtApp.hook("page:finish", () => {
                 <div class="bg-[#2969f1] h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                     <img class="h-[1.8rem]" :src="'/logo.png'">
                 </div>
-                <div class="font-bold text-[1.6rem] text-gray-300 poppins">
+                <div class="font-semibold text-[1.6rem] text-gray-300 poppins">
                     Litlyx
                 </div>
             </NuxtLink>
