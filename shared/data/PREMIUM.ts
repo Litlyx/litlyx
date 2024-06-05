@@ -2,7 +2,7 @@
 export type PREMIUM_TAG = typeof PREMIUM_TAGS[number];
 
 export const PREMIUM_TAGS = [
-    'FREE', 'PLAN_1', 'PLAN_2', 'PLAN_99'
+    'FREE', 'PLAN_1', 'PLAN_2', 'CUSTOM_1'
 ] as const;
 
 
@@ -36,11 +36,11 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         PRICE: 'price_1POKCKB2lPUiVs9Vol8XOmhW',
         PRICE_TEST: ''
     },
-    PLAN_99: {
-        ID: 99,
+    CUSTOM_1: {
+        ID: 1001,
         COUNT_LIMIT: 10_000_000,
         AI_MESSAGE_LIMIT: 100_000,
-        PRICE: '',
+        PRICE: 'price_1POKZyB2lPUiVs9VMAY6jXTV',
         PRICE_TEST: ''
     }
 }
