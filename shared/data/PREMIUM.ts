@@ -2,7 +2,7 @@
 export type PREMIUM_TAG = typeof PREMIUM_TAGS[number];
 
 export const PREMIUM_TAGS = [
-    'FREE', 'PLAN_1', 'PLAN_2', 'PLAN_3', 'PLAN_99'
+    'FREE', 'PLAN_1', 'PLAN_2', 'PLAN_99'
 ] as const;
 
 
@@ -10,6 +10,7 @@ export type PREMIUM_DATA = {
     COUNT_LIMIT: number,
     AI_MESSAGE_LIMIT: number,
     PRICE: string,
+    PRICE_TEST: string,
     ID: number
 }
 
@@ -18,31 +19,29 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         ID: 0,
         COUNT_LIMIT: 3_000,
         AI_MESSAGE_LIMIT: 10,
-        PRICE: 'price_1PNbHYB2lPUiVs9VZP32xglF'
+        PRICE: 'price_1POKCMB2lPUiVs9VLe3QjIHl',
+        PRICE_TEST: 'price_1PNbHYB2lPUiVs9VZP32xglF'
     },
     PLAN_1: {
         ID: 1,
         COUNT_LIMIT: 150_000,
         AI_MESSAGE_LIMIT: 100,
-        PRICE: 'price_1PNZjVB2lPUiVs9VrsTbJL04'
+        PRICE: 'price_1POKCOB2lPUiVs9VC13s2rQw',
+        PRICE_TEST: 'price_1PNZjVB2lPUiVs9VrsTbJL04'
     },
     PLAN_2: {
         ID: 2,
         COUNT_LIMIT: 500_000,
         AI_MESSAGE_LIMIT: 5_000,
-        PRICE: ''
-    },
-    PLAN_3: {
-        ID: 3,
-        COUNT_LIMIT: 2_000_000,
-        AI_MESSAGE_LIMIT: 10_000,
-        PRICE: ''
+        PRICE: 'price_1POKCKB2lPUiVs9Vol8XOmhW',
+        PRICE_TEST: ''
     },
     PLAN_99: {
         ID: 99,
         COUNT_LIMIT: 10_000_000,
         AI_MESSAGE_LIMIT: 100_000,
-        PRICE: ''
+        PRICE: '',
+        PRICE_TEST: ''
     }
 }
 
