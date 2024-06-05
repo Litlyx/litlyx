@@ -67,25 +67,28 @@ definePageMeta({ layout: 'header' });
 
         <div class="p-8">
 
-            <div class="flex gap-8 h-max">
+            <div class="flex gap-8 h-max flex-col lg:flex-row">
                 <PricingCard class="flex-1" :data="starterTierCardData"></PricingCard>
                 <PricingCard class="flex-1" :data="accelerationTierCardData"></PricingCard>
                 <PricingCard class="flex-1" :data="expansionTierCardData"></PricingCard>
             </div>
 
-            <div class="flex justify-between items-center mt-10">
+            <div class="flex justify-between items-center md:flex-row flex-col mt-10">
                 <div class="flex flex-col gap-2">
                     <div class="poppins text-[2rem] font-semibold">
-                        Book a demo with me!
+                        Book a demo!
                     </div>
                     <div class="poppins text-[1.2rem] text-text/90">
-                       Take a slot & talk with <span class="text-accent font-semibold " > Antonio | CEO at Litlyx.</span>
+                        Take a slot & talk with <span class="text-accent font-semibold "> Antonio | CEO at
+                            Litlyx.</span>
                     </div>
                 </div>
-                <div class="py-4 px-20 bg-[#303030] rounded-lg">
-                    <a href="https://cal.com/litlyx/15min" target="_blank" class="poppins text-[1.3rem]">
-                        Schedule now!
-                    </a>
+                <div class="w-full lg:w-fit flex justify-center mt-10">
+                    <div class="bg-[#303030] rounded-lg py-4 w-full text-center lg:px-20">
+                        <a href="https://cal.com/litlyx/15min" target="_blank" class="poppins text-[1.3rem]">
+                            Schedule now!
+                        </a>
+                    </div>
                 </div>
             </div>
 
