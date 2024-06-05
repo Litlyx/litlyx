@@ -107,7 +107,7 @@ const selectLabelsEvents = [
 
 
 
-            <div class="flex flex-row p-6 gap-6">
+            <div class="flex p-6 gap-6 flex-col xl:flex-row">
 
 
 

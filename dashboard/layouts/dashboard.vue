@@ -38,7 +38,7 @@ const sections: Section[] = [
                 label: 'Github', to: 'https://github.com/litlyx/litlyx', icon: 'fab fa-github', external: true,
                 action() { Lit.event('git_clicked') },
             },
-            { label: 'Plans', to: '/plans', icon: 'far fa-wallet' },
+            { label: 'Billing', to: '/plans', icon: 'far fa-wallet' },
             { label: 'Book a demo', to: '/book_demo', icon: 'far fa-calendar' },
         ]
     },

@@ -27,7 +27,7 @@ const leftPercent = computed(() => {
     if (!planData.value) return 0;
     const left = dayjs().diff(planData.value.billing_expire_at, 'days');
     const total = dayjs(planData.value.billing_start_at).diff(planData.value.billing_expire_at, 'days');
-    const percent = 100 / total * left;
+    const percent = 100 - (100 / total * left);
     return percent;
 });
 
@@ -48,6 +48,14 @@ function openInvoice(link: string) {
     window.open(link, '_blank');
 }
 
+function getPremiumName(type: number) {
+    if (type === 0) return 'FREE';
+    if (type === 1) return 'ACCELERATION';
+    if (type === 2) return 'EXPANSION';
+    return 'CUSTOM';
+
+}
+
 </script>
 
 <template>
@@ -55,7 +63,7 @@ function openInvoice(link: string) {
     <div class="w-full h-full p-8 overflow-y-auto pb-40 lg:pb-0 relative overflow-x-hidden">
 
         <Transition name="pdrawer">
-            <PricingDrawer class="bg-black absolute right-0 top-0 w-[60vw] min-w-[65rem] h-full z-[20]"
+            <PricingDrawer @onCloseClick="showPricingDrawer = false" class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]"
                 v-if=showPricingDrawer>
             </PricingDrawer>
         </Transition>
@@ -67,12 +75,14 @@ function openInvoice(link: string) {
         <div class="poppins font-semibold text-[1.8rem]">
             Billing
         </div>
+
         <div class="poppins text-[1.3rem] text-text-sub">
             Manage your billing cycle for the project
             <span class="font-bold">
                 {{ activeProject?.name || '' }}
             </span>
         </div>
+
         <div class="my-4 mb-10 w-full bg-gray-400/30 h-[1px]">
         </div>
 
@@ -87,7 +97,7 @@ function openInvoice(link: string) {
                                 </div>
                                 <div
                                     class="flex lato text-[.7rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-lg">
-                                    {{ planData.premium ? 'PREMIUM ' + planData.premium_type : 'FREE' }}
+                                    {{ planData.premium ? getPremiumName(planData.premium_type) : 'FREE' }}
                                 </div>
                             </div>
                             <div class="poppins text-text-sub text-[.9rem]">
@@ -101,8 +111,8 @@ function openInvoice(link: string) {
                     </div>
                     <div class="flex flex-col">
                         <div class="poppins"> Billing period:</div>
-                        <div class="flex items-center gap-4">
-                            <div class="grow">
+                        <div class="flex items-center gap-2 md:gap-4 flex-col pt-4 md:pt-0 md:flex-row">
+                            <div class="grow w-full md:w-auto">
                                 <UProgress color="green" :min="0" :max="100" :value="leftPercent"></UProgress>
                             </div>
                             <div class="poppins"> {{ daysLeft }} days left </div>
@@ -141,8 +151,8 @@ function openInvoice(link: string) {
                     </div>
                     <div class="flex flex-col">
                         <div class="poppins"> Usage:</div>
-                        <div class="flex items-center gap-4">
-                            <div class="grow">
+                        <div class="flex items-center gap-2 md:gap-4 flex-col pt-4 md:pt-0 md:flex-row">
+                            <div class="grow w-full md:w-auto">
                                 <UProgress :color="color" :min="0" :max="planData.limit" :value="planData.count">
                                 </UProgress>
                             </div>
@@ -171,17 +181,20 @@ function openInvoice(link: string) {
 
             <div class="flex flex-col gap-2">
 
-                <div class="flex gap-10 bg-black p-4 rounded-lg" v-for="invoice of invoices">
+                <div class="flex justify-between items-center bg-[#161616] p-4 rounded-lg" v-for="invoice of invoices">
 
-                    <div> <i class="far fa-file-invoice"></i> </div>
+                    <div> <i class="fal fa-file-invoice"></i> </div>
 
-                    <div> {{ new Date(invoice.date).toLocaleString() }} </div>
-                    <div> € {{ invoice.cost / 100 }} </div>
-                    <div> {{ invoice.id }} </div>
-                    <div
-                        class="flex items-center lato text-[.8rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-lg">
-                        {{ invoice.status }}
+                    <div class="flex flex-col md:flex-row md:justify-around md:grow items-center gap-2">
+                        <div> {{ new Date(invoice.date).toLocaleString() }} </div>
+                        <div> € {{ invoice.cost / 100 }} </div>
+                        <div> {{ invoice.id }} </div>
+                        <div
+                            class="flex items-center lato text-[.8rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-lg">
+                            {{ invoice.status }}
+                        </div>
                     </div>
+
                     <div>
                         <i @click="openInvoice(invoice.link)"
                             class="far fa-download cursor-pointer hover:text-white/80"></i>

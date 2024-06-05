@@ -62,18 +62,28 @@ const expansionTierCardData = ref<PricingCardProp>({
     planId: 2
 });
 
+
+const emits = defineEmits<{
+    (evt: 'onCloseClick'): void
+}>();
+
 </script>
 
 <template>
-    <div class="p-8">
+    <div class="p-8 overflow-y-auto xl:overflow-y-hidden">
 
-        <div class="flex gap-8 h-max">
+        <div @click="$emit('onCloseClick')"
+            class="cursor-pointer fixed top-4 right-4 rounded-full bg-menu drop-shadow-[0_0_2px_#CCCCCCCC] w-9 h-9 flex items-center justify-center">
+            <i class="fas fa-close text-[1.6rem]"></i>
+        </div>
+
+        <div class="flex gap-8 mt-10 h-max xl:flex-row flex-col">
             <PricingCard class="flex-1" :data="starterTierCardData"></PricingCard>
             <PricingCard class="flex-1" :data="accelerationTierCardData"></PricingCard>
             <PricingCard class="flex-1" :data="expansionTierCardData"></PricingCard>
         </div>
 
-        <div class="flex justify-between items-center mt-10">
+        <div class="flex justify-between items-center mt-10 flex-col xl:flex-row">
             <div class="flex flex-col gap-2">
                 <div class="poppins text-[2rem] font-semibold">
                     Do you need help ?
@@ -82,10 +92,12 @@ const expansionTierCardData = ref<PricingCardProp>({
                     We respond in max. 1-2 days
                 </div>
             </div>
-            <div class="py-4 px-20 bg-[#303030] rounded-lg">
-                <a href="mailto:helplitlyx@gmail.com" class="poppins text-[1.3rem]">
-                    helplitlyx@gmail.com
-                </a>
+            <div class="mt-2">
+                <div class="rounded-lg px-10 py-3 bg-[#303030]">
+                    <a href="mailto:helplitlyx@gmail.com" class="poppins text-[1.3rem]">
+                        helplitlyx@gmail.com
+                    </a>
+                </div>
             </div>
         </div>
     </div>

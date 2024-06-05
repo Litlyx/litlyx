@@ -24,7 +24,7 @@ async function generatePDF() {
 
 <template>
 
-    <div class="home w-full h-full px-10 lg:px-0">
+    <div class="home w-full h-full px-10 lg:px-0 overflow-y-auto pb-[12rem] md:pb-0">
 
         <div class="flex flex-col items-center justify-center mt-20 gap-20">
 
@@ -32,16 +32,15 @@ async function generatePDF() {
                 <div class="poppins text-[2.4rem] font-bold text-text">
                     Project Report
                 </div>
-                <div class="poppins text-[1.8rem] text-text-sub/90">
+                <div class="poppins text-[1.4rem] text-center lg:text-[1.8rem] text-text-sub/90">
                     One-Click, Comprehensive KPI PDF for Your Investors or Team.
                 </div>
-                <div v-if="activeProject" class="flex gap-2">
+                <div v-if="activeProject" class="flex md:gap-2 flex-col md:flex-row">
                     <div class="poppins text-[1.4rem] font-semibold text-text-sub/90">
                         Relative to:
                     </div>
                     <div class="poppins text-[1.4rem] font-semibold text-text">
                         {{ activeProject.name }}
-                        <span class="text-[.9rem] text-text-sub/80"> ( {{ activeProject._id }} ) </span>
                     </div>
                 </div>
             </div>

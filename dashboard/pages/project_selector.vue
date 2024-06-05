@@ -49,10 +49,12 @@ async function onProjectClick(pid: string) {
 
         <div class="flex flex-col justify-center mt-16 gap-10 px-10" v-if="projects">
 
-            <div class="flex gap-4 items-center">
-                <div class="text-text font-bold text-[1.5rem]"> Projects </div>
-                <div class="text-text-sub/90 text-[1rem] font-semibold lato">
-                    {{ projects?.length ?? '-' }} / 3
+            <div class="flex gap-4 items-center flex-col md:flex-row">
+                <div class="flex gap-4 items-center">
+                    <div class="text-text font-bold text-[1.5rem]"> Projects </div>
+                    <div class="text-text-sub/90 text-[1rem] font-semibold lato">
+                        {{ projects?.length ?? '-' }} / 3
+                    </div>
                 </div>
                 <NuxtLink v-if="(projects?.length || 0) < 3" to="/project_creation"
                     class="bg-blue-500/20 hover:bg-blue-500/30 px-4 py-1 flex items-center gap-4 rounded-xl cursor-pointer">

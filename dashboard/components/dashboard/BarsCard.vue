@@ -87,7 +87,7 @@ function showDetails(id: string) {
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <div v-if="props.data.length > 0" class="flex justify-between" v-for="element of props.data">
+                        <div v-if="props.data.length > 0" class="flex justify-between items-center" v-for="element of props.data">
                             <div class="w-10/12 relative" @click="showDetails(element._id)"
                                 :class="{ 'cursor-pointer line-active': interactive }">
                                 <div class="absolute rounded-sm w-full h-full bg-[#92abcf38]"
@@ -105,7 +105,7 @@ function showDetails(id: string) {
                                     </span>
                                 </div>
                             </div>
-                            <div class="text-text font-semibold manrope"> {{ formatNumberK(element.count) }} </div>
+                            <div class="text-text font-semibold text-[.9rem] md:text-[1rem] manrope"> {{ formatNumberK(element.count) }} </div>
                         </div>
                         <div v-if="props.data.length == 0"
                             class="flex justify-center text-text-sub font-bold text-[1.1rem]">
