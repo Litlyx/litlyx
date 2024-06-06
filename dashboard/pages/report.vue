@@ -6,17 +6,22 @@ const activeProject = useActiveProject();
 
 
 async function generatePDF() {
-    const res = await $fetch<Blob>('/api/project/generate_pdf', {
-        ...signHeaders(),
-        responseType: 'blob'
-    });
 
-    const url = URL.createObjectURL(res);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Report.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
+    try {
+        const res = await $fetch<Blob>('/api/project/generate_pdf', {
+            ...signHeaders(),
+            responseType: 'blob'
+        });
+
+        const url = URL.createObjectURL(res);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Report.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (ex: any) {
+        alert(ex.message);
+    }
 }
 
 </script>

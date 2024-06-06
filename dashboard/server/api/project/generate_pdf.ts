@@ -129,6 +129,9 @@ export default defineEventHandler(async event => {
     const firstEventDate = await EventModel.findOne({ project_id: project._id }, { created_at: 1 }, { sort: { created_at: 1 } });
     const firstViewDate = await VisitModel.findOne({ project_id: project._id }, { created_at: 1 }, { sort: { created_at: 1 } });
 
+    if (!firstEventDate || !firstViewDate) {
+        return setResponseStatus(event, 400, 'Not enough data to generate report');
+    }
 
     const avgEventsDay = () => {
         const days = (Date.now() - (firstEventDate?.created_at.getTime() || 0)) / 1000 / 60 / 60 / 24;
