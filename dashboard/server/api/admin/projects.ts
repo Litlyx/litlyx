@@ -4,6 +4,8 @@ export type AdminProjectsList = {
     premium: boolean,
     created_at: Date,
     project_name: string,
+    premium_type: number,
+    _id: string,
     user: {
         name: string,
         email: string,
@@ -32,71 +34,26 @@ export default defineEventHandler(async event => {
         },
         {
             $lookup: {
-                from: "visits",
-                let: { projectId: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $eq: ["$project_id", "$$projectId"]
-                            }
-                        }
-                    },
-                    {
-                        $count: "total_visits"
-                    }
-                ],
-                as: "visits"
-            }
-        },
-        {
-            $lookup: {
-                from: "events",
-                let: { projectId: "$_id" },
-                pipeline: [
-                    {
-                        $match: {
-                            $expr: {
-                                $eq: ["$project_id", "$$projectId"]
-                            }
-                        }
-                    },
-                    {
-                        $count: "total_events"
-                    }
-                ],
-                as: "events"
+                from: "project_counts",
+                localField: "_id",
+                foreignField: "project_id",
+                as: "counts"
             }
         },
         {
             $project: {
                 project_name: "$name",
                 premium: 1,
+                premium_type: 1,
                 created_at: 1,
                 user: {
                     $first: "$user"
                 },
                 total_visits: {
-                    $ifNull: [
-                        {
-                            $arrayElemAt: [
-                                "$visits.total_visits",
-                                0
-                            ]
-                        },
-                        0
-                    ]
+                    $arrayElemAt: ["$counts.visits", 0]
                 },
                 total_events: {
-                    $ifNull: [
-                        {
-                            $arrayElemAt: [
-                                "$events.total_events",
-                                0
-                            ]
-                        },
-                        0
-                    ]
+                    $arrayElemAt: ["$counts.visits", 0]
                 }
             }
         }
