@@ -1,4 +1,5 @@
 import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectCountModel } from "@schema/ProjectsCounts";
 import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {
@@ -32,6 +33,11 @@ export default defineEventHandler(async event => {
         premium_expire_at: subscription.current_period_end * 1000
     });
 
+    await ProjectCountModel.create({
+        project_id: project._id,
+        events: 0,
+        visits: 0
+    });
 
     return project.toJSON() as TProject;
 

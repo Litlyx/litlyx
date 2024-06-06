@@ -8,7 +8,7 @@ export type TProjectCount = {
 }
 
 const ProjectCountSchema = new Schema<TProjectCount>({
-    project_id: { type: Types.ObjectId, index: 1 },
+    project_id: { type: Types.ObjectId, index: true, unique: true },
     events: { type: Number, required: true, default: 0 },
     visits: { type: Number, required: true, default: 0 },
 });
