@@ -15,7 +15,9 @@ type TProjectsGrouped = {
         created_at: Date
     },
     projects: {
+        _id: string,
         premium: boolean,
+        premium_type: number,
         created_at: Date,
         project_name: string,
         total_visits: number,
@@ -39,7 +41,9 @@ const projectsGrouped = computed(() => {
         if (target) {
 
             target.projects.push({
+                _id: project._id,
                 created_at: project.created_at,
+                premium_type: project.premium_type,
                 premium: project.premium,
                 project_name: project.project_name,
                 total_events: project.total_events,
@@ -51,8 +55,10 @@ const projectsGrouped = computed(() => {
             const item: TProjectsGrouped = {
                 user: project.user,
                 projects: [{
+                    _id: project._id,
                     created_at: project.created_at,
                     premium: project.premium,
+                    premium_type: project.premium_type,
                     project_name: project.project_name,
                     total_events: project.total_events,
                     total_visits: project.total_visits
@@ -73,7 +79,16 @@ function onHideClicked() {
     isAdminHidden.value = true;
 }
 
-const activeProject = useActiveProject();
+const details = ref<any>();
+const showDetails = ref<boolean>(false);
+async function getProjectDetails(project_id: string) {
+    details.value = await $fetch(`/api/admin/details?project_id=${project_id}`, signHeaders());
+    showDetails.value = true;
+}
+
+async function resetCount(project_id: string) {
+    await $fetch(`/api/admin/reset_count?project_id=${project_id}`, signHeaders());
+}
 
 </script>
 
@@ -81,6 +96,16 @@ const activeProject = useActiveProject();
 <template>
     <div class="bg-bg overflow-y-auto w-full h-dvh p-6 gap-6 flex flex-col">
 
+        <div v-if="showDetails"
+            class="w-full md:px-40 h-full fixed top-0 left-0 bg-black/90 backdrop-blur-[2px] z-[20] overflow-y-auto">
+            <div class="cursor-pointer bg-red-400 w-fit px-10 py-2 rounded-lg font-semibold my-3"
+                @click="showDetails = false">
+                Close
+            </div>
+            <div class="whitespace-pre-wrap poppins">
+                {{ JSON.stringify(details, null, 3) }}
+            </div>
+        </div>
 
         <div @click="onHideClicked()" v-if="!isAdminHidden"
             class="bg-menu hover:bg-menu/70 cursor-pointer flex gap-2 rounded-lg w-fit px-6 py-4 text-text-sub">
@@ -115,6 +140,18 @@ const activeProject = useActiveProject();
                             <div> Events: </div>
                             <div> {{ project.total_events }} </div>
                         </div>
+
+                        <div class="flex gap-4">
+                            <div class="bg-[#272727] hover:bg-[#313131] cursor-pointer px-8 py-2 mt-3 rounded-lg"
+                                @click="getProjectDetails(project._id)">
+                                Get details
+                            </div>
+                            <div class="bg-[#272727] hover:bg-[#313131] cursor-pointer px-8 py-2 mt-3 rounded-lg"
+                                @click="resetCount(project._id)">
+                                Reset counts
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
