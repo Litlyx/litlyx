@@ -135,3 +135,16 @@ Write to us at `helplitlyx@gmail.com` if you need to contact us.
 # License
 
 Litlyx is licensed under the [Apache 2.0](/LICENSE.md) license.
+
+# Share some ❤️ for the repo
+
+If you like what you see, join us and start collaborating! Leave a star (⭐) to stay updated on our progress and show your support.
+
+
+### Let's change analytics landscape togheter!
+
+<a href="https://github.com/Litlyx/litlyx" style="display:inline-block;background-color:#5680F8;color:white;padding:10px 20px;text-align:center;text-decoration:none;font-size:16px;border-radius:5px;" target="_blank" rel="noopener noreferrer">⭐ Leave a Star</a>
+
+We are on track! `Thanks for your support!` 
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Litlyx/Litlyx&type=Date)](https://star-history.com/#Litlyx/Litlyx&Date)
