@@ -18,7 +18,8 @@ nuxtApp.hook("page:finish", () => {
 
     <div class="layout h-full flex flex-col pt-1 px-1">
 
-        <div class="text-white items-center py-4 gap-2 flex-col lg:flex-row lg:mx-20 lg:pl-10 hidden lg:flex">
+        <div
+            class="text-white items-center py-4 gap-2 flex-col lg:flex-row lg:mx-20 lg:pl-10 hidden lg:flex z-[20] relative">
 
 
             <NuxtLink to="/" tag="div" class="flex gap-4 items-center">
@@ -47,7 +48,7 @@ nuxtApp.hook("page:finish", () => {
             </div>
         </div>
 
-        <div class="flex lg:hidden p-4">
+        <div class="flex lg:hidden p-4 z-[20] relative">
             <NuxtLink to="/" class="flex gap-4 items-center">
                 <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                     <img class="h-[1.8rem]" :src="'/logo.png'">
@@ -81,11 +82,6 @@ nuxtApp.hook("page:finish", () => {
                         </NuxtLink>
                     </div>
 
-                    <!-- <div class="flex justify-between items-center mr-2">
-                        <NuxtLink to="/" class="hover:text-text-sub/90 py-3"> Live demo </NuxtLink>
-                        <div> <i class="fas fa-chevron-right"></i> </div>
-                    </div>
-                    <div class="divider border-b border-gray-500/40"></div> -->
 
                     <div class="flex justify-between items-center mr-2">
                         <NuxtLink target="_blank" to="https://docs.litlyx.com" class="hover:text-text-sub/90 py-3">
@@ -144,11 +140,9 @@ nuxtApp.hook("page:finish", () => {
                     </div>
 
                     <div class="flex">
-                        <div class="text-[.9rem] text-text-sub/80">
-                            © 2024 Litlyx All right reserved.
-                            <span class="ml-1 font-bold">
-                                Made with ❤ in Italy
-                            </span>
+                        <div class="text-[.9rem] flex flex-col text-center text-text-sub/80">
+                            <div> © 2024 Litlyx All right reserved. </div>
+                            <div class="ml-1 font-bold"> Made with ❤ in Italy </div>
                         </div>
                     </div>
 

@@ -36,7 +36,7 @@ const mouseStyle = computed(() => {
 
     <div class="home relative h-full w-full bg-[#151517] overflow-x-hidden">
 
-        <div class="w-full h-full fixed left-0 top-0">
+        <div class="w-full h-full fixed left-0 top-0 hidden md:flex">
             <div :style="mouseStyle" class="absolute w-[30rem] h-[18rem] flex items-center justify-center z-0">
                 <div class="blob opacity-5"></div>
             </div>

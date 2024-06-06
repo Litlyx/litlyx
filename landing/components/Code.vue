@@ -27,7 +27,7 @@ onMounted(() => {
         </div>
 
         <div
-            class="bg-menu font-semibold px-8 text-[1.4rem] h-24 flex items-center inconsolata mt-12 outline outline-[2px] outline-[#83838388] rounded-lg">
+            class="bg-menu font-semibold px-8 text-[1.2rem] md:text-[1.4rem] h-24 flex items-center inconsolata mt-12 outline outline-[2px] outline-[#83838388] rounded-lg">
             {{ currentText }}
         </div>
 
