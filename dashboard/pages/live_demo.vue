@@ -59,7 +59,7 @@ const selectLabelsEvents = [
             <div
                 class="bg-bg w-full px-6 py-6 text-text/90 flex flex-collg:flex-row text-lg lg:text-2xl gap-2 lg:gap-12">
 
-                <div class="flex items-center w-full">
+                <div class="flex items-center w-full flex-col md:flex-row">
                     <div class="flex flex-col gap-2">
                         <div class="poppins font-semibold">
                             Litlyx open metrics
@@ -70,7 +70,7 @@ const selectLabelsEvents = [
                         </div>
                     </div>
                     <div class="grow"></div>
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 md:pt-0 pt-4">
                         <NuxtLink target="_blank" to="https://cal.com/litlyx/30min"
                             class="bg-white hover:bg-white/90 px-4 py-3 text-black poppins font-semibold text-[.9rem] lg:text-[1.2rem] rounded-lg">
                             Book a demo
@@ -181,7 +181,7 @@ const selectLabelsEvents = [
                 <div class="poppins text-[1.3rem]">
                     Made with ❤ in Italy
                 </div>
-                <div class="flex flex-col lg:flex-row justify-between w-full items-center gap-10 lg:gap-0">
+                <div class="flex flex-col lg:flex-row justify-between w-full items-center gap-10 lg:gap-0 lg:px-10">
 
                     <div class="text-[1.9rem] lg:text-[2.2rem] text-center lg:text-left px-2 lg:px-0">
                         <div class="poppins font-semibold text-accent">
@@ -192,7 +192,7 @@ const selectLabelsEvents = [
                         </div>
                     </div>
 
-                    <div class="flex gap-2">
+                    <div class="flex gap-2 flex-col md:flex-row">
                         <NuxtLink to="/"
                             class="bg-accent hover:bg-accent/90 px-14 py-4 poppins font-semibold text-[1.1rem] lg:text-[1.6rem] rounded-lg">
                             Get started
