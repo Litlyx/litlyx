@@ -28,14 +28,10 @@ async function handleOnSuccess(response: any) {
 
         console.log('LOGIN DONE - USER', loggedUser.value);
 
-        const { refresh } = useProjectsList();
-
         const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
 
-        await refresh();
-
         if (isFirstTime === true) {
-            router.push('/project_creation');
+            router.push('/project_creation?just_logged=true');
         } else {
             router.push('/?just_logged=true');
         }

@@ -12,10 +12,7 @@ const eventsStackedSelectIndex = ref<number>(0);
 const route = useRoute();
 
 onMounted(async () => {
-
-    if (route.query.just_logged) {
-        return location.href = '/';
-    }
+    if (route.query.just_logged) return location.href = '/';
 });
 
 

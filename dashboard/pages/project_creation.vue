@@ -13,11 +13,10 @@ const isFirstProject = computed(() => { return projects.value?.length == 0; })
 
 import { Lit } from 'litlyx';
 
+const route = useRoute();
 
 onMounted(() => {
-    if (projects.value?.length == 0) {
-        setPageLayout('none');
-    }
+    if (route.query.just_logged) return location.href = '/project_creation';
 })
 
 
@@ -42,7 +41,6 @@ async function createProject() {
         if (newActiveProjectId) {
             await setActiveProject(newActiveProjectId);
         }
-
 
         router.push('/');
 

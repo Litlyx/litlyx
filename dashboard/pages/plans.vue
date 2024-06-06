@@ -63,7 +63,8 @@ function getPremiumName(type: number) {
     <div class="w-full h-full p-8 overflow-y-auto pb-40 lg:pb-0 relative overflow-x-hidden">
 
         <Transition name="pdrawer">
-            <PricingDrawer @onCloseClick="showPricingDrawer = false" class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]"
+            <PricingDrawer @onCloseClick="showPricingDrawer = false"
+                class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]"
                 v-if=showPricingDrawer>
             </PricingDrawer>
         </Transition>
@@ -204,7 +205,6 @@ function getPremiumName(type: number) {
             </div>
 
         </CardTitled>
-
 
     </div>
 

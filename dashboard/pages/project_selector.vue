@@ -35,9 +35,23 @@ async function deleteProject(projectId: string, projectName: string) {
 
 const router = useRouter();
 
+const { setToken } = useAccessToken();
+
 async function onProjectClick(pid: string) {
     await setActiveProject(pid)
     router.push('/')
+}
+
+async function deleteAccount() {
+    const sure = confirm("Are you sure you want to delete this account ?");
+    if (!sure) return;
+    await $fetch("/api/user/delete_account", {
+        ...signHeaders(),
+        method: "DELETE"
+    })
+
+    setToken('');
+    location.href = "/login"
 }
 
 </script>
@@ -85,37 +99,24 @@ async function onProjectClick(pid: string) {
                     </div>
                 </div>
 
-                <!--                 
-                <div class="bg-blue-500/20 hover:bg-blue-500/30 p-4 w-[20rem] h-[6rem] flex items-center gap-4 rounded-xl cursor-pointer relative"
-                    v-for="e of projects" @click="setActiveProject(e._id.toString())">
-                    <div class="absolute right-2 top-2" v-if="project._id == e._id">
-                        <i class="far fa-circle-check text-green-600"></i>
-                    </div>
-                    <div class="h-full aspect-[1/1]">
-                        <div class="w-full h-full bg-blue-500 rounded-xl"></div>
-                    </div>
-                    <div>
-                        <div class="text-text text-ellipsis line-clamp-1 font-semibold manrope text-[1.1rem]">
-                            {{ e.name }}
-                        </div>
-                        <div class="text-text-sub font-normal lato text-[.9rem]">
-                            {{ e.premium ? 'PREMIUM PLAN' : 'FREE PLAN' }}
-                        </div>
-                    </div>
-                </div> -->
 
-                <!-- <NuxtLink v-if="(projects?.length || 0) < 3" to="/project_creation"
-                    class="bg-blue-500/20 hover:bg-blue-500/30 p-4 w-[20rem] h-[6rem] flex items-center gap-4 rounded-xl cursor-pointer">
-                    <div class="h-full aspect-[1/1] flex items-center justify-center">
-                        <i class="fas fa-plus text-[2rem] text-text-sub/80"></i>
-                    </div>
-                    <div>
-                        <div class="text-text font-semibold manrope text-[1.1rem]"> Create new project</div>
-                        <div class="text-text-sub font-normal lato text-[.9rem]"></div>
-                    </div>
-                </NuxtLink>  -->
             </div>
 
+        </div>
+
+        <div class="px-10">
+            <CardTitled title="Danger zone" :sub="''" class="p-4 mt-8">
+
+                <div
+                    class="outline rounded-lg w-fit px-8 py-4 flex flex-col gap-4 outline-[1px] outline-[#541c15] bg-[#1e1412]">
+                    <div class="poppins font-semibold"> Deleting this account will also remove its projects </div>
+                    <div @click="deleteAccount()"
+                        class="text-[#e95b61] poppins font-semibold cursor-pointer hover:text-black hover:bg-red-700 outline rounded-lg w-fit px-8 py-2 outline-[1px] outline-[#532b26] bg-[#291415]">
+                        Delete account
+                    </div>
+                </div>
+
+            </CardTitled>
         </div>
 
     </div>
