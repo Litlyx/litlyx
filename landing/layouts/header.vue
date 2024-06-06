@@ -22,7 +22,7 @@ nuxtApp.hook("page:finish", () => {
 
 
             <NuxtLink to="/" tag="div" class="flex gap-4 items-center">
-                <div class="bg-[#2969f1] h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
+                <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                     <img class="h-[1.8rem]" :src="'/logo.png'">
                 </div>
                 <div class="font-semibold text-[1.6rem] text-gray-300 poppins">
@@ -36,8 +36,8 @@ nuxtApp.hook("page:finish", () => {
                     Live demo </NuxtLink>
                 <NuxtLink target="_blank" to="https://docs.litlyx.com" class="hover:text-text-sub/90"> Docs </NuxtLink>
                 <NuxtLink to="/pricing" class="hover:text-text-sub/90"> Pricing </NuxtLink>
-                <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
-                    class="hover:text-text-sub/90"> GitHub </NuxtLink>
+                <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx" class="hover:text-text-sub/90"> GitHub
+                </NuxtLink>
             </div>
             <div class="px-10 pt-6 lg:pt-0">
                 <NuxtLink to="https://dashboard.litlyx.com" target="_blank"
@@ -49,7 +49,7 @@ nuxtApp.hook("page:finish", () => {
 
         <div class="flex lg:hidden p-4">
             <NuxtLink to="/" class="flex gap-4 items-center">
-                <div class="bg-[#2969f1] h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
+                <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                     <img class="h-[1.8rem]" :src="'/logo.png'">
                 </div>
                 <div class="font-bold text-[1.6rem] text-gray-300 poppins">
@@ -119,14 +119,11 @@ nuxtApp.hook("page:finish", () => {
 
             </div>
 
-            <div class="flex justify-center text-[1.3rem] items-center poppins py-16">
-                Made with ❤ in Italy
-            </div>
 
             <div
-                class="border-t-[1px] border-accent/40 flex h-fit py-12 w-full justify-between footer flex-col lg:flex-row lg:px-[8rem]">
+                class="border-t-[1px] border-accent/40 mt-20 flex h-fit py-12 w-full justify-between footer flex-col lg:flex-row lg:px-[8rem] relative z-[20]">
 
-                <div class="flex flex-row lg:flex-col gap-7 justify-center mb-10 lg:mb-0">
+                <div class="flex items-center lg:items-start flex-col gap-7 justify-center mb-10 lg:mb-0">
 
                     <div class="flex items-center gap-2">
                         <div class="poppins font-bold text-[1.6rem] text-text/90">
@@ -134,15 +131,24 @@ nuxtApp.hook("page:finish", () => {
                         </div>
                     </div>
 
-                    <div class="flex gap-6 text-[1.5rem] text-text-sub/80">
+                    <div class="flex gap-6 text-[1.6rem] text-text-sub/80">
                         <!-- <div> <i class="fab fa-x-twitter"></i> </div> -->
-                        <div> <a href="https://www.linkedin.com/company/litlyx" target="_blank"> <i class="fab fa-linkedin"></i>
-                            </a></div>
+                        <div class="flex gap-4">
+                            <a href="https://www.linkedin.com/company/litlyx" target="_blank">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="https://www.github.com/Litlyx/litlyx" target="_blank">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
                     </div>
 
-                    <div class="hidden lg:flex">
+                    <div class="flex">
                         <div class="text-[.9rem] text-text-sub/80">
                             © 2024 Litlyx All right reserved.
+                            <span class="ml-1 font-bold">
+                                Made with ❤ in Italy
+                            </span>
                         </div>
                     </div>
 

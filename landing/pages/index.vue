@@ -4,23 +4,48 @@ definePageMeta({ layout: 'header' });
 
 const autoscroll = ref<HTMLElement>();
 
+const x = ref<number>();
+const y = ref<number>();
+
+let mouseMoveHandler: any;
+
+onUnmounted(() => {
+    document.removeEventListener('mousemove', mouseMoveHandler);
+});
+
 onMounted(() => {
-    // setInterval(() => {
-    //     if (!autoscroll.value) return;
-    //     autoscroll.value.scrollLeft++;
-    // }, 10);
-})
+    mouseMoveHandler = function (e: MouseEvent) {
+        x.value = e.screenX;
+        y.value = e.screenY;
+    }
+    document.addEventListener('mousemove', mouseMoveHandler);
+});
+
+const blobSize = 40 * 16;
+
+const mouseStyle = computed(() => {
+    if (!x.value) return;
+    if (!y.value) return;
+    return `top: ${y.value - (blobSize / 2)}px; left: ${x.value - (blobSize / 2)}px; width: ${blobSize}px; height: ${blobSize}px;`
+});
 
 </script>
 
 
 <template>
 
-    <div class="home relative h-full w-full bg-[#151517]">
+    <div class="home relative h-full w-full bg-[#151517] overflow-x-hidden">
+
+        <div class="w-full h-full fixed left-0 top-0">
+            <div :style="mouseStyle" class="absolute w-[30rem] h-[18rem] flex items-center justify-center z-0">
+                <div class="blob opacity-5"></div>
+            </div>
+        </div>
+
 
         <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center z-0 overflow-hidden">
             <HomeBgGrid :size="100" :spacing="18" opacity="0.3" class="w-fit h-fit"></HomeBgGrid>
-            <HomeBgGrid :size="100" :spacing="18" opacity="0.2" class="w-fit h-fit"></HomeBgGrid>
+            <!-- <HomeBgGrid :size="100" :spacing="18" opacity="0.2" class="w-fit h-fit"></HomeBgGrid> -->
         </div>
 
 
@@ -79,7 +104,13 @@ onMounted(() => {
             </div>
         </div>
 
+
         <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
+            <Code></Code>
+        </div>
+
+
+        <div class="flex justify-center mt-40 z-[10] relative items-center flex-col gap-6">
             <div class="poppins font-bold text-text text-center text-[2.2rem] lg:text-[3rem]">
                 +15 Supported technologies
             </div>
@@ -106,72 +137,23 @@ onMounted(() => {
             </div>
         </div>
 
+        <div class="flex justify-center mt-40 z-[10] relative items-center flex-col gap-6">
+            <OpenSource></OpenSource>
+        </div>
+
+        
         <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
-            <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text">
-                That's it !
-            </div>
-        </div>
-
-        <div class="flex justify-center z-[10] relative">
-            <img :src="'carbon_1.png'">
-        </div>
-
-        <div class="flex flex-col items-center justify-center gap-2">
-            <div
-                class="poppins font-semibold text-[1.5rem] z-[10] lg:text-[1.85rem] text-text-sub text-center w-[75%] lg:w-[40%]">
-                This One-Line Code Collect 9 KPIs
-            </div>
-            <div class="poppins text-[1.35rem] text-text-sub text-center w-[90%] lg:w-[60%] z-[10]">
-                Websites visits, Custom events, Referrers, Browsers, Devices, OS, Countries, SearchTerms, User Unique
-                Session and more
-            </div>
-        </div>
-
-        <div class="flex justify-center mt-20 z-[20] relative">
-            <div class="flex gap-6 items-center flex-col lg:flex-row">
-                <NuxtLink to="https://dashboard.litlyx.com"
-                    class="hover:bg-white/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-text text-bg-light px-8 py-3 rounded-2xl text-black">
-                    <div class="poppins"> Get started for free </div>
-                    <i class="fas fa-arrow-right"></i>
-                </NuxtLink>
-
-                <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
-                    class="hover:bg-accent/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-accent text-bg-light px-16 py-3 rounded-2xl text-text">
-                    <div class="poppins"> Live demo </div>
-                </NuxtLink>
-            </div>
-        </div>
-
-        <!-- AI AGENT SECTION -->
-
-        <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
-            <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text">
-                AI Analyst Integrated
-            </div>
-        </div>
-
-        <div class="flex justify-center mx-auto w-[20rem] z-[10] relative">
-            <img class="w-full h-full" :src="'agent.png'" >
-        </div>
-
-        <div class="flex flex-col items-center justify-center gap-2">
-            <div
-                class="poppins font-semibold text-[1.5rem] lg:text-[1.85rem] z-[10] text-text-sub text-center w-[75%] lg:w-[40%]">
-                Meet Lit! The Agent that help you analyze your data!
-            </div>
-            <div class="poppins text-[1.35rem] text-text-sub text-center z-[10] w-[90%] lg:w-[60%]">
-                Take metrics-driven decision with the AI agent suggestions!
-            </div>
+            <Analyst></Analyst>
         </div>
 
 
-        <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
+
+        <div class="flex justify-center mt-40 z-[10] relative items-center flex-col gap-6">
             <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why use litlyx </div>
             <div ref="autoscroll"
                 class="flex gap-8 flex-row lg:flex-col overflow-x-auto overflow-y-hidden lg:overflow-hidden w-full hide-scroll px-6">
                 <div class="flex justify-center gap-8">
-                    <HomeCard title="1-Minute Setup"
-                        text="Effortlessly set up and start collecting KPIs in seconds."
+                    <HomeCard title="1-Minute Setup" text="Effortlessly set up and start collecting KPIs in seconds."
                         icon="far fa-clock">
                     </HomeCard>
                     <HomeCard title="Real-time Insights"
@@ -183,13 +165,11 @@ onMounted(() => {
                     </HomeCard>
                 </div>
                 <div class="flex justify-center gap-8">
-                    <HomeCard title="Start for Free"
-                        text="Try Litlyx with 3k FREE Visits & Events for your website."
+                    <HomeCard title="Start for Free" text="Try Litlyx with 3k FREE Visits & Events for your website."
                         icon="far fa-gift">
                     </HomeCard>
                     <HomeCard title="Open-Source"
-                        text="Litlyx is transparent, Self-Hostable & Open-Source. Share same ❤️."
-                        icon="far fa-globe">
+                        text="Litlyx is transparent, Self-Hostable & Open-Source. Share same ❤️." icon="far fa-globe">
                     </HomeCard>
                     <HomeCard title="Cost-Effective"
                         text="Get more for less with Litlyx, maximizing value without breaking the bank."
@@ -209,5 +189,15 @@ onMounted(() => {
 
 .footer {
     border-style: dashed !important;
+}
+
+
+.blob {
+    width: 100%;
+    height: 100%;
+    border-radius: 13rem;
+    background: linear-gradient(197.37deg, #7450DB -0.38%, rgba(138, 234, 240, 0) 101.89%), linear-gradient(115.93deg, #3E88F6 4.86%, rgba(62, 180, 246, 0.33) 38.05%, rgba(62, 235, 246, 0) 74.14%), radial-gradient(56.47% 76.87% at 6.92% 7.55%, rgba(62, 136, 246, 0.7) 0%, rgba(62, 158, 246, 0.182) 52.16%, rgba(62, 246, 246, 0) 100%), linear-gradient(306.53deg, #2EE4E3 19.83%, rgba(46, 228, 227, 0) 97.33%);
+    background-blend-mode: normal, normal, normal, normal, normal, normal;
+    filter: blur(100px);
 }
 </style>
