@@ -150,7 +150,7 @@ const mouseStyle = computed(() => {
             <Analyst></Analyst>
         </div>
 
-        <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
+        <div class="hidden md:flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
             <Testimonials>
             </Testimonials>
         </div>
