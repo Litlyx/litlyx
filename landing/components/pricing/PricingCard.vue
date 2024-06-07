@@ -12,7 +12,7 @@ const props = defineProps<{ data: PricingCardProp }>();
 
 
 function onUpgradeClick() {
-    window.open('https://dashboard.litlyx.com/book_demo')
+    window.open('https://dashboard.litlyx.com')
 }
 
 </script>
@@ -35,8 +35,8 @@ function onUpgradeClick() {
             <div @click="onUpgradeClick()" v-if="data.active" class="cursor-pointer text-[1rem] font-semibold bg-[#3a3af5] rounded-md py-2 text-center">
                 Start now for FREE
             </div>
-            <div @click="onUpgradeClick()" v-if="!data.active" class="cursor-pointer text-[1rem] font-semibold bg-[#4d4d4d] rounded-md py-2 text-center">
-                Upgrade
+            <div @click="onUpgradeClick()" v-if="!data.active" class="cursor-pointer text-[1rem] font-semibold bg-[#141414] rounded-md py-2 text-center">
+                Go to Dashboard
             </div>
         </div>
 

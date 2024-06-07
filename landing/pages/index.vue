@@ -82,17 +82,21 @@ const mouseStyle = computed(() => {
 
                 </div>
 
-                <div class="flex gap-6 items-center flex-col lg:flex-row">
+                <div class="flex gap-6 items-center flex-col lg:flex-row lg:w-[80%]">
+
                     <NuxtLink to="https://dashboard.litlyx.com"
-                        class="hover:bg-white/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-text text-bg-light px-8 py-3 rounded-2xl text-black">
-                        <div class="poppins"> Get Started for Free </div>
-                        <i class="fas fa-arrow-right"></i>
+                        class="hover:bg-white/90 font-semibold cursor-pointer flex items-center gap-4 text-xl animated-button px-8 py-3 rounded-2xl">
+                        <div class="flex gap-4 items-center">
+                            <div class="poppins"> Get Started for Free </div>
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
                     </NuxtLink>
 
                     <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
-                        class="hover:bg-accent/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-accent text-bg-light px-16 py-3 rounded-2xl text-text">
+                        class="hover:bg-[#1b1b1b] justify-center font-semiboldcursor-pointer w-full flex items-center gap-4 text-xl text-bg-light px-16 py-3 rounded-2xl bg-black border-solid border-[1px] border-white/80 text-white">
                         <div class="poppins"> Live Demo </div>
                     </NuxtLink>
+
                 </div>
 
             </div>
@@ -141,23 +145,25 @@ const mouseStyle = computed(() => {
             <OpenSource></OpenSource>
         </div>
 
-        
+
         <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
             <Analyst></Analyst>
         </div>
 
-
+        <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
+            <Testimonials>
+            </Testimonials>
+        </div>
 
         <div class="flex justify-center mt-40 z-[10] relative items-center flex-col gap-6">
-            <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why Use Litlyx </div>
+            <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why Choose Litlyx </div>
             <div ref="autoscroll"
                 class="flex gap-8 flex-row lg:flex-col overflow-x-auto overflow-y-hidden lg:overflow-hidden w-full hide-scroll px-6">
                 <div class="flex justify-center gap-8">
                     <HomeCard title="1-Minute Setup" text="Effortlessly set up and start collecting KPIs in seconds."
                         icon="far fa-clock">
                     </HomeCard>
-                    <HomeCard title="Real-Time Insights"
-                        text="Immediately visualize visits & events on your Dashboard."
+                    <HomeCard title="Real-Time Insights" text="Immediately visualize visits & events on your Dashboard."
                         icon="far fa-line-chart">
                     </HomeCard>
                     <HomeCard title="Custom Events" text="Tailor your user experience tracking with custom events."
@@ -168,21 +174,21 @@ const mouseStyle = computed(() => {
                     <HomeCard title="Start for Free" text="Try Litlyx with 3k FREE Visits & Events for your website."
                         icon="far fa-gift">
                     </HomeCard>
-                    <HomeCard title="Open-Source"
-                        text="Litlyx is transparent, Self-Hostable & Open-Source." icon="far fa-globe">
+                    <HomeCard title="Open-Source" text="Litlyx is transparent, Self-Hostable & Open-Source."
+                        icon="far fa-globe">
                     </HomeCard>
-                    <HomeCard title="Cost-Effective"
-                        text="Get more for less with Litlyx, without breaking the bank."
+                    <HomeCard title="Cost-Effective" text="Get more for less with Litlyx, without breaking the bank."
                         icon="far fa-wallet">
                     </HomeCard>
                 </div>
             </div>
         </div>
+
     </div>
 
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .footer * {
     font-family: "Poppins";
 }
@@ -199,5 +205,59 @@ const mouseStyle = computed(() => {
     background: linear-gradient(197.37deg, #7450DB -0.38%, rgba(138, 234, 240, 0) 101.89%), linear-gradient(115.93deg, #3E88F6 4.86%, rgba(62, 180, 246, 0.33) 38.05%, rgba(62, 235, 246, 0) 74.14%), radial-gradient(56.47% 76.87% at 6.92% 7.55%, rgba(62, 136, 246, 0.7) 0%, rgba(62, 158, 246, 0.182) 52.16%, rgba(62, 246, 246, 0) 100%), linear-gradient(306.53deg, #2EE4E3 19.83%, rgba(46, 228, 227, 0) 97.33%);
     background-blend-mode: normal, normal, normal, normal, normal, normal;
     filter: blur(100px);
+}
+
+
+
+.animated-button {
+    display: grid;
+    place-content: center;
+    color: white;
+    text-shadow: 0 1px 0 #000;
+    width: 100%;
+
+    --border-angle: 0turn; // For animation.
+
+    --main-bg: conic-gradient(from var(--border-angle),
+            rgb(17, 20, 51),
+            rgb(17, 18, 34) 5%,
+            rgb(17, 20, 34) 60%,
+            rgb(17, 28, 51) 95%);
+
+
+    border: solid 2px transparent;
+    --gradient-border: conic-gradient(from var(--border-angle),
+            transparent 25%,
+            rgb(0, 136, 255),
+            transparent 99%,
+            transparent);
+
+    background:
+        // padding-box clip this background in to the overall element except the border.
+        var(--main-bg) padding-box,
+        // border-box extends this background to the border space
+        var(--gradient-border) border-box,
+        // Duplicate main background to fill in behind the gradient border. You can remove this if you want the border to extend "outside" the box background.
+        var(--main-bg) border-box;
+
+    background-position: center center;
+
+    animation: bg-spin 3s linear infinite;
+
+    @keyframes bg-spin {
+        to {
+            --border-angle: 1turn;
+        }
+    }
+
+    &:hover {
+        animation-play-state: paused;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0turn;
 }
 </style>

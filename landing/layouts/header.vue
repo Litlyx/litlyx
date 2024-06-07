@@ -32,17 +32,23 @@ nuxtApp.hook("page:finish", () => {
             </NuxtLink>
 
             <div class="grow"></div>
-            <div class="flex gap-8 text-[1rem] text-white font-[500] poppins">
-                <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo" class="hover:text-text-sub/90">
-                    Live demo </NuxtLink>
-                <NuxtLink target="_blank" to="https://docs.litlyx.com" class="hover:text-text-sub/90"> Docs </NuxtLink>
-                <NuxtLink to="/pricing" class="hover:text-text-sub/90"> Pricing </NuxtLink>
-                <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx" class="hover:text-text-sub/90"> GitHub
+            <div class="flex gap-8 text-[1.1rem] text-white font-[500]">
+                <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo" class="poppins hover:text-text-sub/90">
+                    Live demo
+                </NuxtLink>
+                <NuxtLink target="_blank" to="https://docs.litlyx.com" class="poppins hover:text-text-sub/90">
+                    Docs
+                </NuxtLink>
+                <NuxtLink to="/pricing" class="poppins hover:text-text-sub/90">
+                    Pricing
+                </NuxtLink>
+                <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx" class="poppins hover:text-text-sub/90">
+                    GitHub
                 </NuxtLink>
             </div>
             <div class="px-10 pt-6 lg:pt-0">
                 <NuxtLink to="https://dashboard.litlyx.com" target="_blank"
-                    class="poppins font-[500] px-4 py-[.3rem] bg-accent rounded-xl">
+                    class="poppins font-[500] px-10 py-[.3rem] bg-accent rounded-xl animated-button">
                     Get started
                 </NuxtLink>
             </div>
@@ -72,39 +78,41 @@ nuxtApp.hook("page:finish", () => {
 
                     <div class="flex flex-col gap-4">
                         <NuxtLink to="https://dashboard.litlyx.com" target="_blank"
-                            class="poppins font-semibold px-4 py-3 text-center bg-accent rounded-lg">
-                            Get started
+                            class="animated-button poppins font-semibold px-4 py-3 text-center bg-black rounded-lg">
+                            Get started for free
                         </NuxtLink>
 
                         <NuxtLink to="https://dashboard.litlyx.com/live_demo" target="_blank"
-                            class="poppins font-semibold px-4 mb-6 py-3 text-center bg-[#e4e6f7] text-accent rounded-lg">
+                            class="poppins font-semibold px-4 mb-6 py-3 text-center bg-transparent border-solid border-[1px] border-white/80 text-white rounded-lg">
                             Live demo
                         </NuxtLink>
                     </div>
 
 
-                    <div class="flex justify-between items-center mr-2">
-                        <NuxtLink target="_blank" to="https://docs.litlyx.com" class="hover:text-text-sub/90 py-3">
+                    <NuxtLink target="_blank" to="https://docs.litlyx.com"
+                        class="flex justify-between items-center mr-2">
+                        <div class="hover:text-text-sub/90 py-3">
                             Docs
-                        </NuxtLink>
+                        </div>
                         <div> <i class="fas fa-chevron-right"></i> </div>
-                    </div>
+                    </NuxtLink>
 
                     <div class="divider border-b border-gray-500/40"></div>
 
-                    <div class="flex justify-between items-center mr-2">
-                        <NuxtLink @click="isMenuOpen = false" to="/pricing" class="hover:text-text-sub/90 py-3"> Pricing
-                        </NuxtLink>
+                    <NuxtLink @click="isMenuOpen = false" to="/pricing" class="flex justify-between items-center mr-2">
+                        <div class="hover:text-text-sub/90 py-3">
+                            Pricing
+                        </div>
                         <div> <i class="fas fa-chevron-right"></i> </div>
-                    </div>
+                    </NuxtLink>
 
                     <div class="divider border-b border-gray-500/40"></div>
 
-                    <div class="flex justify-between items-center mr-2">
-                        <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
-                            class="hover:text-text-sub/90 py-3"> GitHub </NuxtLink>
+                    <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
+                        class="flex justify-between items-center mr-2">
+                        <div class="hover:text-text-sub/90 py-3"> GitHub </div>
                         <div> <i class="fas fa-chevron-right"></i> </div>
-                    </div>
+                    </NuxtLink>
 
                     <div class="divider border-b border-gray-500/40"></div>
 
@@ -190,5 +198,62 @@ nuxtApp.hook("page:finish", () => {
 
 .layout * {
     font-family: "Inter";
+}
+
+
+
+
+
+
+.animated-button {
+    display: grid;
+    place-content: center;
+    color: white;
+    text-shadow: 0 1px 0 #000;
+    width: 100%;
+
+    --border-angle: 0turn; // For animation.
+
+    --main-bg: conic-gradient(from var(--border-angle),
+            rgb(17, 20, 51),
+            rgb(17, 18, 34) 5%,
+            rgb(17, 20, 34) 60%,
+            rgb(17, 28, 51) 95%);
+
+
+    border: solid 2px transparent;
+    --gradient-border: conic-gradient(from var(--border-angle),
+            transparent 25%,
+            rgb(0, 136, 255),
+            transparent 99%,
+            transparent);
+
+    background:
+        // padding-box clip this background in to the overall element except the border.
+        var(--main-bg) padding-box,
+        // border-box extends this background to the border space
+        var(--gradient-border) border-box,
+        // Duplicate main background to fill in behind the gradient border. You can remove this if you want the border to extend "outside" the box background.
+        var(--main-bg) border-box;
+
+    background-position: center center;
+
+    animation: bg-spin 3s linear infinite;
+
+    @keyframes bg-spin {
+        to {
+            --border-angle: 1turn;
+        }
+    }
+
+    &:hover {
+        animation-play-state: paused;
+    }
+}
+
+@property --border-angle {
+    syntax: "<angle>";
+    inherits: true;
+    initial-value: 0turn;
 }
 </style>
