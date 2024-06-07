@@ -55,7 +55,7 @@ const mouseStyle = computed(() => {
                 <div class="poppins text-center font-bold text-text lg:leading-[5rem] text-[1.7rem] lg:text-[4rem]">
                     Boost Analytics Collection
                     <br>
-                    with <span class="text-accent"> Minimal Setup </span>
+                    with <span class="text-accent font-bold poppins"> Minimal Setup </span>
                 </div>
 
                 <div class="flex gap-4 flex-col lg:flex-row lg:gap-10">
@@ -85,13 +85,13 @@ const mouseStyle = computed(() => {
                 <div class="flex gap-6 items-center flex-col lg:flex-row">
                     <NuxtLink to="https://dashboard.litlyx.com"
                         class="hover:bg-white/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-text text-bg-light px-8 py-3 rounded-2xl text-black">
-                        <div class="poppins"> Get started for free </div>
+                        <div class="poppins"> Get Started for Free </div>
                         <i class="fas fa-arrow-right"></i>
                     </NuxtLink>
 
                     <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
                         class="hover:bg-accent/90 font-semibold cursor-pointer flex items-center gap-4 text-xl bg-accent text-bg-light px-16 py-3 rounded-2xl text-text">
-                        <div class="poppins"> Live demo </div>
+                        <div class="poppins"> Live Demo </div>
                     </NuxtLink>
                 </div>
 
@@ -149,18 +149,18 @@ const mouseStyle = computed(() => {
 
 
         <div class="flex justify-center mt-40 z-[10] relative items-center flex-col gap-6">
-            <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why use litlyx </div>
+            <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why Use Litlyx </div>
             <div ref="autoscroll"
                 class="flex gap-8 flex-row lg:flex-col overflow-x-auto overflow-y-hidden lg:overflow-hidden w-full hide-scroll px-6">
                 <div class="flex justify-center gap-8">
                     <HomeCard title="1-Minute Setup" text="Effortlessly set up and start collecting KPIs in seconds."
                         icon="far fa-clock">
                     </HomeCard>
-                    <HomeCard title="Real-time Insights"
-                        text="Instantly visualize events and visits on your Project Dashboard."
+                    <HomeCard title="Real-Time Insights"
+                        text="Immediately visualize visits & events on your Dashboard."
                         icon="far fa-line-chart">
                     </HomeCard>
-                    <HomeCard title="Custom events" text="Tailor your user experience tracking with custom events."
+                    <HomeCard title="Custom Events" text="Tailor your user experience tracking with custom events."
                         icon="far fa-tools">
                     </HomeCard>
                 </div>
@@ -169,10 +169,10 @@ const mouseStyle = computed(() => {
                         icon="far fa-gift">
                     </HomeCard>
                     <HomeCard title="Open-Source"
-                        text="Litlyx is transparent, Self-Hostable & Open-Source. Share same ❤️." icon="far fa-globe">
+                        text="Litlyx is transparent, Self-Hostable & Open-Source." icon="far fa-globe">
                     </HomeCard>
                     <HomeCard title="Cost-Effective"
-                        text="Get more for less with Litlyx, maximizing value without breaking the bank."
+                        text="Get more for less with Litlyx, without breaking the bank."
                         icon="far fa-wallet">
                     </HomeCard>
                 </div>

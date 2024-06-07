@@ -140,9 +140,9 @@ nuxtApp.hook("page:finish", () => {
                     </div>
 
                     <div class="flex">
-                        <div class="text-[.9rem] flex flex-col text-center text-text-sub/80">
+                        <div class="text-[.9rem] flex flex-col lg:items-start text-center text-text-sub/80">
                             <div> © 2024 Litlyx All right reserved. </div>
-                            <div class="ml-1 font-bold"> Made with ❤ in Italy </div>
+                            <div class="ml-1 font-bold">Made with ❤ in Italy </div>
                         </div>
                     </div>
 
