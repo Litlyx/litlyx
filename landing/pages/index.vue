@@ -150,10 +150,10 @@ const mouseStyle = computed(() => {
             <Analyst></Analyst>
         </div>
 
-        <div class="hidden md:flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
+        <!-- <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
             <Testimonials>
             </Testimonials>
-        </div>
+        </div> -->
 
         <div class="flex justify-center mt-40 z-[10] relative items-center flex-col gap-6">
             <div class="poppins font-bold text-[2.2rem] lg:text-[3rem] text-text"> Why Choose Litlyx </div>
