@@ -82,7 +82,7 @@ definePageMeta({ layout: 'header' });
                 leave the EU.
             </div>
             <div class="ml-8">
-                •Payment processing: Handled by PayPal, with detailed privacy information
+                •Payment processing: Handled by Stripe, with detailed privacy information
                 available on their site.
             </div>
             <div class="ml-8">

@@ -75,7 +75,7 @@ definePageMeta({ layout: 'header' });
             <div class="ml-8"> • Upgrading from a free trial to a paid plan incurs immediate charges, and the billing
                 cycle begins on the
                 upgrade day. </div>
-            <div class="ml-8"> • Payments are processed automatically via credit card or PayPal.</div>
+            <div class="ml-8"> • Payments are processed automatically via credit card or Stripe.</div>
             <div class="ml-8"> • Pageviews purchased must be used within the term; unused pageviews are forfeited.</div>
             <div class="ml-8"> • No additional charges for occasional traffic spikes. No surprise fees. </div>
             <div class="ml-8"> • Exceeding the pageview limit of your plan for two consecutive months prompts a
