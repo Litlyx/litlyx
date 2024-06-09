@@ -30,15 +30,23 @@ router.post('/metrics/push', json(jsonOptions), async (req, res) => {
     try {
         const ip = getIPFromRequest(req);
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
-        
+
         const { type } = req.body;
 
         if (type === 0) {
-            await RedisStreamService.addToStream(streamName, { ...req.body, _type: 'visit', sessionHash, ip });
+            await RedisStreamService.addToStream(streamName, {
+                ...req.body, _type: 'visit', sessionHash, ip,
+                screenWidth: '0',
+                screenHeight: '0',
+                type: req.body.type.toString()
+            });
         } else {
-            await RedisStreamService.addToStream(streamName, { ...req.body, _type: 'event', sessionHash, ip });
+            await RedisStreamService.addToStream(streamName, {
+                ...req.body, _type: 'event', sessionHash, ip,
+                type: req.body.type.toString()
+            });
         }
-        
+
         return res.sendStatus(200);
     } catch (ex: any) {
         return res.status(500).json({ error: ex.message });
