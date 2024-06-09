@@ -25,7 +25,7 @@ import TabItem from '@theme/TabItem';
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 
 If your are using vanilla js you can find pretty intresting this approach too
@@ -40,7 +40,7 @@ If your are using vanilla js you can find pretty intresting this approach too
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 #
   </TabItem>
@@ -50,7 +50,7 @@ import { Lit } from 'litlyx';
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 #
   </TabItem>
@@ -60,7 +60,7 @@ import { Lit } from 'litlyx';
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 #
   </TabItem>
@@ -70,7 +70,7 @@ import { Lit } from 'litlyx';
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 #
   </TabItem>
@@ -81,7 +81,7 @@ import { Lit } from 'litlyx';
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 #
   </TabItem>

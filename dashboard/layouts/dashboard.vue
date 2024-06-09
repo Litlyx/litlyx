@@ -5,7 +5,7 @@ import type { Section } from '~/components/CVerticalNavigation.vue';
 const router = useRouter();
 const { setToken } = useAccessToken();
 
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 
 const sections: Section[] = [
     {

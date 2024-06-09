@@ -16,7 +16,7 @@
     "dayjs": "^1.11.11",
     "google-auth-library": "^9.9.0",
     "jsonwebtoken": "^9.0.2",
-    "litlyx": "^1.1.2",
+    "litlyx-js": "^1.0.0",
     "mongoose": "^8.3.2",
     "nodemailer": "^6.9.13",
     "nuxt": "^3.11.2",

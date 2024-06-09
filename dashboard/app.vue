@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 
 Lit.init('6643cd08a1854e3b81722ab5');
 

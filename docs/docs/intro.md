@@ -44,7 +44,7 @@ npm i litlyx
 
 ```ts
 //import
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 
 ```ts

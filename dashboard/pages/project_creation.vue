@@ -11,7 +11,7 @@ const { projects, refresh } = useProjectsList();
 
 const isFirstProject = computed(() => { return projects.value?.length == 0; })
 
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 
 const route = useRoute();
 
