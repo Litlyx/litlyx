@@ -31,7 +31,7 @@ import { Lit } from 'litlyx';
 If your are using vanilla js you can find pretty intresting this approach too
 
 ```html
-<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/npm/litlyx@1.1.0/browser/litlyx.js"></script>
+<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
 ```
 
   </TabItem>

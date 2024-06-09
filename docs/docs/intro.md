@@ -24,7 +24,7 @@ Place this line in your project (recommended below the body tag in index.html):
 
 
 ```html
-<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/npm/litlyx@1.1.0/browser/litlyx.js"></script>
+<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
 ```
 
 This script collects various data from your websites, including `page visits`, `referrers`, `page routes`, `operating systems (OS)`, `browsers`, `countries`, `unique users`, `average session times`, and `real-time user access`. All data is gathered and displayed in real-time in your Litlyx dashboard.

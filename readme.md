@@ -48,7 +48,7 @@ npm i litlyx
 Or import it directly into your JavaScript code:
 
 ```html
-<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/npm/litlyx/browser/litlyx.js"></script>
+<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
 ```
 
 Importing Litlyx with a direct script already tracks 10 KPIs such as page visits, browsers, devices, OS, real-time online users, and many more.

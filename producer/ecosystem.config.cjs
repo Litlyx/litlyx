@@ -6,11 +6,11 @@ module.exports = {
             exec_mode: 'fork',
             script: './dist/producer/src/index.js',
             env: {
-                PORT: "",
-                REDIS_URL: "",
-                REDIS_USERNAME: "",
-                REDIS_PASSWORD: "",
-                STREAM_NAME: ""
+                PORT: "8088",
+                REDIS_URL: "redis://litlyx.com",
+                REDIS_USERNAME: "default",
+                REDIS_PASSWORD: "cameriera",
+                STREAM_NAME: "lib-events"
             }
         }
     ]

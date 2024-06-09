@@ -1,0 +1,28 @@
+{
+    "compilerOptions": {
+        "module": "NodeNext",
+        "target": "ESNext",
+        "esModuleInterop": true,
+        "outDir": "dist",
+        "paths": {
+            "@schema/*": [
+                "../shared/schema/*"
+            ],
+            "@services/*": [
+                "../shared/services/*"
+            ],
+            "@data/*": [
+                "../shared/data/*"
+            ],
+            "@functions/*": [
+                "../shared/functions/*"
+            ]
+        }
+    },
+    "include": [
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

@@ -31,7 +31,7 @@ function copyScript() {
         return [
             '<script defer ',
             `data-project="${activeProject.value?._id}" `,
-            'src="https://cdn.jsdelivr.net/npm/litlyx/browser/litlyx.js"></',
+            'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
             'script>'
         ].join('')
     }
@@ -211,7 +211,7 @@ const selectLabelsEvents = [
                         <div class="text-[.9rem] text-[#acacac] lg:w-min">
                             {{ `
                             <script defer data-project="${activeProject?._id}"
-                                src="https://cdn.jsdelivr.net/npm/litlyx/browser/litlyx.js"></script>` }}
+                                src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>` }}
                         </div>
                     </div>
                 </div>

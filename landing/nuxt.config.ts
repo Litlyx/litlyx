@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     head: {
       script: [
         {
-          src: 'https://cdn.jsdelivr.net/npm/litlyx@1.0.5/browser/litlyx.js',
+          src: 'https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js',
           'data-project': '6643cd08a1854e3b81722ab5',
           defer: true
         }
