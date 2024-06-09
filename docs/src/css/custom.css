@@ -28,3 +28,18 @@
   --ifm-color-primary-lightest: #84c0ff;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+
+/* Targeting the GitHub link button */
+.navbar__link--github {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar__link--github:hover {
+  background-color: #555;
+  color: #ddd;
+}

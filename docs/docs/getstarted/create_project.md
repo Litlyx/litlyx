@@ -4,8 +4,7 @@ sidebar_position: 2
 
 # Create your first project
 
-
-After the signup, create your first project 🔥 
+You just sign in! Now it's time to create your first project 🔥 
 **just inserting a name for it** 
 
 

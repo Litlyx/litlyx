@@ -2,22 +2,24 @@
 sidebar_position: 1
 ---
 
-# Welcome to LitLyx
+# Ehy 👋 Welcome to LitLyx
 
-Discover ultra-fast, real-time analytics with LitLyx 🔥 **Read time: 1 minute ⏱️** Developers, let's dive in!
+This docs aim to be concise and simple to follow in order to setup quickly and easy Litlyx in your project. **Is just 1 minute read-time. ⏱️** Let's dive in!
 
 ## What is LitLyx?
 
-LitLyx integrates real-time analytics and custom events into any project using just a single line of code. Compatible with over 15 JavaScript/TypeScript frameworks, it is designed for developers but accessible to all, from designers to investors, to enrich projects with essential KPIs.
+LitLyx brings real-time analytics and custom events to any JS/TS project with just a single line of code. Enhance your projects with +10 KPIs effortlessly. Enjoy AI-powered dashboards for intuitive data insights, automatic reports sent straight to your email, and seamless CSV file downloads to work on your data.
+
 
 ## Integrating LitLyx
 
-Integrating LitLyx is straightforward ✨. Follow this simple code to add LitLyx to your project quickly:
+Integrating LitLyx is simple. Follow this simple code to add Litlyx to your project quickly:
 
-### Quick Integration Guide
+## Quick Integration Guide
 
+---
 
-#### Universal Insertion
+### Universal Insertion
 Place this line in your project (recommended below the body tag in index.html):
 
 
@@ -25,12 +27,16 @@ Place this line in your project (recommended below the body tag in index.html):
 <script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/npm/litlyx@1.1.0/browser/litlyx.js"></script>
 ```
 
+This script collects various data from your websites, including `page visits`, `referrers`, `page routes`, `operating systems (OS)`, `browsers`, `countries`, `unique users`, `average session times`, and `real-time user access`. All data is gathered and displayed in real-time in your Litlyx dashboard.
 
-#### Framework-Specific Steps (e.g., Nuxt.js, Next.js)
+---
 
-1. **Access the Dashboard**: Visit 👉 [dashboard](https://dashboard.litlyx.com) and sign in.
+### Framework-Specific Steps (e.g., Nuxt.js, Next.js, Vue, Angular, React)
+
+1. **Sign in**: Visit 👉 [sign in page](https://dashboard.litlyx.com).
 2. **Create Your First Project**: Simply enter a name for your project to get started.
-3. **Setup LitLyx**:  Use the following commands to install and initialize LitLyx 👇
+3. **Copy your project_id**: Copy the project id from the dashboard.
+4. **Setup LitLyx**:  Use the following commands to install and initialize LitLyx 👇
 
 ```bash
 npm i litlyx
@@ -46,15 +52,18 @@ import { Lit } from 'litlyx';
 Lit.init('project_id');
 ```
 
+---
+
+
 ## Why Choose LitLyx?
 
-With LitLyx, you gain several advantages:
+Litlyx have transparency at his core. We are `Open-Source`, so you can inspect our code, in his entirety and see what happen behind the scene.
 
-- **Efficiency**: Setup in less than a minute.
-- **Real-Time Data**: Real-time feedback on user interactions & website performance.
-- **Scalability**: Built to handle from small projects to large-scale applications.
+### Our clients love it for this stuffs👇
+
+- **Fast**: Setup in less than a minute.
+- **Real-Time**: Real-time feedback on user interactions & website performance.
+- **Lightweight**: less than 4 KB lib size.
 - **User-Friendly**: Designed with simplicity in mind.
-- **Zero-waste**: Designed to be less than 4 KB.
-- **Open-source**: LitLyx is Open-Source.
 
 ### Enhance your website or app with LitLyx today! 🔥

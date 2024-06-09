@@ -3,8 +3,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 20rem;
+  height: 40rem;
   text-align: center;
+  background: radial-gradient(rgb(1, 1, 77), black);
 }
 
 .hero img {

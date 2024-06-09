@@ -13,10 +13,11 @@ function MainHeader() {
     <header className={clsx('hero', styles.hero)}>
       <img src="/img/logo.png" alt="Logo" />
       <h1 className="hero-title">Welcome to LitLyx Docs</h1>
+      <h3 className="hero-title">One-Line Code Lightweight Analytics | AI Powered Analytics Dashboard</h3>
       <Link
         className="button button--secondary button--lg"
         to="/intro">
-        Read Docs 🔥 |  3 min read ⏱️
+        Go To Docs | 1 Min Read
       </Link>
     </header>
   );
@@ -29,7 +30,6 @@ export default function Home(): JSX.Element {
       description="LitLyx offers ultra-fast, real-time analytics and custom events with just one line of code. It seamlessly integrates with over 15 JavaScript/TypeScript frameworks. Designed for developers, it's also accessible to everyone from designers to investors, enhancing your projects with valuable insights.
       ">
       <MainHeader />
-      <HomepageFeatures />
     </Layout>
   );
 }

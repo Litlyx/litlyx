@@ -48,16 +48,17 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/botkalista/litlyx-javascript-lib',
-          label: 'GitHub',
+          href: 'https://github.com/Litlyx/litlyx',
+          label: 'Github Repo',
           position: 'right',
+          className: 'navbar__link navbar__link--github',
         },
       ],
     },
     footer: {
       style: 'light',
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} LitLyx, All rights reserved. Made with ❤️ in Italy.`,
+      copyright: `&copy ${new Date().getFullYear()} Litlyx |  All rights reserved.`,
     },
     prism: {
       theme: prismThemes.github,

@@ -3,9 +3,11 @@ sidebar_position: 3
 ---
 
 # Install & Import LitLyx
-Installing and integrating LitLyx into your code is simpler than anything else you've tried so far. 🔥 **with just 1 min setup! ⏱️**
+Installing and integrating LitLyx into your code is simpler than anything else you've tried so far.
 
 **To install LitLyx, run the following command:**
+
+You can use `yarn`, `npm`, `pnpm`, `bun`. We use npm because is the more simple.
 
 ```bash
 npm i litlyx
@@ -19,7 +21,7 @@ import TabItem from '@theme/TabItem';
 
 <Tabs>
  <TabItem value="js" label="JavaScript" default>
- **(reading javascript)**
+ (reading javascript)
 
 ```ts
 //import
@@ -34,7 +36,7 @@ If your are using vanilla js you can find pretty intresting this approach too
 
   </TabItem>
   <TabItem value="vue" label="Vue" default>
-   **(reading Vue)**
+   (reading Vue)
 
 ```ts
 //import
@@ -43,7 +45,7 @@ import { Lit } from 'litlyx';
 #
   </TabItem>
  <TabItem value="react" label="React" default>
-   **(reading React)**
+   (reading React)
 
 
 ```ts
@@ -53,7 +55,7 @@ import { Lit } from 'litlyx';
 #
   </TabItem>
   <TabItem value="next" label="Next" default>
-   **(reading Next)**
+   (reading Next)
 
 
 ```ts
@@ -63,7 +65,7 @@ import { Lit } from 'litlyx';
 #
   </TabItem>
 <TabItem value="nuxt" label="Nuxt" default>
-   **(reading Nuxt)**
+   (reading Nuxt)
 
 
 ```ts
@@ -74,7 +76,7 @@ import { Lit } from 'litlyx';
   </TabItem>
 
   <TabItem value="angular" label="Angular" default>
-   **(reading Angular)**
+   (reading Angular)
 
 
 ```ts
