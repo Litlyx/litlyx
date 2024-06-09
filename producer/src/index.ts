@@ -1,9 +1,9 @@
 import { requireEnv } from "../../shared/utilts/requireEnv";
 import { RedisStreamService } from "@services/RedisStreamService";
 
-import crypto from 'crypto';
 import express from 'express';
 import cors from 'cors';
+import { createSessionHash, getIPFromRequest } from "./utils";
 
 const app = express();
 app.use(cors());
@@ -13,19 +13,8 @@ const jsonOptions = { limit: '5mb', type: allowAnyType }
 
 const streamName = requireEnv('STREAM_NAME');
 
-
-function getIPFromRequest(req: express.Request) {
-    const ip = req.header('X-Real-IP') || req.header('X-Forwarded-For') || '0.0.0.0';
-    return ip;
-}
-
-
-export function createSessionHash(website: string, ip: string, userAgent: string) {
-    const dailySalt = new Date().toLocaleDateString('it-IT');
-    const sessionClean = dailySalt + website + ip + userAgent;
-    const sessionHash = crypto.createHash('md5').update(sessionClean).digest("hex");
-    return sessionHash;
-}
+import DeprecatedRouter from "./deprecated";
+app.use('/v1', DeprecatedRouter);
 
 app.post('/event', express.json(jsonOptions), async (req, res) => {
     try {
