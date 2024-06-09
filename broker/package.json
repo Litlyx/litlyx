@@ -25,7 +25,8 @@
     "dev": "node scripts/start_dev.js",
     "compile": "tsc",
     "build": "ts-node scripts/build.ts",
-    "create_db": "cd scripts && ts-node create_database.ts"
+    "create_db": "cd scripts && ts-node create_database.ts",
+    "build_all": "npm run compile && npm run build && npm run create_db"
   },
   "keywords": [],
   "author": "Emily",

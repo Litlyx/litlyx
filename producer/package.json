@@ -20,7 +20,7 @@
 		"dev": "node scripts/start_dev.js",
 		"compile": "tsc",
 		"build": "ts-node scripts/build.ts",
-		"build_all": "scripts/build_all.bat"
+		"build_all": "npm run compile && npm run build"
 	},
 	"keywords": [],
 	"author": "Emily",
