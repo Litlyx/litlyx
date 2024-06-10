@@ -2,6 +2,7 @@
 
 import type { ReferrersAggregated } from '~/server/api/metrics/[project_id]/data/referrers';
 import type { IconProvider } from './BarsCard.vue';
+import ReferrerBarChart from '../referrer/ReferrerBarChart.vue';
 
 const activeProject = await useActiveProject();
 const { data: events, pending, refresh } = await useFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`, signHeaders());
@@ -19,6 +20,16 @@ function elementTextTransformer(element: string) {
 
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
+
+const customDialog = useCustomDialog();
+
+function onShowDetails(referrer: string) {
+    
+    customDialog.openDialog(ReferrerBarChart, { slice: 'day', referrer });
+}
+
+
+
 
 function showMore() {
 
@@ -43,9 +54,9 @@ function showMore() {
 
 <template>
     <div class="flex flex-col gap-2">
-        <DashboardBarsCard @showMore="showMore()" :elementTextTransformer="elementTextTransformer"
-            :iconProvider="iconProvider" @dataReload="refresh" :data="events || []"
-            desc="Where users find your website." :dataIcons="true" :loading="pending" label="Top Referrers"
-            sub-label="Referrers"></DashboardBarsCard>
+        <DashboardBarsCard @showDetails="onShowDetails" @showMore="showMore()"
+            :elementTextTransformer="elementTextTransformer" :iconProvider="iconProvider" @dataReload="refresh"
+            :data="events || []" :interactive="true" desc="Where users find your website." :dataIcons="true"
+            :loading="pending" label="Top Referrers" sub-label="Referrers"></DashboardBarsCard>
     </div>
 </template>

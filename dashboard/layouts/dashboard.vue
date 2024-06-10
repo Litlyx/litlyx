@@ -61,6 +61,7 @@ const sections: Section[] = [
 
 const { showDialog, closeDialog } = useBarCardDialog();
 
+
 const { open, isOpen, close } = useMenu();
 
 </script>
@@ -99,6 +100,7 @@ const { open, isOpen, close } = useMenu();
                     v-if="showDialog">
                     <DashboardDialogBarCard @click.stop="null" class="z-[36]"></DashboardDialogBarCard>
                 </div>
+
                 <slot></slot>
             </div>
         </div>

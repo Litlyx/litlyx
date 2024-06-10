@@ -7,7 +7,7 @@ export type MetricsTimeline = {
     count: number
 }
 
-export async function getTimeline(model: Model<any>, project_id: string, slice: 'hour' | 'day' | 'month' | 'year' = 'day', duration?: number, customOptions: AggregateOptions = {}, customGroup: Object = {}, customProjection: Object = {}, customGroupId: Object = {}) {
+export async function getTimeline(model: Model<any>, project_id: string, slice: 'hour' | 'day' | 'month' | 'year' = 'day', duration?: number, customOptions: AggregateOptions = {}, customGroup: Object = {}, customProjection: Object = {}, customGroupId: Object = {}, customMatch: Object = {}) {
 
     const groupId: any = {};
     const sort: any = {};
@@ -53,13 +53,15 @@ export async function getTimeline(model: Model<any>, project_id: string, slice: 
         {
             $match: {
                 project_id: new Types.ObjectId(project_id),
-                created_at: { $gte: from, $lte: to }
+                created_at: { $gte: from, $lte: to },
+                ...customMatch
             }
         },
         { $group: { _id: { ...groupId, ...customGroupId }, count: { $sum: 1 }, ...customGroup } },
         { $sort: sort },
         { $project: { _id: { $dateFromParts: fromParts }, count: "$count", ...customProjection } }
     ]
+
 
     const result: MetricsTimeline[] = await model.aggregate(aggregation, customOptions);
 

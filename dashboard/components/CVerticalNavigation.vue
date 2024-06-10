@@ -36,7 +36,7 @@ const { isAdmin } = useUserRoles();
             :class="{ '!w-[18rem] shadow-[0_0_20px_#000000] rounded-r-2xl': isOpen }">
             <div :class="{ 'w-[18rem]': isOpen }">
                 <div class="flex gap-4 items-center py-6 px-[.9rem] pb-8">
-                    <div class="bg-accent h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
+                    <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                         <img class="h-[2.4rem]" :src="'/logo.png'">
                     </div>
                     <div v-if="isOpen" class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div>

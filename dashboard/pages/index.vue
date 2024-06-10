@@ -60,7 +60,6 @@ const selectLabelsEvents = [
     { label: 'Month', value: 'month' },
 ];
 
-
 </script>
 
 

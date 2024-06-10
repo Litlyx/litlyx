@@ -43,11 +43,11 @@ function showDetails(id: string) {
 
 <template>
 
-    <div class="flex">
+    <div class="flex h-full">
 
         <div class="text-text flex flex-col items-start gap-4 w-full relative">
 
-            <div class="w-full p-4 flex flex-col bg-menu rounded-xl gap-8 card-shadow">
+            <div class="w-full h-full p-4 flex flex-col bg-menu rounded-xl gap-8 card-shadow">
 
                 <div class="flex justify-between mb-3">
                     <div class="flex flex-col gap-1">
@@ -67,8 +67,9 @@ function showDetails(id: string) {
                     </div>
                     <div v-if="rawButton" class="hidden lg:flex">
                         <div @click="$emit('showRawData')"
-                            class="cursor-pointer hover:bg-accent/60 flex items-center justify-center poppins bg-accent rounded-lg py-2 px-8">
-                            Raw data
+                            class="cursor-pointer flex gap-1 items-center justify-center font-semibold poppins rounded-lg text-[#5680f8] hover:text-[#5681f8ce]">
+                            <div> Raw data </div>
+                            <div class="flex items-center"> <i class="fas fa-arrow-up-right"></i> </div>
                         </div>
 
                     </div>
@@ -87,7 +88,8 @@ function showDetails(id: string) {
                     </div>
 
                     <div class="flex flex-col gap-1">
-                        <div v-if="props.data.length > 0" class="flex justify-between items-center" v-for="element of props.data">
+                        <div v-if="props.data.length > 0" class="flex justify-between items-center"
+                            v-for="element of props.data">
                             <div class="w-10/12 relative" @click="showDetails(element._id)"
                                 :class="{ 'cursor-pointer line-active': interactive }">
                                 <div class="absolute rounded-sm w-full h-full bg-[#92abcf38]"
@@ -99,13 +101,13 @@ function showDetails(id: string) {
                                             :src="iconProvider(element._id)?.[1]">
                                         <i v-else :class="iconProvider(element._id)?.[1]"></i>
                                     </div>
-                                    <span
-                                        class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">
+                                    <span class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">
                                         {{ elementTextTransformer?.(element._id) || element._id }}
                                     </span>
                                 </div>
                             </div>
-                            <div class="text-text font-semibold text-[.9rem] md:text-[1rem] manrope"> {{ formatNumberK(element.count) }} </div>
+                            <div class="text-text font-semibold text-[.9rem] md:text-[1rem] manrope"> {{
+                                formatNumberK(element.count) }} </div>
                         </div>
                         <div v-if="props.data.length == 0"
                             class="flex justify-center text-text-sub font-bold text-[1.1rem]">

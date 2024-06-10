@@ -6,6 +6,7 @@ Lit.init('6643cd08a1854e3b81722ab5');
 
 const debugMode = process.dev;
 
+const { showDialog, closeDialog, dialogComponent, dialogParams } = useCustomDialog();
 </script>
 
 <template>
@@ -20,6 +21,18 @@ const debugMode = process.dev;
       <div class="poppins hidden lg:max-xl:flex"> LG - LARGE </div>
       <div class="poppins hidden xl:max-2xl:flex"> XL - EXTRA LARGE </div>
       <div class="poppins hidden 2xl:flex"> 2XL - WIDE SCREEN </div>
+    </div>
+
+    <div v-if="showDialog"
+      class="custom-dialog flex items-center justify-center lg:pl-32 lg:p-20 p-4 absolute left-0 top-0 w-full h-full z-[100] backdrop-blur-[2px] bg-black/50">
+      <div class="bg-menu w-full h-full rounded-xl relative">
+        <div class="flex justify-end absolute z-[100] right-8 top-8">
+          <i @click="closeDialog()" class="fas fa-close text-[1.6rem] hover:text-gray-500 cursor-pointer"></i>
+        </div>
+        <div class="flex items-center justify-center w-full h-full p-4">
+          <component class="w-full" v-if="dialogComponent" v-bind="dialogParams" :is="dialogComponent"></component>
+        </div>
+      </div>
     </div>
 
     <NuxtLayout>

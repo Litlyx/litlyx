@@ -49,7 +49,7 @@ async function dataReload() {
 
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-full">
         <DashboardBarsCard :hideShowMore="true" @showGeneral="setDefaultData()" @showRawData="goToView()"
             @dataReload="dataReload()" @showDetails="showDetails" :data="currentViewData || []"
             :loading="pending || isLoading" :label="isPagesView ? 'Top pages' : 'Top Websites'"

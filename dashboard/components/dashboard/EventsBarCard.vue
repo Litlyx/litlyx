@@ -34,7 +34,7 @@ function showMore() {
 
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-full">
         <DashboardBarsCard  @showMore="showMore()" @showRawData="goToView()" desc="Most frequent user events triggered in this project" @dataReload="refresh" :data="events || []" :loading="pending" label="Top Events"
             sub-label="Events" :rawButton="!isLiveDemo()"></DashboardBarsCard>
     </div>
