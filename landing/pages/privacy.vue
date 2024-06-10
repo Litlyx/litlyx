@@ -78,7 +78,7 @@ definePageMeta({ layout: 'header' });
             </div>
             <div class="ml-8">
                 • Data security: All collected data is securely encrypted and stored on renewable
-                energy-powered servers in Falkenstein, Germany, adhering to EU data privacy laws. Your data does not
+                energy-powered servers in Nuremberg, Germany, adhering to EU data privacy laws. Your data does not
                 leave the EU.
             </div>
             <div class="ml-8">
