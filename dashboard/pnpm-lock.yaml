@@ -24,8 +24,8 @@ importers:
         specifier: ^9.0.2
         version: 9.0.2
       litlyx-js:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.2
+        version: 1.0.2
       mongoose:
         specifier: ^8.3.2
         version: 8.4.0(socks@2.8.3)
@@ -2926,8 +2926,8 @@ packages:
     resolution: {integrity: sha512-7/HamOm5YD9Wb7CFgAZkKgVPA96WwhcTQoqtm2VTZGVbVVn3IWKRBTgrU7cchA3Q8k9iCsG8Osoi9GX4JsGM9g==}
     hasBin: true
 
-  litlyx-js@1.0.0:
-    resolution: {integrity: sha512-HZYFJDF1hgww5xtkTs+wf2LHMV58yQYo9CAny2RCmp8iJL/TczIuaYN30cJCoYxSBbFKBUZfbAKvErzJrbgXfw==}
+  litlyx-js@1.0.2:
+    resolution: {integrity: sha512-/JxAC+q3vwnCdp8qPs4wJ7UQZln3ZSDGQGBl65I3DOUxrKKQHUyFacRdTofatd5tvK0gDqXb8N0HAEBQ7eCMVw==}
 
   local-pkg@0.4.3:
     resolution: {integrity: sha512-SFppqq5p42fe2qcZQqqEOiVRXl+WCP1MdT6k7BDEW1j++sp5fIY+/fdRQitvKgB5BrBcmrs5m/L0v2FrU5MY1g==}
@@ -8266,7 +8266,7 @@ snapshots:
     transitivePeerDependencies:
       - uWebSockets.js
 
-  litlyx-js@1.0.0: {}
+  litlyx-js@1.0.2: {}
 
   local-pkg@0.4.3: {}
 
