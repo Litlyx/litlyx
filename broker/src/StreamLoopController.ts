@@ -77,11 +77,14 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
         browser: userAgentParsed.browser.name || 'NO_BROWSER',
         os: userAgentParsed.os.name || 'NO_OS',
         device: userAgentParsed.device.type,
+        session: sessionHash,
         continent: geoLocation[0],
         country: geoLocation[1],
     });
 
     await visit.save();
+
+
 
     await ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } }, { upsert: true });
     await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } });
@@ -118,7 +121,7 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
         metadataObject = { error: 'Error parsing metadata' }
     }
 
-    const event = new EventModel({ project_id: pid, name, metadata: metadataObject });
+    const event = new EventModel({ project_id: pid, name, metadata: metadataObject, session: sessionHash });
     await event.save();
 
     await ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true });
