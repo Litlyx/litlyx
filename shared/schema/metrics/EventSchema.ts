@@ -5,6 +5,7 @@ export type TEvent = {
     name: string,
     metadata: Record<string, string>,
     session: string,
+    flowHash: string,
     created_at: Date
 }
 
@@ -13,6 +14,7 @@ const EventSchema = new Schema<TEvent>({
     name: { type: String, required: true },
     metadata: Schema.Types.Mixed,
     session: { type: String },
+    flowHash: { type: String },
     created_at: { type: Date, default: () => Date.now() },
 })
 

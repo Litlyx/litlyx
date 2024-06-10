@@ -14,3 +14,12 @@ export function createSessionHash(website: string, ip: string, userAgent: string
     const sessionHash = crypto.createHash('md5').update(sessionClean).digest("hex");
     return sessionHash;
 }
+
+
+// Track user flow from referrers to cto
+export function createFlowSessionHash(project_id: string, ip: string, userAgent: string) {
+    const dailySalt = new Date().toLocaleDateString('it-IT');
+    const sessionClean = dailySalt + project_id + ip + userAgent;
+    const sessionHash = crypto.createHash('md5').update(sessionClean).digest("hex");
+    return sessionHash;
+}

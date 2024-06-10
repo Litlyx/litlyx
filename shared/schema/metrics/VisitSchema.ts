@@ -10,6 +10,7 @@ export type TVisit = {
     country: string,
 
     session: string,
+    flowHash: string,
     device: string,
 
     website: string,
@@ -27,9 +28,9 @@ const VisitSchema = new Schema<TVisit>({
 
     continent: { type: String },
     country: { type: String },
-    
-    session: { type: String },
 
+    session: { type: String },
+    flowHash: { type: String },
     device: { type: String },
 
     website: { type: String, required: true },

@@ -51,7 +51,7 @@ async function processStreamEvent(data: Record<string, string>) {
 
 async function process_visit(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, ip, website, page, referrer, userAgent } = data;
+    const { pid, ip, website, page, referrer, userAgent, flowHash } = data;
 
     const projectLimits = await ProjectLimitModel.findOne({ project_id: pid });
     if (!projectLimits) return;
@@ -78,6 +78,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
         os: userAgentParsed.os.name || 'NO_OS',
         device: userAgentParsed.device.type,
         session: sessionHash,
+        flowHash,
         continent: geoLocation[0],
         country: geoLocation[1],
     });
@@ -93,16 +94,18 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 
 async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, instant } = data;
+    const { pid, instant, flowHash } = data;
 
     if (instant == "true") {
         await SessionModel.updateOne({ project_id: pid, session: sessionHash, }, {
             $inc: { duration: 0 },
+            flowHash,
             updated_at: Date.now()
         }, { upsert: true });
     } else {
         await SessionModel.updateOne({ project_id: pid, session: sessionHash, }, {
             $inc: { duration: 1 },
+            flowHash,
             updated_at: Date.now()
         }, { upsert: true });
     }
@@ -112,7 +115,7 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
 async function process_event(data: Record<string, string>, sessionHash: string) {
 
-    const { name, metadata, pid } = data;
+    const { name, metadata, pid, flowHash } = data;
 
     let metadataObject;
     try {
@@ -121,7 +124,7 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
         metadataObject = { error: 'Error parsing metadata' }
     }
 
-    const event = new EventModel({ project_id: pid, name, metadata: metadataObject, session: sessionHash });
+    const event = new EventModel({ project_id: pid, name, flowHash, metadata: metadataObject, session: sessionHash });
     await event.save();
 
     await ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true });
