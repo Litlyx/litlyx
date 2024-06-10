@@ -53,7 +53,7 @@ export default defineEventHandler(async event => {
                     $arrayElemAt: ["$counts.visits", 0]
                 },
                 total_events: {
-                    $arrayElemAt: ["$counts.visits", 0]
+                    $arrayElemAt: ["$counts.events", 0]
                 }
             }
         }
