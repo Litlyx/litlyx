@@ -12,10 +12,11 @@ const columns = [
     { key: 'website', label: 'Website', sortable: true },
     { key: 'page', label: 'Page', sortable: true },
     { key: 'referrer', label: 'Referrer', sortable: true },
-    { key: 'session', label: 'Session', sortable: true },
     { key: 'browser', label: 'Browser', sortable: true },
     { key: 'os', label: 'OS', sortable: true },
-    { key: 'screen', label: 'Screen', sortable: true },
+    { key: 'continent', label: 'Continent', sortable: true },
+    { key: 'country', label: 'Country', sortable: true },
+    { key: 'device', label: 'Device', sortable: true },
     { key: 'created_at', label: 'Date', sortable: true }
 ]
 
@@ -42,6 +43,23 @@ onMounted(async () => {
 });
 
 
+const creatingCsv = ref<boolean>(false);
+
+async function downloadCSV() {
+    creatingCsv.value = true;
+    const result = await $fetch(`/api/project/generate_csv?mode=visits`, signHeaders());
+    const blob = new Blob([result], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ReportVisits.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    creatingCsv.value = false;
+}
+
 </script>
 
 
@@ -50,8 +68,15 @@ onMounted(async () => {
 
     <div class="w-full h-dvh flex flex-col">
 
+        <div v-if="creatingCsv"
+            class="fixed z-[100] flex items-center justify-center left-0 top-0 w-full h-full bg-black/60 backdrop-blur-[4px]">
+            <div class="poppins text-[2rem]">
+                Creating csv...
+            </div>
+        </div>
+
         <div class="flex justify-end px-12 py-3">
-            <div
+            <div @click="downloadCSV()"
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 Download CSV
             </div>
