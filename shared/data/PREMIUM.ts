@@ -57,9 +57,14 @@ export function getPlanFromId(id: number) {
     }
 }
 
-export function getPlanFromPrice(price: string) {
+export function getPlanFromPrice(price: string, testMode: boolean) {
     for (const tag of PREMIUM_TAGS) {
         const plan = getPlanFromTag(tag);
-        if (plan.PRICE === price) return plan;
+        if (testMode) {
+            if (plan.PRICE_TEST === price) return plan;
+        } else {
+            if (plan.PRICE === price) return plan;
+        }
+
     }
 }

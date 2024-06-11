@@ -23,7 +23,6 @@ export default defineEventHandler(async event => {
         await StripeService.deleteCustomer(project.customer_id);
         const projectDeletation = await ProjectModel.deleteOne({ _id: project_id });
         const userSettingsDeletation = await UserSettingsModel.deleteOne({ project_id });
-
         const countDeletation = await ProjectCountModel.deleteMany({ project_id });
         const limitdeletation = await ProjectLimitModel.deleteMany({ project_id });
         const sessionsDeletation = await SessionModel.deleteMany({ project_id });

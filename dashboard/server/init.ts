@@ -17,8 +17,7 @@ export default async () => {
         config.EMAIL_PASS,
     );
 
-    StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET);
-
+    StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, false);
 
     if (!connection || connection.connection.readyState == mongoose.ConnectionStates.disconnected) {
         console.log('[DATABASE] Connecting');

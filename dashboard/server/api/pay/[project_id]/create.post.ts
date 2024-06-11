@@ -24,7 +24,7 @@ export default defineEventHandler(async event => {
     }
 
     const checkout = await StripeService.cretePayment(
-        PLAN.PRICE,
+        StripeService.testMode ? PLAN.PRICE_TEST : PLAN.PRICE,
         'https://dashboard.litlyx.com/payment_ok',
         project_id,
         project.customer_id

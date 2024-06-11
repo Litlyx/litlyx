@@ -5,11 +5,13 @@ class StripeService {
     private stripe?: Stripe;
     private privateKey?: string;
     private webhookSecret?: string;
+    public testMode?: boolean;
 
-    init(privateKey: string, webhookSecret: string) {
+    init(privateKey: string, webhookSecret: string, testMode: boolean = false) {
         this.privateKey = privateKey;
         this.webhookSecret = webhookSecret;
         this.stripe = new Stripe(this.privateKey);
+        this.testMode = testMode;
     }
 
     parseWebhook(body: any, sig: string) {
@@ -87,7 +89,7 @@ class StripeService {
         const subscription = await this.stripe.subscriptions.create({
             customer: customer_id,
             items: [
-                { price: FREE_PLAN.PRICE, quantity: 1 }
+                { price: this.testMode ? FREE_PLAN.PRICE_TEST : FREE_PLAN.PRICE, quantity: 1 }
             ]
         });
 

@@ -23,7 +23,9 @@ export default defineEventHandler(async event => {
 
     if (project.premium === true) return setResponseStatus(event, 400, 'Cannot delete premium project');
 
-    await StripeService.deleteCustomer(project.customer_id);
+    if (project.customer_id) {
+        await StripeService.deleteCustomer(project.customer_id);
+    }
 
     const projectDeletation = await ProjectModel.deleteOne({ _id: project_id });
     const countDeletation = await ProjectCountModel.deleteMany({ project_id });
