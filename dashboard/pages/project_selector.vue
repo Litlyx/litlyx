@@ -5,6 +5,8 @@ definePageMeta({ layout: 'dashboard' });
 const { projects, refresh } = useProjectsList();
 const { pid } = useActiveProjectId();
 
+const { data: maxProjects } = useFetch("/api/user/max_projects", signHeaders());
+
 async function deleteProject(projectId: string, projectName: string) {
     const sure = confirm(`Are you sure to delete the project ${projectName} ?`);
     if (!sure) return;
@@ -67,10 +69,10 @@ async function deleteAccount() {
                 <div class="flex gap-4 items-center">
                     <div class="text-text font-bold text-[1.5rem]"> Projects </div>
                     <div class="text-text-sub/90 text-[1rem] font-semibold lato">
-                        {{ projects?.length ?? '-' }} / 3
+                        {{ projects?.length ?? '-' }} / {{maxProjects || 3}}
                     </div>
                 </div>
-                <NuxtLink v-if="(projects?.length || 0) < 3" to="/project_creation"
+                <NuxtLink v-if="(projects?.length || 0) < (maxProjects || 3)" to="/project_creation"
                     class="bg-blue-500/20 hover:bg-blue-500/30 px-4 py-1 flex items-center gap-4 rounded-xl cursor-pointer">
                     <div class="h-full aspect-[1/1] flex items-center justify-center">
                         <i class="fas fa-plus text-[1rem] text-text-sub/80"></i>
