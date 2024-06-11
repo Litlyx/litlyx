@@ -109,6 +109,13 @@ const mouseStyle = computed(() => {
         </div>
 
 
+        <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-2">
+            <div class="poppins text-[1.2rem]"> Trusted by</div>
+            <NuxtLink to="https://nuvol.ai/" target="_blank" class="max-w-[18rem] bg-text-sub p-4 rounded-lg">
+                <img class="w-full h-full" :src="'nuvolai.png'">
+            </NuxtLink>
+        </div>
+
         <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-6">
             <Code></Code>
         </div>
