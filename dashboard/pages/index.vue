@@ -11,8 +11,19 @@ const eventsStackedSelectIndex = ref<number>(0);
 
 const route = useRoute();
 
+
+const limitsInfo = ref<{
+    limited: boolean,
+    maxLimit: number,
+    limit: number,
+    total: number,
+    percent: number
+}>();
+
+
 onMounted(async () => {
     if (route.query.just_logged) return location.href = '/';
+    limitsInfo.value = await $fetch("/api/project/limits_info", signHeaders());
 });
 
 
@@ -68,6 +79,16 @@ const selectLabelsEvents = [
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
         <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction">
+
+            <div class="w-full px-4 py-2">
+                <div v-if="limitsInfo && limitsInfo.limited"
+                    class="bg-orange-600 justify-center flex gap-2 py-2 px-4 font-semibold text-[1.2rem] rounded-lg">
+                    <div class="poppins text-text"> Limit reached </div>
+                    <NuxtLink to="/plans" class="poppins text-[#393972] underline cursor-pointer">
+                        Upgrade project
+                    </NuxtLink>
+                </div>
+            </div>
 
             <DashboardTopSection></DashboardTopSection>
             <DashboardTopCards></DashboardTopCards>

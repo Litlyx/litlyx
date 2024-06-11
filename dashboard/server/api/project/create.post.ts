@@ -1,5 +1,6 @@
 import { ProjectModel, TProject } from "@schema/ProjectSchema";
 import { ProjectCountModel } from "@schema/ProjectsCounts";
+import { UserSettingsModel } from "@schema/UserSettings";
 import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {
@@ -14,8 +15,12 @@ export default defineEventHandler(async event => {
     const userData = getRequestUser(event);
     if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
 
+    const userSettings = await UserSettingsModel.findOne({ user_id: userData.id }, { max_projects: true });
+
+    const maxProjects = userSettings?.max_projects || 3;
+
     const existingUserProjects = await ProjectModel.countDocuments({ owner: userData.id });
-    if (existingUserProjects == 3) return setResponseStatus(event, 400, 'Already have 3 projects');
+    if (existingUserProjects >= maxProjects) return setResponseStatus(event, 400, 'Already have max number of projects');
 
     const customer = await StripeService.createCustomer(userData.user.email);
     if (!customer) return setResponseStatus(event, 400, 'Error creating customer');
