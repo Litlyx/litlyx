@@ -58,7 +58,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 
     const TOTAL_COUNT = projectLimits.events + projectLimits.visits;
     const COUNT_LIMIT = projectLimits.limit;
-    if ((TOTAL_COUNT * EVENT_LOG_LIMIT_PERCENT) > COUNT_LIMIT) return;
+    if ((TOTAL_COUNT) > COUNT_LIMIT * EVENT_LOG_LIMIT_PERCENT) return;
     await checkLimitsForEmail(projectLimits);
 
     let referrerParsed;
