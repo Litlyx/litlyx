@@ -14,18 +14,9 @@ export default defineEventHandler(async event => {
     const project = await getUserProjectFromId(project_id, user);
     if (!project) return;
 
-    const names: string[] = await Redis.useCache({
-        key: `counts:${project_id}:event_names`,
-        exp: EVENT_NAMES_EXPIRE_TIME
-    }, async () => {
-
-        const namesAggregation = await EventModel.aggregate([
-            { $match: { project_id: project._id } },
-            { $group: { _id: "$name" } }
-        ]);
-
+    const names: string[] = await Redis.useCache({ key: `event_names:${project_id}`, exp: EVENT_NAMES_EXPIRE_TIME }, async () => {
+        const namesAggregation = await EventModel.aggregate([{ $match: { project_id: project._id } }, { $group: { _id: "$name" } }]);
         return namesAggregation.map(e => e._id);
-
     });
 
     return names;

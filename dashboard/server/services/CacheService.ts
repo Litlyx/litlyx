@@ -12,6 +12,8 @@ export const COUNTS_SESSIONS_EXPIRE_TIME = 60 * 3;
 
 export const EVENT_NAMES_EXPIRE_TIME = 60;
 
+export const EVENT_METADATA_FIELDS_EXPIRE_TIME = 120;
+
 
 export class Redis {
 

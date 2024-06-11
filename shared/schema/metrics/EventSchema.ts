@@ -11,7 +11,7 @@ export type TEvent = {
 
 const EventSchema = new Schema<TEvent>({
     project_id: { type: Types.ObjectId, index: 1 },
-    name: { type: String, required: true },
+    name: { type: String, required: true, index: 1 },
     metadata: Schema.Types.Mixed,
     session: { type: String },
     flowHash: { type: String },
