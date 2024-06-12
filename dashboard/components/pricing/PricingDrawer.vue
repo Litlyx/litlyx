@@ -4,6 +4,8 @@ import type { PricingCardProp } from './PricingCard.vue';
 
 const activeProject = useActiveProject();
 
+const props = defineProps<{ currentSub: number }>();
+
 
 const starterTierCardData = ref<PricingCardProp>({
     title: 'STARTER',
@@ -23,6 +25,7 @@ const starterTierCardData = ref<PricingCardProp>({
            dedicated server we suggest to upgrade the
            plan to an higher one!`,
     active: activeProject.value?.premium === false,
+    isDowngrade: props.currentSub > 0,
     planId: 0
 });
 
@@ -41,6 +44,7 @@ const accelerationTierCardData = ref<PricingCardProp>({
     ],
     desc: `Your project is entering a growth phase. We simplify data analysis for you. For more support, try our Expansion plan—it's worth it!`,
     active: activeProject.value?.premium_type === 1,
+    isDowngrade: props.currentSub > 1,
     planId: 1
 });
 
@@ -59,6 +63,7 @@ const expansionTierCardData = ref<PricingCardProp>({
     ],
     desc: `We will support you with everything we can offer and give you the full power of our service. If you need more space and are growing, contact us for a custom offer!`,
     active: activeProject.value?.premium_type === 2,
+    isDowngrade: props.currentSub > 2,
     planId: 2
 });
 

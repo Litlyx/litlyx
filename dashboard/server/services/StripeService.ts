@@ -54,6 +54,12 @@ class StripeService {
         return subscription;
     }
 
+    async getAllSubscriptions(customer_id: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const subscriptions = await this.stripe.subscriptions.list({customer: customer_id});
+        return subscriptions;
+    }
+
     async getInvoices(customer_id: string) {
         const invoices = await this.stripe?.invoices.list({ customer: customer_id });
         return invoices;

@@ -63,7 +63,7 @@ function getPremiumName(type: number) {
     <div class="w-full h-full p-8 overflow-y-auto pb-40 lg:pb-0 relative overflow-x-hidden">
 
         <Transition name="pdrawer">
-            <PricingDrawer @onCloseClick="showPricingDrawer = false"
+            <PricingDrawer @onCloseClick="showPricingDrawer = false" :currentSub="planData?.premium_type || 0"
                 class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]"
                 v-if=showPricingDrawer>
             </PricingDrawer>
@@ -131,7 +131,7 @@ function getPremiumName(type: number) {
                         <div> {{ prettyExpireDate }}</div>
                     </div>
                     <div @click="onPlanUpgradeClick()"
-                        class="cursor-pointer flex items-center gap-2 text-[.9rem] text-accent drop-shadow-[0_0_8px_#000000]">
+                        class="cursor-pointer flex items-center gap-2 text-[.9rem] text-white font-semibold bg-accent px-4 py-1 rounded-lg drop-shadow-[0_0_8px_#000000]">
                         <div class="poppins"> Upgrade plan </div>
                         <i class="fas fa-arrow-up-right"></i>
                     </div>
@@ -162,15 +162,6 @@ function getPremiumName(type: number) {
                         <div class="flex justify-center">
                             {{ formatNumberK(planData.count) }} / {{ formatNumberK(planData.limit) }}
                         </div>
-                    </div>
-                </div>
-                <div class="my-4 w-full bg-gray-400/30 h-[1px]">
-                </div>
-                <div class="flex justify-end px-8 flex-col sm:flex-row">
-                    <div @click="onPlanUpgradeClick()"
-                        class="cursor-pointer flex items-center gap-2 text-[.9rem] text-accent drop-shadow-[0_0_8px_#000000]">
-                        <div class="poppins"> Upgrade plan </div>
-                        <i class="fas fa-arrow-up-right"></i>
                     </div>
                 </div>
             </Card>

@@ -6,7 +6,8 @@ export type PricingCardProp = {
     features: string[],
     desc: string,
     active: boolean,
-    planId: number
+    planId: number,
+    isDowngrade: boolean
 }
 
 const props = defineProps<{ data: PricingCardProp }>();
@@ -43,9 +44,13 @@ async function onUpgradeClick() {
             <div v-if="data.active" class="text-[1rem] bg-[#1f1f22] rounded-md py-2 text-center">
                 Current active plan
             </div>
-            <div @click="onUpgradeClick()" v-if="!data.active"
+            <div @click="onUpgradeClick()" v-if="!data.active && !data.isDowngrade"
                 class="cursor-pointer text-[1rem] font-semibold bg-[#3a3af5] rounded-md py-2 text-center">
                 Upgrade
+            </div>
+            <div @click="onUpgradeClick()" v-if="!data.active && data.isDowngrade"
+                class="cursor-pointer text-[1rem] font-semibold bg-[#1f1f22] text-red-400 rounded-md py-2 text-center">
+                Downgrade
             </div>
         </div>
 
