@@ -12,7 +12,7 @@ onMounted(async () => {
 });
 
 function test() {
-    const res = $fetch(`/api/metrics/${activeProject.value?._id.toString()}/events/flow_from_name?name=docs_clicked`)
+    const res = $fetch(`/api/metrics/${activeProject.value?._id.toString()}/events/flow_from_name?name=ToggleFavorite`, signHeaders());
     console.log(res);
 }
 

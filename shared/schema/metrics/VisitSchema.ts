@@ -21,7 +21,7 @@ export type TVisit = {
 }
 
 const VisitSchema = new Schema<TVisit>({
-    project_id: { type: Schema.Types.ObjectId, index: 1 },
+    project_id: { type: Schema.Types.ObjectId, index: true },
 
     browser: { type: String, required: true },
     os: { type: String, required: true },

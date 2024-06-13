@@ -19,7 +19,7 @@ const sections: Section[] = [
         title: 'Project',
         entries: [
             { label: 'Dashboard', to: '/', icon: 'far fa-home' },
-            // { label: 'Events', to: '/events', icon: 'far fa-bolt' },
+            { label: 'Events', to: '/events', icon: 'far fa-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'far fa-microchip-ai' },
             { label: 'Report', to: '/report', icon: 'far fa-notes' },
             // { label: 'AI', to: '/dashboard/settings', icon: 'far fa-robot brightness-[.4]' },

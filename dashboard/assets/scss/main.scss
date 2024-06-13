@@ -59,6 +59,15 @@
 }
 
 
+.hide-scrollbars {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+
 
 .card-shadow {
   box-shadow: 0 0 18px #00000033;

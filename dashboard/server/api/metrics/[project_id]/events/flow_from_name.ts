@@ -2,8 +2,7 @@
 
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { EventModel } from "@schema/metrics/EventSchema";
-import { EVENT_METADATA_FIELDS_EXPIRE_TIME, Redis } from "~/server/services/CacheService";
-import { PipelineStage } from "mongoose";
+import { VisitModel } from "@schema/metrics/VisitSchema";
 
 
 export default defineEventHandler(async event => {
@@ -19,27 +18,59 @@ export default defineEventHandler(async event => {
     const { name: eventName } = getQuery(event);
     if (!eventName) return [];
 
-    const aggregation: PipelineStage[] = [
-        { $match: { project_id: project._id, name: eventName } },
-        { $group: { _id: "$flowHash", count: { $sum: 1 } } },
-        { $match: { _id: { $ne: null } } },
-        {
-            $lookup: {
-                from: "visits",
-                let: { flowHash: "$_id" },
-                pipeline: [
-                    { $match: { $expr: { $eq: ["$flowHash", "$$flowHash"] } } },
-                    { $group: { _id: "referrers", list: { $addToSet: "$referrer" } } },
-                    { $limit: 1 }
-                ],
-                as: "referrers"
-            }
+
+
+    const allEvents = await EventModel.find({ project_id: project_id, name: eventName }, { flowHash: 1 });
+    const allFlowHashes = new Map<string, number>();
+
+    allEvents.forEach(e => {
+        if (!e.flowHash) return;
+        if (e.flowHash.length == 0) return;
+        if (allFlowHashes.has(e.flowHash)) {
+            const count = allFlowHashes.get(e.flowHash) as number;
+            allFlowHashes.set(e.flowHash, count + 1);
+        } else {
+            allFlowHashes.set(e.flowHash, 1);
         }
-    ];
+    });
 
-    const flow: { _id: string, count: number, referrers: [{ list: string[] }] }[] = await EventModel.aggregate(aggregation);
+    const flowHashIds = Array.from(allFlowHashes.keys());
 
-    return flow;
+    const allReferrers: { referrer: string, flowHash: string }[] = [];
 
+    const promises: any[] = [];
+    while (flowHashIds.length > 0) {
+        promises.push(new Promise<void>(async resolve => {
+            const flowHashIdsChunk = flowHashIds.splice(0, 10);
+            const visits = await VisitModel.find({ project_id, flowHash: { $in: flowHashIdsChunk } }, { referrer: 1, flowHash: 1 });
+            allReferrers.push(...visits.map(e => { return { referrer: e.referrer, flowHash: e.flowHash } }));
+            resolve();
+        }));
+    }
+
+    await Promise.all(promises);
+
+    const groupedFlows: Record<string, { referrers: string[] }> = {};
+
+    flowHashIds.forEach(flowHash => {
+        if (!groupedFlows[flowHash]) groupedFlows[flowHash] = { referrers: [] };
+        const target = groupedFlows[flowHash];
+        if (!target) return;
+        const referrers = allReferrers.filter(e => e.flowHash === flowHash).map(e => e.referrer);
+        for (const referrer of referrers) {
+            if (target.referrers.includes(referrer)) continue;
+            target.referrers.push(referrer);
+        }
+    });
+
+    const grouped: Record<string, number> = {};
+
+    for (const referrerPlusHash of allReferrers) {
+        const referrer = referrerPlusHash.referrer;
+        if (!grouped[referrer]) grouped[referrer] = 0
+        grouped[referrer]++;
+    }
+
+    return grouped;
 
 });

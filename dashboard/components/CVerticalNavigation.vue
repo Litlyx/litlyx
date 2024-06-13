@@ -27,6 +27,23 @@ const props = defineProps<Props>();
 
 const { isAdmin } = useUserRoles();
 
+
+let resizeHandler: any;
+
+onMounted(() => {
+    resizeHandler = () => {
+        isMenuTooLarge.value = innerHeight < 720;
+    }
+    addEventListener('resize', resizeHandler);
+})
+
+onUnmounted(() => {
+    if (resizeHandler) removeEventListener('resize', resizeHandler);
+})
+
+const isMenuTooLarge = ref<boolean>(false);
+
+
 </script>
 
 <template>
@@ -35,16 +52,16 @@ const { isAdmin } = useUserRoles();
             class="CVerticalNavigation absolute z-[80] bg-menu h-full overflow-hidden w-0 md:w-[5rem]"
             :class="{ '!w-[18rem] shadow-[0_0_20px_#000000] rounded-r-2xl': isOpen }">
             <div :class="{ 'w-[18rem]': isOpen }">
-                <div class="flex gap-4 items-center py-6 px-[.9rem] pb-8">
+                <div class="flex gap-4 items-center py-6 px-[.9rem] pb-8" :class="{ '!pb-4': isMenuTooLarge }">
                     <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                         <img class="h-[2.4rem]" :src="'/logo.png'">
                     </div>
                     <div v-if="isOpen" class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div>
                 </div>
 
-                <div class="pb-8" v-for="section of sections">
+                <div class="pb-8" :class="{ '!pb-3': isMenuTooLarge }" v-for="section of sections">
 
-                    <div class="flex flex-col px-3 gap-2">
+                    <div class="flex flex-col px-3 gap-2" :class="{ '!gap-[.3rem]': isMenuTooLarge }">
 
                         <template v-for="entry of section.entries">
 
