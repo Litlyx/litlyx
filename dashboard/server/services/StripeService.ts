@@ -27,6 +27,7 @@ class StripeService {
         if (!this.stripe) throw Error('Stripe not initialized');
 
         const checkout = await this.stripe.checkout.sessions.create({
+            allow_promotion_codes: true,
             payment_method_types: ['card'],
             line_items: [
                 { price, quantity: 1 }
