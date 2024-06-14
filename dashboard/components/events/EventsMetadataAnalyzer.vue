@@ -2,7 +2,6 @@
 
 const activeProject = useActiveProject();
 
-
 const eventNames = ref<string[]>([]);
 const selectedEventName = ref<string>();
 const metadataFields = ref<string[]>([]);

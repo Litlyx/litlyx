@@ -13,11 +13,10 @@ const eventsStackedSelectIndex = ref<number>(0);
 
 
 <template>
-    <div class="w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
+    <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
 
 
-
-        <div class="flex p-6 gap-6 flex-col xl:flex-row">
+        <div class="flex gap-6 flex-col xl:flex-row">
             <CardTitled class="p-4 flex-[4]" title="Events" sub="Events stacked bar chart.">
                 <template #header>
                     <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
@@ -45,7 +44,11 @@ const eventsStackedSelectIndex = ref<number>(0);
             </div>
         </div>
 
-        <div class="flex p-6">
+        <div class="flex">
+            <EventsUserFlow></EventsUserFlow>
+        </div>
+
+        <div class="flex">
             <EventsMetadataAnalyzer></EventsMetadataAnalyzer>
         </div>
 

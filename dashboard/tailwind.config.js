@@ -3,6 +3,9 @@ module.exports = {
     content: [],
     theme: {
         extend: {
+            screens: {
+                "m-cards-wrap": '1830px'
+            },
             fontSize: {
 
             },

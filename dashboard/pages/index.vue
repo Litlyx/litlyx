@@ -23,7 +23,7 @@ const limitsInfo = ref<{
 
 onMounted(async () => {
     if (route.query.just_logged) return location.href = '/';
-    limitsInfo.value = await $fetch("/api/project/limits_info", signHeaders());
+    limitsInfo.value = await $fetch<any>("/api/project/limits_info", signHeaders());
 });
 
 
