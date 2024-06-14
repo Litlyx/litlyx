@@ -10,7 +10,7 @@ Installing and integrating LitLyx into your code is simpler than anything else y
 You can use `yarn`, `npm`, `pnpm`, `bun`. We use npm because is the more simple.
 
 ```bash
-npm i litlyx
+npm i litlyx-js
 ```
 
 ## Choose your Framework

@@ -39,7 +39,7 @@ This script collects various data from your websites, including `page visits`, `
 4. **Setup LitLyx**:  Use the following commands to install and initialize LitLyx 👇
 
 ```bash
-npm i litlyx
+npm i litlyx-js
 ```
 
 ```ts
