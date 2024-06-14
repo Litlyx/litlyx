@@ -18,14 +18,26 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
-    const { mode } = getQuery(event);
+    const { mode, slice } = getQuery(event);
+
+    let timeSub = 1000 * 60 * 60 * 24;
+
+    if (slice == '0') {
+        timeSub = 1000 * 60 * 60 * 24
+    } else if (slice == '1') {
+        timeSub = 1000 * 60 * 60 * 24 * 7
+    } else if (slice == '2') {
+        timeSub = 1000 * 60 * 60 * 24 * 7 * 30
+    } else if (slice == '3') {
+        timeSub = 1000 * 60 * 60 * 24 * 7 * 30 * 12 * 2
+    }
 
     if (mode === 'visits') {
 
         const visistsReportData = await VisitModel.find({
             project_id,
             created_at: {
-                $gt: Date.now() - 1000 * 60 * 60 * 24 * 7
+                $gt: Date.now() - timeSub
             }
         });
 
