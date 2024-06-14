@@ -19,7 +19,7 @@ const sections: Section[] = [
         title: 'Project',
         entries: [
             { label: 'Dashboard', to: '/', icon: 'far fa-home' },
-            // { label: 'Events', to: '/events', icon: 'far fa-bolt' },
+            { label: 'Events', to: '/events', icon: 'far fa-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'far fa-microchip-ai' },
             { label: 'Report', to: '/report', icon: 'far fa-notes' },
             // { label: 'AI', to: '/dashboard/settings', icon: 'far fa-robot brightness-[.4]' },
@@ -61,8 +61,7 @@ const sections: Section[] = [
 
 const { showDialog, closeDialog } = useBarCardDialog();
 
-
-const { open, isOpen, close } = useMenu();
+const { isOpen, close, open } = useMenu();
 
 </script>
 
@@ -73,7 +72,7 @@ const { open, isOpen, close } = useMenu();
 
 
         <div
-            class="px-6 py-3 flex items-center justify-center shadow-[0_0_10px_#000000CC] z-[20] rounded-xl mx-2 my-2 md:hidden">
+            class="px-6 py-3 flex items-center justify-center shadow-[0_0_10px_#000000CC] z-[20] rounded-xl mx-2 my-2 lg:hidden">
             <i @click="open()" class="fas fa-bars text-[1.2rem] absolute left-6"></i>
             <div class="nunito font-semibold text-[1.2rem]">
                 Litlyx
@@ -82,12 +81,15 @@ const { open, isOpen, close } = useMenu();
 
         <div class="flex h-full">
 
+
             <div v-if="isOpen" @click="close()"
                 class="lg:hidden barrier bg-black/40 backdrop-blur-[2px] w-full h-full absolute left-0 top-0 z-[40]">
             </div>
 
+
             <CVerticalNavigation :sections="sections">
             </CVerticalNavigation>
+
 
             <div class="overflow-hidden w-full bg-bg relative h-full">
 

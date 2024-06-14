@@ -15,7 +15,8 @@ type Props = {
     interactive?: boolean,
     isDetailView?: boolean,
     rawButton?: boolean,
-    hideShowMore?: boolean
+    hideShowMore?: boolean,
+    customIconStyle?: string
 }
 const props = defineProps<Props>();
 const emits = defineEmits<{
@@ -97,8 +98,12 @@ function showDetails(id: string) {
                                 <div class="flex px-2 py-1 relative items-center gap-4">
                                     <div v-if="iconProvider && iconProvider(element._id) != undefined"
                                         class="flex items-center h-[1.3rem]">
-                                        <img v-if="iconProvider(element._id)?.[0] == 'img'" class="h-full"
-                                            :src="iconProvider(element._id)?.[1]">
+
+                                        <img v-if="iconProvider(element._id)?.[0] == 'img'"
+                                         class="h-full"
+                                         :style="customIconStyle"
+                                         :src="iconProvider(element._id)?.[1]">
+
                                         <i v-else :class="iconProvider(element._id)?.[1]"></i>
                                     </div>
                                     <span class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">

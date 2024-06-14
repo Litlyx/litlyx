@@ -20,57 +20,57 @@ type Props = {
     sections: Section[]
 }
 
-const { isOpen, open, close, toggle } = useMenu()
-
 const route = useRoute();
 const props = defineProps<Props>();
 
 const { isAdmin } = useUserRoles();
 
+const { isOpen, close } = useMenu();
+
 </script>
 
 <template>
-    <div class="w-0 md:w-[5rem] absolute top-0 md:relative h-full">
-        <div @mouseover="open()" @mouseleave="close()"
-            class="CVerticalNavigation absolute z-[80] bg-menu h-full overflow-hidden w-0 md:w-[5rem]"
-            :class="{ '!w-[18rem] shadow-[0_0_20px_#000000] rounded-r-2xl': isOpen }">
-            <div :class="{ 'w-[18rem]': isOpen }">
-                <div class="flex gap-4 items-center py-6 px-[.9rem] pb-8">
-                    <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
-                        <img class="h-[2.4rem]" :src="'/logo.png'">
-                    </div>
-                    <div v-if="isOpen" class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div>
+    <div class="CVerticalNavigation h-full w-[20rem] bg-[#111111] flex shadow-[1px_0_10px_#000000] rounded-r-lg" :class="{
+        'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
+        'hidden lg:flex': !isOpen
+    }">
+        <div class="p-4 gap-6 flex flex-col w-full">
+
+            <div class="flex items-center gap-2 ml-2">
+                <div class="bg-black h-[2.4rem] aspect-[1/1] flex items-center justify-center rounded-lg">
+                    <img class="h-[2rem]" :src="'/logo.png'">
+                </div>
+                <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div>
+                
+                <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
+                    <i @click="close()" class="fas fa-close"></i>
                 </div>
 
-                <div class="pb-8" v-for="section of sections">
+            </div>
 
-                    <div class="flex flex-col px-3 gap-2">
+            <div class="flex flex-col gap-4">
 
-                        <template v-for="entry of section.entries">
+                <div v-for="section of sections" class="flex flex-col gap-1">
 
-                            <NuxtLink @click="entry.action?.()" :target="entry.external ? '_blank' : ''"
-                                v-if="entry.to && (!entry.adminOnly || (isAdmin && !isAdminHidden))" tag="div"
-                                :to="entry.to || '/'"
-                                class="text-[#a3a9b6] flex w-full items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#363638] hover:text-[#ffffff]"
-                                :class="{
-                                    'brightness-[.4] pointer-events-none': entry.disabled,
-                                    'bg-[#363638] shadow-[0px_0px_2px_#ffffff20_inset] border-[#ffffff20] border-[1px] !text-[#ffffff]': route.path == (entry.to || '#')
-                                }">
-                                <div class="flex items-center text-[1.4rem] w-[1.8rem] justify-center">
+                    <div v-for="entry of section.entries">
+
+                        <div class="bg-[#111111] text-gray-300 hover:bg-[#1b1b1b] py-2 px-4 rounded-lg" :class="{
+                            'text-gray-700 pointer-events-none': entry.disabled,
+                            'bg-[#1b1b1b]': route.path == (entry.to || '#')
+                        }">
+
+                            <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
+                                v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))" tag="div" class="flex"
+                                :to="entry.to || '/'">
+                                <div class="flex items-center w-[1.8rem] justify-start">
                                     <i :class="entry.icon"></i>
                                 </div>
-                                <div v-if="isOpen" class="text-[.9rem] font-bold manrope"> {{ entry.label }} </div>
+                                <div class="manrope">
+                                    {{ entry.label }}
+                                </div>
                             </NuxtLink>
 
-                            <div v-if="!entry.to" @click="entry.action?.()"
-                                class="text-[#a3a9b6] flex w-full items-center gap-3 p-3 rounded-lg cursor-pointer hover:bg-[#363638] hover:text-[#ffffff]">
-                                <div class="flex items-center text-[1.4rem] w-[1.8rem] justify-center">
-                                    <i :class="entry.icon"></i>
-                                </div>
-                                <div v-if="isOpen" class="text-[.9rem] font-bold manrope"> {{ entry.label }} </div>
-                            </div>
-
-                        </template>
+                        </div>
 
                     </div>
 
@@ -83,12 +83,9 @@ const { isAdmin } = useUserRoles();
 
 
 <style lang="scss" scoped>
-.CVerticalNavigation {
-    transition: all .25s ease-in-out;
-}
 
 .CVerticalNavigation * {
-    font-family: 'Inter';
+    font-family: 'Geist';
 }
 
 input:focus {
