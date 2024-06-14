@@ -42,7 +42,7 @@ If you need more information, help, or want to provide general feedback, feel fr
 You can install Litlyx using `npm`, `yarn`, or `pnpm`:
 
 ```sh
-npm i litlyx
+npm i litlyx-js
 ```
 
 Or import it directly into your JavaScript code:
@@ -71,7 +71,7 @@ Litlyx natively supports all these JavaScript/TypeScript frameworks. You can use
 Litlyx is very simple to use. The first thing is to import Litlyx into your code:
 
 ```js
-import { Lit } from 'litlyx';
+import { Lit } from 'litlyx-js';
 ```
 
 Once imported, you need to initialize Litlyx:
@@ -106,12 +106,12 @@ Lit.event('pretty_cool_event', {
 });
 ```
 
-And that's it! You have set up your first custom event. From now on, you know how to set them up.
+And that's it! You have set up your first custom event. From now on, you know how to set them up. With events you can track even the user flow, from where they come to the final Click!
 
 # Lit, the AI Data Analyst at Your Service
 
 <p align="center">
-  <img src="assets/agent.png" width="200px"/>
+  <img src="assets/agent.png" width="180px"/>
 </p>
 
 Litlyx comes with an integrated AI that can analyze your collected data and your entire history. It can compare data, query specific metadata, visualize charts, and much more.
