@@ -79,6 +79,35 @@ function onHideClicked() {
     isAdminHidden.value = true;
 }
 
+
+const projectsCount = computed(() => {
+    return projects.value?.length || 0;
+});
+
+const premiumCount = computed(() => {
+    let premiums = 0;
+    projects.value?.forEach(e => {
+        if (e.premium) premiums++;
+    })
+    return premiums;
+})
+
+
+const usersCount = computed(() => {
+    const uniqueUsers = new Set<string>();
+    projects.value?.forEach(e => uniqueUsers.add(e.user.email));
+    return uniqueUsers.size;
+});
+
+
+const totalVisits = computed(() => {
+    return projects.value?.reduce((a, e) => a + e.total_visits, 0) || 0;
+});
+const totalEvents = computed(() => {
+    return projects.value?.reduce((a, e) => a + e.total_events, 0) || 0;
+});
+
+
 const details = ref<any>();
 const showDetails = ref<boolean>(false);
 async function getProjectDetails(project_id: string) {
@@ -112,6 +141,26 @@ async function resetCount(project_id: string) {
             <div class="text-text-sub/90"> <i class="far fa-eye"></i> </div>
             <div> Nascondi dalla barra </div>
         </div>
+
+
+        <Card class="p-4">
+
+            <div class="grid grid-cols-2">
+                <div>
+                    Users: {{ usersCount }}
+                </div>
+                <div>
+                    Projects: {{ projectsCount }} ( {{ premiumCount }} premium )
+                </div>
+                <div>
+                    Total visits: {{ formatNumberK(totalVisits) }}
+                </div>
+                <div>
+                    Total events: {{ formatNumberK(totalEvents) }}
+                </div>
+            </div>
+
+        </Card>
 
 
         <div v-for="item of projectsGrouped" class="bg-menu p-4 rounded-xl flex flex-col gap-2 w-full relative">
