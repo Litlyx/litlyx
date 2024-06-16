@@ -25,6 +25,8 @@ const props = defineProps<Props>();
 
 const { isAdmin } = useUserRoles();
 
+const debugMode = process.dev;
+
 const { isOpen, close } = useMenu();
 
 </script>
@@ -41,11 +43,15 @@ const { isOpen, close } = useMenu();
                     <img class="h-[2rem]" :src="'/logo.png'">
                 </div>
                 <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div>
-                
+
                 <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
                     <i @click="close()" class="fas fa-close"></i>
                 </div>
 
+            </div>
+
+            <div v-if="debugMode" class="flex justify-center w-full">
+                <ThemeSelector></ThemeSelector>
             </div>
 
             <div class="flex flex-col gap-4">
@@ -83,7 +89,6 @@ const { isOpen, close } = useMenu();
 
 
 <style lang="scss" scoped>
-
 .CVerticalNavigation * {
     font-family: 'Geist';
 }
