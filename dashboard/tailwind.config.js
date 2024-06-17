@@ -11,10 +11,10 @@ module.exports = {
             },
             colors: {
                 card: {
-                    DEFAULT: 'var(--current-card-color)',
+                    DEFAULT: 'var(--card-color)',
                 },
                 bg: {
-                    DEFAULT: '#151517',
+                    DEFAULT: 'var(--bg-color)',
                 },
                 menu: {
                     DEFAULT: '#1d1d1f'

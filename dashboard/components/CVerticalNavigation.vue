@@ -49,11 +49,7 @@ const { isOpen, close } = useMenu();
                 </div>
 
             </div>
-
-            <div v-if="debugMode" class="flex justify-center w-full">
-                <ThemeSelector></ThemeSelector>
-            </div>
-
+            
             <div class="flex flex-col gap-4">
 
                 <div v-for="section of sections" class="flex flex-col gap-1">
