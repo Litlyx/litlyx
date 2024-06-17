@@ -122,7 +122,8 @@ const defaultPrompts = [
                         How can i help you today?
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-6">
-                        <div v-for="prompt of defaultPrompts" @click="currentText = prompt" class="bg-[#2f2f2f] hover:bg-[#424242] cursor-pointer p-4 rounded-lg poppins text-center">
+                        <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
+                            class="bg-[#2f2f2f] hover:bg-[#424242] cursor-pointer p-4 rounded-lg poppins text-center">
                             {{ prompt }}
                         </div>
                     </div>
@@ -167,7 +168,7 @@ const defaultPrompts = [
                         <i class="far fa-arrow-up"></i>
                     </div>
                     <div @click="menuOpen = !menuOpen"
-                        class="bg-[#303030] hover:bg-[#464646] cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-[#303030] lg:hidden hover:bg-[#464646] cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-message"></i>
                     </div>
                 </div>
@@ -201,10 +202,12 @@ const defaultPrompts = [
 
                 <div class="poppins font-semibold text-[1.1rem]"> History: </div>
 
-                <div @click="openChat()"
-                    class="bg-menu px-4 ml-2 mr-6 py-3 cursor-pointer hover:bg-menu/80 poppins rounded-lg flex gap-2 items-center">
-                    <div> <i class="fas fa-plus"></i> </div>
-                    <div> New chat </div>
+                <div class="px-2">
+                    <div @click="openChat()"
+                        class="bg-menu cursor-pointer hover:bg-menu/80 rounded-lg px-4 py-3 poppins flex gap-2 items-center">
+                        <div> <i class="fas fa-plus"></i> </div>
+                        <div> New chat </div>
+                    </div>
                 </div>
 
 
