@@ -105,6 +105,18 @@ const defaultPrompts = [
     'How many events i got last week ?',
 ]
 
+async function deleteChat(chat_id: string) {
+    if (!activeProject.value) return;
+    const sure = confirm("Are you sure to delete the chat ?");
+    if (!sure) return;
+    if (currentChatId.value === chat_id) {
+        currentChatId.value = "";
+        currentChatMessages.value = [];
+    }
+    await $fetch(`/api/ai/${activeProject.value._id}/${chat_id}/delete`, signHeaders());
+    await reloadChatsList();
+}
+
 </script>
 
 <template>
@@ -213,11 +225,16 @@ const defaultPrompts = [
 
                 <div class="overflow-y-auto">
                     <div class="flex flex-col gap-2 px-2">
-                        <div @click="openChat(chat._id.toString())" v-for="chat of chatsList?.toReversed()"
-                            class="bg-menu px-4 py-3 cursor-pointer hover:bg-menu/80 poppins rounded-lg"
-                            :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }">
-                            {{ chat.title }}
+                        <div class="flex items-center gap-4 w-full" v-for="chat of chatsList?.toReversed()">
+                            <i @click="deleteChat(chat._id.toString())"
+                                class="fas fa-trash hover:text-gray-300 cursor-pointer"></i>
+                            <div @click="openChat(chat._id.toString())"
+                                class="bg-menu px-4 py-3 w-full cursor-pointer hover:bg-menu/80 poppins rounded-lg"
+                                :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }">
+                                {{ chat.title }}
+                            </div>
                         </div>
+
                     </div>
                 </div>
 
