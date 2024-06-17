@@ -16,7 +16,8 @@ type Props = {
     isDetailView?: boolean,
     rawButton?: boolean,
     hideShowMore?: boolean,
-    customIconStyle?: string
+    customIconStyle?: string,
+    showLink?: boolean
 }
 const props = defineProps<Props>();
 const emits = defineEmits<{
@@ -38,6 +39,11 @@ function reloadData() {
 
 function showDetails(id: string) {
     emits('showDetails', id);
+}
+
+function openExternalLink(link: string) {
+    if (link === 'self') return;
+    return window.open('https://' + link, '_blank');
 }
 
 </script>
@@ -89,28 +95,40 @@ function showDetails(id: string) {
                     </div>
 
                     <div class="flex flex-col gap-1">
+
                         <div v-if="props.data.length > 0" class="flex justify-between items-center"
                             v-for="element of props.data">
-                            <div class="w-10/12 relative" @click="showDetails(element._id)"
-                                :class="{ 'cursor-pointer line-active': interactive }">
-                                <div class="absolute rounded-sm w-full h-full bg-[#92abcf38]"
-                                    :style="'width:' + 100 / maxData * element.count + '%;'"></div>
-                                <div class="flex px-2 py-1 relative items-center gap-4">
-                                    <div v-if="iconProvider && iconProvider(element._id) != undefined"
-                                        class="flex items-center h-[1.3rem]">
 
-                                        <img v-if="iconProvider(element._id)?.[0] == 'img'"
-                                         class="h-full"
-                                         :style="customIconStyle"
-                                         :src="iconProvider(element._id)?.[1]">
+                            <div class="flex items-center gap-2 w-10/12 relative">
 
-                                        <i v-else :class="iconProvider(element._id)?.[1]"></i>
+                                <div v-if="showLink">
+                                    <i @click="openExternalLink(element._id)"
+                                        class="fas fa-link text-gray-300 hover:text-gray-400 cursor-pointer"></i>
+                                </div>
+
+                                <div class="flex gap-1 items-center" @click="showDetails(element._id)"
+                                    :class="{ 'cursor-pointer line-active': interactive }">
+
+                                    <div class="absolute rounded-sm w-full h-full bg-[#92abcf38]"
+                                        :style="'width:' + 100 / maxData * element.count + '%;'"></div>
+
+                                    <div class="flex px-2 py-1 relative items-center gap-4">
+                                        <div v-if="iconProvider && iconProvider(element._id) != undefined"
+                                            class="flex items-center h-[1.3rem]">
+
+                                            <img v-if="iconProvider(element._id)?.[0] == 'img'" class="h-full"
+                                                :style="customIconStyle" :src="iconProvider(element._id)?.[1]">
+
+                                            <i v-else :class="iconProvider(element._id)?.[1]"></i>
+                                        </div>
+                                        <span
+                                            class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">
+                                            {{ elementTextTransformer?.(element._id) || element._id }}
+                                        </span>
                                     </div>
-                                    <span class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">
-                                        {{ elementTextTransformer?.(element._id) || element._id }}
-                                    </span>
                                 </div>
                             </div>
+
                             <div class="text-text font-semibold text-[.9rem] md:text-[1rem] manrope"> {{
                                 formatNumberK(element.count) }} </div>
                         </div>

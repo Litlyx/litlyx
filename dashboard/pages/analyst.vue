@@ -17,8 +17,10 @@ const currentChatMessages = ref<any[]>([]);
 const scroller = ref<HTMLDivElement | null>(null);
 
 async function sendMessage() {
+
     if (loading.value) return;
     if (!activeProject.value) return;
+
     loading.value = true;
 
     const body: any = { text: currentText.value }
@@ -63,6 +65,7 @@ async function sendMessage() {
 }
 
 async function openChat(chat_id?: string) {
+    menuOpen.value = false;
     if (!activeProject.value) return;
     if (!chat_id) {
         currentChatMessages.value = [];
@@ -87,53 +90,27 @@ function parseMessageContent(content: string) {
     return content.replace(/\*\*(.*?)\*\*/g, '<b class="text-text">$1</b>');
 }
 
+function onKeyDown(e: KeyboardEvent) {
+    if (e.code !== 'Enter') return;
+    if (e.shiftKey === true) return;
+    sendMessage();
+}
+
+const menuOpen = ref<boolean>(false);
+
+const defaultPrompts = [
+    'How many visits i got last week ?',
+    'How many visits i got last month ?',
+    'How many visits i got today ?',
+    'How many events i got last week ?',
+]
+
 </script>
 
 <template>
     <div class="w-full h-full">
 
-        <div class="flex flex-row-reverse h-full">
-
-            <div class="flex-[2] bg-[#303030] p-6 flex flex-col gap-4">
-
-                <div class="gap-2 flex flex-col">
-                    <div class="poppins font-semibold text-[1.5rem]">
-                        Lit, your AI Analyst is here!
-                    </div>
-                    <div class="poppins text-text/75">
-                        Ask anything you want on your analytics,
-                        and understand more Trends and Key Points to take Strategic moves!
-                    </div>
-                </div>
-
-                <div class="flex gap-2 items-center py-3">
-                    <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
-                    </div>
-                    <div class="manrope font-semibold"> {{ chatsRemaining }} remaining messages </div>
-                </div>
-
-                <div>
-                    <div class="poppins font-semibold text-[1.1rem]"> History: </div>
-
-                    <div class="flex flex-col w-full mt-4 gap-2">
-
-                        <div @click="openChat()"
-                            class="bg-menu px-4 py-3 cursor-pointer hover:bg-menu/80 poppins rounded-lg mb-8 flex gap-2 items-center">
-                            <div> <i class="fas fa-plus"></i> </div>
-                            <div> New chat </div>
-                        </div>
-
-                        <div @click="openChat(chat._id.toString())" v-for="chat of chatsList"
-                            class="bg-menu px-4 py-3 cursor-pointer hover:bg-menu/80 poppins rounded-lg"
-                            :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }">
-                            {{ chat.title }}
-                        </div>
-                    </div>
-
-                </div>
-
-
-            </div>
+        <div class="flex flex-row h-full">
 
             <div class="flex-[5] py-8 flex flex-col items-center relative">
 
@@ -145,22 +122,14 @@ function parseMessageContent(content: string) {
                         How can i help you today?
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-6">
-                        <div class="bg-[#2f2f2f] p-4 rounded-lg poppins">
-                            How many visits i got last week ?
-                        </div>
-                        <div class="bg-[#2f2f2f] p-4 rounded-lg poppins">
-                            How many visits i got last week ?
-                        </div>
-                        <div class="bg-[#2f2f2f] p-4 rounded-lg poppins">
-                            How many visits i got last week ?
-                        </div>
-                        <div class="bg-[#2f2f2f] p-4 rounded-lg poppins">
-                            How many visits i got last week ?
+                        <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
+                            class="bg-[#2f2f2f] hover:bg-[#424242] cursor-pointer p-4 rounded-lg poppins text-center">
+                            {{ prompt }}
                         </div>
                     </div>
                 </div>
 
-                <div ref="scroller" class="flex flex-col w-full gap-6 px-28 overflow-y-auto pb-20">
+                <div ref="scroller" class="flex flex-col w-full gap-6 px-6 xl:px-28 overflow-y-auto pb-20">
 
                     <div class="flex w-full" v-for="message of currentChatMessages">
                         <div class="flex justify-end w-full poppins text-[1.1rem]" v-if="message.role === 'user'">
@@ -191,14 +160,68 @@ function parseMessageContent(content: string) {
 
 
 
-                <div class="flex gap-2 items-center absolute bottom-8 left-0 w-full px-28">
-                    <input v-model="currentText" class="bg-[#303030] w-full focus:outline-none px-4 py-2 rounded-lg"
-                        type="text">
+                <div class="flex gap-2 items-center absolute bottom-8 left-0 w-full px-10 xl:px-28">
+                    <input @keydown="onKeyDown" v-model="currentText"
+                        class="bg-[#303030] w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
                     <div @click="sendMessage()"
                         class="bg-[#303030] hover:bg-[#464646] cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-arrow-up"></i>
                     </div>
+                    <div @click="menuOpen = !menuOpen"
+                        class="bg-[#303030] lg:hidden hover:bg-[#464646] cursor-pointer px-4 py-2 rounded-full">
+                        <i class="far fa-message"></i>
+                    </div>
                 </div>
+
+            </div>
+
+
+            <div :class="{
+                'absolute': menuOpen,
+                'hidden lg:flex': !menuOpen
+            }" class="flex-[2] bg-[#303030] p-6 flex flex-col gap-4 h-full overflow-hidden">
+
+                <div class="gap-2 flex flex-col">
+                    <div class="lg:hidden absolute right-4 top-4 text-[1.5rem]">
+                        <i @click="menuOpen = false" class="fas fa-close cursor-pointer"></i>
+                    </div>
+                    <div class="poppins font-semibold text-[1.5rem]">
+                        Lit, your AI Analyst is here!
+                    </div>
+                    <div class="poppins text-text/75">
+                        Ask anything you want on your analytics,
+                        and understand more Trends and Key Points to take Strategic moves!
+                    </div>
+                </div>
+
+                <div class="flex gap-2 items-center py-3">
+                    <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
+                    </div>
+                    <div class="manrope font-semibold"> {{ chatsRemaining }} remaining messages </div>
+                </div>
+
+                <div class="poppins font-semibold text-[1.1rem]"> History: </div>
+
+                <div class="px-2">
+                    <div @click="openChat()"
+                        class="bg-menu cursor-pointer hover:bg-menu/80 rounded-lg px-4 py-3 poppins flex gap-2 items-center">
+                        <div> <i class="fas fa-plus"></i> </div>
+                        <div> New chat </div>
+                    </div>
+                </div>
+
+
+                <div class="overflow-y-auto">
+                    <div class="flex flex-col gap-2 px-2">
+                        <div @click="openChat(chat._id.toString())" v-for="chat of chatsList?.toReversed()"
+                            class="bg-menu px-4 py-3 cursor-pointer hover:bg-menu/80 poppins rounded-lg"
+                            :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }">
+                            {{ chat.title }}
+                        </div>
+                    </div>
+                </div>
+
+
 
             </div>
 

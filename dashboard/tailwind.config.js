@@ -11,7 +11,7 @@ module.exports = {
             },
             colors: {
                 card: {
-                    DEFAULT: '#1d1d1f',
+                    DEFAULT: 'var(--current-card-color)',
                 },
                 bg: {
                     DEFAULT: '#151517',

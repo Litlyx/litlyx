@@ -24,7 +24,7 @@ const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 const customDialog = useCustomDialog();
 
 function onShowDetails(referrer: string) {
-    
+
     customDialog.openDialog(ReferrerBarChart, { slice: 'day', referrer });
 }
 
@@ -56,7 +56,7 @@ function showMore() {
     <div class="flex flex-col gap-2">
         <DashboardBarsCard @showDetails="onShowDetails" @showMore="showMore()"
             :elementTextTransformer="elementTextTransformer" :iconProvider="iconProvider" @dataReload="refresh"
-            :data="events || []" :interactive="true" desc="Where users find your website." :dataIcons="true"
-            :loading="pending" label="Top Referrers" sub-label="Referrers"></DashboardBarsCard>
+            :showLink=true :data="events || []" :interactive="true" desc="Where users find your website."
+            :dataIcons="true" :loading="pending" label="Top Referrers" sub-label="Referrers"></DashboardBarsCard>
     </div>
 </template>
