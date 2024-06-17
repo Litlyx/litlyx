@@ -138,10 +138,10 @@ nuxtApp.hook("page:finish", () => {
                     <div class="flex gap-6 text-[1.6rem] text-text-sub/80">
                         <!-- <div> <i class="fab fa-x-twitter"></i> </div> -->
                         <div class="flex gap-4">
-                            <a href="https://www.linkedin.com/company/litlyx" target="_blank">
+                            <a class="hover:text-gray-400" href="https://www.linkedin.com/company/litlyx" target="_blank">
                                 <i class="fab fa-linkedin"></i>
                             </a>
-                            <a href="https://www.github.com/Litlyx/litlyx" target="_blank">
+                            <a class="hover:text-gray-400" href="https://www.github.com/Litlyx/litlyx" target="_blank">
                                 <i class="fab fa-github"></i>
                             </a>
                         </div>

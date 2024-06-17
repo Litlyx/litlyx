@@ -60,14 +60,14 @@ const { isOpen, close } = useMenu();
 
                     <div v-for="entry of section.entries">
 
-                        <div class="bg-[#111111] text-gray-300 hover:bg-[#1b1b1b] py-2 px-4 rounded-lg" :class="{
-                            'text-gray-700 pointer-events-none': entry.disabled,
-                            'bg-[#1b1b1b]': route.path == (entry.to || '#')
-                        }">
+                        <div v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))"
+                            class="bg-[#111111] text-gray-300 hover:bg-[#1b1b1b] py-2 px-4 rounded-lg" :class="{
+                                'text-gray-700 pointer-events-none': entry.disabled,
+                                'bg-[#1b1b1b]': route.path == (entry.to || '#')
+                            }">
 
                             <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
-                                v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))" tag="div" class="flex"
-                                :to="entry.to || '/'">
+                                tag="div" class="flex" :to="entry.to || '/'">
                                 <div class="flex items-center w-[1.8rem] justify-start">
                                     <i :class="entry.icon"></i>
                                 </div>
