@@ -55,7 +55,7 @@ async function addMember() {
 
         <div class="flex flex-col gap-4">
 
-            <div @click="showAddMember = !showAddMember;"
+            <div v-if="!isGuest" @click="showAddMember = !showAddMember;"
                 class="flex items-center gap-2 bg-menu w-fit px-3 py-2 rounded-lg hover:bg-menu/80 cursor-pointer">
                 <i class="fas fa-plus"></i>
                 <div> Add member </div>

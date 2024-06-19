@@ -17,7 +17,7 @@ export default defineEventHandler(async event => {
     if (!project_id) return;
 
     const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user);
+    const project = await getUserProjectFromId(project_id, user, false);
     if (!project) return;
 
     if (!project.customer_id) return [];

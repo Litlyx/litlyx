@@ -13,7 +13,7 @@ export default defineEventHandler(async event => {
 
     const { project_id } = getQuery(event);
 
-    const hasAccess = await hasAccessToProject(userData.id, project_id as string);
+    const [hasAccess] = await hasAccessToProject(userData.id, project_id as string);
 
     if (!hasAccess) return setResponseStatus(event, 400, 'No access to project');
 

@@ -130,10 +130,13 @@ async function deleteChat(chat_id: string) {
                     <div class="w-[10rem]">
                         <img :src="'analyst.png'" class="w-full h-full">
                     </div>
-                    <div class="poppins text-[1.2rem]">
+                    <div v-if="!isGuest" class="poppins text-[1.2rem]">
                         How can i help you today?
                     </div>
-                    <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div v-if="isGuest" class="poppins text-[1.2rem]">
+                        Im not allowed to help guests :c
+                    </div>
+                    <div class="grid grid-cols-2 gap-4 mt-6" v-if="!isGuest">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
                             class="bg-[#2f2f2f] hover:bg-[#424242] cursor-pointer p-4 rounded-lg poppins text-center">
                             {{ prompt }}
@@ -172,7 +175,7 @@ async function deleteChat(chat_id: string) {
 
 
 
-                <div class="flex gap-2 items-center absolute bottom-8 left-0 w-full px-10 xl:px-28">
+                <div v-if="!isGuest" class="flex gap-2 items-center absolute bottom-8 left-0 w-full px-10 xl:px-28">
                     <input @keydown="onKeyDown" v-model="currentText"
                         class="bg-[#303030] w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
                     <div @click="sendMessage()"

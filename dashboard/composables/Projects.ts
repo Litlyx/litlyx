@@ -16,9 +16,15 @@ export function useGuestProjectsList() {
     return { ...guestProjects, guestProjects: guestProjects.data }
 }
 
-
 const activeProjectId = useFetch<string>(`/api/user/active_project`, {
     key: 'activeProjectId', ...signHeaders(),
+});
+
+export const isGuest = computed(() => {
+    if (!guestProjects.data.value) return false;
+    const guestTarget = guestProjects.data.value.find(e => e._id.toString() == activeProjectId.data.value);
+    if (guestTarget) return true;
+    return false;
 });
 
 export function useActiveProjectId() {
