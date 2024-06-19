@@ -4,10 +4,16 @@ const projects = useFetch<TProject[]>('/api/project/list', {
     key: 'projectslist', ...signHeaders()
 });
 
-
-
 export function useProjectsList() {
     return { ...projects, projects: projects.data }
+}
+
+const guestProjects = useFetch<TProject[]>('/api/project/list_guest', {
+    key: 'guestProjectslist', ...signHeaders()
+});
+
+export function useGuestProjectsList() {
+    return { ...guestProjects, guestProjects: guestProjects.data }
 }
 
 
@@ -28,7 +34,10 @@ export function useActiveProject() {
         if (!projects.data.value) return;
         if (!activeProjectId.data.value) return;
         const target = projects.data.value.find(e => e._id.toString() == activeProjectId.data.value);
-        return target;
+        if (target) return target;
+        if (!guestProjects.data.value) return;
+        const guestTarget = guestProjects.data.value.find(e => e._id.toString() == activeProjectId.data.value);
+        return guestTarget;
     });
 }
 

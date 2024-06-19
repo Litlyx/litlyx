@@ -2,6 +2,7 @@
 import { ProjectModel } from "@schema/ProjectSchema";
 
 import { UserSettingsModel } from "@schema/UserSettings";
+import { hasAccessToProject } from "~/server/utils/hasAccessToProject";
 
 export default defineEventHandler(async event => {
 
@@ -12,7 +13,7 @@ export default defineEventHandler(async event => {
 
     const { project_id } = getQuery(event);
 
-    const hasAccess = await ProjectModel.exists({ owner: userData.id, _id: project_id });
+    const hasAccess = await hasAccessToProject(userData.id, project_id as string);
 
     if (!hasAccess) return setResponseStatus(event, 400, 'No access to project');
 

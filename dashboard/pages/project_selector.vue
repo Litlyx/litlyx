@@ -3,6 +3,7 @@
 definePageMeta({ layout: 'dashboard' });
 
 const { projects, refresh } = useProjectsList();
+const { guestProjects } = useGuestProjectsList();
 const { pid } = useActiveProjectId();
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", signHeaders());
@@ -69,7 +70,7 @@ async function deleteAccount() {
                 <div class="flex gap-4 items-center">
                     <div class="text-text font-bold text-[1.5rem]"> Projects </div>
                     <div class="text-text-sub/90 text-[1rem] font-semibold lato">
-                        {{ projects?.length ?? '-' }} / {{maxProjects || 3}}
+                        {{ projects?.length ?? '-' }} / {{ maxProjects || 3 }}
                     </div>
                 </div>
                 <NuxtLink v-if="(projects?.length || 0) < (maxProjects || 3)" to="/project_creation"
@@ -101,8 +102,17 @@ async function deleteAccount() {
                     </div>
                 </div>
 
+                <div v-for="e of guestProjects">
+                    <DashboardProjectSelectionCard class="outline outline-[2px] outline-yellow-200"
+                        @click="onProjectClick(e._id.toString())" :title="e.name" :active="pid == e._id.toString()"
+                        :subtitle="pid == e._id.toString() ? 'ATTIVO' : ''" :chip="''">
+                    </DashboardProjectSelectionCard>
+                </div>
 
             </div>
+
+
+
 
         </div>
 
