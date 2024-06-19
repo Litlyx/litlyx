@@ -9,6 +9,7 @@ const columns = [
     { key: 'email', label: 'Email' },
     { key: 'name', label: 'Name' },
     { key: 'role', label: 'Role' },
+    { key: 'action', label: 'Actions' },
     // { key: 'pending', label: 'Pending' },
 ]
 
@@ -17,6 +18,30 @@ const { data: members, refresh: refreshMembers } = useFetch('/api/project/member
 const showAddMember = ref<boolean>(false);
 
 const addMemberEmail = ref<string>("");
+
+async function kickMember(email: string) {
+
+    const sure = confirm('Are you sure to kick ' + email + ' ?');
+    if (!sure) return;
+
+    try {
+
+        await $fetch('/api/project/members/kick', {
+            method: 'POST',
+            ...signHeaders({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ email }),
+            onResponseError({ request, response, options }) {
+                alert(response.statusText);
+            }
+        });
+
+        refreshMembers();
+
+    } catch (ex: any) { }
+
+
+
+}
 
 async function addMember() {
 
@@ -74,6 +99,14 @@ async function addMember() {
                     <i v-if="e.row.me" class="far fa-user"></i>
                     <i v-if="!e.row.me"></i>
                 </template>
+
+                <template #action-data="e" v-if="!isGuest">
+                    <div @click="kickMember(e.row.email)" v-if="e.row.role != 'OWNER'"
+                        class="text-red-500 hover:bg-black/20 cursor-pointer outline outline-[1px] outline-red-500 px-3 py-1 rounded-lg text-center">
+                        Kick
+                    </div>
+                </template>
+
             </UTable>
 
         </div>

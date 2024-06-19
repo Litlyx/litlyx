@@ -3,7 +3,7 @@
 definePageMeta({ layout: 'dashboard' });
 
 const { projects, refresh } = useProjectsList();
-const { guestProjects } = useGuestProjectsList();
+const { guestProjects, refresh: refreshGuest } = useGuestProjectsList();
 const { pid } = useActiveProjectId();
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", signHeaders());
@@ -33,6 +33,30 @@ async function deleteProject(projectId: string, projectName: string) {
         alert(ex.message);
     }
 
+
+}
+
+
+async function leaveProject(projectId: string, projectName: string) {
+    const sure = confirm(`Are you sure to leave the project ${projectName} ?`);
+    if (!sure) return;
+
+    try {
+
+        await $fetch('/api/project/members/leave', signHeaders());
+
+        await refreshGuest();
+
+        if (pid.value == projectId) {
+            const firstProjectId = projects.value?.[0]?._id.toString();
+            if (firstProjectId) {
+                await setActiveProject(firstProjectId);
+            }
+        }
+
+    } catch (ex: any) {
+        alert(ex.message);
+    }
 
 }
 
@@ -107,6 +131,10 @@ async function deleteAccount() {
                         @click="onProjectClick(e._id.toString())" :title="e.name" :active="pid == e._id.toString()"
                         :subtitle="pid == e._id.toString() ? 'ATTIVO' : ''" :chip="''">
                     </DashboardProjectSelectionCard>
+                    <div @click="leaveProject(e._id.toString(), e.name)"
+                        class="mt-4 rounded-lg bg-[#3a3a3b] hover:bg-[#4f4f50] cursor-pointer hover:text-red-500 flex items-center justify-center py-3">
+                        <i class="far fa-right-from-bracket"></i>
+                    </div>
                 </div>
 
             </div>
