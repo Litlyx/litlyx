@@ -31,7 +31,7 @@ const starterTierCardData = ref<PricingCardProp>({
 
 const accelerationTierCardData = ref<PricingCardProp>({
     title: 'ACCELERATION',
-    cost: '9.99',
+    cost: '9,99',
     features: [
         "150K visits/events per month",
         "100 AI Interaction per month",
@@ -50,7 +50,7 @@ const accelerationTierCardData = ref<PricingCardProp>({
 
 const expansionTierCardData = ref<PricingCardProp>({
     title: 'EXPANSION',
-    cost: '39.99',
+    cost: '39,99',
     features: [
         "500K visits/events per month",
         "5000 AI Interaction per month",
