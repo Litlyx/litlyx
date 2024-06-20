@@ -102,8 +102,8 @@ definePageMeta({ layout: 'header' });
                     </div>
                 </div>
                 <div class="py-4 px-20 bg-[#303030] rounded-lg">
-                    <a href="mailto:helplitlyx@gmail.com" class="poppins text-[1.3rem]">
-                        helplitlyx@gmail.com
+                    <a href="mailto:help@litlyx.com" class="poppins text-[1.3rem]">
+                        help@litlyx.com
                     </a>
                 </div>
             </div> -->
