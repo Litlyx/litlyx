@@ -24,7 +24,7 @@ nuxtApp.hook("page:finish", () => {
 
             <NuxtLink to="/" tag="div" class="flex gap-4 items-center">
                 <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
-                    <img class="h-[1.8rem]" :src="'/logo.png'">
+                    <img class="h-[1.8rem]" alt="Litlyx logo" :src="'/logo.png'">
                 </div>
                 <div class="font-semibold text-[1.6rem] text-gray-300 poppins">
                     Litlyx
@@ -33,7 +33,8 @@ nuxtApp.hook("page:finish", () => {
 
             <div class="grow"></div>
             <div class="flex gap-8 text-[1.1rem] text-white font-[500]">
-                <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo" class="poppins hover:text-text-sub/90">
+                <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
+                    class="poppins hover:text-text-sub/90">
                     Live demo
                 </NuxtLink>
                 <NuxtLink target="_blank" to="https://docs.litlyx.com" class="poppins hover:text-text-sub/90">
@@ -57,7 +58,7 @@ nuxtApp.hook("page:finish", () => {
         <div class="flex lg:hidden p-4 z-[20] relative">
             <NuxtLink to="/" class="flex gap-4 items-center">
                 <div class="bg-black h-[2.8rem] aspect-[1/1] flex items-center justify-center rounded-lg">
-                    <img class="h-[1.8rem]" :src="'/logo.png'">
+                    <img class="h-[1.8rem]" alt="Litlyx logo" :src="'/logo.png'">
                 </div>
                 <div class="font-bold text-[1.6rem] text-gray-300 poppins">
                     Litlyx
@@ -138,7 +139,8 @@ nuxtApp.hook("page:finish", () => {
                     <div class="flex gap-6 text-[1.6rem] text-text-sub/80">
                         <!-- <div> <i class="fab fa-x-twitter"></i> </div> -->
                         <div class="flex gap-4">
-                            <a class="hover:text-gray-400" href="https://www.linkedin.com/company/litlyx" target="_blank">
+                            <a class="hover:text-gray-400" href="https://www.linkedin.com/company/litlyx"
+                                target="_blank">
                                 <i class="fab fa-linkedin"></i>
                             </a>
                             <a class="hover:text-gray-400" href="https://www.github.com/Litlyx/litlyx" target="_blank">

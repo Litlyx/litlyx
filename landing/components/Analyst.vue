@@ -12,7 +12,7 @@
         </div>
 
         <div class="flex justify-center mx-auto w-[20rem] z-[25] relative">
-            <img class="w-full h-full" :src="'agent.png'">
+            <img class="w-full h-full" alt="Litlyx AI Agent" :src="'agent.png'">
         </div>
 
         <div class="flex flex-col items-center justify-center gap-2 z-[25] relative">
