@@ -217,7 +217,7 @@ definePageMeta({ layout: 'header' });
         <div> Contact Information </div>
         <div>
             For any questions or concerns about our data policy, please contact our data protection officer at
-            <a class="text-blue-400" href="mailto:helplitlyx@gmail.com">helplitlyx@gmail.com</a>
+            <a class="text-blue-400" href="mailto:help@litlyx.com">help@litlyx.com</a>
         </div>
     </div>
 

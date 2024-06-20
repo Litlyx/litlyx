@@ -120,7 +120,7 @@ You can have a `conversation` with Lit in the dashboard  👉 [here](https://das
 
 # You Are Free to Self-Host Litlyx
 
-Litlyx is completely open-source, and you are free to self-host it and create your own version of the dashboard. We are always open to conversations with all contributors to the project, so contact us at `helplitlyx@gmail.com` to schedule a call with us!
+Litlyx is completely open-source, and you are free to self-host it and create your own version of the dashboard. We are always open to conversations with all contributors to the project, so contact us at `help@litlyx.com` to schedule a call with us!
 
 We hope to hear from you!
 
@@ -130,7 +130,7 @@ Read the complete documentation at [https://docs.litlyx.com](https://docs.litlyx
 
 # Contact
 
-Write to us at `helplitlyx@gmail.com` if you need to contact us.
+Write to us at `help@litlyx.com` if you need to contact us.
 
 # License
 

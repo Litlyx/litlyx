@@ -99,8 +99,8 @@ const emits = defineEmits<{
             </div>
             <div class="mt-2">
                 <div class="rounded-lg px-10 py-3 bg-[#303030]">
-                    <a href="mailto:helplitlyx@gmail.com" class="poppins text-[1.3rem]">
-                        helplitlyx@gmail.com
+                    <a href="mailto:help@litlyx.com" class="poppins text-[1.3rem]">
+                        help@litlyx.com
                     </a>
                 </div>
             </div>

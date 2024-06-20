@@ -105,7 +105,7 @@ definePageMeta({ layout: 'header' });
             communicated through our blog, social media, and direct emails.
         </div>
         <div>
-            Please reach out to us at <a href="mailto:helplitlyx@gmail.com" class=text-blue-400>helplitlyx@gmail.com</a> with any questions or concerns regarding this privacy policy
+            Please reach out to us at <a href="mailto:help@litlyx.com" class=text-blue-400>help@litlyx.com</a> with any questions or concerns regarding this privacy policy
             or
             your rights.
         </div>

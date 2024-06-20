@@ -14,7 +14,7 @@ definePageMeta({ layout: 'header' });
         <div class="flex justify-center flex-col items-center">
             <div class="font-bold text-[2rem]"> Contact us </div>
             <div class="font-bold mb-1 mt-4 text-accent">
-                <a href="mailto:helplitlyx@gmail.com">helplitlyx@gmail.com </a>
+                <a href="mailto:help@litlyx.com">help@litlyx.com </a>
             </div>
         </div>
     </div>

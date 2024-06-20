@@ -6,7 +6,7 @@ At Litlyx, we prioritize the security of our users' data and strive to maintain 
 
 ### How to Report
 
-- **Email:** Send an email to [helplitlyx@gmail.com](mailto:helplitlyx@gmail.com) with details of the discovered vulnerability.
+- **Email:** Send an email to [help@litlyx.com](mailto:help@litlyx.com) with details of the discovered vulnerability.
 - **Include:**
   - A detailed description of the vulnerability.
   - Steps to reproduce the issue.
