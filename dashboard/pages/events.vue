@@ -29,7 +29,7 @@ const eventsStackedSelectIndex = ref<number>(0);
                 </div>
             </CardTitled>
 
-            <div class="bg-menu p-4 rounded-xl flex-[2] flex flex-col gap-10 h-full">
+            <div class="bg-card p-4 rounded-xl flex-[2] flex flex-col gap-10 h-full">
                 <div class="flex flex-col gap-1">
                     <div class="poppins font-semibold text-[1.4rem] text-text">
                         Top events

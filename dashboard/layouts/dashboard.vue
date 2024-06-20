@@ -12,6 +12,7 @@ const sections: Section[] = [
         title: 'General',
         entries: [
             { label: 'Projects', icon: 'far fa-table-layout', to: '/project_selector' },
+            { label: 'Members', icon: 'far fa-users', to: '/members' },
             { label: 'Admin', icon: 'fas fa-cat', adminOnly: true, to: '/admin' },
         ]
     },

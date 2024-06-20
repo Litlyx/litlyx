@@ -63,7 +63,7 @@ export default defineEventHandler(async event => {
         return {
             eventsCount: count[0].events,
             visitsCount: count[0].visits,
-            sessionsVisitsCount: totalSessions + (sessionsVisitsCount?.[0]?.count || 0),
+            sessionsVisitsCount: totalSessions || 0,
             avgSessionDuration,
             firstEventDate,
             firstViewDate,

@@ -130,7 +130,7 @@ function getPremiumName(type: number) {
                         <div class="poppins"> Expire date:</div>
                         <div> {{ prettyExpireDate }}</div>
                     </div>
-                    <div @click="onPlanUpgradeClick()"
+                    <div v-if="!isGuest" @click="onPlanUpgradeClick()"
                         class="cursor-pointer flex items-center gap-2 text-[.9rem] text-white font-semibold bg-accent px-4 py-1 rounded-lg drop-shadow-[0_0_8px_#000000]">
                         <div class="poppins"> Upgrade plan </div>
                         <i class="fas fa-arrow-up-right"></i>
@@ -168,7 +168,7 @@ function getPremiumName(type: number) {
         </div>
 
 
-        <CardTitled title="Invoices" :sub="(invoices && invoices.length == 0) ? 'No invoices yet' : ''"
+        <CardTitled v-if="!isGuest" title="Invoices" :sub="(invoices && invoices.length == 0) ? 'No invoices yet' : ''"
             class="p-4 mt-8 max-w-[72rem]">
 
             <div class="flex flex-col gap-2">

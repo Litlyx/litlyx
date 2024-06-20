@@ -3,6 +3,7 @@
 definePageMeta({ layout: 'dashboard' });
 
 const { projects, refresh } = useProjectsList();
+const { guestProjects, refresh: refreshGuest } = useGuestProjectsList();
 const { pid } = useActiveProjectId();
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", signHeaders());
@@ -32,6 +33,30 @@ async function deleteProject(projectId: string, projectName: string) {
         alert(ex.message);
     }
 
+
+}
+
+
+async function leaveProject(projectId: string, projectName: string) {
+    const sure = confirm(`Are you sure to leave the project ${projectName} ?`);
+    if (!sure) return;
+
+    try {
+
+        await $fetch('/api/project/members/leave', signHeaders());
+
+        await refreshGuest();
+
+        if (pid.value == projectId) {
+            const firstProjectId = projects.value?.[0]?._id.toString();
+            if (firstProjectId) {
+                await setActiveProject(firstProjectId);
+            }
+        }
+
+    } catch (ex: any) {
+        alert(ex.message);
+    }
 
 }
 
@@ -69,7 +94,7 @@ async function deleteAccount() {
                 <div class="flex gap-4 items-center">
                     <div class="text-text font-bold text-[1.5rem]"> Projects </div>
                     <div class="text-text-sub/90 text-[1rem] font-semibold lato">
-                        {{ projects?.length ?? '-' }} / {{maxProjects || 3}}
+                        {{ projects?.length ?? '-' }} / {{ maxProjects || 3 }}
                     </div>
                 </div>
                 <NuxtLink v-if="(projects?.length || 0) < (maxProjects || 3)" to="/project_creation"
@@ -101,8 +126,21 @@ async function deleteAccount() {
                     </div>
                 </div>
 
+                <div v-for="e of guestProjects">
+                    <DashboardProjectSelectionCard class="outline outline-[2px] outline-yellow-200"
+                        @click="onProjectClick(e._id.toString())" :title="e.name" :active="pid == e._id.toString()"
+                        :subtitle="pid == e._id.toString() ? 'ATTIVO' : ''" :chip="''">
+                    </DashboardProjectSelectionCard>
+                    <div @click="leaveProject(e._id.toString(), e.name)"
+                        class="mt-4 rounded-lg bg-[#3a3a3b] hover:bg-[#4f4f50] cursor-pointer hover:text-red-500 flex items-center justify-center py-3">
+                        <i class="far fa-right-from-bracket"></i>
+                    </div>
+                </div>
 
             </div>
+
+
+
 
         </div>
 

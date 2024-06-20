@@ -8,8 +8,12 @@ export default defineEventHandler(async event => {
     if (!user?.logged) return;
     const project_id = getRequestProjectId(event);
     if (!project_id) return;
-    const project = await ProjectModel.findOne({ _id: project_id, owner: user.id });
+    const project = await ProjectModel.findOne({ _id: project_id });
     if (!project) return;
+
+    const [hasAccess] = await hasAccessToProject(user.id, project_id, project)
+    if (!hasAccess) return;
+
     const query = getQuery(event);
 
     const { orderBy, order, page, limit, type } = query;

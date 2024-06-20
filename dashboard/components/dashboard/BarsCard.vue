@@ -54,7 +54,7 @@ function openExternalLink(link: string) {
 
         <div class="text-text flex flex-col items-start gap-4 w-full relative">
 
-            <div class="w-full h-full p-4 flex flex-col bg-menu rounded-xl gap-8 card-shadow">
+            <div class="w-full h-full p-4 flex flex-col bg-card rounded-xl gap-8 card-shadow">
 
                 <div class="flex justify-between mb-3">
                     <div class="flex flex-col gap-1">
