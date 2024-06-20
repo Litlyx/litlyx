@@ -45,7 +45,6 @@ const mouseStyle = computed(() => {
 
         <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center z-0 overflow-hidden">
             <HomeBgGrid :size="100" :spacing="18" opacity="0.3" class="w-fit h-fit"></HomeBgGrid>
-            <!-- <HomeBgGrid :size="100" :spacing="18" opacity="0.2" class="w-fit h-fit"></HomeBgGrid> -->
         </div>
 
 
@@ -104,7 +103,7 @@ const mouseStyle = computed(() => {
 
         <div class="flex justify-center mt-10 z-[10] relative">
             <div class="bg-[#1d1d1f] rounded-[1rem] overflow-hidden w-[96%] lg:w-[60%] ">
-                <img :src="'screen_1.png'" class="">
+                <img :src="'screen_1.png'" alt="Litlyx dashboard" class="">
             </div>
         </div>
 
@@ -112,7 +111,7 @@ const mouseStyle = computed(() => {
         <div class="flex justify-center mt-20 z-[10] relative items-center flex-col gap-2">
             <div class="poppins text-[1.2rem]"> Trusted by</div>
             <NuxtLink to="https://nuvol.ai/" target="_blank" class="max-w-[18rem] bg-text-sub p-4 rounded-lg">
-                <img class="w-full h-full" :src="'nuvolai.png'">
+                <img class="w-full h-full" alt="Partner_1" :src="'nuvolai.png'">
             </NuxtLink>
         </div>
 
