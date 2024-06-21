@@ -16,7 +16,7 @@ export function useFirstInteractionData() {
     return metricsInfo;
 }
 
-export async function useVisitsTimeline(slice: Slice, fromDate?: string, toDate?: string) {
+export async function useTimeline(endpoint: 'visits' | 'sessions', slice: Slice, fromDate?: string, toDate?: string) {
 
     const { from, to } = DateService.prepareDateRange(
         fromDate || DateService.getDefaultRange(slice).from,
@@ -26,13 +26,13 @@ export async function useVisitsTimeline(slice: Slice, fromDate?: string, toDate?
 
     const activeProject = useActiveProject();
     const response = await $fetch(
-        `/api/metrics/${activeProject.value?._id}/timeline/visits`, {
+        `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`, {
         method: 'POST',
         ...signHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ slice, from, to })
     });
-    
-    return response;
+
+    return response as { _id: string, count: number }[];
 
 }
 

@@ -1,20 +1,20 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 
+import DateService, { type Slice } from '@services/DateService';
+
 const data = ref<number[]>([]);
 const labels = ref<string[]>([]);
 const ready = ref<boolean>(false);
-const key = ref<string>('0');
 
-const props = defineProps<{ slice: SliceName }>();
+const props = defineProps<{ slice: Slice }>();
 
 async function loadData() {
-    const response = await useTimelineData('sessions', props.slice);
+    const response = await useTimeline('sessions', props.slice);
     if (!response) return;
-    data.value = response.data;
-    labels.value = response.labels;
+    data.value = response.map(e => e.count);
+    labels.value = response.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, props.slice));
     ready.value = true;
-    key.value = Date.now().toString();
 }
 
 onMounted(async () => {
