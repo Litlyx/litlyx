@@ -23,8 +23,11 @@ class DateService {
 
     public slicesData = slicesData;
 
-    getDefaultRange(slice: Slice, from?: string, to?: string) {
-
+    getDefaultRange(slice: Slice) {
+        return {
+            from: new Date(Date.now() - slicesData[slice].fromOffset).toISOString(),
+            to: new Date().toISOString()
+        }
     }
 
     getQueryDateRange(slice: Slice) {

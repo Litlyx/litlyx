@@ -16,8 +16,14 @@ export function useFirstInteractionData() {
     return metricsInfo;
 }
 
-export async function useVisitsTimeline(fromDate: string, toDate: string, slice: Slice) {
-    const { from, to } = DateService.prepareDateRange(fromDate, toDate, slice);
+export async function useVisitsTimeline(slice: Slice, fromDate?: string, toDate?: string) {
+
+    const { from, to } = DateService.prepareDateRange(
+        fromDate || DateService.getDefaultRange(slice).from,
+        toDate || DateService.getDefaultRange(slice).to,
+        slice
+    );
+
     const activeProject = useActiveProject();
     const response = await $fetch(
         `/api/metrics/${activeProject.value?._id}/timeline/visits`, {
@@ -25,6 +31,7 @@ export async function useVisitsTimeline(fromDate: string, toDate: string, slice:
         ...signHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({ slice, from, to })
     });
+    
     return response;
 
 }
