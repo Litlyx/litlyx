@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
 
+import dayjs from 'dayjs';
+
 const data = ref<number[]>([]);
 const labels = ref<string[]>([]);
 const ready = ref<boolean>(false);
@@ -13,15 +15,18 @@ async function loadData() {
     const response = await $fetch(`/api/metrics/${activeProject.value?._id.toString()}/timeline/referrers`, {
         method: 'POST',
         ...signHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ slice: 'day', referrer: props.referrer })
+        body: JSON.stringify({
+            slice: 'hour',
+            from: Date.now() - 1000 * 60 * 60 * 12,
+            to: Date.now(),
+            referrer: props.referrer
+        })
     });
 
     if (!response) return;
 
-    const fixed = fixMetrics(response, props.slice);
-    console.log(fixed);
-    data.value = fixed.data;
-    labels.value = fixed.labels;
+    data.value = response.map(e => e.count);
+    labels.value = response.map(e => dayjs(e._id).locale(navigator.language));
     ready.value = true;
 
 }
