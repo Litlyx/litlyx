@@ -1,9 +1,31 @@
 
 import dayjs from 'dayjs';
 
-export type Slice = 'day' | 'hour' | 'month' | 'year';
+export type Slice = keyof typeof slicesData;
+
+const slicesData = {
+    hour: {
+        fromOffset: 1000 * 60 * 60 * 24
+    },
+    day: {
+        fromOffset: 1000 * 60 * 60 * 24 * 7
+    },
+    month: {
+        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12
+    },
+    year: {
+        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12 * 10
+    }
+}
+
 
 class DateService {
+
+    public slicesData = slicesData;
+
+    getDefaultRange(slice: Slice, from?: string, to?: string) {
+
+    }
 
     getQueryDateRange(slice: Slice) {
 

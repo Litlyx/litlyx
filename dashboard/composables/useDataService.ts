@@ -1,3 +1,5 @@
+import type { Slice } from "@services/DateService";
+import DateService from "@services/DateService";
 import type { MetricsCounts } from "~/server/api/metrics/[project_id]/counts";
 import type { VisitsWebsiteAggregated } from "~/server/api/metrics/[project_id]/data/websites";
 import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline/generic";
@@ -12,6 +14,19 @@ export function useFirstInteractionData() {
     const activeProject = useActiveProject();
     const metricsInfo = useFetch<boolean>(`/api/metrics/${activeProject.value?._id}/first_interaction`, signHeaders());
     return metricsInfo;
+}
+
+export async function useVisitsTimeline(fromDate: string, toDate: string, slice: Slice) {
+    const { from, to } = DateService.prepareDateRange(fromDate, toDate, slice);
+    const activeProject = useActiveProject();
+    const response = await $fetch(
+        `/api/metrics/${activeProject.value?._id}/timeline/visits`, {
+        method: 'POST',
+        ...signHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ slice, from, to })
+    });
+    return response;
+
 }
 
 export async function useTimelineDataRaw(timelineEndpointName: string, slice: SliceName) {

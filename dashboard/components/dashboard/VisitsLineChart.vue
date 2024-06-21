@@ -8,7 +8,7 @@ const ready = ref<boolean>(false);
 const props = defineProps<{ slice: SliceName }>();
 
 async function loadData() {
-    const response = await useTimelineDataRaw('visits', props.slice);
+    const response = await useVisitsTimeline(props.slice);
     if (!response) return;
     const fixed = fixMetrics(response, props.slice);
     console.log(fixed);
