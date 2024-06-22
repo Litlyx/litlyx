@@ -17,7 +17,7 @@ export function useFirstInteractionData() {
 }
 
 
-export async function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Slice, fromDate?: string, toDate?: string) {
+export async function useTimelineAdvanced(endpoint: string, slice: Slice, fromDate?: string, toDate?: string, customBody: Object = {}) {
 
     const { from, to } = DateService.prepareDateRange(
         fromDate || DateService.getDefaultRange(slice).from,
@@ -30,11 +30,20 @@ export async function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers',
         `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`, {
         method: 'POST',
         ...signHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ slice, from, to })
+        body: JSON.stringify({ slice, from, to, ...customBody })
     });
 
     return response as { _id: string, count: number }[];
 
+}
+
+
+export async function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Slice, fromDate?: string, toDate?: string) {
+    return await useTimelineAdvanced(endpoint, slice, fromDate, toDate, {});
+}
+
+export async function useReferrersTimeline(referrer: string, slice: Slice, fromDate?: string, toDate?: string) {
+    return await useTimelineAdvanced('referrers', slice, fromDate, toDate, { referrer });
 }
 
 

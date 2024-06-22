@@ -108,14 +108,11 @@ class DateService {
         const lastDate = dayjs(dates.at(-1));
         let currentDate = firstDate.clone();
 
-        console.log('currentDate', currentDate.toISOString());
-        console.log('   lastDate', lastDate.toISOString());
-
         while (currentDate.isBefore(lastDate, slice)) {
             currentDate = currentDate.add(1, slice);
             allDates.push(currentDate);
         }
-        console.log('alldates', allDates.length);
+        
         return allDates;
     }
 
@@ -132,31 +129,3 @@ class DateService {
 
 const dateServiceInstance = new DateService();
 export default dateServiceInstance;
-
-
-dateServiceInstance.fillDates([
-    { _id: "2024-06-21T00:00:00.000Z", count: 33 },
-    { _id: "2024-06-21T01:00:00.000Z", count: 10 },
-    { _id: "2024-06-21T02:00:00.000Z", count: 7 },
-    { _id: "2024-06-21T03:00:00.000Z", count: 7 },
-    { _id: "2024-06-21T04:00:00.000Z", count: 7 },
-    { _id: "2024-06-21T05:00:00.000Z", count: 27 },
-    { _id: "2024-06-21T06:00:00.000Z", count: 5 },
-    { _id: "2024-06-21T07:00:00.000Z", count: 9 },
-    { _id: "2024-06-21T08:00:00.000Z", count: 24 },
-    { _id: "2024-06-21T09:00:00.000Z", count: 6 },
-    { _id: "2024-06-21T10:00:00.000Z", count: 13 },
-    { _id: "2024-06-21T11:00:00.000Z", count: 12 },
-    { _id: "2024-06-21T12:00:00.000Z", count: 13 },
-    { _id: "2024-06-21T13:00:00.000Z", count: 68 },
-    { _id: "2024-06-21T14:00:00.000Z", count: 12 },
-    { _id: "2024-06-21T15:00:00.000Z", count: 26 },
-    { _id: "2024-06-21T16:00:00.000Z", count: 8 },
-    { _id: "2024-06-21T17:00:00.000Z", count: 8 },
-    { _id: "2024-06-21T18:00:00.000Z", count: 17 },
-    { _id: "2024-06-20T19:00:00.000Z", count: 7 },
-    { _id: "2024-06-20T20:00:00.000Z", count: 13 },
-    { _id: "2024-06-20T21:00:00.000Z", count: 10 },
-    { _id: "2024-06-20T22:00:00.000Z", count: 16 },
-    { _id: "2024-06-20T23:00:00.000Z", count: 14 }
-].map(e => e._id), 'hour')
