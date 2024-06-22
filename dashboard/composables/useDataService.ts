@@ -16,7 +16,8 @@ export function useFirstInteractionData() {
     return metricsInfo;
 }
 
-export async function useTimeline(endpoint: 'visits' | 'sessions', slice: Slice, fromDate?: string, toDate?: string) {
+
+export async function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Slice, fromDate?: string, toDate?: string) {
 
     const { from, to } = DateService.prepareDateRange(
         fromDate || DateService.getDefaultRange(slice).from,
@@ -35,6 +36,8 @@ export async function useTimeline(endpoint: 'visits' | 'sessions', slice: Slice,
     return response as { _id: string, count: number }[];
 
 }
+
+
 
 export async function useTimelineDataRaw(timelineEndpointName: string, slice: SliceName) {
     const activeProject = useActiveProject();

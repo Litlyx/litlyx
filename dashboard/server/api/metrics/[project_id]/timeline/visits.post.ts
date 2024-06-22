@@ -2,6 +2,7 @@ import { VisitModel } from "@schema/metrics/VisitSchema";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import DateService from "@services/DateService";
+import { executeTimelineAggregation, fillAndMergeTimelineAggregation } from "~/server/services/TimelineService";
 
 
 export default defineEventHandler(async event => {
@@ -23,27 +24,15 @@ export default defineEventHandler(async event => {
         key: `timeline:visits:${project_id}:${slice}:${from || 'none'}:${to || 'none'}`,
         exp: TIMELINE_EXPIRE_TIME
     }, async () => {
-
-        const { group, sort, fromParts } = DateService.getQueryDateRange(slice);
-
-        const aggregation = [
-            {
-                $match: {
-                    project_id: project._id,
-                    created_at: { $gte: new Date(from), $lte: new Date(to) },
-                }
-            },
-            { $group: { _id: group, count: { $sum: 1 } } },
-            { $sort: sort },
-            { $project: { _id: { $dateFromParts: fromParts }, count: "$count" } }
-        ]
-
-        const timelineVisits: { _id: string, count: number }[] = await VisitModel.aggregate(aggregation);
-        const filledDates = DateService.fillDates(timelineVisits.map(e => e._id), slice);
-        const merged = DateService.mergeFilledDates(filledDates, timelineVisits, '_id', slice, { count: 0 });
-        return merged;
-
+        const timelineData = await executeTimelineAggregation({
+            projectId: project._id,
+            model: VisitModel,
+            from, to, slice
+        });
+        const timelineFilledMerged = fillAndMergeTimelineAggregation(timelineData, slice);
+        return timelineFilledMerged;
     });
+
 
 
 
