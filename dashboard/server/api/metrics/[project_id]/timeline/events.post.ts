@@ -2,6 +2,7 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { getTimeline } from "./generic";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
+import { executeTimelineAggregation, fillAndMergeTimelineAggregation } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
     const project_id = getRequestProjectId(event);
@@ -11,11 +12,25 @@ export default defineEventHandler(async event => {
     const project = await getUserProjectFromId(project_id, user);
     if (!project) return;
 
-    const { slice, duration } = await readBody(event);
+    const { slice, from, to } = await readBody(event);
 
-    return await Redis.useCache({ key: `timeline:events:${project_id}:${slice}`, exp: TIMELINE_EXPIRE_TIME }, async () => {
-        const timelineEvents = await getTimeline(EventModel, project_id, slice, duration);
-        return timelineEvents;
+    if (!from) return setResponseStatus(event, 400, 'from is required');
+    if (!from) return setResponseStatus(event, 400, 'to is required');
+    if (!from) return setResponseStatus(event, 400, 'slice is required');
+
+    return await Redis.useCache({
+        key: `timeline:events:${project_id}:${slice}:${from || 'none'}:${to || 'none'}`,
+        exp: TIMELINE_EXPIRE_TIME
+    }, async () => {
+        const timelineData = await executeTimelineAggregation({
+            projectId: project._id,
+            model: EventModel,
+            from, to, slice
+        });
+        const timelineFilledMerged = fillAndMergeTimelineAggregation(timelineData, slice);
+        return timelineFilledMerged;
     });
+
+
 
 });

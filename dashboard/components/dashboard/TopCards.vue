@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import type { MetricsTimeline } from '~/server/api/metrics/[project_id]/timeline/generic';
-
+import DateService from '@services/DateService';
 
 const { data: metricsInfo } = useMetricsData();
 
@@ -63,11 +63,18 @@ const sessionsData = reactive<Data>({ data: [], labels: [], trend: 0, ready: fal
 const sessionsDurationData = reactive<Data>({ data: [], labels: [], trend: 0, ready: false });
 
 async function loadData(timelineEndpointName: string, target: Data) {
-    const response = await useTimelineData(timelineEndpointName, 'day');
+
+    const response = await useTimeline(timelineEndpointName as any, 'day');
     if (!response) return;
-    target.data = response.data;
-    target.labels = response.labels;
-    target.trend = response.trend;
+    target.data = response.map(e => e.count);
+    target.labels = response.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, 'day'));
+
+    const pool = [...response.map(e => e.count)];
+    pool.pop();
+    const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
+    const diffPercent = (100 / avg * (response.at(-1)?.count || 0)) - 100;
+    target.trend = diffPercent;
+    
     target.ready = true;
 }
 
