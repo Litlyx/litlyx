@@ -134,7 +134,7 @@ Write to us at `help@litlyx.com` if you need to contact us.
 
 # License
 
-Litlyx is licensed under the [Apache 2.0](/LICENSE.md) license.
+Litlyx is licensed under the [Apache 2.0](/LICENSE) license.
 
 # Share some ❤️ for the repo
 
