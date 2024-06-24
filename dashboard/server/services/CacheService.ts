@@ -21,6 +21,7 @@ export class Redis {
         url: runtimeConfig.REDIS_URL,
         username: runtimeConfig.REDIS_USERNAME,
         password: runtimeConfig.REDIS_PASSWORD,
+        database: process.dev ? 1 : 0
     });
 
     static async init() {

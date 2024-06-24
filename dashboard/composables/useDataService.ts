@@ -1,3 +1,5 @@
+import type { Slice } from "@services/DateService";
+import DateService from "@services/DateService";
 import type { MetricsCounts } from "~/server/api/metrics/[project_id]/counts";
 import type { VisitsWebsiteAggregated } from "~/server/api/metrics/[project_id]/data/websites";
 import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline/generic";
@@ -13,6 +15,38 @@ export function useFirstInteractionData() {
     const metricsInfo = useFetch<boolean>(`/api/metrics/${activeProject.value?._id}/first_interaction`, signHeaders());
     return metricsInfo;
 }
+
+
+export async function useTimelineAdvanced(endpoint: string, slice: Slice, fromDate?: string, toDate?: string, customBody: Object = {}) {
+
+    const { from, to } = DateService.prepareDateRange(
+        fromDate || DateService.getDefaultRange(slice).from,
+        toDate || DateService.getDefaultRange(slice).to,
+        slice
+    );
+
+    const activeProject = useActiveProject();
+    const response = await $fetch(
+        `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`, {
+        method: 'POST',
+        ...signHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ slice, from, to, ...customBody })
+    });
+
+    return response as { _id: string, count: number }[];
+
+}
+
+
+export async function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Slice, fromDate?: string, toDate?: string) {
+    return await useTimelineAdvanced(endpoint, slice, fromDate, toDate, {});
+}
+
+export async function useReferrersTimeline(referrer: string, slice: Slice, fromDate?: string, toDate?: string) {
+    return await useTimelineAdvanced('referrers', slice, fromDate, toDate, { referrer });
+}
+
+
 
 export async function useTimelineDataRaw(timelineEndpointName: string, slice: SliceName) {
     const activeProject = useActiveProject();

@@ -63,7 +63,8 @@ watch(pending, () => {
 
 const selectLabels = [
     { label: 'Hour', value: 'hour' },
-    { label: 'Day', value: 'day' }
+    { label: 'Day', value: 'day' },
+    // { label: 'Month', value: 'month' },
 ];
 
 

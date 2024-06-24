@@ -1,29 +1,19 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
+import DateService, { type Slice } from '@services/DateService';
 
 const data = ref<number[]>([]);
 const labels = ref<string[]>([]);
 const ready = ref<boolean>(false);
-const props = defineProps<{ slice: SliceName, referrer: string }>();
 
-const activeProject = useActiveProject();
+const props = defineProps<{ slice: Slice, referrer: string }>();
 
 async function loadData() {
-
-    const response = await $fetch(`/api/metrics/${activeProject.value?._id.toString()}/timeline/referrers`, {
-        method: 'POST',
-        ...signHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ slice: 'day', referrer: props.referrer })
-    });
-
+    const response = await useReferrersTimeline(props.referrer, props.slice);
     if (!response) return;
-
-    const fixed = fixMetrics(response, props.slice);
-    console.log(fixed);
-    data.value = fixed.data;
-    labels.value = fixed.labels;
+    data.value = response.map(e => e.count);
+    labels.value = response.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, props.slice));
     ready.value = true;
-
 }
 
 onMounted(async () => {
