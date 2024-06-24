@@ -20,7 +20,8 @@
 		"dev": "node scripts/start_dev.js",
 		"compile": "tsc",
 		"build": "ts-node scripts/build.ts",
-		"build_all": "npm run compile && npm run build"
+		"build_all": "npm run compile && npm run build",
+		"docker-build": "node scripts/prepare_docker.js && docker build -t litlyx-producer ."
 	},
 	"keywords": [],
 	"author": "Emily",
