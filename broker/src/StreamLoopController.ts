@@ -22,6 +22,7 @@ export async function startStreamLoop() {
         delay: { base: 100, empty: 5000 },
         readBlock: 2500
     }, processStreamEvent);
+    
 }
 
 

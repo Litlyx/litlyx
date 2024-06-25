@@ -5,13 +5,14 @@ import EmailService from '@services/EmailService';
 import { requireEnv } from "../../shared/utilts/requireEnv";
 import { TProjectLimit } from "@schema/ProjectsLimits";
 
-
-EmailService.createTransport(
-    requireEnv('EMAIL_SERVICE'),
-    requireEnv('EMAIL_HOST'),
-    requireEnv('EMAIL_USER'),
-    requireEnv('EMAIL_PASS'),
-);
+if (process.env.EMAIL_SERVICE) {
+    EmailService.createTransport(
+        requireEnv('EMAIL_SERVICE'),
+        requireEnv('EMAIL_HOST'),
+        requireEnv('EMAIL_USER'),
+        requireEnv('EMAIL_PASS'),
+    );
+}
 
 export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
@@ -22,7 +23,7 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
         if (!project) return;
         const owner = await UserModel.findById(project.owner);
         if (!owner) return;
-        await EmailService.sendLimitEmail50(owner.email);
+        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmail50(owner.email);
         await LimitNotifyModel.updateOne({ project_id: projectCounts._id }, { limit1: true, limit2: false, limit3: false }, { upsert: true });
     }
 

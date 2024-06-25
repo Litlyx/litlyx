@@ -8,7 +8,8 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "test": "vitest"
+    "test": "vitest",
+    "docker-build": "pnpm run build && docker build -t litlyx-dashboard ."
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",
