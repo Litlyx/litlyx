@@ -42,3 +42,9 @@ landing/*
 docker/*
 dev/*
 assets/*
+CODE_OF_CONDUCT.md
+LICENSE
+readme.md
+SECURITY.md
+steps
+docker-compose.yml
