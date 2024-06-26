@@ -1,0 +1,32 @@
+
+# Broker
+broker/node_modules
+broker/scripts/start_dev.js
+broker/ecosystem.config.cjs
+broker/ecosystem.config.example.cjs
+broker/Dockerfile
+broker/.gitignore
+broker/dist
+
+# Producer
+producer/node_modules
+producer/scripts/start_dev.js
+producer/ecosystem.config.cjs
+producer/ecosystem.config.example.cjs
+producer/Dockerfile
+producer/.gitignore
+producer/dist
+
+# Dashboard
+dashboard/*
+
+# Shared
+shared/node_modules
+shared/.gitignore
+
+# Others
+docs/*
+landing/*
+docker/*
+dev/*
+assets/*

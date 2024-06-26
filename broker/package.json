@@ -27,7 +27,8 @@
     "build": "ts-node scripts/build.ts",
     "create_db": "cd scripts && ts-node create_database.ts",
     "build_all": "npm run compile && npm run build && npm run create_db",
-    "docker-build": "node scripts/prepare_docker.js && docker build -t litlyx-broker ."
+    "docker-build": "docker build -t litlyx-broker -f Dockerfile ../",
+    "docker-inspect": "docker run -it litlyx-broker sh"
   },
   "keywords": [],
   "author": "Emily",

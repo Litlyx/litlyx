@@ -1,0 +1,54 @@
+version: "3.1"
+
+services:
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: litlyx
+      MONGO_INITDB_ROOT_PASSWORD: litlyx
+    ports:
+      - 27017:27017
+
+  cache:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --save 20 1 --loglevel warning --requirepass litlyx
+
+  producer:
+    image: litlyx-producer:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      REDIS_URL: "redis://cache"
+      REDIS_USERNAME: "default"
+      REDIS_PASSWORD: "litlyx"
+      STREAM_NAME: "lib-events"
+
+  broker:
+    image: litlyx-broker:latest
+    restart: always
+    ports:
+      - "3999:3999"
+    environment:
+      # EMAIL_SERVICE: ""
+      # EMAIL_HOST: ""
+      # EMAIL_USER: ""
+      # EMAIL_PASS: ""
+      PORT: "3999"
+      MONGO_CONNECTION_STRING: "mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin"
+      REDIS_URL: "redis://cache"
+      REDIS_USERNAME: "default"
+      REDIS_PASSWORD: "litlyx"
+      STREAM_NAME: "lib-events"
+
+  # dashboard:
+  #   image: litlyx-dashboard:latest
+  #   restart: always
+  #   ports:
+  #     - "80:80"
+  #   environment:
+  #     PORT: "80"
