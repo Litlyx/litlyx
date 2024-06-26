@@ -1,7 +1,31 @@
-FROM node:21-alpine
+ARG NODE_VERSION=21
+
+FROM node:${NODE_VERSION}-alpine as base
+
+ENV NODE_ENV=production
+
+# Build stage
+
 WORKDIR /home/app
-COPY package.json pnpm-lock.yaml ./
-RUN npm install -g pnpm && pnpm install --prod --frozen-lockfile
-COPY ./.output /home/app/dist
+
+FROM base as build
+
+COPY --link dashboard/package.json dashboard/pnpm-lock.yaml ./
+RUN npm install --production=false
+
+COPY --link dashboard/ ./
+
+COPY --link shared/ /home/shared
+
+RUN npm run build
+RUN npm prune
+
+# Final stage
+
+FROM base
+
+COPY --from=build /home/app /home/app
+
 EXPOSE ${PORT}
-CMD ["node", "dist/server/index.mjs"]
+
+CMD [ "node", "/home/app/.output/server/index.mjs" ]

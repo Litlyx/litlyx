@@ -8,6 +8,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: litlyx
     ports:
       - 27017:27017
+    volumes:
+      - mongo-data:/data/db
 
   cache:
     image: redis:alpine
@@ -20,9 +22,9 @@ services:
     image: litlyx-producer:latest
     restart: always
     ports:
-      - "3000:3000"
+      - "3099:3099"
     environment:
-      PORT: "3000"
+      PORT: "3099"
       REDIS_URL: "redis://cache"
       REDIS_USERNAME: "default"
       REDIS_PASSWORD: "litlyx"
@@ -45,10 +47,38 @@ services:
       REDIS_PASSWORD: "litlyx"
       STREAM_NAME: "lib-events"
 
-  # dashboard:
-  #   image: litlyx-dashboard:latest
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #   environment:
-  #     PORT: "80"
+  dashboard:
+    image: litlyx-dashboard:latest
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NUXT_PORT: "3000"
+      NUXT_MONGO_CONNECTION_STRING: 'mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin'
+
+      NUXT_REDIS_URL: "redis://cache"
+      NUXT_REDIS_USERNAME: "default"
+      NUXT_REDIS_PASSWORD: "litlyx"
+
+      NUXT_AI_ORG: 'OPEN_AI_ORGANIZATION'
+      NUXT_AI_PROJECT: 'OPEN_AI_PROJECT'
+      NUXT_AI_KEY: 'OPEN_AI_KEY'
+
+      # NUXT_EMAIL_SERVICE: ""
+      # NUXT_EMAIL_HOST: ""
+      # NUXT_EMAIL_USER: ""
+      # NUXT_EMAIL_PASS: ""
+
+      NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
+
+      NUXT_GOOGLE_AUTH_CLIENT_ID: "GOOGLE_AUTH_CLIENT_ID"
+      NUXT_GOOGLE_AUTH_CLIENT_SECRET: "GOOGLE_AUTH_CLIENT_SECRET"
+
+      NUXT_STRIPE_SECRET_TEST: "STRIPE_SECRET_TEST"
+      NUXT_STRIPE_WH_SECRET_TEST: "STRIPE_WEBHOOK_SECRET_TEST"
+
+      NUXT_STRIPE_SECRET: "STRIPE_SECRET"
+      NUXT_STRIPE_WH_SECRET: "STRIPE_WEBHOOK_SECRET"
+
+volumes:
+  mongo-data:

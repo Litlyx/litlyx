@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "test": "vitest",
-    "docker-build": "pnpm run build && docker build -t litlyx-dashboard ."
+    "docker-build": "docker build -t litlyx-dashboard -f Dockerfile ../",
+		"docker-inspect": "docker run -it litlyx-dashboard sh"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",

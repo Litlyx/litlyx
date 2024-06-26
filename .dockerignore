@@ -18,7 +18,19 @@ producer/.gitignore
 producer/dist
 
 # Dashboard
-dashboard/*
+dashboard/node_modules
+dashboard/.nuxt
+dashboard/.output
+dashboard/tests
+dashboard/.env.example
+dashboard/.env
+dashboard/.gitignore
+dashboard/ecosystem.config.cjs
+dashboard/out.pdf
+dashboard/timeline.report.txt
+dashboard/Dockerfile
+dashboard/vitest.config.ts
+dashboard/vitest.setup.ts
 
 # Shared
 shared/node_modules
