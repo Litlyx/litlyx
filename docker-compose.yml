@@ -1,5 +1,3 @@
-version: "3.1"
-
 services:
   mongo:
     image: mongo
@@ -19,7 +17,7 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass litlyx
 
   producer:
-    image: litlyx-producer:latest
+    image: litlyx-producer
     restart: always
     ports:
       - "3099:3099"
@@ -29,9 +27,12 @@ services:
       REDIS_USERNAME: "default"
       REDIS_PASSWORD: "litlyx"
       STREAM_NAME: "lib-events"
+    build:
+      dockerfile: ./producer/Dockerfile
+
 
   broker:
-    image: litlyx-broker:latest
+    image: litlyx-broker
     restart: always
     ports:
       - "3999:3999"
@@ -46,9 +47,11 @@ services:
       REDIS_USERNAME: "default"
       REDIS_PASSWORD: "litlyx"
       STREAM_NAME: "lib-events"
+    build:
+      dockerfile: ./broker/Dockerfile 
 
   dashboard:
-    image: litlyx-dashboard:latest
+    image: litlyx-dashboard
     restart: always
     ports:
       - "3000:3000"
@@ -79,6 +82,8 @@ services:
 
       NUXT_STRIPE_SECRET: "STRIPE_SECRET"
       NUXT_STRIPE_WH_SECRET: "STRIPE_WEBHOOK_SECRET"
+    build:
+      dockerfile: ./dashboard/Dockerfile 
 
 volumes:
   mongo-data:
