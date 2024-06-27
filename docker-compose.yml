@@ -37,10 +37,14 @@ services:
     ports:
       - "3999:3999"
     environment:
+
+      # Optional - Used to send welcome and quota emails
+
       # EMAIL_SERVICE: ""
       # EMAIL_HOST: ""
       # EMAIL_USER: ""
       # EMAIL_PASS: ""
+
       PORT: "3999"
       MONGO_CONNECTION_STRING: "mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin"
       REDIS_URL: "redis://cache"
@@ -63,9 +67,15 @@ services:
       NUXT_REDIS_USERNAME: "default"
       NUXT_REDIS_PASSWORD: "litlyx"
 
-      NUXT_AI_ORG: 'OPEN_AI_ORGANIZATION'
-      NUXT_AI_PROJECT: 'OPEN_AI_PROJECT'
-      NUXT_AI_KEY: 'OPEN_AI_KEY'
+
+      # Optional - Used to use Lit, the AI analyst
+
+      # NUXT_AI_ORG: 'OPEN_AI_ORGANIZATION'
+      # NUXT_AI_PROJECT: 'OPEN_AI_PROJECT'
+      # NUXT_AI_KEY: 'OPEN_AI_KEY'
+
+
+      # Optional - Used to send welcome and quota emails
 
       # NUXT_EMAIL_SERVICE: ""
       # NUXT_EMAIL_HOST: ""
@@ -74,14 +84,24 @@ services:
 
       NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
 
-      NUXT_GOOGLE_AUTH_CLIENT_ID: "GOOGLE_AUTH_CLIENT_ID"
-      NUXT_GOOGLE_AUTH_CLIENT_SECRET: "GOOGLE_AUTH_CLIENT_SECRET"
 
-      NUXT_STRIPE_SECRET_TEST: "STRIPE_SECRET_TEST"
-      NUXT_STRIPE_WH_SECRET_TEST: "STRIPE_WEBHOOK_SECRET_TEST"
+      # Optional - Used to register / login
 
-      NUXT_STRIPE_SECRET: "STRIPE_SECRET"
-      NUXT_STRIPE_WH_SECRET: "STRIPE_WEBHOOK_SECRET"
+      # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
+      # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
+
+
+      # Optional - Used for tests
+
+      # NUXT_STRIPE_SECRET_TEST: ""
+      # NUXT_STRIPE_WH_SECRET_TEST: ""
+
+
+      # Optional - Stripe secret - Used to change plans of the projects
+
+      #NUXT_STRIPE_SECRET: ""
+      #NUXT_STRIPE_WH_SECRET: ""
+
     build:
       dockerfile: ./dashboard/Dockerfile 
 

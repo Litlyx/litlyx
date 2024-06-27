@@ -6,6 +6,7 @@ class StripeService {
     private privateKey?: string;
     private webhookSecret?: string;
     public testMode?: boolean;
+    private disabledMode: boolean = false;
 
     init(privateKey: string, webhookSecret: string, testMode: boolean = false) {
         this.privateKey = privateKey;
@@ -14,7 +15,12 @@ class StripeService {
         this.testMode = testMode;
     }
 
+    disable() { this.disabledMode = true; }
+    enable() { this.disabledMode = false; }
+    isDisabled() { return this.disabledMode; }
+
     parseWebhook(body: any, sig: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
         if (!this.webhookSecret) {
             console.error('Stripe not initialized')
@@ -24,6 +30,7 @@ class StripeService {
     }
 
     async cretePayment(price: string, success_url: string, pid: string, customer?: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
 
         const checkout = await this.stripe.checkout.sessions.create({
@@ -44,42 +51,50 @@ class StripeService {
     }
 
     async deleteSubscription(subscriptionId: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
         const subscription = await this.stripe.subscriptions.cancel(subscriptionId);
         return subscription;
     }
 
     async getSubscription(subscriptionId: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
         const subscription = await this.stripe.subscriptions.retrieve(subscriptionId);
         return subscription;
     }
 
     async getAllSubscriptions(customer_id: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
-        const subscriptions = await this.stripe.subscriptions.list({customer: customer_id});
+        const subscriptions = await this.stripe.subscriptions.list({ customer: customer_id });
         return subscriptions;
     }
 
     async getInvoices(customer_id: string) {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
         const invoices = await this.stripe?.invoices.list({ customer: customer_id });
         return invoices;
     }
 
 
     async getCustomer(customer_id: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
         const customer = await this.stripe.customers.retrieve(customer_id, { expand: [] })
         return customer;
     }
 
     async createCustomer(email: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
         const customer = await this.stripe.customers.create({ email });
         return customer;
     }
 
     async deleteCustomer(customer_id: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
         const { deleted } = await this.stripe.customers.del(customer_id);
         return deleted;
@@ -89,6 +104,7 @@ class StripeService {
 
 
     async createFreeSubscription(customer_id: string) {
+        if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
 
         const FREE_PLAN = getPlanFromTag('FREE');

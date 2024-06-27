@@ -29,7 +29,7 @@ export default defineEventHandler(async event => {
         billing_expire_at: projectLimits.billing_expire_at,
         limit: projectLimits.limit,
         count: projectLimits.events + projectLimits.visits,
-        subscription_status: subscription.status
+        subscription_status: StripeService.isDisabled() ? 'Disabled mode' : (subscription?.status ?? '?')
     }
 
     return result;

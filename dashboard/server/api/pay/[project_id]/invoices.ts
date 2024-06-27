@@ -25,6 +25,7 @@ export default defineEventHandler(async event => {
     return await Redis.useCache({ key: `invoices:${project_id}`, exp: 10 }, async () => {
 
         const invoices = await StripeService.getInvoices(project.customer_id);
+        if (!invoices) return [];
 
         return invoices?.data.map(e => {
             const result: InvoiceData = {
@@ -36,6 +37,7 @@ export default defineEventHandler(async event => {
             }
             return result;
         });
+
 
     });
 

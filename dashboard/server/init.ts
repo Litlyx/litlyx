@@ -10,15 +10,19 @@ export default async () => {
 
     console.log('[SERVER] Initializing');
 
-    EmailService.createTransport(
-        config.EMAIL_SERVICE,
-        config.EMAIL_HOST,
-        config.EMAIL_USER,
-        config.EMAIL_PASS,
-    );
+    if (config.EMAIL_SERVICE) {
+        EmailService.createTransport(config.EMAIL_SERVICE, config.EMAIL_HOST, config.EMAIL_USER, config.EMAIL_PASS);
+        console.log('[EMAIL] Initialized')
+    }
 
-    
-    StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, false);
+
+    if (config.STRIPE_SECRET) {
+        StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, false);
+        console.log('[STRIPE] Initialized')
+    } else {
+        StripeService.disable();
+        console.log('[STRIPE] No stripe key - Disabled mode')
+    }
 
 
     if (!connection || connection.connection.readyState == mongoose.ConnectionStates.disconnected) {
