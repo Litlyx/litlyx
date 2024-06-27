@@ -17,6 +17,9 @@ COPY --link dashboard/ ./
 
 COPY --link shared/ /home/shared
 
+ARG GOOGLE_AUTH_CLIENT_ID
+ENV GOOGLE_AUTH_CLIENT_ID=$GOOGLE_AUTH_CLIENT_ID
+
 RUN npm run build
 RUN npm prune
 

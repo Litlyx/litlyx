@@ -22,28 +22,56 @@ export default defineEventHandler(async event => {
     const existingUserProjects = await ProjectModel.countDocuments({ owner: userData.id });
     if (existingUserProjects >= maxProjects) return setResponseStatus(event, 400, 'Already have max number of projects');
 
-    const customer = await StripeService.createCustomer(userData.user.email);
-    if (!customer) return setResponseStatus(event, 400, 'Error creating customer');
+    if (StripeService.isDisabled()) {
 
-    const subscription = await StripeService.createFreeSubscription(customer.id);
-    if (!subscription) return setResponseStatus(event, 400, 'Error creating subscription');
+        const project = await ProjectModel.create({
+            owner: userData.id,
+            name: newProjectName,
+            premium: false,
+            premium_type: 0,
+            customer_id: 'DISABLED_MODE',
+            subscription_id: "DISABLED_MODE",
+            premium_expire_at: new Date(3000, 1, 1)
+        });
 
-    const project = await ProjectModel.create({
-        owner: userData.id,
-        name: newProjectName,
-        premium: false,
-        premium_type: 0,
-        customer_id: customer.id,
-        subscription_id: subscription.id,
-        premium_expire_at: subscription.current_period_end * 1000
-    });
 
-    await ProjectCountModel.create({
-        project_id: project._id,
-        events: 0,
-        visits: 0
-    });
+        await ProjectCountModel.create({
+            project_id: project._id,
+            events: 0,
+            visits: 0
+        });
 
-    return project.toJSON() as TProject;
+        return project.toJSON() as TProject;
+
+    } else {
+
+        const customer = await StripeService.createCustomer(userData.user.email);
+        if (!customer) return setResponseStatus(event, 400, 'Error creating customer');
+
+        const subscription = await StripeService.createFreeSubscription(customer.id);
+        if (!subscription) return setResponseStatus(event, 400, 'Error creating subscription');
+
+        const project = await ProjectModel.create({
+            owner: userData.id,
+            name: newProjectName,
+            premium: false,
+            premium_type: 0,
+            customer_id: customer.id,
+            subscription_id: subscription.id,
+            premium_expire_at: subscription.current_period_end * 1000
+        });
+
+
+        await ProjectCountModel.create({
+            project_id: project._id,
+            events: 0,
+            visits: 0
+        });
+
+        return project.toJSON() as TProject;
+
+    }
+
+
 
 });

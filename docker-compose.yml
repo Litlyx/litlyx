@@ -86,9 +86,9 @@ services:
 
 
       # Optional - Used to register / login
-
-      # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
-      # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
+      
+      NUXT_GOOGLE_AUTH_CLIENT_ID: ""
+      NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
 
 
       # Optional - Used for tests
@@ -104,6 +104,11 @@ services:
 
     build:
       dockerfile: ./dashboard/Dockerfile 
+      args:
+        
+        # Optional - Used to register / login
+        
+        GOOGLE_AUTH_CLIENT_ID: ""
 
 volumes:
   mongo-data:

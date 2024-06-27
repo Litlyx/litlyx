@@ -2,3 +2,4 @@ steps
 PROCESS_EVENT
 docker
 dev
+docker-compose.admin.yml

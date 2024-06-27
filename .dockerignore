@@ -48,3 +48,4 @@ readme.md
 SECURITY.md
 steps
 docker-compose.yml
+docker-compose.admin.yml
