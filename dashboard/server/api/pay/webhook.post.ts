@@ -35,19 +35,21 @@ async function addSubscriptionToProject(project_id: string, plan: PREMIUM_DATA, 
 async function onPaymentFailed(event: Event.InvoicePaymentFailedEvent) {
 
     //TODO: Send emails
-    
+
     if (event.data.object.attempt_count > 1) {
         const customer_id = event.data.object.customer as string;
         const project = await ProjectModel.findOne({ customer_id });
         if (!project) return { error: 'CUSTOMER NOT EXIST' }
 
         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
+        if (!allSubscriptions) return;
 
         for (const subscription of allSubscriptions.data) {
             await StripeService.deleteSubscription(subscription.id);
         }
 
         const freeSub = await StripeService.createFreeSubscription(customer_id);
+        if (!freeSub) return;
 
         await addSubscriptionToProject(
             project._id.toString(),
@@ -75,7 +77,8 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
         const subscription_id = event.data.object.subscription as string;
 
         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
-
+        if (!allSubscriptions) return;
+        
         const currentSubscription = allSubscriptions.data.find(e => e.id === subscription_id);
         if (!currentSubscription) return { error: 'SUBSCRIPTION NOT EXIST' }
 

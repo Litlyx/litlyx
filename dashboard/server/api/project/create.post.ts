@@ -1,5 +1,6 @@
 import { ProjectModel, TProject } from "@schema/ProjectSchema";
 import { ProjectCountModel } from "@schema/ProjectsCounts";
+import { ProjectLimitModel } from "@schema/ProjectsLimits";
 import { UserSettingsModel } from "@schema/UserSettings";
 import StripeService from '~/server/services/StripeService';
 
@@ -40,6 +41,16 @@ export default defineEventHandler(async event => {
             events: 0,
             visits: 0
         });
+
+        await ProjectLimitModel.updateOne({ project_id: project._id }, {
+            events: 0,
+            visits: 0,
+            ai_messages: 0,
+            limit: 10_000_000,
+            ai_limit: 1_000_000,
+            billing_start_at: Date.now(),
+            billing_expire_at: new Date(3000, 1, 1)
+        }, { upsert: true })
 
         return project.toJSON() as TProject;
 
