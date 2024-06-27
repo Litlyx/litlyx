@@ -85,7 +85,7 @@ services:
       NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
 
 
-      # Optional - Used to register / login
+      # Used to register / login
       
       NUXT_GOOGLE_AUTH_CLIENT_ID: ""
       NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
@@ -106,7 +106,7 @@ services:
       dockerfile: ./dashboard/Dockerfile 
       args:
         
-        # Optional - Used to register / login
+        # Used to register / login
         
         GOOGLE_AUTH_CLIENT_ID: ""
 
