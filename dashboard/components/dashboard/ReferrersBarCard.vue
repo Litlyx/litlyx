@@ -5,7 +5,10 @@ import type { IconProvider } from './BarsCard.vue';
 import ReferrerBarChart from '../referrer/ReferrerBarChart.vue';
 
 const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`, signHeaders());
+const { data: events, pending, refresh } = await useFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`, {
+    ...signHeaders(),
+    lazy: true
+});
 
 
 function iconProvider(id: string): ReturnType<IconProvider> {

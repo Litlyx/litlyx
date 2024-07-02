@@ -3,7 +3,10 @@
 import type { DevicesAggregated } from '~/server/api/metrics/[project_id]/data/devices';
 
 const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`, signHeaders());
+const { data: events, pending, refresh } = await useFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`, {
+    ...signHeaders(),
+    lazy: true
+});
 
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();

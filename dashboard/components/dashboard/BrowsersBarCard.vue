@@ -3,7 +3,10 @@
 import type { BrowsersAggregated } from '~/server/api/metrics/[project_id]/data/browsers';
 
 const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`, signHeaders());
+const { data: events, pending, refresh } = await useFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`, {
+    ...signHeaders(),
+    lazy: true
+});
 
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { MetricsTimeline } from '~/server/api/metrics/[project_id]/timeline/generic';
+
 import DateService from '@services/DateService';
 
 const { data: metricsInfo } = useMetricsData();

@@ -6,7 +6,10 @@ import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline
 
 export function useMetricsData() {
     const activeProject = useActiveProject();
-    const metricsInfo = useFetch<MetricsCounts>(`/api/metrics/${activeProject.value?._id}/counts`, signHeaders());
+    const metricsInfo = useFetch<MetricsCounts>(`/api/metrics/${activeProject.value?._id}/counts`, {
+        ...signHeaders(),
+        lazy: true
+    });
     return metricsInfo;
 }
 
@@ -55,7 +58,7 @@ export async function useTimelineDataRaw(timelineEndpointName: string, slice: Sl
         `/api/metrics/${activeProject.value?._id}/timeline/${timelineEndpointName}`, {
         method: 'POST',
         ...signHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ slice })
+        body: JSON.stringify({ slice }),
     });
 
     return response;
@@ -77,6 +80,7 @@ export function usePagesData(website: string, limit: number = 10) {
             'x-website-name': website
         }),
         key: `pages_data:${website}:${limit}`,
+        lazy: true
     });
 
     return res;
@@ -88,6 +92,7 @@ export function useWebsitesData(limit: number = 10) {
     const res = useFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`, {
         ...signHeaders({ 'x-query-limit': limit.toString() }),
         key: `websites_data:${limit}`,
+        lazy: true
     });
     return res;
 }

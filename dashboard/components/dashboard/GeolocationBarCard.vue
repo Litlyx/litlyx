@@ -4,7 +4,10 @@ import type { CountriesAggregated } from '~/server/api/metrics/[project_id]/data
 import type { IconProvider } from './BarsCard.vue';
 
 const activeProject = await useActiveProject();
-const { data: countries, pending, refresh } = await useFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`, signHeaders());
+const { data: countries, pending, refresh } = await useFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`, {
+    ...signHeaders(),    
+    lazy: true
+});
 
 function iconProvider(id: string): ReturnType<IconProvider> {
     if (id === 'self') return ['icon', 'fas fa-link'];

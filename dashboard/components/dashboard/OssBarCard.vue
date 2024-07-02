@@ -3,7 +3,10 @@
 import type { OssAggregated } from '~/server/api/metrics/[project_id]/data/oss';
 
 const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`, signHeaders());
+const { data: events, pending, refresh } = await useFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`, {
+    ...signHeaders(),
+    lazy: true
+});
 
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();

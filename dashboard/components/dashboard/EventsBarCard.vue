@@ -3,7 +3,10 @@
 import type { CustomEventsAggregated } from '~/server/api/metrics/[project_id]/visits/events';
 
 const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, signHeaders());
+const { data: events, pending, refresh } = await useFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, {
+    ...signHeaders(),
+    lazy: true
+});
 
 const router = useRouter();
 
@@ -35,7 +38,8 @@ function showMore() {
 
 <template>
     <div class="flex flex-col gap-2 h-full">
-        <DashboardBarsCard  @showMore="showMore()" @showRawData="goToView()" desc="Most frequent user events triggered in this project" @dataReload="refresh" :data="events || []" :loading="pending" label="Top Events"
-            sub-label="Events" :rawButton="!isLiveDemo()"></DashboardBarsCard>
+        <DashboardBarsCard @showMore="showMore()" @showRawData="goToView()"
+            desc="Most frequent user events triggered in this project" @dataReload="refresh" :data="events || []"
+            :loading="pending" label="Top Events" sub-label="Events" :rawButton="!isLiveDemo()"></DashboardBarsCard>
     </div>
 </template>
