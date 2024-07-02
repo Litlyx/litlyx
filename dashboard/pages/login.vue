@@ -2,8 +2,41 @@
 
 definePageMeta({ layout: 'none' });
 
+const { GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig();
 
-const { isReady, login } = useCodeClient({ onSuccess: handleOnSuccess, onError: handleOnError, });
+const isNoAuth = ref<boolean>(GOOGLE_AUTH_CLIENT_ID == undefined);
+
+const useCodeClientWrapper = isNoAuth.value === true ? useCodeClient : (...args: any) => {
+    return { isReady: false, login: () => { } }
+}
+
+async function loginWithoutAuth() {
+    try {
+        const result = await $fetch('/api/auth/no_auth');
+        if (result.error) return alert('Error during login, please try again');
+        
+        setToken(result.access_token);
+
+        const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
+        const loggedUser = useLoggedUser();
+        loggedUser.value = user;
+
+        console.log('LOGIN DONE - USER', loggedUser.value);
+
+        const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
+
+        if (isFirstTime === true) {
+            router.push('/project_creation?just_logged=true');
+        } else {
+            router.push('/?just_logged=true');
+        }
+
+    } catch (ex) {
+        alert('Error during login.', ex.message);
+    }
+}
+
+const { isReady, login } = useCodeClientWrapper({ onSuccess: handleOnSuccess, onError: handleOnError, });
 
 const router = useRouter();
 
@@ -80,12 +113,20 @@ function handleOnError(errorResponse: any) {
 
                 <div class="mt-12">
 
-                    <div @click="login"
+                    <div v-if="!isNoAuth" @click="login"
                         class="hover:bg-accent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
                         <div class="flex items-center">
                             <i class="fab fa-google"></i>
                         </div>
                         Continue with Google
+                    </div>
+
+                    <div v-if="isNoAuth" @click="loginWithoutAuth"
+                        class="hover:bg-accent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                        <div class="flex items-center">
+                            <i class="far fa-crown"></i>
+                        </div>
+                        Continue as Admin
                     </div>
 
                 </div>

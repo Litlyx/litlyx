@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 
 const gooleSignInConfig: any = {
   googleSignIn: {
-    clientId: process.env.GOOGLE_AUTH_CLIENT_ID
+    clientId: process.env.GOOGLE_AUTH_CLIENT_ID || 'NONE'
   }
 }
 
@@ -43,6 +43,8 @@ export default defineNuxtConfig({
     STRIPE_WH_SECRET: process.env.STRIPE_WH_SECRET,
     STRIPE_SECRET_TEST: process.env.STRIPE_SECRET_TEST,
     STRIPE_WH_SECRET_TEST: process.env.STRIPE_WH_SECRET_TEST,
+    NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
+    NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME,
     public: {
       PAYPAL_CLIENT_ID: ''
     }

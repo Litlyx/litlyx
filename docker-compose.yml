@@ -85,10 +85,16 @@ services:
       NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
 
 
-      # Used to register / login
+      # Optional - Used to register / login via google
       
-      NUXT_GOOGLE_AUTH_CLIENT_ID: ""
-      NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
+      # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
+      # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
+
+
+      # Default user created to login if no GOOGLE_AUTH_CLIENT_ID is provided
+      
+      NOAUTH_USER_EMAIL: 'default@user.com'
+      NOAUTH_USER_NAME: "defaultuser"
 
 
       # Optional - Used for tests
@@ -99,16 +105,16 @@ services:
 
       # Optional - Stripe secret - Used to change plans of the projects
 
-      #NUXT_STRIPE_SECRET: ""
-      #NUXT_STRIPE_WH_SECRET: ""
+      # NUXT_STRIPE_SECRET: ""
+      # NUXT_STRIPE_WH_SECRET: ""
 
     build:
       dockerfile: ./dashboard/Dockerfile 
-      args:
+      #args:
         
-        # Used to register / login
+        # Optional - Used to register / login via google
         
-        GOOGLE_AUTH_CLIENT_ID: ""
+        # GOOGLE_AUTH_CLIENT_ID: ""
 
 volumes:
   mongo-data:

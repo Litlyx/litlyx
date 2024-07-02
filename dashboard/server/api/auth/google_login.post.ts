@@ -3,8 +3,6 @@ import { OAuth2Client } from 'google-auth-library';
 import { createUserJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
 import EmailService from '@services/EmailService';
-import { ProjectModel } from '@schema/ProjectSchema';
-import StripeService from '~/server/services/StripeService';
 
 const { GOOGLE_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig()
 
