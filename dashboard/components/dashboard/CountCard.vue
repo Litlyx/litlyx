@@ -23,7 +23,7 @@ const props = defineProps<{
             </div>
             <div class="flex flex-col grow">
                 <div class="flex items-end gap-2">
-                    <div class="brockmann text-text-dirty text-[1.6rem] 2xl:text-[2rem]"> {{ value }} </div>
+                    <div class="brockmann text-text-dirty text-[1.6rem] 2xl:text-[1.9rem]"> {{ value }} </div>
                     <div class="poppins text-text-sub text-[.7rem] 2xl:text-[.85rem] mb-2"> {{ avg }} </div>
                 </div>
                 <div class="poppins text-text-sub text-[.9rem] 2xl:text-base"> {{ text }} </div>

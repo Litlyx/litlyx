@@ -72,9 +72,11 @@ async function loadData(timelineEndpointName: string, target: Data) {
     const pool = [...response.map(e => e.count)];
     pool.pop();
     const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
-    const diffPercent = (100 / avg * (response.at(-1)?.count || 0)) - 100;
-    target.trend = diffPercent;
-    
+
+    const diffPercent: number = (100 / avg * (response.at(-1)?.count || 0)) - 100;
+
+    target.trend = Math.max(Math.min(diffPercent, 99), -99);
+
     target.ready = true;
 }
 

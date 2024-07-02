@@ -2,6 +2,8 @@ import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { ProjectCountModel } from "@schema/ProjectsCounts";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { COUNTS_EXPIRE_TIME, COUNTS_SESSIONS_EXPIRE_TIME, Redis } from "~/server/services/CacheService";
+import { EventModel } from "@schema/metrics/EventSchema";
+import { VisitModel } from "@schema/metrics/VisitSchema";
 
 export type MetricsCounts = {
     eventsCount: number,
@@ -54,19 +56,16 @@ export default defineEventHandler(async event => {
         const totalSessionsTime = sessionsVisitsCount.reduce((a, e) => a + e.time, 0);
         const avgSessionDuration = totalSessionsTime / totalSessions;
 
-        const year = new Date().getFullYear();
-        const month = new Date().getMonth();
-
-        const firstEventDate = new Date(year, month, 0, 0, 0, 0, 0).getTime();
-        const firstViewDate = new Date(year, month, 0, 0, 0, 0, 0).getTime();
+        const firstEvent = await EventModel.findOne({ project_id: project._id }, { created_at: 1 });
+        const firstView = await VisitModel.findOne({ project_id: project._id }, { created_at: 1 });
 
         return {
             eventsCount: count[0].events,
             visitsCount: count[0].visits,
             sessionsVisitsCount: totalSessions || 0,
             avgSessionDuration,
-            firstEventDate,
-            firstViewDate,
+            firstEventDate: firstEvent?.created_at.getTime()  || Date.now(),
+            firstViewDate: firstView?.created_at.getTime() || Date.now(),
         } as MetricsCounts;
 
     });
