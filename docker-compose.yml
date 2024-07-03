@@ -93,8 +93,8 @@ services:
 
       # Default user created to login if no GOOGLE_AUTH_CLIENT_ID is provided
       
-      NOAUTH_USER_EMAIL: 'default@user.com'
-      NOAUTH_USER_NAME: "defaultuser"
+      NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
+      NUXT_NOAUTH_USER_NAME: "defaultuser"
 
 
       # Optional - Used for tests
