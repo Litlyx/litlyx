@@ -2,9 +2,9 @@
 import { createUserJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
 
-const { NOAUTH_USER_EMAIL, NOAUTH_USER_NAME, GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig();
+const { NOAUTH_USER_EMAIL, NOAUTH_USER_NAME, public: publicRuntime } = useRuntimeConfig();
 
-const noAuthMode = GOOGLE_AUTH_CLIENT_ID.length == 0;
+const noAuthMode = publicRuntime.AUTH_MODE == 'NO_AUTH';
 
 export default defineEventHandler(async event => {
 

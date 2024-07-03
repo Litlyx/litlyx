@@ -3,7 +3,7 @@
 definePageMeta({ layout: 'none' });
 
 const config = useRuntimeConfig()
-const isNoAuth = ref<boolean>(config.public.GOOGLE_AUTH_CLIENT_ID == undefined);
+const isNoAuth = ref<boolean>(config.public.AUTH_MODE == 'NO_AUTH');
 
 const useCodeClientWrapper = isNoAuth.value === false ?
     useCodeClient :

@@ -90,9 +90,12 @@ services:
       # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
       # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
 
-
-      # Default user created to login if no GOOGLE_AUTH_CLIENT_ID is provided
+      # NO_AUTH or GOOGLE
       
+      NUXT_PUBLIC_AUTH_MODE: 'NO_AUTH'
+
+      # Default user created in NO_AUTH mode
+
       NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
       NUXT_NOAUTH_USER_NAME: "defaultuser"
 

@@ -46,7 +46,7 @@ export default defineNuxtConfig({
     NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
     NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME,
     public: {
-      GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID
+      AUTH_MODE: process.env.AUTH_MODE
     }
 
   },
