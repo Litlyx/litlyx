@@ -74,7 +74,7 @@ nuxtApp.hook("page:finish", () => {
 
 
         <div ref="scroller" :class="{ 'overflow-y-hidden': isMenuOpen }" class="overflow-y-auto shrink h-full relative">
-            <div v-if="isMenuOpen" class="menu fixed z-[20] top-20 left-0 w-full bg-bg h-dvh lg:hidden">
+            <div v-if="isMenuOpen" class="menu fixed z-[30] top-20 left-0 w-full bg-bg h-dvh lg:hidden">
                 <div class="flex flex-col p-4">
 
                     <div class="flex flex-col gap-4">
