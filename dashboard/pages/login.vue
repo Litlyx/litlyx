@@ -2,19 +2,20 @@
 
 definePageMeta({ layout: 'none' });
 
-const { GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig();
+const config = useRuntimeConfig()
+const isNoAuth = ref<boolean>(config.public.GOOGLE_AUTH_CLIENT_ID == undefined);
 
-const isNoAuth = ref<boolean>(GOOGLE_AUTH_CLIENT_ID == undefined);
-
-const useCodeClientWrapper = isNoAuth.value === true ? useCodeClient : (...args: any) => {
-    return { isReady: false, login: () => { } }
-}
+const useCodeClientWrapper = isNoAuth.value === false ?
+    useCodeClient :
+    (...args: any) => {
+        return { isReady: false, login: () => { } }
+    }
 
 async function loginWithoutAuth() {
     try {
         const result = await $fetch('/api/auth/no_auth');
         if (result.error) return alert('Error during login, please try again');
-        
+
         setToken(result.access_token);
 
         const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
@@ -31,8 +32,8 @@ async function loginWithoutAuth() {
             router.push('/?just_logged=true');
         }
 
-    } catch (ex) {
-        alert('Error during login.', ex.message);
+    } catch (ex: any) {
+        alert('Error during login.' + ex.message);
     }
 }
 
