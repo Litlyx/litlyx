@@ -5,6 +5,7 @@ useSeoMeta({
   ogTitle: 'Litlyx - One-Line Code Lightweight Analytics | AI Powered Analytics Dashboard',
   description: 'Track over 10 KPIs effortlessly with Litlyx. One line of code, open-source, lightweight, custom events, AI Data-Analyst at your service and affordable. Start for free!',
   ogDescription: 'Track over 10 KPIs effortlessly with Litlyx. One line of code, open-source, lightweight, custom events, AI Data-Analyst at your service and affordable. Start for free!',
+  keywords: 'Litlyx, analytics tracking, real-time analytics, open-source analytics, minimal setup, KPI tracking, one line of code, high customization, AI data analyst assistant, report generation, user-friendly analytics, business intelligence, data visualization, performance metrics, customizable dashboards, data insights, seamless integration, powerful analytics',
   author: 'Litlyx',
   ogImage: 'https://litlyx.com/ogimage.jpg',
   ogType: 'website',
