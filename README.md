@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="assets/devto1.png"/>
+  <img src="assets/claim-t.png"/>
 </p>
 
 <h4 align="center">
@@ -12,9 +12,7 @@
 #
 
 <p align="center">
-  A single-line code analytics solution that integrates with every JavaScript/TypeScript framework. <br />
-  Track 10+ KPIs and as many custom events as you want for your website or web app.<br />
-  An AI Data Analyst Assistant ready to help you!
+  The easiest Dev-Centric Analytics tool.<br>Litlyx is , Open-Source, Plug-In everywhere Javascript is Supported. Setup in less then 30 seconds, with just One-Line of code.
 </p>
 
 #
@@ -31,13 +29,19 @@
 ![NPM Version](https://img.shields.io/npm/v/litlyx?logo=npm&color=orange)
 ![npm bundle size](https://img.shields.io/bundlephobia/min/litlyx)
 
-#
+## Pre-Requisites
 
-# Join Litlyx's Community Channel on Discord
+Sign-up on [Litlyx cloud](https://dashboard.litlyx.com) using OAuth & name your project to get your project_id to connect Litlyx to your website OR Self-Host Litlyx with Docker.
 
-If you need more information, help, or want to provide general feedback, feel free to join us here: [Litlyx on Discord](https://discord.gg/9cQykjsmWX)
+## Universal Installation
 
-# Installation
+```html
+<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
+```
+
+Importing Litlyx with a direct script already tracks 10 KPIs such as `Page visits`, `Browsers`, `Devices`, `OS`, `Real-Time Online Users`, `Unique Session`, `Countries`, `Avarage Session Time`.
+
+# All Javascript Runtimes
 
 You can install Litlyx using `npm`, `yarn`, or `pnpm`:
 
@@ -45,30 +49,15 @@ You can install Litlyx using `npm`, `yarn`, or `pnpm`:
 npm i litlyx-js
 ```
 
-Or import it directly into your JavaScript code:
-
-```html
-<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
-```
-
-Importing Litlyx with a direct script already tracks 10 KPIs such as page visits, browsers, devices, OS, real-time online users, and many more.
-
-> [!NOTE]
-> - If you want to track custom events, you need to import the library with `npm`, `yarn`, or `pnpm`. Continue reading to find out more!
-
-#### You can find the official documentation: [here](https://docs.litlyx.com).
-
-# Supported Frameworks
-
-Litlyx natively supports all these JavaScript/TypeScript frameworks. You can use Litlyx in all WordPress projects by injecting JS code using plugins. You can even use Litlyx in cloud (or edge) functions in BaaS!
+Litlyx natively supports all  JS/TS frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a plug-in. Litlyx work in serverless enviroments with Cloud (or Edge) Functions.
 
 <p align="center">
   <img src="assets/techs.png" />
 </p>
 
-# Usage
+# Import
 
-Litlyx is very simple to use. The first thing is to import Litlyx into your code:
+Import litlyx-js library into your code:
 
 ```js
 import { Lit } from 'litlyx-js';
@@ -80,68 +69,72 @@ Once imported, you need to initialize Litlyx:
 Lit.init('your_project_id');
 ```
 
-After this line, Litlyx will automatically track more than 10 KPIs for you.
+After initialization, Litlyx will automatically track Analytics such as `Page visits`, `Browsers`, `Devices`, `OS`, `Real-Time Online Users`, `Unique Session`, `Countries`, `Avarage Session Time`.
 
-> [!NOTE]
-> - Create your first project for free! 👉 <a href="https://dashboard.litlyx.com">Create now!</a>
+# Custom Events
 
-# Customize Your Experience by Tracking Custom Events
-
-With Litlyx, you can create your own events to track in your project on the main CTA. Your creativity is the limit! Customize your experience like this:
+With Litlyx, you can create your own events to track in your project.
 
 ```js
-Lit.event('main_cta');
+Lit.event('click_on_buy_item');
 ```
 
-This is the minimal setup for an event. If you want more control over them, you can use the `metadata` field:
+If you want more dept tracking, you can use the `metadata` field, like this:
 
 ```js
-Lit.event('pretty_cool_event', {
+Lit.event('click_on_buy_item', {
   metadata: {
-    'tag': 'litlyx is awesome!',
-    'age': 27,
-    'score': 100.01,
-    'list': ['Hello', 'World!']
+    'product-name': 'Coca-Cola',
+    'price': 1.50,
   }
 });
 ```
 
-And that's it! You have set up your first custom event. From now on, you know how to set them up. With events you can track even the user flow, from where they come to the final Click!
+You can create your Tailor-Made Experience at ease. 
 
-# Lit, the AI Data Analyst at Your Service
+# AI Data-Analyst
 
 <p align="center">
   <img src="assets/agent.png" width="180px"/>
 </p>
 
-Litlyx comes with an integrated AI that can analyze your collected data and your entire history. It can compare data, query specific metadata, visualize charts, and much more.
+Lit can compare data, query specific metadata, visualize charts, and much more just by having a simple `conversation` with him.
 
-You can have a `conversation` with Lit in the dashboard  👉 [here](https://dashboard.litlyx.com).
 
-# You Are Free to Self-Host Litlyx
+# Self-Hosting with Docker
 
-Litlyx is completely open-source, and you are free to self-host it and create your own version of the dashboard. We are always open to conversations with all contributors to the project, so contact us at `help@litlyx.com` to schedule a call with us!
+First thing first **Fork** this repository.
 
-We hope to hear from you!
+Then run the following command:
+
+```bash
+docker-compose build
+```
+
+then, after the build finish, run:
+```bash
+docker-compose up
+```
+
+on your localhost you will see your own instance of the Litlyx Dashboard.
 
 # Official Docs
 
-Read the complete documentation at [https://docs.litlyx.com](https://docs.litlyx.com).
+For more info read our [documentation](https://docs.litlyx.com). (will be improved in the near future using Mintlify!)
 
-# Contact
+# Join Discord
 
-Write to us at `help@litlyx.com` if you need to contact us.
+If you need more information, help, or want to provide general feedback, feel free to join us on[Discord](https://discord.gg/9cQykjsmWX)
+
+# Contributors
+
+Every kind of contribution is accepted in this stage of the project. In the future we will onboard you better. 
+
+### Thank you!
+<a href="https://github.com/litlyx/litlyx/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=litlyx/litlyx" />
+</a>
 
 # License
 
 Litlyx is licensed under the [Apache 2.0](/LICENSE) license.
-
-# Share some ❤️ for the repo
-
-If you like what you see, join us and start collaborating! Leave a star (⭐) to stay updated on our progress and show your support.
-
-### Let's change analytics landscape togheter!
-
-<a href="https://github.com/Litlyx/litlyx" style="display:inline-block;background-color:#5680F8;color:white;padding:10px 20px;text-align:center;text-decoration:none;font-size:16px;border-radius:5px;" target="_blank" rel="noopener noreferrer">⭐ Leave a Star</a>
-
-We are on track! `Thanks for your support!` 
