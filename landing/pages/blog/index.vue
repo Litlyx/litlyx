@@ -18,7 +18,7 @@ import { blogPosts, homePosts } from '~/blog/Blog';
             </div>
 
             <div class="home-posts flex gap-10 justify-center">
-                <NuxtLink tag="article" :to="post.id" v-for="post of homePosts" class="flex flex-col gap-2">
+                <NuxtLink tag="article" :to="'/blog/' + post.id" v-for="post of homePosts" class="flex flex-col gap-2">
                     <img class="w-full h-full rounded-xl outline outline-[1px] outline-gray-100/20"
                         :src="'/blog/' + post.image" :alt="post.title">
                     <h4 class="font-normal mt-2"> {{ post.title }} </h4>
@@ -33,7 +33,7 @@ import { blogPosts, homePosts } from '~/blog/Blog';
             <h5 class="mt-12"> Latest posts </h5>
 
             <div class="grid grid-cols-3 gap-2">
-                <NuxtLink tag="article" :to="post.id" v-for="post of blogPosts" class="flex flex-col gap-2">
+                <NuxtLink tag="article" :to="'/blog/' + post.id" v-for="post of blogPosts" class="flex flex-col gap-2">
                     <img class="rounded-xl outline outline-[1px] outline-gray-100/20" :src="'/blog/' + post.image"
                         :alt="post.title">
                     <h5 class="font-normal mt-2"> {{ post.title }} </h5>
