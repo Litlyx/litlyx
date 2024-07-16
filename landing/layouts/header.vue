@@ -33,6 +33,9 @@ nuxtApp.hook("page:finish", () => {
 
             <div class="grow"></div>
             <div class="flex gap-8 text-[1.1rem] text-white font-[500]">
+                <NuxtLink to="https://litlyx.com/blog" class="poppins hover:text-text-sub/90">
+                    Blog
+                </NuxtLink>
                 <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
                     class="poppins hover:text-text-sub/90">
                     Live demo
@@ -40,11 +43,11 @@ nuxtApp.hook("page:finish", () => {
                 <NuxtLink target="_blank" to="https://docs.litlyx.com" class="poppins hover:text-text-sub/90">
                     Docs
                 </NuxtLink>
-                <NuxtLink to="/pricing" class="poppins hover:text-text-sub/90">
-                    Pricing
-                </NuxtLink>
                 <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx" class="poppins hover:text-text-sub/90">
                     GitHub
+                </NuxtLink>
+                <NuxtLink to="/pricing" class="poppins hover:text-text-sub/90">
+                    Pricing
                 </NuxtLink>
             </div>
             <div class="px-10 pt-6 lg:pt-0">
@@ -90,6 +93,16 @@ nuxtApp.hook("page:finish", () => {
                     </div>
 
 
+                    <NuxtLink to="https://litlyx.com/blog"
+                        class="flex justify-between items-center mr-2">
+                        <div class="hover:text-text-sub/90 py-3">
+                            Blog
+                        </div>
+                        <div> <i class="fas fa-chevron-right"></i> </div>
+                    </NuxtLink>
+
+                    <div class="divider border-b border-gray-500/40"></div>
+
                     <NuxtLink target="_blank" to="https://docs.litlyx.com"
                         class="flex justify-between items-center mr-2">
                         <div class="hover:text-text-sub/90 py-3">
@@ -100,6 +113,16 @@ nuxtApp.hook("page:finish", () => {
 
                     <div class="divider border-b border-gray-500/40"></div>
 
+
+                    <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
+                        class="flex justify-between items-center mr-2">
+                        <div class="hover:text-text-sub/90 py-3"> GitHub </div>
+                        <div> <i class="fas fa-chevron-right"></i> </div>
+                    </NuxtLink>
+
+                    <div class="divider border-b border-gray-500/40"></div>
+
+
                     <NuxtLink @click="isMenuOpen = false" to="/pricing" class="flex justify-between items-center mr-2">
                         <div class="hover:text-text-sub/90 py-3">
                             Pricing
@@ -107,13 +130,6 @@ nuxtApp.hook("page:finish", () => {
                         <div> <i class="fas fa-chevron-right"></i> </div>
                     </NuxtLink>
 
-                    <div class="divider border-b border-gray-500/40"></div>
-
-                    <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
-                        class="flex justify-between items-center mr-2">
-                        <div class="hover:text-text-sub/90 py-3"> GitHub </div>
-                        <div> <i class="fas fa-chevron-right"></i> </div>
-                    </NuxtLink>
 
                     <div class="divider border-b border-gray-500/40"></div>
 
@@ -164,11 +180,12 @@ nuxtApp.hook("page:finish", () => {
 
                         <div class="text-text-sub/60 font-semibold text-[1.3rem]"> Product </div>
 
-                        <NuxtLink to="/pricing" class="hover:text-accent cursor-pointer"> Pricing </NuxtLink>
+                        <NuxtLink to="/blog" class="hover:text-accent cursor-pointer"> Blog </NuxtLink>
                         <NuxtLink target="_blank" to="https://docs.litlyx.com" class="hover:text-accent cursor-pointer">
                             Docs </NuxtLink>
                         <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
                             class="hover:text-accent cursor-pointer"> Github </NuxtLink>
+                            <NuxtLink to="/pricing" class="hover:text-accent cursor-pointer"> Pricing </NuxtLink>
                     </div>
                     <div class="flex flex-col gap-4">
                         <div class="text-text-sub/60 font-semibold text-[1.3rem]"> Company </div>
