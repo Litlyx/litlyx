@@ -21,7 +21,7 @@ const blogPost = blogPosts.value.find(e => e.id == id);
                         {{ blogPost?.subtitle }}
                     </p>
                     <div class="flex items-center gap-2">
-                        <img class="w-9 h-9 rounded-full" :src="blogPost?.authorImage" :alt="blogPost?.author">
+                        <img class="w-9 h-9 rounded-full" :src="'/blog/' + blogPost?.authorImage" :alt="blogPost?.author">
                         <p class="align-middle mt-4">
                             {{ blogPost?.author }}
                         </p>
@@ -30,7 +30,7 @@ const blogPost = blogPosts.value.find(e => e.id == id);
                 </div>
 
                 <img class="w-full h-full rounded-xl outline outline-[1px] outline-gray-100/20 mt-10 mb-10"
-                    :src="blogPost?.image" :alt="blogPost?.title">
+                    :src="'/blog/' + blogPost?.image" :alt="blogPost?.title">
             </header>
             <slot></slot>
         </article>
