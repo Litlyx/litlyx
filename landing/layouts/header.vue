@@ -133,9 +133,6 @@ nuxtApp.hook("page:finish", () => {
 
                     <div class="divider border-b border-gray-500/40"></div>
 
-                    <div class="divider border-b border-gray-500/40"></div>
-
-
                     <NuxtLink @click="isMenuOpen = false" to="/pricing" class="flex justify-between items-center mr-2">
                         <div class="hover:text-text-sub/90 py-3">
                             Pricing
