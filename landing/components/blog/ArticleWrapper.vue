@@ -17,7 +17,7 @@ const blogPost = blogPosts.value.find(e => e.id == id);
                     <h1 class="text-6xl font-normal">
                         {{ blogPost?.title }}
                     </h1>
-                    <p class="italic mt-3 text-2xl">
+                    <p class="mt-6 text-2xl">
                         {{ blogPost?.subtitle }}
                     </p>
                     <div class="flex items-center gap-2">

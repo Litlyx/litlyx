@@ -16,13 +16,13 @@ useSeoMeta({
     ogDescription: () => blogPost?.subtitle,
     keywords: 'Litlyx blog, analytics insights, real-time analytics, AI-powered analytics, data visualization, performance metrics, KPI tracking, custom events, open-source analytics, business intelligence, data trends, developer insights, analytics updates, data-driven decisions, blog updates, tech news, Litlyx updates, analytics best practices',
     author: () => blogPost?.author,
-    ogImage: () => 'https://litlyx.com/blog/posts/' + blogPost?.image,
+    ogImage: () => 'https://litlyx.com/blog/' + blogPost?.image,
     ogType: 'website',
     ogUrl: 'https://litlyx.com/blog',
     twitterCard: 'summary_large_image',
     twitterTitle: () => `Litlyx Blog - ${blogPost?.title}`,
     twitterDescription: () => blogPost?.subtitle,
-    twitterImage: () => 'https://litlyx.com/blog/posts/' + blogPost?.image,
+    twitterImage: () => 'https://litlyx.com/blog/' + blogPost?.image,
     ogSiteName: 'Litlyx',
     ogLocale: 'en_US',
     ogImageWidth: '1200',
@@ -33,12 +33,12 @@ useSeoMeta({
 
 <template>
     <BlogArticleWrapper>
-        <div>
+        <div class="text-white/80">
             <section>
                 <h2 class="text-3xl font-semibold">Why?</h2>
                 <p>When I was a CTO at one of my previous startups, I faced significant challenges in tracking and
                     analyzing
-                    metrics effectively. Our team needed <strong>real-time analytics</strong>, yet existing solutions
+                    metrics effectively. Our team needed real-time analytics, yet existing solutions
                     were
                     often outdated, expensive, and complicated to set up.</p>
                 <p>I needed speed. Speed like a Ferrari.</p>
@@ -47,8 +47,8 @@ useSeoMeta({
                     growth team, I had to manage a team of five developers, organize feature implementations, and set up
                     analytics.</p>
                 <p>It was rough.</p>
-                <p>I struggled to get actionable data without a complex setup, and the lack of a <strong>lightweight,
-                        customizable analytics tool</strong> that was fast to implement.</p>
+                <p>I struggled to get actionable data without a complex setup, and the lack of a lightweight,
+                        customizable analytics tool that was fast to implement.</p>
                 <p>It was a real problem.</p>
                 <p>Frustrated with the limitations of current analytics solutions, I opted for MixPanel for tracking
                     custom
@@ -59,42 +59,42 @@ useSeoMeta({
                     behavior but lacked real-time capabilities. There wasn’t a tool that did it all in one solution nor
                     was
                     created for each tech-stack out there.</p>
-                <p>For this level of complexity in metrics, <strong>developers MUST be involved</strong>. period.</p>
+                <p>For this level of complexity in metrics, developers MUST be involved. period.</p>
             </section>
             <section>
                 <h2 class="text-3xl font-semibold">Why Dev-Centric</h2>
-                <p>We're building <strong>Litlyx</strong>, an <strong>open-source, lightweight analytics
-                        platform</strong>
+                <p>We're building Litlyx, an open-source, lightweight analytics
+                        platform
                     designed for simplicity to empower each developer to track analytics within seconds.</p>
-                <p>Our mission was to achieve a <strong>30-seconds setup</strong> in all tech stacks.</p>
-                <p><strong>Spoiler Alert: we did!</strong></p>
-                <p>We needed to create a tool that not only tracks your KPIs but also offers <strong>high
-                        customization</strong>, an <strong>AI data-analyst assistant</strong>, and <strong>comprehensive
-                        analytics report generation</strong>.</p>
+                <p>Our mission was to achieve a 30-seconds setup in all tech stacks.</p>
+                <p>Spoiler Alert: we did!</p>
+                <p>We needed to create a tool that not only tracks your KPIs but also offers high
+                        customization, an AI data-analyst assistant, and comprehensive
+                        analytics report generation.</p>
                 <p>Everything about analytics with Litlyx should be Exceptionally Easy and Fast.</p>
                 <p>Devs should be focusing on actual Feature implementations and not wasting-time on reading complex
                     documentations.</p>
             </section>
             <section>
                 <h2 class="text-3xl font-semibold">Why now, in 2024?</h2>
-                <p>The current landscape of <strong>analytics tools</strong> is outdated and fragmented. Most solutions
+                <p>The current landscape of analytics tools is outdated and fragmented. Most solutions
                     were
                     developed over a decade ago, primarily focusing on large enterprises and emphasizing sales-led
                     growth or
                     marketing.</p>
                 <p>These tools often ignore the needs of developers and smaller teams. But they are essential.</p>
-                <p>No one is prioritizing a <strong>developer-first analytics experience</strong> or innovating in the
+                <p>No one is prioritizing a developer-first analytics experience or innovating in the
                     analytics space.</p>
                 <p>The time has come to rethink analytics for 2024 and beyond. We need a tool that aligns with modern
                     app
-                    development standards and provides a seamless, intuitive, and most importantly, <strong>dev-centric
-                        experience</strong>.</p>
+                    development standards and provides a seamless, intuitive, and most importantly, dev-centric
+                        experience.</p>
             </section>
             <section>
                 <h2 class="text-3xl font-semibold">How the future looks</h2>
-                <p><strong>Litlyx</strong> aims to be the No.1 tool for analytics tracking that comes to mind for
+                <p>Litlyx aims to be the No.1 tool for analytics tracking that comes to mind for
                     developers, known for efficiency, simplicity, and cost-effectiveness.</p>
-                <p>We want to be the <strong>go-to solution for collecting analytics</strong>, reducing fragmentation,
+                <p>We want to be the go-to solution for collecting analytics, reducing fragmentation,
                     enhancing aggregation, and acting as a connector for databases and analytics tools that people
                     already
                     use. Our goal is to be the only place people need for everything related to analytics.</p>
@@ -105,12 +105,12 @@ useSeoMeta({
                 <p>The Litlyx Team have taken the responsibility to create the simplest yet most effective way to track
                     analytics.</p>
                 <p>We're building something that developers can really love.</p>
-                <p>We're building it <a href="https://github.com/Litlyx/litlyx"><strong>Open-Source</strong></a>,
+                <p>We're building it <a href="https://github.com/Litlyx/litlyx">Open-Source</a>,
                     because we
                     trust transparency and we know how much difficult it is to gain control on where your data goes.</p>
                 <p>Probably we will make some mistakes in the process, but we are humans. We are devs!</p>
                 <p>Join our journey and be among the pioneer developers to experience analytics tracking with
-                    <strong>Litlyx</strong>.
+                    Litlyx.
                 </p>
             </section>
         </div>
@@ -130,6 +130,11 @@ header,
 section,
 footer {
     margin-bottom: 2rem;
+}
+
+section h2 {
+    margin-bottom: 2rem;
+    color: white;
 }
 
 p {
