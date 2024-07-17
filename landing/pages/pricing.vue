@@ -173,12 +173,12 @@ const slidePricings: PricingCardProp[] = [
             <div class="poppins text-4xl mb-4 font-medium">
                 Pricing
             </div>
-            <div class="poppins text-2xl mb-4 font-normal text-white/80">
+            <div class="poppins text-2xl mb-4 font-normal text-white/80 px-8">
                 Start for Free and scale as you go
             </div>
         </div>
 
-        <div class="p-8">
+        <div class="p-4">
 
             <div class="flex gap-12 h-max flex-col lg:flex-row justify-center">
                 <PricingCardGeneric :datas="freePricing">
@@ -262,10 +262,6 @@ const slidePricings: PricingCardProp[] = [
                     {
                         label: 'Can I self-host Litlyx?',
                         content: 'Yes! You can self-host your own instance of Litlyx. More information is available on docs.'
-                    },
-                    {
-                        label: 'If I don\'t pay and want to stay on the free tier forever, can I?',
-                        content: 'Yes, you can! You can collect up to 2 months\' worth of data. We offer flexible plans so you can find one that fits your needs.'
                     },
                     {
                         label: 'Did this FAQ help you?',

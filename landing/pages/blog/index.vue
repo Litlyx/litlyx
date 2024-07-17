@@ -35,9 +35,9 @@ import { blogPosts, homePosts } from '~/blog/Blog';
                 </NuxtLink>
             </div>
 
-            <h5 class="mt-12"> Latest posts </h5>
+            <h5 class="mt-12 hidden"> Latest posts </h5>
 
-            <div class="grid grid-cols-3 gap-2">
+            <div class="grid-cols-3 gap-2 hidden">
                 <NuxtLink tag="article" :to="'/blog/' + post.id" v-for="post of blogPosts" class="flex flex-col gap-2">
                     <img class="rounded-xl outline outline-[1px] outline-gray-100/20" :src="'/blog/' + post.image"
                         :alt="post.title">
