@@ -1,62 +1,166 @@
 <script setup lang="ts">
-import { Vue3Lottie } from 'vue3-lottie';
 
+import type { PricingCardProp } from '~/components/pricing/PricingCardGeneric.vue';
 
-const starterTierCardData = ref<any>({
-    title: 'STARTER',
-    cost: '0',
-    features: [
-        "3K visits/events per month",
-        "10 AI Interaction per month",
-        "1 month data retention",
-        "Limited reports",
-        "1 Team member",
-        "Limited Automatic Email Report",
-        "Shared Server & DB",
-        "Low priority email support",
-    ],
-    desc: `Free project are not reliable and sometimes
-           can experience some data loss.To have a 
-           dedicated server we suggest to upgrade the
-           plan to an higher one!`,
-    active: true
-});
-
-const accelerationTierCardData = ref<any>({
-    title: 'ACCELERATION',
-    cost: '9,99',
-    features: [
-        "150K visits/events per month",
-        "100 AI Interaction per month",
-        "6 months data retention",
-        "Limited reports",
-        "1 Team member",
-        "Limited Automatic Email Report",
-        "Shared Server & DB",
-        "Low priority email support"
-    ],
-    desc: `Your project is entering a growth phase. We simplify data analysis for you. For more support, try our Expansion plan—it's worth it!`,
-    active: false
-});
-
-const expansionTierCardData = ref<any>({
-    title: 'EXPANSION',
-    cost: '39,99',
-    features: [
-        "500K visits/events per month",
-        "5000 AI Interaction per month",
-        "2 years data retention",
-        "Unlimited reports",
-        "10 Team member",
-        "Unlimited Automatic Email Report",
-        "Dedicated Server & DB",
-        "high priority email support"
-    ],
-    desc: `We will support you with everything we can offer and give you the full power of our service. If you need more space and are growing, contact us for a custom offer!`,
-    active: false
-});
 
 definePageMeta({ layout: 'header' });
+
+
+const freePricing: PricingCardProp[] = [
+    {
+        title: 'Free',
+        price: '€0 / mo',
+        subs: [
+            'Up to 5000 visits/events per month',
+            'CPM 0€ per visit/event'
+        ],
+        features: [
+            'Email support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 10',
+            'Server type: SHARED',
+            'Projects: max 2',
+            'Data retention: 2 Months'
+        ],
+        cta: 'Start For Free now!'
+    },
+]
+
+const customPricing: PricingCardProp[] = [
+    {
+        title: 'Enterprise',
+        price: 'Custom',
+        subs: [
+            'Unlimited visits/events per month',
+            'Service Tailor-made on needs'
+        ],
+        features: [
+            'Priority support',
+            'Server type: DEDICATED',
+            'DB instance: DEDICATED',
+            'Dedicated operator',
+            'White label',
+            'Custom Charts',
+            'Custom Data Aggregation'
+        ],
+        cta: 'Let\'s Talk!',
+        link: 'mailto:help@litlyx.com'
+    }
+]
+
+const slidePricings: PricingCardProp[] = [
+    {
+        title: 'Incubation',
+        price: '€4,99 / mo',
+        subs: [
+            'Up to 50.000 visits/events per month',
+            'CPM 0,10€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 30',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 6 Months'
+        ],
+        cta: 'Go to Cloud Dashboard'
+    },
+    {
+        title: 'Acceleration',
+        price: '€9,99 / mo',
+        subs: [
+            'Up to 150.000 visits/events per month',
+            'CPM 0,06€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 100',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 9 Months'
+        ],
+        cta: 'Go to Cloud Dashboard'
+    },
+    {
+        title: 'Growth',
+        price: '€29,99 / mo',
+        subs: [
+            'Up to 500.000 visits/events per month',
+            'CPM 0,059€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 3.000',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 1 Year'
+        ],
+        cta: 'Go to Cloud Dashboard'
+    },
+    {
+        title: 'Expansion',
+        price: '€59,99 / mo',
+        subs: [
+            'Up to 1.000.000 visits/events per month',
+            'CPM 0,059€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 5.000',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 1 Year'
+        ],
+        cta: 'Go to Cloud Dashboard'
+    },
+    {
+        title: 'Scaling',
+        price: '€99,99 / mo',
+        subs: [
+            'Up to 2.500.000 visits/events per month',
+            'CPM 0,039€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 10.000',
+            'Server type: DEDICATED',
+            'Projects: max 3',
+            'Data retention: 2 Years'
+        ],
+        cta: 'Go to Cloud Dashboard'
+    },
+    {
+        title: 'Unicorn',
+        price: '€149,99 / mo',
+        subs: [
+            'Up to 5.000.000 visits/events per month',
+            'CPM 0,029€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 20.000',
+            'Server type: DEDICATED',
+            'Projects: max 3',
+            'Data retention: 3 Years'
+        ],
+        cta: 'Go to Cloud Dashboard'
+    }
+]
+
+
 
 </script>
 
@@ -65,9 +169,27 @@ definePageMeta({ layout: 'header' });
 
     <div class="home h-full w-full min-h-[40dvh]">
 
+        <div class="text-center mt-8">
+            <div class="poppins text-4xl mb-4 font-medium">
+                Pricing
+            </div>
+            <div class="poppins text-2xl mb-4 font-normal text-white/80">
+                Start for Free and scale as you go
+            </div>
+        </div>
+
         <div class="p-8">
 
-            <div class="flex gap-8 h-max flex-col lg:flex-row">
+            <div class="flex gap-12 h-max flex-col lg:flex-row justify-center">
+                <PricingCardGeneric :datas="freePricing">
+                </PricingCardGeneric>
+                <PricingCardGeneric :datas="slidePricings">
+                </PricingCardGeneric>
+                <PricingCardGeneric :datas="customPricing">
+                </PricingCardGeneric>
+            </div>
+
+            <!-- <div class="flex gap-8 h-max flex-col lg:flex-row">
                 <PricingCard class="flex-1" :data="starterTierCardData"></PricingCard>
                 <PricingCard class="flex-1" :data="accelerationTierCardData"></PricingCard>
                 <PricingCard class="flex-1" :data="expansionTierCardData"></PricingCard>
@@ -90,7 +212,7 @@ definePageMeta({ layout: 'header' });
                         </a>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- <div class="flex justify-between items-center mt-10">
                 <div class="flex flex-col gap-2">
@@ -109,10 +231,51 @@ definePageMeta({ layout: 'header' });
             </div> -->
         </div>
 
-        <!-- <Vue3Lottie height="16rem" animation-link="pricing_lottie.json"></Vue3Lottie>
-        <div class="poppins text-[2rem] font-semibold text-center mt-6">
-            Pricing coming soon
-        </div> -->
+
+        <div class="px-8 mt-8 flex flex-col items-center">
+            <div class="poppins text-4xl mb-4 font-medium">
+                Frequently Asked Questions
+            </div>
+            <div class="w-full">
+                <UAccordion :ui="{
+                    wrapper: 'w-full',
+                    item: {
+                        padding: 'pl-8'
+                    }
+                }" color="white" variant="ghost" size="xl" :items="[
+                    {
+                        label: 'Is Litlyx free?',
+                        content: 'We offer a free-forever plan with a 5k/mo limit and 2 months of data retention. We offer plans that grow with you.'
+                    },
+                    {
+                        label: 'What does \'Data Retention\' mean?',
+                        content: 'It is the duration your data is available in our database. After the data retention period expires, you will be notified via e-mail. You have 14 days to upgrade to a new plan. If not upgraded, we will start deleting data one day at a time to make space for new data.'
+                    },
+                    {
+                        label: 'Can I export my data?',
+                        content: 'Yes! We provide access to raw data, allowing you to download a CSV file and use your data as you wish. It’s always yours!'
+                    },
+                    {
+                        label: 'Is the data collected privacy-focused?',
+                        content: 'Yes! All data we collect is anonymous. We have our own tracking system. You can find more details in our Data Policy.'
+                    },
+                    {
+                        label: 'Can I self-host Litlyx?',
+                        content: 'Yes! You can self-host your own instance of Litlyx. More information is available on docs.'
+                    },
+                    {
+                        label: 'If I don\'t pay and want to stay on the free tier forever, can I?',
+                        content: 'Yes, you can! You can collect up to 2 months\' worth of data. We offer flexible plans so you can find one that fits your needs.'
+                    },
+                    {
+                        label: 'Did this FAQ help you?',
+                        content: 'If you have any more questions or need further clarification, please contact us at help@litlyx.com.'
+                    }
+
+                ]">
+                </UAccordion>
+            </div>
+        </div>
 
     </div>
 

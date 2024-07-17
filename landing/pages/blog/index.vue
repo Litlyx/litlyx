@@ -13,8 +13,13 @@ import { blogPosts, homePosts } from '~/blog/Blog';
 
         <div class="flex flex-col gap-6 px-6 py-6 max-w-[1200px]">
 
-            <div>
-                <h1> Blog </h1>
+            <div class="text-center mt-8">
+                <h1 class="poppins text-4xl mb-4 font-medium">
+                    Blog
+                </h1>
+                <div class="poppins text-2xl mb-4 font-normal text-white/80">
+                    Stay updated with latest news about Litlyx. We "Build in Public".
+                </div>
             </div>
 
             <div class="home-posts flex gap-10 justify-center">

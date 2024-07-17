@@ -10,7 +10,7 @@ const props = defineProps<{
 
 <template>
     <NuxtLink @click="action?.()" :to="link" :target="target || ''"
-        class="poppins font-[500] px-10 py-[.3rem] bg-[#222A42] outline outline-[1px] outline-[#5680F8] rounded-xl">
+        class="poppins cursor-pointer font-[500] px-10 py-[.3rem] bg-[#222A42] outline outline-[1px] outline-[#5680F8] rounded-xl">
         <slot></slot>
     </NuxtLink>
 </template>

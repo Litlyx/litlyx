@@ -193,6 +193,12 @@ nuxtApp.hook("page:finish", () => {
                             <a class="hover:text-gray-400" href="https://www.github.com/Litlyx/litlyx" target="_blank">
                                 <i class="fab fa-github"></i>
                             </a>
+                            <a class="hover:text-gray-400" href="https://x.com/litlyx" target="_blank">
+                                <i class="fab fa-x-twitter"></i>
+                            </a>
+                            <a class="hover:text-gray-400" href="https://dev.to/litlyx-org" target="_blank">
+                                <i class="fab fa-dev"></i>
+                            </a>
                         </div>
                     </div>
 
