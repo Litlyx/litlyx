@@ -2,7 +2,18 @@ import { CustomPremiumPriceModel } from "../schema/CustomPremiumPriceSchema";
 
 export type PREMIUM_TAG = typeof PREMIUM_TAGS[number];
 
-export const PREMIUM_TAGS = ['FREE', 'PLAN_1', 'PLAN_2', 'CUSTOM_1'] as const;
+export const PREMIUM_TAGS = [
+    'FREE',
+    'PLAN_1',
+    'PLAN_2',
+    'CUSTOM_1',
+    'INCUBATION',
+    'ACCELERATION',
+    'GROWTH',
+    'EXPANSION',
+    'SCALING',
+    'UNICORN'
+] as const;
 
 
 export type PREMIUM_DATA = {
@@ -16,7 +27,7 @@ export type PREMIUM_DATA = {
 export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
     FREE: {
         ID: 0,
-        COUNT_LIMIT: 3_000,
+        COUNT_LIMIT: 5_000,
         AI_MESSAGE_LIMIT: 10,
         PRICE: 'price_1POKCMB2lPUiVs9VLe3QjIHl',
         PRICE_TEST: 'price_1PNbHYB2lPUiVs9VZP32xglF'
@@ -41,7 +52,49 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         AI_MESSAGE_LIMIT: 100_000,
         PRICE: 'price_1POKZyB2lPUiVs9VMAY6jXTV',
         PRICE_TEST: ''
-    }
+    },
+    INCUBATION: {
+        ID: 101,
+        COUNT_LIMIT: 50_000,
+        AI_MESSAGE_LIMIT: 30,
+        PRICE: 'price_1PdsyzB2lPUiVs9V4J246Jw0',
+        PRICE_TEST: ''
+    },
+    ACCELERATION: {
+        ID: 102,
+        COUNT_LIMIT: 150_000,
+        AI_MESSAGE_LIMIT: 100,
+        PRICE: 'price_1Pdt5bB2lPUiVs9VhkuCouEt',
+        PRICE_TEST: ''
+    },
+    GROWTH: {
+        ID: 103,
+        COUNT_LIMIT: 500_000,
+        AI_MESSAGE_LIMIT: 3_000,
+        PRICE: 'price_1PdszrB2lPUiVs9VIdkT3thv',
+        PRICE_TEST: ''
+    },
+    EXPANSION: {
+        ID: 104,
+        COUNT_LIMIT: 1_000_000,
+        AI_MESSAGE_LIMIT: 5_000,
+        PRICE: 'price_1Pdt0xB2lPUiVs9V0Rdt80Fe',
+        PRICE_TEST: ''
+    },
+    SCALING: {
+        ID: 105,
+        COUNT_LIMIT: 2_500_000,
+        AI_MESSAGE_LIMIT: 10_000,
+        PRICE: 'price_1Pdt1UB2lPUiVs9VUmxntSwZ',
+        PRICE_TEST: ''
+    },
+    UNICORN: {
+        ID: 106,
+        COUNT_LIMIT: 5_000_000,
+        AI_MESSAGE_LIMIT: 20_000,
+        PRICE: 'price_1Pdt2LB2lPUiVs9VGBFAIG9G',
+        PRICE_TEST: ''
+    },
 }
 
 CustomPremiumPriceModel.find({}).then(custom_prices => {

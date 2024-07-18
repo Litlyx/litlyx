@@ -1,71 +1,188 @@
 <script lang="ts" setup>
-import type { PricingCardProp } from './PricingCard.vue';
+import type { PricingCardProp } from './PricingCardGeneric.vue';
 
 
 const activeProject = useActiveProject();
 
 const props = defineProps<{ currentSub: number }>();
 
+const freePricing: PricingCardProp[] = [
+    {
+        title: 'Free',
+        price: '€0 / mo',
+        subs: [
+            'Up to 5000 visits/events per month',
+            'CPM 0€ per visit/event'
+        ],
+        features: [
+            'Email support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 10',
+            'Server type: SHARED',
+            'Projects: max 2',
+            'Data retention: 2 Months'
+        ],
+        cta: 'Start For Free now!',
+        active: props.currentSub == 0,
+        isDowngrade: props.currentSub > 0,
+        planId: 0
+    },
+]
 
-const starterTierCardData = ref<PricingCardProp>({
-    title: 'STARTER',
-    cost: '0',
-    features: [
-        "3K visits/events per month",
-        "10 AI Interaction per month",
-        "1 month data retention",
-        "Limited reports",
-        "1 Team member",
-        "Limited Automatic Email Report",
-        "Shared Server & DB",
-        "Low priority email support",
-    ],
-    desc: `Free project are not reliable and sometimes
-           can experience some data loss.To have a 
-           dedicated server we suggest to upgrade the
-           plan to an higher one!`,
-    active: activeProject.value?.premium === false,
-    isDowngrade: props.currentSub > 0,
-    planId: 0
-});
+const customPricing: PricingCardProp[] = [
+    {
+        title: 'Enterprise',
+        price: 'Custom',
+        subs: [
+            'Unlimited visits/events per month',
+            'Service Tailor-made on needs'
+        ],
+        features: [
+            'Priority support',
+            'Server type: DEDICATED',
+            'DB instance: DEDICATED',
+            'Dedicated operator',
+            'White label',
+            'Custom Charts',
+            'Custom Data Aggregation'
+        ],
+        cta: 'Let\'s Talk!',
+        link: 'mailto:help@litlyx.com',
+        active: false,
+        isDowngrade: false,
+        planId: -1
+    }
+]
 
-const accelerationTierCardData = ref<PricingCardProp>({
-    title: 'ACCELERATION',
-    cost: '9,99',
-    features: [
-        "150K visits/events per month",
-        "100 AI Interaction per month",
-        "6 months data retention",
-        "Limited reports",
-        "1 Team member",
-        "Limited Automatic Email Report",
-        "Shared Server & DB",
-        "Low priority email support"
-    ],
-    desc: `Your project is entering a growth phase. We simplify data analysis for you. For more support, try our Expansion plan—it's worth it!`,
-    active: activeProject.value?.premium_type === 1,
-    isDowngrade: props.currentSub > 1,
-    planId: 1
-});
-
-const expansionTierCardData = ref<PricingCardProp>({
-    title: 'EXPANSION',
-    cost: '39,99',
-    features: [
-        "500K visits/events per month",
-        "5000 AI Interaction per month",
-        "2 years data retention",
-        "Unlimited reports",
-        "10 Team member",
-        "Unlimited Automatic Email Report",
-        "Dedicated Server & DB",
-        "high priority email support"
-    ],
-    desc: `We will support you with everything we can offer and give you the full power of our service. If you need more space and are growing, contact us for a custom offer!`,
-    active: activeProject.value?.premium_type === 2,
-    isDowngrade: props.currentSub > 2,
-    planId: 2
-});
+const slidePricings: PricingCardProp[] = [
+    {
+        title: 'Incubation',
+        price: '€4,99 / mo',
+        subs: [
+            'Up to 50.000 visits/events per month',
+            'CPM 0,10€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 30',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 6 Months'
+        ],
+        cta: 'Go to Cloud Dashboard',
+        active: props.currentSub == 101,
+        isDowngrade: props.currentSub > 101,
+        planId: 101
+    },
+    {
+        title: 'Acceleration',
+        price: '€9,99 / mo',
+        subs: [
+            'Up to 150.000 visits/events per month',
+            'CPM 0,06€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 100',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 9 Months'
+        ],
+        cta: 'Go to Cloud Dashboard',
+        active: props.currentSub == 102,
+        isDowngrade: props.currentSub > 102,
+        planId: 102
+    },
+    {
+        title: 'Growth',
+        price: '€29,99 / mo',
+        subs: [
+            'Up to 500.000 visits/events per month',
+            'CPM 0,059€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 3.000',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 1 Year'
+        ],
+        cta: 'Go to Cloud Dashboard',
+        active: props.currentSub == 103,
+        isDowngrade: props.currentSub > 103,
+        planId: 103
+    },
+    {
+        title: 'Expansion',
+        price: '€59,99 / mo',
+        subs: [
+            'Up to 1.000.000 visits/events per month',
+            'CPM 0,059€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 5.000',
+            'Server type: SHARED',
+            'Projects: max 3',
+            'Data retention: 1 Year'
+        ],
+        cta: 'Go to Cloud Dashboard',
+        active: props.currentSub == 104,
+        isDowngrade: props.currentSub > 104,
+        planId: 104
+    },
+    {
+        title: 'Scaling',
+        price: '€99,99 / mo',
+        subs: [
+            'Up to 2.500.000 visits/events per month',
+            'CPM 0,039€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 10.000',
+            'Server type: DEDICATED',
+            'Projects: max 3',
+            'Data retention: 2 Years'
+        ],
+        cta: 'Go to Cloud Dashboard',
+        active: props.currentSub == 105,
+        isDowngrade: props.currentSub > 105,
+        planId: 105
+    },
+    {
+        title: 'Unicorn',
+        price: '€149,99 / mo',
+        subs: [
+            'Up to 5.000.000 visits/events per month',
+            'CPM 0,029€ per visit/event'
+        ],
+        features: [
+            'Discord support',
+            'Unlimited domains',
+            'Unlimited reports',
+            'AI Tokens: 20.000',
+            'Server type: DEDICATED',
+            'Projects: max 3',
+            'Data retention: 3 Years'
+        ],
+        cta: 'Go to Cloud Dashboard',
+        active: props.currentSub == 106,
+        isDowngrade: props.currentSub > 106,
+        planId: 106
+    }
+]
 
 
 const emits = defineEmits<{
@@ -83,9 +200,9 @@ const emits = defineEmits<{
         </div>
 
         <div class="flex gap-8 mt-10 h-max xl:flex-row flex-col">
-            <PricingCard class="flex-1" :data="starterTierCardData"></PricingCard>
-            <PricingCard class="flex-1" :data="accelerationTierCardData"></PricingCard>
-            <PricingCard class="flex-1" :data="expansionTierCardData"></PricingCard>
+            <PricingCardGeneric class="flex-1" :datas="freePricing"></PricingCardGeneric>
+            <PricingCardGeneric class="flex-1" :datas="slidePricings"></PricingCardGeneric>
+            <PricingCardGeneric class="flex-1" :datas="customPricing"></PricingCardGeneric>
         </div>
 
         <div class="flex justify-between items-center mt-10 flex-col xl:flex-row">
