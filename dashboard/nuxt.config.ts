@@ -9,6 +9,12 @@ const gooleSignInConfig: any = {
 }
 
 export default defineNuxtConfig({
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {}
+    }
+  },
   colorMode: {
     preference: 'dark',
   },
