@@ -25,7 +25,7 @@ useSeoMeta({
 
 <template>
 
-  <div class="w-dvw h-dvh bg-[#151517]">
+  <div class="w-dvw h-dvh bg-lyx-background">
     <NuxtLayout>
       <NuxtPage></NuxtPage>
     </NuxtLayout>

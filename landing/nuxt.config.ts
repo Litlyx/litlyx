@@ -29,4 +29,6 @@ export default defineNuxtConfig({
   devServer: {
     host: '0.0.0.0',
   },
+  components: true,
+  extends: ['../lyx-ui']
 })
