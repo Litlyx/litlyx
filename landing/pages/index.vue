@@ -29,6 +29,10 @@ const mouseStyle = computed(() => {
     return `top: ${y.value - (blobSize / 2)}px; left: ${x.value - (blobSize / 2)}px; width: ${blobSize}px; height: ${blobSize}px;`
 });
 
+
+
+const email = ref<string>("");
+
 </script>
 
 
@@ -36,19 +40,23 @@ const mouseStyle = computed(() => {
 
     <div class="home relative h-full w-full bg-lyx-background px-8 py-10 overflow-x-hidden">
 
-        <div class="poppins font-medium text-[3rem] text-center leading-[3.5rem]">
+        <div class="headline">
             Analytics For
             <span class="text-lyx-primary"> Developers </span>
         </div>
 
-        <div class="poppins text-center text-lyx-text-dark mt-4 text-[1.1rem]">
-            30 Seconds Setup with One Line of Code.
-            All Your Analytics in a Single AI Powered Dashboard.
-        </div>
 
+        <div class="section">
 
-        <div class="flex justify-center mt-8">
-            <LyxUiButton class="text-[1.2rem] px-6 py-2" type="primary"> Start for free </LyxUiButton>
+            <div class="paragraph">
+                30 Seconds Setup with One Line of Code.
+                All Your Analytics in a Single AI Powered Dashboard.
+            </div>
+
+            <div class="button-container">
+                <LyxUiButton class="button" type="primary"> Start for free </LyxUiButton>
+            </div>
+
         </div>
 
         <div class="mt-8">
@@ -66,144 +74,239 @@ const mouseStyle = computed(() => {
         </div>
 
 
-        <div class="poppins text-center font-semibold text-[1.8rem] mt-20">
-            Collect Analytics, <br>Easy way
-        </div>
+        <div class="section">
 
-        <div class="poppins text-center mt-4 text-[1.1rem]">
-            More than 10 KPIs like Page Visits, Custom Events
-            Referrers and many more
-        </div>
+            <div class="subtitle">
+                Collect analytics, <br>easy way
+            </div>
 
-
-        <div class="flex justify-center items-center gap-2 text-[.8rem] mt-8">
-            <LyxUiButton type="secondary"> Javascript </LyxUiButton>
-            <LyxUiButton type="secondary"> All js runtime </LyxUiButton>
-            <LyxUiButton type="secondary"> Custom events </LyxUiButton>
-        </div>
-
-        <LyxUiCard class="w-full mt-8 bg-lyx-background py-6">
-            <span class="text-[#9CDCFE] menlo text-[1.1rem]">Lit</span>
-            <span class="text-[#D3D3D3] menlo text-[1.1rem]">.</span>
-            <span class="text-[#DCDCAA] menlo text-[1.1rem]">init</span>
-            <span class="text-[#D3D3D3] menlo text-[1.1rem]">(</span>
-            <span class="text-[#CE9178] menlo text-[1.1rem]">'project_id'</span>
-            <span class="text-[#D3D3D3] menlo text-[1.1rem]">);</span>
-        </LyxUiCard>
+            <div class="paragraph">
+                More than 10 KPIs like Page Visits, Custom Events
+                Referrers and many more
+            </div>
 
 
+            <div class="flex justify-center items-center gap-2 text-[.8rem] mt-8">
+                <LyxUiButton type="secondary"> Javascript </LyxUiButton>
+                <LyxUiButton type="secondary"> Runtimes </LyxUiButton>
+                <LyxUiButton type="secondary"> Events </LyxUiButton>
+            </div>
 
-        <div class="poppins text-center mt-4 text-[1.1rem]">
-            That’s It! You are <span class="font-bold"> Ready </span> to Collect data.
-        </div>
 
-        <div class="flex justify-center mt-8">
-            <LyxUiButton class="text-[1.2rem] px-6 py-2" type="primary"> Start for free </LyxUiButton>
-        </div>
+            <LyxUiCard class="w-full mt-8 bg-lyx-background py-6 text-center">
+                <span class="text-[#9CDCFE] menlo text-[1.1rem]">Lit</span>
+                <span class="text-[#D3D3D3] menlo text-[1.1rem]">.</span>
+                <span class="text-[#DCDCAA] menlo text-[1.1rem]">init</span>
+                <span class="text-[#D3D3D3] menlo text-[1.1rem]">(</span>
+                <span class="text-[#CE9178] menlo text-[1.1rem]">'project_id'</span>
+                <span class="text-[#D3D3D3] menlo text-[1.1rem]">);</span>
+            </LyxUiCard>
 
 
 
+            <div class="poppins text-center mt-6 text-[1.1rem]">
+                That’s It! You are <span class="font-bold"> Ready </span> to Collect data.
+            </div>
 
+            <div class="button-container">
+                <LyxUiButton class="button" type="primary"> Start for free </LyxUiButton>
+            </div>
 
-
-        <div class="poppins text-center font-semibold text-[1.8rem] mt-20">
-            Plug in <br> Everywhere.
-        </div>
-
-        <div class="poppins text-center mt-4 text-[1.1rem]">
-            Seamless Integrations with popular
-            <span class="text-[#FFCA27]">JS</span>/<span class="text-[#017ACB]">TS</span>
-            runtime like React, Angular, Vue, Node, Next and many more.
-        </div>
-
-        <div class="mt-8">
-            <img :src="'techs-new.png'" alt="Techs">
         </div>
 
 
 
 
+        <div class="section">
+            <div class="subtitle">
+                Plug in <br> everywhere.
+            </div>
 
-        <div class="poppins text-center font-semibold text-[1.8rem] mt-20">
-            Connect DB'S In One Place with beautiful charts
-        </div>
+            <div class="paragraph">
+                Seamless Integrations with popular
+                <span class="text-[#FFCA27]">JS</span>/<span class="text-[#017ACB]">TS</span>
+                runtimes like Nuxt, Deno, Next, Vue, React and many more.
+            </div>
 
-        <div class="poppins text-center mt-4 text-[1.1rem]">
-            Easily connect all your databases to your dashboard like Supabase, MongoDB, Cassandra and more.
-        </div>
-
-        <div class="mt-10">
-            <img :src="'db-connect.png'" alt="DB-CONNECT">
-        </div>
-
-        <div class="poppins text-center mt-10 text-[1.1rem]">
-            We don't only collect Analytics.
-            We Agglomerate your Existing data! Showing
-            Beautiful Charts!
-        </div>
-
-        <div class="mt-8">
-            <img :src="'placeholder.jpg'" alt="Placeholder">
+            <div class="mt-8">
+                <img :src="'techs-new.png'" alt="Techs">
+            </div>
         </div>
 
 
-        <div class="flex justify-center mt-8">
-            <LyxUiButton class="text-[1.2rem] px-10 py-2" type="outline">
-                Go to Live Demo!
-            </LyxUiButton>
+        <div class="section">
+
+            <div class="subtitle">
+                Transform DB's data in beautiful charts
+            </div>
+
+            <div class="paragraph">
+                Easily connect all your databases to your dashboard like Supabase, MongoDB, Cassandra and more.
+            </div>
+
+            <div class="my-10">
+                <img :src="'db-connect.png'" alt="DB-CONNECT">
+            </div>
+
+            <div class="paragraph">
+                We don't only collect Analytics.
+                We Agglomerate your Existing data! Showing
+                Beautiful Charts!
+            </div>
+
+            <div class="mt-8">
+                <img :src="'placeholder.jpg'" alt="Placeholder">
+            </div>
+
+
+            <div class="button-container">
+                <LyxUiButton class="button" type="outline">
+                    Go to live demo
+                </LyxUiButton>
+            </div>
         </div>
 
 
-        <div class="poppins text-center font-semibold text-[1.8rem] mt-20">
-            An AI Data Analyst Available 24/7
+        <div class="section">
+
+            <div class="subtitle">
+                An AI data analyst available 24/7
+            </div>
+
+            <div class="paragraph">
+                Take metrics-driven decision with Lit our AI agent. Generate charts chatting with Lit. 
+            </div>
+
+            <div class="mt-8">
+                <img class="scale-125" :src="'ai-chat.png'" alt="Ai-Chat">
+            </div>
+
         </div>
 
-        <div class="poppins text-center mt-4 text-[1.1rem]">
-            Take metrics-driven decision with Lit our AI agent. Generate charts chatting with Lit. 
+        <div class="section">
+
+
+            <div class="subtitle">
+                Our users loves Litlyx's simplicity
+            </div>
+
+            <div class="mt-10 flex flex-col gap-4">
+                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
+                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
+                </Testimonial>
+                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
+                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
+                </Testimonial>
+                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
+                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
+                </Testimonial>
+                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
+                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
+                </Testimonial>
+            </div>
+
         </div>
 
-        <div class="mt-8">
-            <img :src="'ai-chat.png'" alt="Ai-Chat">
+        <div class="section">
+            <div class="subtitle">
+                Powered by <br> open-source
+            </div>
+
+            <div class="paragraph">
+                Completely self-hostable with Docker.
+            </div>
+
+            <div class="mt-8 flex justify-center">
+                <img class="w-[40%]" :src="'docker.png'" alt="Self-Host">
+            </div>
+
+            <div class="button-container flex-col items-center gap-4 !mt-10">
+                <LyxUiButton class="button" type="outline">
+                    Leave a Star on Github!
+                </LyxUiButton>
+                <LyxUiButton class="button" type="primary">
+                    Start for free
+                </LyxUiButton>
+            </div>
+
         </div>
 
 
+        <div class="section">
+            <div class="subtitle">
+                Why choose Litlyx
+            </div>
 
+            <div class="paragraph">
+                Litlyx vs Plausible vs Google Analytics
+            </div>
 
+            <div class="button-container">
+                <LyxUiButton class="button" type="primary">
+                    Read more
+                </LyxUiButton>
+            </div>
+        </div>
 
-        <div class="poppins text-center font-semibold text-[1.8rem] mt-20">
-            Our Users Loves Litlyx Semplicity
+        <div class="section">
+            <div class="subtitle">
+                Update me!
+            </div>
+
+            <div class="paragraph">
+                Litlyx is in beta version. We will keep you updated with our latest news.
+            </div>
+
+            <div class="flex justify-center mt-8">
+                <LyxUiInput placeholder="Insert email" v-model="email" class="text-[1.1rem] w-full py-2 px-3">
+                </LyxUiInput>
+            </div>
+
+            <div class="button-container">
+                <LyxUiButton class="button" type="primary">
+                    Keep me updated
+                </LyxUiButton>
+            </div>
+
         </div>
 
 
-
-
-        
-        <div class="poppins text-center font-semibold text-[1.8rem] mt-20">
-            Powered by <br> Open-Source
-        </div>
-
-        <div class="poppins text-center mt-4 text-[1.1rem]">
-            Completely self-hostable with Docker.
-        </div>
-
-        <div class="mt-8">
-            <img :src="'selfhost.png'" alt="Self-Host">
-        </div>
-
-        <div class="flex justify-center flex-col gap-4 w-full items-center mt-20">
-            <LyxUiButton class="text-[1.2rem] px-10 py-2" type="outline">
-               Leave a Star on Github!
-            </LyxUiButton>
-            <LyxUiButton class="text-[1.2rem] px-10 py-2" type="primary">
-               Start for free
-            </LyxUiButton>
-        </div>
-      
     </div>
 
 </template>
 
 <style scoped lang="scss">
+.section {
+    @apply mt-20
+}
+
+.button {
+    @apply font-medium text-[1rem] px-6 py-2
+}
+
+.button-container {
+    @apply flex justify-center mt-8
+}
+
+.headline {
+    font-family: 'Poppins' !important;
+    @apply font-semibold text-[3rem] text-center leading-[3.5rem]
+}
+
+.paragraph {
+    font-family: 'Poppins' !important;
+    @apply text-center text-lyx-text-dark mt-4 text-[1.1rem]
+}
+
+.subtitle {
+    font-family: 'Poppins' !important;
+    @apply text-center font-semibold text-[1.8rem]
+}
+
+
+
+
+
 .footer * {
     font-family: "Poppins";
 }

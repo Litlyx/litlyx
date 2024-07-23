@@ -17,7 +17,10 @@ useSeoMeta({
   ogSiteName: 'Litlyx',
   ogLocale: 'en_US',
   ogImageWidth: '1200',
-  ogImageHeight: '630'
+  ogImageHeight: '630',
+  themeColor: '#0A0A0A',
+  appleMobileWebAppCapable: 'yes',
+  appleMobileWebAppStatusBarStyle: 'black-translucent',
 });
 
 
