@@ -39,7 +39,7 @@ Sign-up on [Litlyx cloud](https://dashboard.litlyx.com) using OAuth & name your 
 <script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
 ```
 
-Importing Litlyx with a direct script already tracks 10 KPIs such as `Page visits`, `Browsers`, `Devices`, `OS`, `Real-Time Online Users`, `Unique Session`, `Countries`, `Avarage Session Time`.
+Importing Litlyx with a direct script already tracks 10 KPIs such as `Page visits`, `Browsers`, `Devices`, `OS`, `Real-Time Online Users`, `Unique Session`, `Countries`, `Average Session Time`.
 
 # All Javascript Runtimes
 
@@ -69,7 +69,7 @@ Once imported, you need to initialize Litlyx:
 Lit.init('your_project_id');
 ```
 
-After initialization, Litlyx will automatically track Analytics such as `Page visits`, `Browsers`, `Devices`, `OS`, `Real-Time Online Users`, `Unique Session`, `Countries`, `Avarage Session Time`.
+After initialization, Litlyx will automatically track Analytics such as `Page visits`, `Browsers`, `Devices`, `OS`, `Real-Time Online Users`, `Unique Session`, `Countries`, `Average Session Time`.
 
 # Custom Events
 
