@@ -241,6 +241,12 @@ const snippetIndex = ref<number>(0);
                     <img class="scale-125 lg:scale-100 lg:h-[35rem]" :src="'ai-chat.png'" alt="Ai-Chat">
                 </div>
 
+                <div class="button-container">
+                    <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
+                        Start for free
+                    </LyxUiButton>
+                </div>
+
             </div>
 
             <div class="section">
@@ -285,11 +291,9 @@ const snippetIndex = ref<number>(0);
                 </div>
 
                 <div class="button-container flex-col items-center gap-4 !mt-10">
-                    <LyxUiButton link="https://github.com/Litlyx/litlyx" target="_blank" class="button" type="outline">
+                    <LyxUiButton link="https://github.com/Litlyx/litlyx" target="_blank" class="button"
+                        type="secondary">
                         Leave a Star on Github!
-                    </LyxUiButton>
-                    <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
-                        Start for free
                     </LyxUiButton>
                 </div>
 

@@ -3,139 +3,163 @@
 definePageMeta({ layout: 'header' });
 
 
+const featureStyle = 'font-bold poppins text-lyx-text';
+const cellStyle = 'poppins text-lyx-text'
+const activeStyle = 'poppins !text-lyx-text border-solid border-[1px] border-green-400 bg-green-400/5'
+
+
+const columns = [{
+    key: 'feature',
+    label: 'Feature'
+}, {
+    key: 'litlyx',
+    label: 'Litlyx'
+}, {
+    key: 'plausible',
+    label: 'Plausible'
+}, {
+    key: 'google',
+    label: 'Google Analytics'
+}]
 
 const comparisons = ref<any[]>([
     {
-        feature: 'Setup Time',
-        litlyx: '30 seconds',
-        plausible: 'A few Minutes',
-        google: 'Hours'
+        feature: { text: 'Setup Time', class: featureStyle },
+        litlyx: { text: '30 seconds', class: activeStyle },
+        plausible: { text: 'A few Minutes', class: cellStyle },
+        google: { text: 'Hours', class: cellStyle }
     },
     {
-        feature: 'Real-Time Collection',
-        litlyx: 'Instant',
-        plausible: 'each 5 minutes',
-        google: 'from few minutes, to hours'
+        feature: { text: 'Real-Time Collection', class: featureStyle },
+        litlyx: { text: 'Instant', class: activeStyle },
+        plausible: { text: 'each 5 minutes', class: cellStyle },
+        google: { text: 'from few minutes, to hours', class: cellStyle }
     },
     {
-        feature: 'Documentation',
-        litlyx: 'Small, Easy & Modern',
-        plausible: 'Longer than necessary',
-        google: 'Mstodon & Complex'
+        feature: { text: 'Documentation', class: featureStyle },
+        litlyx: { text: 'Small, Easy & Modern', class: activeStyle },
+        plausible: { text: 'Longer than necessary', class: cellStyle },
+        google: { text: 'Mstodon & Complex', class: cellStyle }
     },
     {
-        feature: 'Modern UI',
-        litlyx: 'Yes',
-        plausible: 'Yes',
-        google: 'Yes'
+        feature: { text: 'Modern UI', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Yes', class: activeStyle },
+        google: { text: 'Yes', class: activeStyle }
     },
     {
-        feature: 'Developers Centric Approach',
-        litlyx: 'Yes',
-        plausible: 'Partially',
-        google: 'No'
+        feature: { text: 'Developers Centric Approach', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Partially', class: cellStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Website Loading Time',
-        litlyx: '3 ms',
-        plausible: '3 ms',
-        google: '5-15 ms'
+        feature: { text: 'Website Loading Time', class: featureStyle },
+        litlyx: { text: '3 ms', class: activeStyle },
+        plausible: { text: '3 ms', class: activeStyle },
+        google: { text: '5-15 ms', class: cellStyle }
     },
     {
-        feature: 'Library Size',
-        litlyx: '3 kb',
-        plausible: '2 kb',
-        google: 'avg. 50 kb'
+        feature: { text: 'Library Size', class: featureStyle },
+        litlyx: { text: '3 kb', class: '' },
+        plausible: { text: '2 kb', class: activeStyle },
+        google: { text: 'avg. 50 kb', class: cellStyle }
     },
     {
-        feature: 'Custom Events Support',
-        litlyx: 'Yes',
-        plausible: 'Yes',
-        google: 'Yes'
+        feature: { text: 'Custom Events Support', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Yes', class: activeStyle },
+        google: { text: 'Yes', class: activeStyle }
     },
     {
-        feature: 'Native Js Runtimes',
-        litlyx: 'Yes',
-        plausible: 'No',
-        google: 'No'
+        feature: { text: 'Native Js Runtimes', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'No', class: cellStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Custom Events metadata Support',
-        litlyx: 'Yes',
-        plausible: 'No',
-        google: 'Limited'
+        feature: { text: 'Custom Events metadata Support', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'No', class: cellStyle },
+        google: { text: 'Limited', class: cellStyle }
     },
     {
-        feature: 'Raw Data Export',
-        litlyx: 'Yes',
-        plausible: 'No',
-        google: 'No'
+        feature: { text: 'Raw Data Export', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'No', class: cellStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Data Ownership',
-        litlyx: 'Yes',
-        plausible: 'Yes',
-        google: 'No'
+        feature: { text: 'Data Ownership', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Yes', class: activeStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Open-Source',
-        litlyx: 'Self-Hostable',
-        plausible: 'Self-Hostable',
-        google: 'No'
+        feature: { text: 'Open-Source', class: featureStyle },
+        litlyx: { text: 'Self-Hostable', class: activeStyle },
+        plausible: { text: 'Self-Hostable', class: activeStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Privacy-focused',
-        litlyx: 'Yes',
-        plausible: 'Yes',
-        google: 'No'
+        feature: { text: 'Privacy-focused', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Yes', class: activeStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Cookies Stored',
-        litlyx: '0 Cookies',
-        plausible: '0 Cookies',
-        google: 'Yes, many'
+        feature: { text: 'Cookies Stored', class: featureStyle },
+        litlyx: { text: '0 Cookies', class: activeStyle },
+        plausible: { text: '0 Cookies', class: activeStyle },
+        google: { text: 'Yes, many', class: cellStyle }
     },
     {
-        feature: 'EU standard',
-        litlyx: 'Yes',
-        plausible: 'Yes',
-        google: 'Limited'
+        feature: { text: 'EU standard', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Yes', class: activeStyle },
+        google: { text: 'Limited', class: cellStyle }
     },
     {
-        feature: 'Ad Blockers',
-        litlyx: 'Impossible to block',
-        plausible: 'Possible, but hard!',
-        google: 'Possible'
+        feature: { text: 'Ad Blockers', class: featureStyle },
+        litlyx: { text: 'Impossible to block', class: activeStyle },
+        plausible: { text: 'Possible, but hard!', class: cellStyle },
+        google: { text: 'Possible', class: cellStyle }
     },
     {
-        feature: 'AI Data Analyst Assistant',
-        litlyx: 'Yes',
-        plausible: 'No',
-        google: 'No'
+        feature: { text: 'AI Data Analyst Assistant', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'No', class: cellStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Report Generation',
-        litlyx: 'Detailed reports in seconds',
-        plausible: 'Basic Reports',
-        google: 'Extensive, but complex to do'
+        feature: { text: 'Report Generation', class: featureStyle },
+        litlyx: { text: 'Detailed reports in seconds', class: activeStyle },
+        plausible: { text: 'Basic Reports', class: cellStyle },
+        google: { text: 'Extensive, but complex to do', class: cellStyle }
     },
     {
-        feature: 'User-Friendly interface',
-        litlyx: 'Yes',
-        plausible: 'Yes',
-        google: 'Moderate Complexity'
+        feature: { text: 'User-Friendly interface', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'Yes', class: activeStyle },
+        google: { text: 'Moderate Complexity', class: cellStyle }
     },
     {
-        feature: 'Agglomeration from third parties DB’s',
-        litlyx: 'Yes',
-        plausible: 'No',
-        google: 'No'
+        feature: { text: 'Agglomeration from third parties DB’s', class: featureStyle },
+        litlyx: { text: 'Yes', class: activeStyle },
+        plausible: { text: 'No', class: cellStyle },
+        google: { text: 'No', class: cellStyle }
     },
     {
-        feature: 'Cost Effective (Cloud)',
-        litlyx: 'Free-Forever plan to start. Basic plan: €4,99/mo for 50k visits/events',
-        plausible: '30 days free trial. basic plan: €9,00/mo for 10k page visits',
-        google: 'Free forever. Offers Enterprise only Premium prices (really expansive)'
+        feature: { text: 'Free Options (Cloud)', class: featureStyle },
+        litlyx: { text: 'Free-Forever plan to start.', class: activeStyle },
+        plausible: { text: '30 days free trial.', class: cellStyle },
+        google: { text: 'Free forever. No Ownership.', class: activeStyle }
+    },
+    {
+        feature: { text: 'Cost Effective (Cloud)', class: featureStyle },
+        litlyx: { text: 'Basic plan: €4,99/mo for 50k visits/events', class: activeStyle },
+        plausible: { text: 'Basic plan: €9,00/mo for 10k page visits', class: cellStyle },
+        google: { text: 'Offers Enterprise only Premium prices (really expansive)', class: cellStyle }
     }
 ]);
 
@@ -172,8 +196,29 @@ const comparisons = ref<any[]>([
 
         <div class="section">
 
-            <div class="hidden lg:flex lg:justify-center">
-                <UTable :rows="comparisons"></UTable>
+            <div class="hidden lg:flex lg:justify-center w-full lg:flex-nowrap">
+                <UTable :rows="comparisons" :columns="columns" :ui="{
+                    td: {
+                        base: 'border-x-[1px] border-solid border-lyx-widget-lighter'
+                    },
+                    th: {
+                        base: 'border-[1px] border-solid border-lyx-widget-lighter bg-lyx-widget'
+                    }
+                }">
+
+                    <template #litlyx-data="{ row }">
+                        {{ row.litlyx.text }}
+                    </template>
+                    <template #feature-data="{ row }">
+                        {{ row.feature.text }}
+                    </template>
+                    <template #plausible-data="{ row }">
+                        {{ row.plausible.text }}
+                    </template>
+                    <template #google-data="{ row }">
+                        {{ row.google.text }}
+                    </template>
+                </UTable>
             </div>
 
             <div class="lg:hidden text-lyx-text-dark">
@@ -184,7 +229,7 @@ const comparisons = ref<any[]>([
 
 
         <div class="section">
-            <div class="subtitle">
+            <div class="title">
                 Google Analytics vs. Litlyx
             </div>
             <ul class="list-disc text-lyx-text-dark mt-4">
@@ -209,7 +254,7 @@ const comparisons = ref<any[]>([
 
 
         <div class="section">
-            <div class="subtitle">
+            <div class="title">
                 Plausible vs. Litlyx <span class="text-[.9rem]">(we ❤️ Plausible)</span>
             </div>
             <ul class="list-disc text-lyx-text-dark mt-4">
@@ -286,6 +331,23 @@ const comparisons = ref<any[]>([
             </div>
         </div>
 
+        <div class="section">
+
+            <div class="title text-center">
+                Ready to start with Litlyx?
+            </div>
+
+            <div class="button-container flex-col items-center gap-6">
+                <LyxUiButton link="https://dashboard.litlyx.com/live_demo" target="_blank" class="button" type="outline">
+                    Go to Live Demo
+                </LyxUiButton>
+                <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
+                    Start for free now
+                </LyxUiButton>
+            </div>
+
+        </div>
+
 
     </div>
 </template>
@@ -310,4 +372,13 @@ const comparisons = ref<any[]>([
 .section {
     @apply mt-20
 }
+
+.button {
+    @apply font-medium text-[1rem] px-6 py-2
+}
+
+.button-container {
+    @apply flex justify-center mt-8
+}
+
 </style>
