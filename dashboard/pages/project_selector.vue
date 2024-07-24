@@ -96,13 +96,7 @@ async function deleteAccount() {
                         {{ projects?.length ?? '-' }} / {{ maxProjects || 3 }}
                     </div>
                 </div>
-
-                <LyxUiButton type="primary">
-                    <NuxtLink v-if="(projects?.length || 0) < (maxProjects || 3)" to="/project_creation">
-                        Create new project
-                    </NuxtLink>
-                </LyxUiButton>
-                <!-- <NuxtLink v-if="(projects?.length || 0) < (maxProjects || 3)" to="/project_creation"
+                 <NuxtLink v-if="(projects?.length || 0) < (maxProjects || 3)" to="/project_creation"
                     class="bg-blue-500/20 hover:bg-blue-500/30 px-4 py-1 flex items-center gap-4 rounded-xl cursor-pointer">
                     <div class="h-full aspect-[1/1] flex items-center justify-center">
                         <i class="fas fa-plus text-[1rem] text-text-sub/80"></i>
@@ -112,7 +106,7 @@ async function deleteAccount() {
                             Create new project
                         </div>
                     </div>
-                </NuxtLink> -->
+                </NuxtLink>
 
 
             </div>
@@ -124,9 +118,6 @@ async function deleteAccount() {
             <div class="flex gap-12 flex-wrap" v-if="pid">
 
                 <div v-for="e of projects">
-                    <LyxUiProjectSelector>
-
-                    </LyxUiProjectSelector>
                     <DashboardProjectSelectionCard @click="onProjectClick(e._id.toString())"
                         :active="pid == e._id.toString()" :title="e.name"
                         :subtitle="pid == e._id.toString() ? 'ATTIVO' : ''"
