@@ -2,10 +2,148 @@
 
 definePageMeta({ layout: 'header' });
 
+
+
+const comparisons = ref<any[]>([
+    {
+        feature: 'Setup Time',
+        litlyx: '30 seconds',
+        plausible: 'A few Minutes',
+        google: 'Hours'
+    },
+    {
+        feature: 'Real-Time Collection',
+        litlyx: 'Instant',
+        plausible: 'each 5 minutes',
+        google: 'from few minutes, to hours'
+    },
+    {
+        feature: 'Documentation',
+        litlyx: 'Small, Easy & Modern',
+        plausible: 'Longer than necessary',
+        google: 'Mstodon & Complex'
+    },
+    {
+        feature: 'Modern UI',
+        litlyx: 'Yes',
+        plausible: 'Yes',
+        google: 'Yes'
+    },
+    {
+        feature: 'Developers Centric Approach',
+        litlyx: 'Yes',
+        plausible: 'Partially',
+        google: 'No'
+    },
+    {
+        feature: 'Website Loading Time',
+        litlyx: '3 ms',
+        plausible: '3 ms',
+        google: '5-15 ms'
+    },
+    {
+        feature: 'Library Size',
+        litlyx: '3 kb',
+        plausible: '2 kb',
+        google: 'avg. 50 kb'
+    },
+    {
+        feature: 'Custom Events Support',
+        litlyx: 'Yes',
+        plausible: 'Yes',
+        google: 'Yes'
+    },
+    {
+        feature: 'Native Js Runtimes',
+        litlyx: 'Yes',
+        plausible: 'No',
+        google: 'No'
+    },
+    {
+        feature: 'Custom Events metadata Support',
+        litlyx: 'Yes',
+        plausible: 'No',
+        google: 'Limited'
+    },
+    {
+        feature: 'Raw Data Export',
+        litlyx: 'Yes',
+        plausible: 'No',
+        google: 'No'
+    },
+    {
+        feature: 'Data Ownership',
+        litlyx: 'Yes',
+        plausible: 'Yes',
+        google: 'No'
+    },
+    {
+        feature: 'Open-Source',
+        litlyx: 'Self-Hostable',
+        plausible: 'Self-Hostable',
+        google: 'No'
+    },
+    {
+        feature: 'Privacy-focused',
+        litlyx: 'Yes',
+        plausible: 'Yes',
+        google: 'No'
+    },
+    {
+        feature: 'Cookies Stored',
+        litlyx: '0 Cookies',
+        plausible: '0 Cookies',
+        google: 'Yes, many'
+    },
+    {
+        feature: 'EU standard',
+        litlyx: 'Yes',
+        plausible: 'Yes',
+        google: 'Limited'
+    },
+    {
+        feature: 'Ad Blockers',
+        litlyx: 'Impossible to block',
+        plausible: 'Possible, but hard!',
+        google: 'Possible'
+    },
+    {
+        feature: 'AI Data Analyst Assistant',
+        litlyx: 'Yes',
+        plausible: 'No',
+        google: 'No'
+    },
+    {
+        feature: 'Report Generation',
+        litlyx: 'Detailed reports in seconds',
+        plausible: 'Basic Reports',
+        google: 'Extensive, but complex to do'
+    },
+    {
+        feature: 'User-Friendly interface',
+        litlyx: 'Yes',
+        plausible: 'Yes',
+        google: 'Moderate Complexity'
+    },
+    {
+        feature: 'Agglomeration from third parties DB’s',
+        litlyx: 'Yes',
+        plausible: 'No',
+        google: 'No'
+    },
+    {
+        feature: 'Cost Effective (Cloud)',
+        litlyx: 'Free-Forever plan to start. Basic plan: €4,99/mo for 50k visits/events',
+        plausible: '30 days free trial. basic plan: €9,00/mo for 10k page visits',
+        google: 'Free forever. Offers Enterprise only Premium prices (really expansive)'
+    }
+]);
+
+
 </script>
 
 <template>
-    <div class="px-8">
+    <div class="px-8 lg:px-40">
 
         <div class="section">
             <div class="title">
@@ -34,15 +172,8 @@ definePageMeta({ layout: 'header' });
 
         <div class="section">
 
-            <div class="hidden lg:grid grid-cols-[20%_20%_30%_30%]">
-                <div> Feature </div>
-                <div> Litlyx </div>
-                <div> Plausible </div>
-                <div> Google Analytics </div>
-                <div> A </div>
-                <div> B </div>
-                <div> C </div>
-                <div> D </div>
+            <div class="hidden lg:flex lg:justify-center">
+                <UTable :rows="comparisons"></UTable>
             </div>
 
             <div class="lg:hidden text-lyx-text-dark">
@@ -128,7 +259,7 @@ definePageMeta({ layout: 'header' });
             </div>
         </div>
 
-        
+
         <div class="section">
             <div class="title">
                 Is Impossible to Beat a giant, but...
@@ -141,7 +272,7 @@ definePageMeta({ layout: 'header' });
                 industry taking matrics driven decisions with semplicity.
             </div>
         </div>
-        
+
         <div class="section">
             <div class="title">
                 Help us improve!

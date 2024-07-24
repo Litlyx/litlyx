@@ -33,244 +33,308 @@ const mouseStyle = computed(() => {
 
 const email = ref<string>("");
 
+const scriptDeferTokens = ref<string[]>([
+    "<",
+    "script",
+    " defer ",
+    "data-project",
+    "=",
+    "\"project_id\"",
+    " src",
+    "=",
+    "\"https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js\"",
+    ">",
+    "<",
+    "/script",
+    ">",
+])
+
+const snippetIndex = ref<number>(0);
+
 </script>
 
 
 <template>
 
-    <div class="home relative h-full w-full bg-lyx-background px-8 py-10 overflow-x-hidden">
+    <div class="flex justify-center home relative">
 
-        <div class="headline">
-            Analytics For
-            <span class="text-lyx-primary"> Developers </span>
-        </div>
+        <div
+            class="lg:w-[800px] h-full w-full bg-lyx-background px-8 py-10 overflow-x-hidden flex flex-col items-center">
 
-
-        <div class="section">
-
-            <div class="paragraph">
-                30 Seconds Setup with One Line of Code.
-                All Your Analytics in a Single AI Powered Dashboard.
-            </div>
-
-            <div class="button-container">
-                <LyxUiButton class="button" type="primary"> Start for free </LyxUiButton>
-            </div>
-
-        </div>
-
-        <div class="mt-8">
-            <img :src="'placeholder.jpg'" alt="Placeholder">
-        </div>
-
-        <div class="text-center poppins mt-8">
-            Trusted by
-            <NuxtLink class="font-bold" target="_blank" to="#">NuvolAI</NuxtLink>,
-            <NuxtLink class="font-bold" target="_blank" to="#">DTech</NuxtLink>,
-            <NuxtLink class="font-bold" target="_blank" to="#">National Geografic (IT)</NuxtLink>,
-            <NuxtLink class="font-bold" target="_blank" to="#">DeckX</NuxtLink>,
-            <NuxtLink class="font-bold" target="_blank" to="#">Antichi Casali Camper Shop</NuxtLink>,
-            for Data collection.
-        </div>
-
-
-        <div class="section">
-
-            <div class="subtitle">
-                Collect analytics, <br>easy way
-            </div>
-
-            <div class="paragraph">
-                More than 10 KPIs like Page Visits, Custom Events
-                Referrers and many more
+            <div class="headline w-full scale-up-center">
+                Analytics For
+                <span class="text-lyx-primary"> Developers </span>
             </div>
 
 
-            <div class="flex justify-center items-center gap-2 text-[.8rem] mt-8">
-                <LyxUiButton type="secondary"> Javascript </LyxUiButton>
-                <LyxUiButton type="secondary"> Runtimes </LyxUiButton>
-                <LyxUiButton type="secondary"> Events </LyxUiButton>
-            </div>
+            <div class="section !mt-6">
 
+                <div class="paragraph">
+                    30 Seconds Setup with One Line of Code.
+                    All Your Analytics in a Single AI Powered Dashboard.
+                </div>
 
-            <LyxUiCard class="w-full mt-8 bg-lyx-background py-6 text-center">
-                <span class="text-[#9CDCFE] menlo text-[1.1rem]">Lit</span>
-                <span class="text-[#D3D3D3] menlo text-[1.1rem]">.</span>
-                <span class="text-[#DCDCAA] menlo text-[1.1rem]">init</span>
-                <span class="text-[#D3D3D3] menlo text-[1.1rem]">(</span>
-                <span class="text-[#CE9178] menlo text-[1.1rem]">'project_id'</span>
-                <span class="text-[#D3D3D3] menlo text-[1.1rem]">);</span>
-            </LyxUiCard>
+                <div class="button-container">
+                    <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
+                        Start for free
+                    </LyxUiButton>
+                </div>
 
-
-
-            <div class="poppins text-center mt-6 text-[1.1rem]">
-                That’s It! You are <span class="font-bold"> Ready </span> to Collect data.
-            </div>
-
-            <div class="button-container">
-                <LyxUiButton class="button" type="primary"> Start for free </LyxUiButton>
-            </div>
-
-        </div>
-
-
-
-
-        <div class="section">
-            <div class="subtitle">
-                Plug in <br> everywhere.
-            </div>
-
-            <div class="paragraph">
-                Seamless Integrations with popular
-                <span class="text-[#FFCA27]">JS</span>/<span class="text-[#017ACB]">TS</span>
-                runtimes like Nuxt, Deno, Next, Vue, React and many more.
             </div>
 
             <div class="mt-8">
-                <img :src="'techs-new.png'" alt="Techs">
+                <img :src="'screenshot.png'" alt="Litlyx dashboard">
             </div>
+
+            <div class="text-center poppins mt-8">
+                Trusted by
+                <NuxtLink class="font-bold" target="_blank" to="https://nuvol.ai">NuvolAI</NuxtLink>,
+                <NuxtLink class="font-bold" target="_blank" to="https://www.nationalgeographic.it">National Geografic
+                    (IT)</NuxtLink>,
+                <NuxtLink class="font-bold" target="_blank" to="https://deckx.app">DeckX</NuxtLink>,
+                <NuxtLink class="font-bold" target="_blank" to="https://www.antichicasalicampershop.it">Antichi Casali
+                    Camper Shop</NuxtLink>,
+                for Data collection.
+            </div>
+
+
+            <div class="section">
+
+                <div class="subtitle">
+                    Collect analytics, <br>easy way
+                </div>
+
+                <div class="paragraph">
+                    More than 10 KPIs like Page Visits, Custom Events
+                    Referrers and many more
+                </div>
+
+
+                <div class="flex justify-center items-center gap-2 text-[.8rem] mt-8">
+                    <LyxUiButton :class="{ 'outline outline-[1px] outline-[#CD8700]': snippetIndex == 0 }"
+                        @click="snippetIndex = 0" type="secondary"> Javascript
+                    </LyxUiButton>
+                    <LyxUiButton :class="{ 'outline outline-[1px] outline-[#CD8700]': snippetIndex == 1 }"
+                        @click="snippetIndex = 1" type="secondary"> Runtimes </LyxUiButton>
+                    <LyxUiButton :class="{ 'outline outline-[1px] outline-[#CD8700]': snippetIndex == 2 }"
+                        @click="snippetIndex = 2" type="secondary"> Events </LyxUiButton>
+                </div>
+
+
+                <LyxUiCard class="w-full mt-8 bg-lyx-background py-6 text-center">
+
+                    <div v-if="snippetIndex == 0" class="text-[.9rem]">
+                        <span class="text-[#808080] menlo">{{ scriptDeferTokens[0] }}</span>
+                        <span class="text-[#569CD6] menlo">{{ scriptDeferTokens[1] }}</span>
+                        <span class="text-[#9CDCFE] menlo">{{ scriptDeferTokens[2] }}</span>
+                        <span class="text-[#9CDCFE] text-nowrap menlo">{{ scriptDeferTokens[3] }}</span>
+                        <span class="text-[#D4D4D4] menlo">{{ scriptDeferTokens[4] }}</span>
+                        <span class="text-[#CD9178] menlo">{{ scriptDeferTokens[5] }}</span>
+                        <span class="text-[#9CDCFE] menlo">{{ scriptDeferTokens[6] }}</span>
+                        <span class="text-[#D4D4D4] menlo">{{ scriptDeferTokens[7] }}</span>
+                        <span class="text-[#CE9178] break-words menlo">{{ scriptDeferTokens[8] }}</span>
+                        <span class="text-[#808080] menlo">{{ scriptDeferTokens[9] }}</span>
+                        <span class="text-[#808080] menlo">{{ scriptDeferTokens[10] }}</span>
+                        <span class="text-[#569CD6] menlo">{{ scriptDeferTokens[11] }}</span>
+                        <span class="text-[#808080] menlo">{{ scriptDeferTokens[12] }}</span>
+                    </div>
+
+                    <div v-if="snippetIndex == 1" class="text-[.9rem]">
+                        <span class="text-[#9CDCFE] menlo">Lit</span>
+                        <span class="text-[#D3D3D3] menlo">.</span>
+                        <span class="text-[#DCDCAA] menlo">init</span>
+                        <span class="text-[#D3D3D3] menlo">(</span>
+                        <span class="text-[#CE9178] menlo">'project_id'</span>
+                        <span class="text-[#D3D3D3] menlo">);</span>
+                    </div>
+
+                    <div v-if="snippetIndex == 2" class="text-[.9rem]">
+                        <span class="text-[#9CDCFE] menlo">Lit</span>
+                        <span class="text-[#D3D3D3] menlo">.</span>
+                        <span class="text-[#DCDCAA] menlo">event</span>
+                        <span class="text-[#D3D3D3] menlo">(</span>
+                        <span class="text-[#CE9178] menlo">'event_name'</span>
+                        <span class="text-[#D3D3D3] menlo">);</span>
+                    </div>
+
+                </LyxUiCard>
+
+
+
+                <div class="poppins text-center mt-6 text-[1.1rem]">
+                    That’s It! You are <span class="font-bold"> Ready </span> to Collect data.
+                </div>
+
+                <div class="button-container">
+                    <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
+                        Start for free
+                    </LyxUiButton>
+                </div>
+
+            </div>
+
+
+
+
+            <div class="section">
+                <div class="subtitle">
+                    Plug in <br> everywhere.
+                </div>
+
+                <div class="paragraph">
+                    Seamless Integrations with popular
+                    <span class="text-[#FFCA27]">JS</span>/<span class="text-[#017ACB]">TS</span>
+                    runtimes like Nuxt, Deno, Next, Vue, React and many more.
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <img :src="'techs-new.png'" alt="Techs">
+                </div>
+            </div>
+
+
+            <div class="section">
+
+                <div class="subtitle">
+                    Transform DB's data in beautiful charts
+                </div>
+
+                <div class="paragraph">
+                    Easily connect all your databases to your dashboard like Supabase, MongoDB, Cassandra and more.
+                </div>
+
+                <div class="my-10 flex justify-center">
+                    <img class="lg:h-[35rem]" :src="'db-connect.png'" alt="DB-CONNECT">
+                </div>
+
+                <div class="paragraph">
+                    We don't only collect Analytics.
+                    We Agglomerate your Existing data! Showing
+                    Beautiful Charts!
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <img :src="'placeholder.jpg'" alt="Placeholder">
+                </div>
+
+
+                <div class="button-container">
+                    <LyxUiButton link="https://dashboard.litlyx.com/live_demo" target="_blank" class="button"
+                        type="outline">
+                        Go to live demo
+                    </LyxUiButton>
+                </div>
+            </div>
+
+
+            <div class="section">
+
+                <div class="subtitle">
+                    An AI data analyst available 24/7
+                </div>
+
+                <div class="paragraph">
+                    Take metrics-driven decision with Lit our AI agent. Generate charts chatting with Lit. 
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <img class="scale-125 lg:scale-100 lg:h-[35rem]" :src="'ai-chat.png'" alt="Ai-Chat">
+                </div>
+
+            </div>
+
+            <div class="section">
+
+
+                <div class="subtitle">
+                    Our users loves Litlyx's simplicity
+                </div>
+
+                <ClientOnly>
+                    <div class="mt-10 flex flex-col gap-4 lg:grid lg:grid-cols-2">
+                        <Testimonial class="w-full h-full" name="Victoria - CEO" sub="Founder" link-text="@DeckX"
+                            link="https://deckx.app"
+                            text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
+                        </Testimonial>
+                        <Testimonial class="w-full h-full" name="Alessio - CEO" sub="Founder" link-text="@NuvolAI"
+                            link="https://https://nuvol.ai"
+                            text="I instantly loved Litlyx because it is simple. I integrated their universal script in PHP; it was seamless. I will start to track events very soon!
+                            One of my clients said to me, 'We open only Litlyx to keep an eye on referrers from our campaigns.">
+                        </Testimonial>
+                        <Testimonial class="w-full h-full" name="Marco - Business Owner" sub=""
+                            link-text="@Antichi Casali Camper Shop" link="https://www.antichicasalicampershop.it"
+                            text="We needed to track metrics, but we didn’t know what to use. Than Alessio presented us Litlyx. We was Enthusiasts and payied the 9,99 subscription. We are happy about the service they provide for our online Ecommerce selling Camper equipments.">
+                        </Testimonial>
+
+                    </div>
+                </ClientOnly>
+
+            </div>
+
+            <div class="section">
+                <div class="subtitle">
+                    Powered by <br> open-source
+                </div>
+
+                <div class="paragraph">
+                    Completely self-hostable with Docker.
+                </div>
+
+                <div class="mt-8 flex justify-center">
+                    <img class="w-[40%]" :src="'docker.png'" alt="Self-Host">
+                </div>
+
+                <div class="button-container flex-col items-center gap-4 !mt-10">
+                    <LyxUiButton link="https://github.com/Litlyx/litlyx" target="_blank" class="button" type="outline">
+                        Leave a Star on Github!
+                    </LyxUiButton>
+                    <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
+                        Start for free
+                    </LyxUiButton>
+                </div>
+
+            </div>
+
+
+            <div class="section">
+                <div class="subtitle">
+                    Why choose Litlyx
+                </div>
+
+                <div class="paragraph">
+                    Litlyx vs Plausible vs Google Analytics
+                </div>
+
+                <div class="button-container">
+                    <LyxUiButton link="/why-choose-litlyx" target="_blank" class="button" type="outline">
+                        Read more
+                    </LyxUiButton>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="subtitle">
+                    Update me!
+                </div>
+
+                <div class="paragraph">
+                    Litlyx is in beta version. We will keep you updated with our latest news.
+                </div>
+
+                <div class="flex justify-center mt-8">
+                    <LyxUiInput placeholder="Insert email" v-model="email" class="text-[1.1rem] w-full py-2 px-3">
+                    </LyxUiInput>
+                </div>
+
+                <div class="button-container">
+                    <LyxUiButton class="button" type="primary">
+                        Keep me updated
+                    </LyxUiButton>
+                </div>
+
+            </div>
+
         </div>
-
-
-        <div class="section">
-
-            <div class="subtitle">
-                Transform DB's data in beautiful charts
-            </div>
-
-            <div class="paragraph">
-                Easily connect all your databases to your dashboard like Supabase, MongoDB, Cassandra and more.
-            </div>
-
-            <div class="my-10">
-                <img :src="'db-connect.png'" alt="DB-CONNECT">
-            </div>
-
-            <div class="paragraph">
-                We don't only collect Analytics.
-                We Agglomerate your Existing data! Showing
-                Beautiful Charts!
-            </div>
-
-            <div class="mt-8">
-                <img :src="'placeholder.jpg'" alt="Placeholder">
-            </div>
-
-
-            <div class="button-container">
-                <LyxUiButton class="button" type="outline">
-                    Go to live demo
-                </LyxUiButton>
-            </div>
-        </div>
-
-
-        <div class="section">
-
-            <div class="subtitle">
-                An AI data analyst available 24/7
-            </div>
-
-            <div class="paragraph">
-                Take metrics-driven decision with Lit our AI agent. Generate charts chatting with Lit. 
-            </div>
-
-            <div class="mt-8">
-                <img class="scale-125" :src="'ai-chat.png'" alt="Ai-Chat">
-            </div>
-
-        </div>
-
-        <div class="section">
-
-
-            <div class="subtitle">
-                Our users loves Litlyx's simplicity
-            </div>
-
-            <div class="mt-10 flex flex-col gap-4">
-                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
-                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
-                </Testimonial>
-                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
-                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
-                </Testimonial>
-                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
-                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
-                </Testimonial>
-                <Testimonial name="Victoria - CEO" sub="Founder" link-text="@DeckX" link="https://deckx.app"
-                    text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
-                </Testimonial>
-            </div>
-
-        </div>
-
-        <div class="section">
-            <div class="subtitle">
-                Powered by <br> open-source
-            </div>
-
-            <div class="paragraph">
-                Completely self-hostable with Docker.
-            </div>
-
-            <div class="mt-8 flex justify-center">
-                <img class="w-[40%]" :src="'docker.png'" alt="Self-Host">
-            </div>
-
-            <div class="button-container flex-col items-center gap-4 !mt-10">
-                <LyxUiButton class="button" type="outline">
-                    Leave a Star on Github!
-                </LyxUiButton>
-                <LyxUiButton class="button" type="primary">
-                    Start for free
-                </LyxUiButton>
-            </div>
-
-        </div>
-
-
-        <div class="section">
-            <div class="subtitle">
-                Why choose Litlyx
-            </div>
-
-            <div class="paragraph">
-                Litlyx vs Plausible vs Google Analytics
-            </div>
-
-            <div class="button-container">
-                <LyxUiButton class="button" type="primary">
-                    Read more
-                </LyxUiButton>
-            </div>
-        </div>
-
-        <div class="section">
-            <div class="subtitle">
-                Update me!
-            </div>
-
-            <div class="paragraph">
-                Litlyx is in beta version. We will keep you updated with our latest news.
-            </div>
-
-            <div class="flex justify-center mt-8">
-                <LyxUiInput placeholder="Insert email" v-model="email" class="text-[1.1rem] w-full py-2 px-3">
-                </LyxUiInput>
-            </div>
-
-            <div class="button-container">
-                <LyxUiButton class="button" type="primary">
-                    Keep me updated
-                </LyxUiButton>
-            </div>
-
-        </div>
-
-
     </div>
 
 </template>
@@ -303,6 +367,23 @@ const email = ref<string>("");
     @apply text-center font-semibold text-[1.8rem]
 }
 
+@media (min-width: 1024px) {
+    .headline {
+        @apply text-[4rem]
+    }
+
+    .subtitle {
+        @apply text-[2.3rem]
+    }
+
+    .paragraph {
+        @apply text-[1.5rem]
+    }
+
+    .section {
+        @apply mt-32
+    }
+}
 
 
 
