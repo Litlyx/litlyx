@@ -28,7 +28,7 @@ definePageMeta({ layout: 'header' });
             exclusively with crucial services required for app functionality.
         </div>
         <div>
-            LitLyx Analytics (SaaS) adheres strictly to GDPR, CCPA, PECR, and other relevant privacy standards both on
+            LitLyx Analytics (SaaS) adheres strictly to GDPR and other relevant privacy standards both on
             our site and within our analytics tool. We prioritize the confidentiality of your information—it belongs to
             you, not us. This policy details the types of data we gather, the handling process, and your rights over
             your data. We are committed to never selling your data—this has always been our stance.
