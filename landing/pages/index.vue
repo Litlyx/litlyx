@@ -269,7 +269,7 @@ const snippetIndex = ref<number>(0);
                         </Testimonial>
                         <Testimonial class="w-full h-full" name="Marco - Business Owner" sub=""
                             link-text="@Antichi Casali Camper Shop" link="https://www.antichicasalicampershop.it"
-                            text="We needed to track metrics, but we didn’t know what to use. Than Alessio presented us Litlyx. We was Enthusiasts and payied the 9,99 subscription. We are happy about the service they provide for our online Ecommerce selling Camper equipments.">
+                            text="We needed to track metrics, but we didn’t know what to use. Than Alessio presented us Litlyx. We was Enthusiasts and paid the 9,99 subscription. We are happy about the service they provide for our online Ecommerce selling Camper equipments.">
                         </Testimonial>
 
                     </div>
