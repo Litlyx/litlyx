@@ -87,12 +87,18 @@ export function usePagesData(website: string, limit: number = 10) {
 
 }
 
+const { safeSnapshotDates } = useSnapshot()
+
 export function useWebsitesData(limit: number = 10) {
     const activeProject = useActiveProject();
     const res = useFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`, {
-        ...signHeaders({ 'x-query-limit': limit.toString() }),
-        key: `websites_data:${limit}`,
-        lazy: true
+        ...signHeaders({ 
+            'x-query-limit': limit.toString(),
+            'x-from': safeSnapshotDates.value.from,
+            'x-to': safeSnapshotDates.value.to
+         }),
+        key: `websites_data:${limit}:${safeSnapshotDates.value.from}:${safeSnapshotDates.value.to}`,
+        lazy: true,
     });
     return res;
 }

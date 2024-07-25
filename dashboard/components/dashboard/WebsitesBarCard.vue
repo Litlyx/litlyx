@@ -6,12 +6,23 @@ const { data: websites, pending, refresh } = useWebsitesData();
 
 const currentViewData = ref<(VisitsWebsiteAggregated[] | null)>(websites.value);
 
-watch(pending, () => {
-    currentViewData.value = websites.value;
-})
 
 const isPagesView = ref<boolean>(false);
 const isLoading = ref<boolean>(false);
+
+
+const { snapshot } = useSnapshot()
+
+watch(pending, () => {
+    isLoading.value = true;
+    currentViewData.value = websites.value;
+    isLoading.value = false;
+});
+
+watch(snapshot, () => {
+    refresh();
+});
+
 
 async function showDetails(website: string) {
     if (isPagesView.value == true) return;
@@ -21,6 +32,7 @@ async function showDetails(website: string) {
     const { data: pagesData, pending } = usePagesData(website, 10);
 
     watch(pending, () => {
+        isLoading.value = true;
         currentViewData.value = pagesData.value;
         isLoading.value = false;
     })

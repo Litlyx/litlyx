@@ -91,7 +91,7 @@ const selectLabels = [
             <DashboardTopCards></DashboardTopCards>
 
 
-            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
+            <!-- <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
                 <CardTitled class="p-4 flex-1" title="Visits trends" sub="Shows trends in page visits.">
                     <template #header>
@@ -117,7 +117,7 @@ const selectLabels = [
                     </div>
                 </CardTitled>
 
-            </div>
+            </div> -->
 
 
             <div class="flex w-full justify-center mt-6 px-6">

@@ -17,7 +17,7 @@ const props = defineProps<{
 <template>
 
     <Card class="flex flex-col overflow-hidden relative max-h-[12rem] aspect-[2/1] w-full">
-        <div class="flex p-4 items-start">
+        <div v-if="ready" class="flex p-4 items-start">
             <div class="flex items-center mt-2 mr-4">
                 <i :style="`color: ${props.color}`" :class="icon" class="text-[1.6rem] 2xl:text-[2rem]"></i>
             </div>
@@ -40,7 +40,7 @@ const props = defineProps<{
             </div>
 
         </div>
-        <div class="absolute bottom-0 left-0 w-full h-[50%] flex items-end" v-if="(props.data?.length || 0) > 0">
+        <div class="absolute bottom-0 left-0 w-full h-[50%] flex items-end" v-if="((props.data?.length || 0) > 0) && ready">
             <DashboardEmbedChartCard v-if="ready" :data="props.data || []" :labels="props.labels || []"
                 :color="props.color">
             </DashboardEmbedChartCard>

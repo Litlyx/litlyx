@@ -29,6 +29,13 @@ const debugMode = process.dev;
 
 const { isOpen, close } = useMenu();
 
+const { snapshots, snapshot } = useSnapshot();
+
+const snapshotsItems = computed(() => {
+    if (!snapshots.data.value) return []
+    return snapshots.data.value as any[];
+})
+
 </script>
 
 <template>
@@ -49,7 +56,32 @@ const { isOpen, close } = useMenu();
                 </div>
 
             </div>
-            
+
+            <div class="px-4 w-full flex-col">
+
+                <USelectMenu class="w-full" v-model="snapshot" :options="snapshotsItems">
+                    <template #label>
+                        <div class="flex items-center gap-2">
+                            <div :style="'background-color:' + snapshot?.color" class="w-2 h-2 rounded-full">
+                            </div>
+                            <div> {{ snapshot?.name }} </div>
+                        </div>
+                    </template>
+                    <template #option="{ option }">
+                        <div class="flex items-center gap-2">
+                            <div :style="'background-color:' + option.color" class="w-2 h-2 rounded-full">
+                            </div>
+                            <div> {{ option.name }} </div>
+                        </div>
+                    </template>
+                </USelectMenu>
+
+                <div v-if="snapshot">
+                    <div> {{ new Date(snapshot.from).toLocaleString('it-IT') }} </div>
+                    <div> {{ new Date(snapshot.to).toLocaleString('it-IT') }}</div>
+                </div>
+            </div>
+
             <div class="flex flex-col gap-4">
 
                 <div v-for="section of sections" class="flex flex-col gap-1">
