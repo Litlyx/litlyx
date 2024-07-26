@@ -1,6 +1,11 @@
 import type { Slice } from "@services/DateService";
 import DateService from "@services/DateService";
 import type { MetricsCounts } from "~/server/api/metrics/[project_id]/counts";
+import type { BrowsersAggregated } from "~/server/api/metrics/[project_id]/data/browsers";
+import type { CountriesAggregated } from "~/server/api/metrics/[project_id]/data/countries";
+import type { DevicesAggregated } from "~/server/api/metrics/[project_id]/data/devices";
+import type { CustomEventsAggregated } from "~/server/api/metrics/[project_id]/data/events";
+import type { OssAggregated } from "~/server/api/metrics/[project_id]/data/oss";
 import type { ReferrersAggregated } from "~/server/api/metrics/[project_id]/data/referrers";
 import type { VisitsWebsiteAggregated } from "~/server/api/metrics/[project_id]/data/websites";
 import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline/generic";
@@ -97,28 +102,61 @@ const getFromToHeaders = (headers: Record<string, string> = {}) => ({
     ...headers
 });
 
+
+
+
 export function useWebsitesData(limit: number = 10) {
-    const activeProject = useActiveProject();
-    const res = useFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`, {
-        ...signHeaders({
-            'x-query-limit': limit.toString(),
-            'x-from': safeSnapshotDates.value.from,
-            'x-to': safeSnapshotDates.value.to
-        }),
-        key: `websites_data:${limit}:${safeSnapshotDates.value.from}:${safeSnapshotDates.value.to}`,
-        lazy: true,
-    });
+    const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: false, watchProps: [snapshot] }
+    );
     return res;
 }
 
-
+export function useEventsData(limit: number = 10) {
+    const res = useCustomFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/events`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: false, watchProps: [snapshot] }
+    );
+    return res;
+}
 
 export function useReferrersData(limit: number = 10) {
-
     const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`,
         () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: true, watchProps: [snapshot] }
+        { lazy: false, watchProps: [snapshot] }
     );
+    return res;
+}
 
+export function useBrowsersData(limit: number = 10) {
+    const res = useCustomFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: false, watchProps: [snapshot] }
+    );
+    return res;
+}
+
+export function useOssData(limit: number = 10) {
+    const res = useCustomFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: false, watchProps: [snapshot] }
+    );
+    return res;
+}
+
+export function useGeolocationData(limit: number = 10) {
+    const res = useCustomFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: false, watchProps: [snapshot] }
+    );
+    return res;
+}
+
+export function useDevicesData(limit: number = 10) {
+    const res = useCustomFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: false, watchProps: [snapshot] }
+    );
     return res;
 }

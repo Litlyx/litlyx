@@ -9,17 +9,26 @@ export type CustomFetchOptions = {
     lazy?: boolean
 }
 
+type OnResponseCallback<TData> = (data: Ref<TData | undefined>) => any
+
 export function useCustomFetch<T>(url: NitroFetchRequest, getHeaders: () => Record<string, string>, options?: CustomFetchOptions) {
 
     const pending = ref<boolean>(false);
     const data = ref<T | undefined>();
     const error = ref<Error | undefined>();
 
+    let onResponseCallback: OnResponseCallback<T> = () => { }
+
+    const onResponse = (callback: OnResponseCallback<T>) => {
+        onResponseCallback = callback;
+    }
+
     const execute = async () => {
         pending.value = true;
         error.value = undefined;
         try {
             data.value = await $fetch<T>(url, { headers: getHeaders() });
+            onResponseCallback(data);
         } catch (err) {
             error.value = err as Error;
         } finally {
@@ -37,5 +46,7 @@ export function useCustomFetch<T>(url: NitroFetchRequest, getHeaders: () => Reco
         });
     }
 
-    return { pending, execute, data, error };
+    const refresh = execute;
+
+    return { pending, execute, data, error, refresh, onResponse };
 }

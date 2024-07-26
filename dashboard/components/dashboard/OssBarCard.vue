@@ -1,29 +1,20 @@
 <script lang="ts" setup>
 
-import type { OssAggregated } from '~/server/api/metrics/[project_id]/data/oss';
-
-const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`, {
-    ...signHeaders(),
-    lazy: true
-});
-
-
+const { data: oss, pending, refresh } = useOssData()
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
 function showMore() {
-
 
     showDialog.value = true;
     dialogBarData.value = [];
     isDataLoading.value = true;
 
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/data/oss`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data;
+    const moreRes = useOssData(200);
+
+    moreRes.onResponse(data => {
+        dialogBarData.value = data.value || [];
         isDataLoading.value = false;
-    });
+    })
 
 }
 
@@ -32,7 +23,7 @@ function showMore() {
 
 <template>
     <div class="flex flex-col gap-2">
-        <DashboardBarsCard @showMore="showMore()" @dataReload="refresh" :data="events || []"
+        <DashboardBarsCard @showMore="showMore()" @dataReload="refresh" :data="oss || []"
             desc="The operating systems most commonly used by your website's visitors." :dataIcons="false"
             :loading="pending" label="Top OS" sub-label="OSs"></DashboardBarsCard>
     </div>

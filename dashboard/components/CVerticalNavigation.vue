@@ -32,8 +32,8 @@ const { isOpen, close } = useMenu();
 const { snapshots, snapshot } = useSnapshot();
 
 const snapshotsItems = computed(() => {
-    if (!snapshots.data.value) return []
-    return snapshots.data.value as any[];
+    if (!snapshots.value) return []
+    return snapshots.value as any[];
 })
 
 </script>

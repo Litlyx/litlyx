@@ -1,16 +1,14 @@
 
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { VisitModel } from "@schema/metrics/VisitSchema";
+import { EventModel } from "@schema/metrics/EventSchema";
 import { DATA_EXPIRE_TIME, Redis } from "~/server/services/CacheService";
 
-
-export type BrowsersAggregated = {
+export type CustomEventsAggregated = {
     _id: string,
     count: number
 }
 
 export default defineEventHandler(async event => {
-
     const project_id = getRequestProjectId(event);
     if (!project_id) return;
 
@@ -18,39 +16,33 @@ export default defineEventHandler(async event => {
     const project = await getUserProjectFromId(project_id, user);
     if (!project) return;
 
-
-    const limit = getRequestHeader(event, 'x-query-limit');
-    const numLimit = parseInt(limit || '10');
-
-
     const from = getRequestHeader(event, 'x-from');
     const to = getRequestHeader(event, 'x-to');
 
+
     if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to headers missing');
 
+
     return await Redis.useCache({
-        key: `browsers:${project_id}:${numLimit}:${from}:${to}`,
+        key: `events:${project_id}:${from}:${to}`,
         exp: DATA_EXPIRE_TIME
     }, async () => {
-        const browsers: BrowsersAggregated[] = await VisitModel.aggregate([
+
+        const events: CustomEventsAggregated[] = await EventModel.aggregate([
             {
                 $match: {
-                    project_id: project._id,
-                    created_at: {
+                    project_id: project._id, created_at: {
                         $gte: new Date(from),
                         $lte: new Date(to)
                     }
                 },
             },
-            { $group: { _id: "$browser", count: { $sum: 1, } } },
-            { $sort: { count: -1 } },
-            { $limit: numLimit }
+            { $group: { _id: "$name", count: { $sum: 1, } } },
+            { $sort: { count: -1 } }
         ]);
 
-        return browsers;
+        return events;
     });
-
-
 
 
 

@@ -1,24 +1,9 @@
 <script lang="ts" setup>
 
-import type { ReferrersAggregated } from '~/server/api/metrics/[project_id]/data/referrers';
 import type { IconProvider } from './BarsCard.vue';
 import ReferrerBarChart from '../referrer/ReferrerBarChart.vue';
 
-const activeProject = await useActiveProject();
-
-const { safeSnapshotDates, snapshot } = useSnapshot();
-
-const { data: events, pending, refresh } = await useFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`, {
-    ...signHeaders({
-        'x-from': safeSnapshotDates.value.from,
-        'x-to': safeSnapshotDates.value.to
-    }),
-    lazy: true
-});
-
-watch(snapshot,()=>{
-    refresh();
-})
+const { data: events, pending, refresh } = useReferrersData(10);
 
 
 function iconProvider(id: string): ReturnType<IconProvider> {
@@ -37,7 +22,6 @@ const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 const customDialog = useCustomDialog();
 
 function onShowDetails(referrer: string) {
-
     customDialog.openDialog(ReferrerBarChart, { slice: 'day', referrer });
 }
 
@@ -46,19 +30,19 @@ function onShowDetails(referrer: string) {
 
 function showMore() {
 
-
     showDialog.value = true;
     dialogBarData.value = [];
     isDataLoading.value = true;
 
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data.map(e => {
+
+    const moreRes = useReferrersData(200);
+
+    moreRes.onResponse(data => {
+        dialogBarData.value = data.value?.map(e => {
             return { ...e, icon: iconProvider(e._id) }
-        });
+        }) || [];
         isDataLoading.value = false;
-    });
+    })
 
 }
 

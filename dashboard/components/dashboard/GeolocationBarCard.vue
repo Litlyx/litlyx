@@ -1,13 +1,8 @@
 <script lang="ts" setup>
 
-import type { CountriesAggregated } from '~/server/api/metrics/[project_id]/data/countries';
 import type { IconProvider } from './BarsCard.vue';
 
-const activeProject = await useActiveProject();
-const { data: countries, pending, refresh } = await useFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`, {
-    ...signHeaders(),    
-    lazy: true
-});
+const { data: countries, pending, refresh } = useGeolocationData(10);
 
 function iconProvider(id: string): ReturnType<IconProvider> {
     if (id === 'self') return ['icon', 'fas fa-link'];
@@ -23,17 +18,18 @@ const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
 function showMore() {
 
-
     showDialog.value = true;
     dialogBarData.value = [];
     isDataLoading.value = true;
 
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/data/countries`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data;
+    const moreRes = useGeolocationData(200);
+
+    moreRes.onResponse(data => {
+        dialogBarData.value = data.value?.map(e => {
+            return { ...e, icon: iconProvider(e._id) }
+        }) || [];
         isDataLoading.value = false;
-    });
+    })
 
 }
 

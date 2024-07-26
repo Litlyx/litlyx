@@ -1,13 +1,6 @@
 <script lang="ts" setup>
 
-import type { DevicesAggregated } from '~/server/api/metrics/[project_id]/data/devices';
-
-const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`, {
-    ...signHeaders(),
-    lazy: true
-});
-
+const { data: devices, pending, refresh } = useDevicesData(10);
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
@@ -18,10 +11,10 @@ function showMore() {
     dialogBarData.value = [];
     isDataLoading.value = true;
 
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/data/devices`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data;
+    const moreRes = useDevicesData(200);
+
+    moreRes.onResponse(data => {
+        dialogBarData.value = data.value || [];
         isDataLoading.value = false;
     });
 
@@ -32,7 +25,7 @@ function showMore() {
 
 <template>
     <div class="flex flex-col gap-2">
-        <DashboardBarsCard @showMore="showMore()" @dataReload="refresh" :data="events || []" :dataIcons="false"
+        <DashboardBarsCard @showMore="showMore()" @dataReload="refresh" :data="devices || []" :dataIcons="false"
             desc="The devices most used to access your website." :loading="pending" label="Top Devices"
             sub-label="Devices"></DashboardBarsCard>
     </div>

@@ -1,12 +1,6 @@
 <script lang="ts" setup>
 
-import type { CustomEventsAggregated } from '~/server/api/metrics/[project_id]/visits/events';
-
-const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, {
-    ...signHeaders(),
-    lazy: true
-});
+const { data: events, pending, refresh } = useEventsData();
 
 const router = useRouter();
 
@@ -23,10 +17,10 @@ function showMore() {
     dialogBarData.value = [];
     isDataLoading.value = true;
 
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data;
+    const moreRes = useEventsData(200);
+
+    moreRes.onResponse(data => {
+        dialogBarData.value = data.value || [];
         isDataLoading.value = false;
     });
 

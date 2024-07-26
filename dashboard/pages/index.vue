@@ -91,7 +91,7 @@ const selectLabels = [
             <DashboardTopCards></DashboardTopCards>
 
 
-            <!-- <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
+            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
                 <CardTitled class="p-4 flex-1" title="Visits trends" sub="Shows trends in page visits.">
                     <template #header>
@@ -117,9 +117,9 @@ const selectLabels = [
                     </div>
                 </CardTitled>
 
-            </div> -->
+            </div>
 
-<!-- 
+
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -129,9 +129,9 @@ const selectLabels = [
                         <DashboardEventsBarCard></DashboardEventsBarCard>
                     </div>
                 </div>
-            </div> -->
+            </div>
 
-      
+
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -143,7 +143,7 @@ const selectLabels = [
                 </div>
             </div>
 
-            <!-- <div class="flex w-full justify-center mt-6 px-6">
+            <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <DashboardOssBarCard></DashboardOssBarCard>
@@ -162,7 +162,7 @@ const selectLabels = [
                     <div class="flex-1">
                     </div>
                 </div>
-            </div>  -->
+            </div>
 
         </div>
 
