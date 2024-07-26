@@ -119,7 +119,7 @@ const selectLabels = [
 
             </div> -->
 
-
+<!-- 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -129,7 +129,7 @@ const selectLabels = [
                         <DashboardEventsBarCard></DashboardEventsBarCard>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
       
             <div class="flex w-full justify-center mt-6 px-6">
@@ -143,7 +143,7 @@ const selectLabels = [
                 </div>
             </div>
 
-            <div class="flex w-full justify-center mt-6 px-6">
+            <!-- <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <DashboardOssBarCard></DashboardOssBarCard>
@@ -162,7 +162,7 @@ const selectLabels = [
                     <div class="flex-1">
                     </div>
                 </div>
-            </div> 
+            </div>  -->
 
         </div>
 

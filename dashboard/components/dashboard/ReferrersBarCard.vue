@@ -5,10 +5,20 @@ import type { IconProvider } from './BarsCard.vue';
 import ReferrerBarChart from '../referrer/ReferrerBarChart.vue';
 
 const activeProject = await useActiveProject();
+
+const { safeSnapshotDates, snapshot } = useSnapshot();
+
 const { data: events, pending, refresh } = await useFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`, {
-    ...signHeaders(),
+    ...signHeaders({
+        'x-from': safeSnapshotDates.value.from,
+        'x-to': safeSnapshotDates.value.to
+    }),
     lazy: true
 });
+
+watch(snapshot,()=>{
+    refresh();
+})
 
 
 function iconProvider(id: string): ReturnType<IconProvider> {

@@ -1,6 +1,7 @@
 import type { Slice } from "@services/DateService";
 import DateService from "@services/DateService";
 import type { MetricsCounts } from "~/server/api/metrics/[project_id]/counts";
+import type { ReferrersAggregated } from "~/server/api/metrics/[project_id]/data/referrers";
 import type { VisitsWebsiteAggregated } from "~/server/api/metrics/[project_id]/data/websites";
 import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline/generic";
 
@@ -87,18 +88,37 @@ export function usePagesData(website: string, limit: number = 10) {
 
 }
 
-const { safeSnapshotDates } = useSnapshot()
+const { safeSnapshotDates, snapshot } = useSnapshot()
+const activeProject = useActiveProject();
+
+const getFromToHeaders = (headers: Record<string, string> = {}) => ({
+    'x-from': safeSnapshotDates.value.from,
+    'x-to': safeSnapshotDates.value.to,
+    ...headers
+});
 
 export function useWebsitesData(limit: number = 10) {
     const activeProject = useActiveProject();
     const res = useFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`, {
-        ...signHeaders({ 
+        ...signHeaders({
             'x-query-limit': limit.toString(),
             'x-from': safeSnapshotDates.value.from,
             'x-to': safeSnapshotDates.value.to
-         }),
+        }),
         key: `websites_data:${limit}:${safeSnapshotDates.value.from}:${safeSnapshotDates.value.to}`,
         lazy: true,
     });
+    return res;
+}
+
+
+
+export function useReferrersData(limit: number = 10) {
+
+    const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`,
+        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        { lazy: true, watchProps: [snapshot] }
+    );
+
     return res;
 }
