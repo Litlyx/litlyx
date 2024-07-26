@@ -263,11 +263,11 @@ const snippetIndex = ref<number>(0);
                             text="Just one word: WOW! Easy to use. If I need to check my metrics, I open Litlyx. I love it.">
                         </Testimonial>
                         <Testimonial class="w-full h-full" name="Alessio - CEO" sub="Founder" link-text="@NuvolAI"
-                            link="https://https://nuvol.ai"
+                            link="https://nuvol.ai"
                             text="I instantly loved Litlyx because it is simple. I integrated their universal script in PHP; it was seamless. I will start to track events very soon!
                             One of my clients said to me, 'We open only Litlyx to keep an eye on referrers from our campaigns.">
                         </Testimonial>
-                        <Testimonial class="w-full h-full" name="Marco - Business Owner" sub=""
+                        <Testimonial class="w-full h-full" name="Liam - Business Owner" sub=""
                             link-text="@Antichi Casali Camper Shop" link="https://www.antichicasalicampershop.it"
                             text="We needed to track metrics, but we didn’t know what to use. Than Alessio presented us Litlyx. We was Enthusiasts and paid the 9,99 subscription. We are happy about the service they provide for our online Ecommerce selling Camper equipments.">
                         </Testimonial>
