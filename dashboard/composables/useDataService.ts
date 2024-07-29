@@ -19,6 +19,26 @@ export function useMetricsData() {
     return metricsInfo;
 }
 
+
+
+
+const { safeSnapshotDates, snapshot } = useSnapshot()
+const activeProject = useActiveProject();
+
+const createFromToHeaders = (headers: Record<string, string> = {}) => ({
+    'x-from': safeSnapshotDates.value.from,
+    'x-to': safeSnapshotDates.value.to,
+    ...headers
+});
+
+const createFromToBody = (body: Record<string, any> = {}) => ({
+    from: safeSnapshotDates.value.from,
+    to: safeSnapshotDates.value.to,
+    ...body
+});
+
+
+
 export function useFirstInteractionData() {
     const activeProject = useActiveProject();
     const metricsInfo = useFetch<boolean>(`/api/metrics/${activeProject.value?._id}/first_interaction`, signHeaders());
@@ -26,33 +46,25 @@ export function useFirstInteractionData() {
 }
 
 
-export async function useTimelineAdvanced(endpoint: string, slice: Slice, fromDate?: string, toDate?: string, customBody: Object = {}) {
-
-    const { from, to } = DateService.prepareDateRange(
-        fromDate || DateService.getDefaultRange(slice).from,
-        toDate || DateService.getDefaultRange(slice).to,
-        slice
-    );
-
-    const activeProject = useActiveProject();
-    const response = await $fetch(
-        `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`, {
+export function useTimelineAdvanced(endpoint: string, slice: Ref<Slice>, customBody: Object = {}) {
+    const response = useCustomFetch<{ _id: string, count: number }[]>(
+        `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`,
+        () => signHeaders({ 'Content-Type': 'application/json' }).headers, {
         method: 'POST',
-        ...signHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ slice, from, to, ...customBody })
+        getBody: () => createFromToBody({ slice: slice.value, ...customBody }),
+        lazy: true,
+        watchProps: [snapshot, slice]
     });
-
-    return response as { _id: string, count: number }[];
-
+    return response;
 }
 
 
-export async function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Slice, fromDate?: string, toDate?: string) {
-    return await useTimelineAdvanced(endpoint, slice, fromDate, toDate, {});
+export function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Ref<Slice>) {
+    return useTimelineAdvanced(endpoint, slice);
 }
 
-export async function useReferrersTimeline(referrer: string, slice: Slice, fromDate?: string, toDate?: string) {
-    return await useTimelineAdvanced('referrers', slice, fromDate, toDate, { referrer });
+export async function useReferrersTimeline(referrer: string, slice: Ref<Slice>) {
+    return await useTimelineAdvanced('referrers', slice, { referrer });
 }
 
 
@@ -93,21 +105,12 @@ export function usePagesData(website: string, limit: number = 10) {
 
 }
 
-const { safeSnapshotDates, snapshot } = useSnapshot()
-const activeProject = useActiveProject();
-
-const getFromToHeaders = (headers: Record<string, string> = {}) => ({
-    'x-from': safeSnapshotDates.value.from,
-    'x-to': safeSnapshotDates.value.to,
-    ...headers
-});
-
 
 
 
 export function useWebsitesData(limit: number = 10) {
     const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;
@@ -115,7 +118,7 @@ export function useWebsitesData(limit: number = 10) {
 
 export function useEventsData(limit: number = 10) {
     const res = useCustomFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/events`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;
@@ -123,7 +126,7 @@ export function useEventsData(limit: number = 10) {
 
 export function useReferrersData(limit: number = 10) {
     const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;
@@ -131,7 +134,7 @@ export function useReferrersData(limit: number = 10) {
 
 export function useBrowsersData(limit: number = 10) {
     const res = useCustomFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;
@@ -139,7 +142,7 @@ export function useBrowsersData(limit: number = 10) {
 
 export function useOssData(limit: number = 10) {
     const res = useCustomFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;
@@ -147,7 +150,7 @@ export function useOssData(limit: number = 10) {
 
 export function useGeolocationData(limit: number = 10) {
     const res = useCustomFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;
@@ -155,7 +158,7 @@ export function useGeolocationData(limit: number = 10) {
 
 export function useDevicesData(limit: number = 10) {
     const res = useCustomFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`,
-        () => signHeaders(getFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );
     return res;

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 
 import DateService from '@services/DateService';
+import type { Slice } from '@services/DateService';
 
 const { data: metricsInfo } = useMetricsData();
 
@@ -75,31 +76,41 @@ const avgSessionDuration = computed(() => {
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds.toFixed()}s`
 });
 
+
+const chartSlice = computed(() => {
+    const snapshotSizeMs = new Date(snapshot.value.to).getTime() - new Date(snapshot.value.from).getTime();
+    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 6) return 'hour' as Slice;
+    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 30) return 'day' as Slice;
+    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 90) return 'day' as Slice;
+    return 'month' as Slice;
+});
+
 async function loadData(timelineEndpointName: string, target: Data) {
 
     target.ready = false;
 
-    const response = await useTimeline(timelineEndpointName as any, 'day',
-        snapshot.value?.from.toString() || "0",
-        snapshot.value?.to.toString() || Date.now().toString()
-    );
+    const response = useTimeline(timelineEndpointName as any, chartSlice);
 
-    console.log(timelineEndpointName,response);
+    response.onResponse(data => {
 
-    if (!response) return;
+        if (!data.value) return;
 
-    target.data = response.map(e => e.count);
-    target.labels = response.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, 'day'));
+        target.data = data.value.map(e => e.count);
+        target.labels = data.value.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, chartSlice.value));
 
-    const pool = [...response.map(e => e.count)];
-    pool.pop();
-    const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
+        const pool = [...data.value.map(e => e.count)];
+        pool.pop();
+        const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
 
-    const diffPercent: number = (100 / avg * (response.at(-1)?.count || 0)) - 100;
+        const diffPercent: number = (100 / avg * (data.value.at(-1)?.count || 0)) - 100;
 
-    target.trend = Math.max(Math.min(diffPercent, 99), -99);
+        target.trend = Math.max(Math.min(diffPercent, 99), -99);
 
-    target.ready = true;
+        target.ready = true;
+    });
+
+    response.execute();
+
 }
 
 
@@ -112,6 +123,7 @@ async function loadAllData() {
         loadData('sessions_duration', sessionsDurationData),
     ])
 }
+
 
 onMounted(async () => {
 
@@ -137,13 +149,15 @@ onMounted(async () => {
         </DashboardCountCard>
 
         <DashboardCountCard :ready="eventsData.ready" icon="far fa-flag" text="Total custom events"
-            :value="formatNumberK(eventsData.data.reduce((a, e) => a + e, 0))" :avg="formatNumberK(avgEventsDay) + '/day'"
-            :trend="eventsData.trend" :data="eventsData.data" :labels="eventsData.labels" color="#1e9b86">
+            :value="formatNumberK(eventsData.data.reduce((a, e) => a + e, 0))"
+            :avg="formatNumberK(avgEventsDay) + '/day'" :trend="eventsData.trend" :data="eventsData.data"
+            :labels="eventsData.labels" color="#1e9b86">
         </DashboardCountCard>
 
         <DashboardCountCard :ready="sessionsData.ready" icon="far fa-user" text="Unique visits sessions"
-            :value="formatNumberK(sessionsData.data.reduce((a, e) => a + e, 0))" :avg="formatNumberK(avgSessionsDay) + '/day'"
-            :trend="sessionsData.trend" :data="sessionsData.data" :labels="sessionsData.labels" color="#4abde8">
+            :value="formatNumberK(sessionsData.data.reduce((a, e) => a + e, 0))"
+            :avg="formatNumberK(avgSessionsDay) + '/day'" :trend="sessionsData.trend" :data="sessionsData.data"
+            :labels="sessionsData.labels" color="#4abde8">
         </DashboardCountCard>
 
         <DashboardCountCard :ready="sessionsDurationData.ready" icon="far fa-timer" text="Avg session time"

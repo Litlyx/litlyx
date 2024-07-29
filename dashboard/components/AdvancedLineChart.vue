@@ -80,6 +80,9 @@ const { lineChartProps, lineChartRef } = useLineChart({ chartData: chartData, op
 
 
 onMounted(async () => {
+
+    console.log('MOUNTED')
+
     const c = document.createElement('canvas');
     const ctx = c.getContext("2d");
     let gradient: any = `${props.color}22`;
@@ -106,5 +109,5 @@ onMounted(async () => {
 
 
 <template>
-    <LineChart ref="lineChartRef" v-bind="lineChartProps"> </LineChart>
+        <LineChart ref="lineChartRef" v-bind="lineChartProps"> </LineChart>
 </template>

@@ -6,7 +6,9 @@ type NitroFetchRequest = Exclude<keyof InternalApi, `/_${string}` | `/api/_${str
 
 export type CustomFetchOptions = {
     watchProps?: WatchSource[],
-    lazy?: boolean
+    lazy?: boolean,
+    method?: string,
+    getBody?: () => Record<string, any>
 }
 
 type OnResponseCallback<TData> = (data: Ref<TData | undefined>) => any
@@ -27,7 +29,13 @@ export function useCustomFetch<T>(url: NitroFetchRequest, getHeaders: () => Reco
         pending.value = true;
         error.value = undefined;
         try {
-            data.value = await $fetch<T>(url, { headers: getHeaders() });
+
+            data.value = await $fetch<T>(url, {
+                headers: getHeaders(),
+                method: (options?.method || 'GET') as any,
+                body: options?.getBody ? JSON.stringify(options.getBody()) : undefined
+            });
+
             onResponseCallback(data);
         } catch (err) {
             error.value = err as Error;

@@ -119,7 +119,6 @@ const selectLabels = [
 
             </div>
 
-
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
