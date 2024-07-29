@@ -59,26 +59,34 @@ const snapshotsItems = computed(() => {
 
             <div class="px-4 w-full flex-col">
 
+                <div class="poppins text-[.8rem] mb-2 px-2"> Snapshots </div>
+
                 <USelectMenu class="w-full" v-model="snapshot" :options="snapshotsItems">
                     <template #label>
                         <div class="flex items-center gap-2">
                             <div :style="'background-color:' + snapshot?.color" class="w-2 h-2 rounded-full">
                             </div>
-                            <div> {{ snapshot?.name }} </div>
+                            <div class="poppins"> {{ snapshot?.name }} </div>
                         </div>
                     </template>
                     <template #option="{ option }">
                         <div class="flex items-center gap-2">
                             <div :style="'background-color:' + option.color" class="w-2 h-2 rounded-full">
                             </div>
-                            <div> {{ option.name }} </div>
+                            <div class="poppins"> {{ option.name }} </div>
                         </div>
                     </template>
                 </USelectMenu>
 
-                <div v-if="snapshot">
-                    <div> {{ new Date(snapshot.from).toLocaleString('it-IT') }} </div>
-                    <div> {{ new Date(snapshot.to).toLocaleString('it-IT') }}</div>
+                <div v-if="snapshot" class="flex flex-col text-[.8rem] mt-2 px-2">
+                    <div class="flex">
+                        <div class="grow poppins"> From:</div>
+                        <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT') }} </div>
+                    </div>
+                    <div class="flex">
+                        <div class="grow poppins"> To:</div>
+                        <div class="poppins"> {{ new Date(snapshot.to).toLocaleString('it-IT') }}</div>
+                    </div>
                 </div>
             </div>
 

@@ -27,10 +27,13 @@ onMounted(async () => {
 });
 
 
+const { createAlert } = useAlert();
+
+
 function copyProjectId() {
     if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
     navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
-    alert('Copiato !');
+    createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
 
@@ -48,7 +51,7 @@ function copyScript() {
     }
 
     navigator.clipboard.writeText(createScriptText());
-    alert('Copiato !');
+    createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
 }
 
 const { data: firstInteraction, pending, refresh } = useFirstInteractionData();
@@ -165,10 +168,10 @@ const selectLabels = [
 
         </div>
 
-        <div v-if="!firstInteraction && activeProject" class="mt-[36vh] flex flex-col gap-6">
+        <div v-if="!firstInteraction && activeProject" class="mt-[20vh] lg:mt-[36vh] flex flex-col gap-6">
             <div class="flex gap-4 items-center justify-center">
                 <div class="animate-pulse w-[1.5rem] h-[1.5rem] bg-accent rounded-full"> </div>
-                <div class="text-text/90 poppins text-[1.4rem] font-bold">
+                <div class="text-text/90 poppins text-[1.3rem] font-semibold">
                     Waiting for your first Visit or Event
                 </div>
             </div>
@@ -199,7 +202,11 @@ const selectLabels = [
 
             </div>
 
-            <div></div>
+            <NuxtLink to="https://docs.litlyx.com" target="_blank"
+                class="flex justify-center poppins text-[1.2rem] text-accent gap-2 items-center">
+                <div> <i class="far fa-book"></i> </div>
+                <div class="poppins"> Go to docs </div>
+            </NuxtLink>
         </div>
 
 

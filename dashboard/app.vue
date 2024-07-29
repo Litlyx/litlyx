@@ -6,12 +6,33 @@ Lit.init('6643cd08a1854e3b81722ab5');
 
 const debugMode = process.dev;
 
+const { alerts, closeAlert } = useAlert();
+
 const { showDialog, closeDialog, dialogComponent, dialogParams } = useCustomDialog();
 </script>
 
 <template>
 
   <div class="w-dvw h-dvh bg-[#151517] relative">
+
+    <div class="fixed top-4 right-8 z-[999] flex flex-col gap-2" v-if="alerts.length > 0">
+      <div v-for="alert of alerts"
+        class="w-[30vw] min-w-[20rem] relative bg-[#151515] border-solid border-[2px] border-[#262626] rounded-lg p-6 drop-shadow-lg">
+        <div class="flex items-start gap-4">
+          <div> <i :class="alert.icon"></i> </div>
+          <div class="grow">
+            <div class="poppins font-semibold">{{ alert.title }}</div>
+            <div class="poppins">
+              {{ alert.text }}
+            </div>
+          </div>
+          <div>
+            <i @click="closeAlert(alert.id)" class="fas fa-close hover:text-[#CCCCCC] cursor-pointer"></i>
+          </div>
+        </div>
+
+      </div>
+    </div>
 
     <div v-if="debugMode"
       class="absolute bottom-8 left-4 bg-red-400 text-white text-[.9rem] font-bold px-4 py-[.2rem] rounded-lg z-[100]">

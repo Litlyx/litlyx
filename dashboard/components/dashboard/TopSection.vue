@@ -6,10 +6,12 @@ onMounted(() => startWatching());
 onUnmounted(() => stopWatching());
 
 
+const { createAlert } = useAlert();
+
 function copyProjectId() {
     if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
     navigator.clipboard.writeText((activeProject.value?._id || 0).toString());
-    alert('Copiato !');
+    createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 </script>
 
