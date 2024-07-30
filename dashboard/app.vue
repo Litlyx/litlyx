@@ -13,7 +13,7 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
 
 <template>
 
-  <div class="w-dvw h-dvh bg-[#151517] relative">
+  <div class="w-dvw h-dvh bg-lyx-background-light relative">
 
     <div class="fixed top-4 right-8 z-[999] flex flex-col gap-2" v-if="alerts.length > 0">
       <div v-for="alert of alerts"

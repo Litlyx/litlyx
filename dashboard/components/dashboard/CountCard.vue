@@ -16,7 +16,7 @@ const props = defineProps<{
 
 <template>
 
-    <Card class="flex flex-col overflow-hidden relative max-h-[12rem] aspect-[2/1] w-full">
+    <LyxUiCard class="flex !p-0 flex-col overflow-hidden relative max-h-[12rem] aspect-[2/1] w-full">
         <div v-if="ready" class="flex p-4 items-start">
             <div class="flex items-center mt-2 mr-4">
                 <i :style="`color: ${props.color}`" :class="icon" class="text-[1.6rem] 2xl:text-[2rem]"></i>
@@ -49,7 +49,7 @@ const props = defineProps<{
         <div v-if="!ready" class="flex justify-center items-center w-full h-full">
             <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
         </div>
-    </Card>
+    </LyxUiCard>
 
 
 </template>

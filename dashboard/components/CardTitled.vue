@@ -5,7 +5,7 @@ const props = defineProps<{ title: string, sub?: string }>();
 </script>
 
 <template>
-    <Card>
+    <LyxUiCard>
         <div class="flex flex-col gap-4">
             <div class="flex items-center">
                 <div class="flex flex-col grow">
@@ -23,5 +23,5 @@ const props = defineProps<{ title: string, sub?: string }>();
                 <slot></slot>
             </div>
         </div>
-    </Card>
+    </LyxUiCard>
 </template>

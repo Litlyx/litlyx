@@ -50,10 +50,11 @@ function openSnapshotDialog() {
 </script>
 
 <template>
-    <div class="CVerticalNavigation h-full w-[20rem] bg-[#111111] flex shadow-[1px_0_10px_#000000] rounded-r-lg" :class="{
-        'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
-        'hidden lg:flex': !isOpen
-    }">
+    <div class="CVerticalNavigation h-full w-[20rem] bg-lyx-background flex shadow-[1px_0_10px_#000000] rounded-r-lg"
+        :class="{
+            'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
+            'hidden lg:flex': !isOpen
+        }">
         <div class="p-4 gap-6 flex flex-col w-full">
 
             <div class="flex items-center gap-2 ml-2">
@@ -117,9 +118,10 @@ function openSnapshotDialog() {
                     <div v-for="entry of section.entries">
 
                         <div v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))"
-                            class="bg-[#111111] text-gray-300 hover:bg-[#1b1b1b] py-2 px-4 rounded-lg" :class="{
+                            class="bg-lyx-background text-gray-300 py-2 px-4 rounded-lg" :class="{
                                 'text-gray-700 pointer-events-none': entry.disabled,
-                                'bg-[#1b1b1b]': route.path == (entry.to || '#')
+                                'bg-lyx-background-lighter': route.path == (entry.to || '#'),
+                                'hover:bg-lyx-background-light': route.path != (entry.to || '#')
                             }">
 
                             <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
