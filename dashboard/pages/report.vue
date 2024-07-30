@@ -31,7 +31,9 @@ async function generatePDF() {
 
     <div class="home w-full h-full px-10 lg:px-0 overflow-y-auto pb-[12rem] md:pb-0">
 
-        <div class="flex flex-col items-center justify-center mt-20 gap-20">
+        <DialogCreateSnapshot></DialogCreateSnapshot>
+
+        <!-- <div class="flex flex-col items-center justify-center mt-20 gap-20">
 
             <div class="flex flex-col items-center justify-center gap-10">
                 <div class="poppins text-[2.4rem] font-bold text-text">
@@ -84,7 +86,7 @@ async function generatePDF() {
 
 
 
-        </div>
+        </div> -->
 
     </div>
 

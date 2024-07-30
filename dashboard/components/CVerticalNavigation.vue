@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-
+import CreateSnapshot from './dialog/CreateSnapshot.vue';
 
 export type Entry = {
     label: string,
@@ -36,6 +36,17 @@ const snapshotsItems = computed(() => {
     return snapshots.value as any[];
 })
 
+
+const { openDialogEx } = useCustomDialog();
+
+function openSnapshotDialog() {
+    openDialogEx(CreateSnapshot, {
+        width: "20rem",
+        height: "16rem",
+        closable: false
+    });
+}
+
 </script>
 
 <template>
@@ -59,7 +70,16 @@ const snapshotsItems = computed(() => {
 
             <div class="px-4 w-full flex-col">
 
-                <div class="poppins text-[.8rem] mb-2 px-2"> Snapshots </div>
+                <div class="flex mb-2 px-2 items-center justify-between">
+                    <div class="poppins text-[.8rem]">
+                        Snapshots
+                    </div>
+                    <div @click="openSnapshotDialog()"
+                        class="poppins text-[.8rem] px-2 rounded-lg outline outline-[2px] outline-lyx-widget-lighter cursor-pointer hover:bg-lyx-widget-lighter">
+                        <i class="far fa-plus"></i>
+                        Add
+                    </div>
+                </div>
 
                 <USelectMenu class="w-full" v-model="snapshot" :options="snapshotsItems">
                     <template #label>

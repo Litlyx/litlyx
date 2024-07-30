@@ -8,7 +8,7 @@ const debugMode = process.dev;
 
 const { alerts, closeAlert } = useAlert();
 
-const { showDialog, closeDialog, dialogComponent, dialogParams } = useCustomDialog();
+const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dialogClosable } = useCustomDialog();
 </script>
 
 <template>
@@ -45,9 +45,9 @@ const { showDialog, closeDialog, dialogComponent, dialogParams } = useCustomDial
     </div>
 
     <div v-if="showDialog"
-      class="custom-dialog flex items-center justify-center lg:pl-32 lg:p-20 p-4 absolute left-0 top-0 w-full h-full z-[100] backdrop-blur-[2px] bg-black/50">
-      <div class="bg-menu w-full h-full rounded-xl relative">
-        <div class="flex justify-end absolute z-[100] right-8 top-8">
+      class="custom-dialog w-full h-full flex items-center justify-center lg:pl-32 lg:p-20 p-4 absolute left-0 top-0 z-[100] backdrop-blur-[2px] bg-black/50">
+      <div :style="dialogStyle" class="bg-lyx-widget rounded-xl relative outline outline-1 outline-lyx-widget-lighter">
+        <div v-if="dialogClosable" class="flex justify-end absolute z-[100] right-8 top-8">
           <i @click="closeDialog()" class="fas fa-close text-[1.6rem] hover:text-gray-500 cursor-pointer"></i>
         </div>
         <div class="flex items-center justify-center w-full h-full p-4">
