@@ -109,7 +109,7 @@ export function usePagesData(website: string, limit: number = 10) {
 
 
 export function useWebsitesData(limit: number = 10) {
-    const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`,
+    const res = useCustomFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`,
         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
         { lazy: false, watchProps: [snapshot] }
     );

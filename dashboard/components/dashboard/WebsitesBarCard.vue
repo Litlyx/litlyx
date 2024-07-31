@@ -4,7 +4,7 @@ import type { VisitsWebsiteAggregated } from '~/server/api/metrics/[project_id]/
 
 const { data: websites, pending, refresh } = useWebsitesData();
 
-const currentViewData = ref<(VisitsWebsiteAggregated[] | null)>(websites.value);
+const currentViewData = ref<(VisitsWebsiteAggregated[] | undefined)>(websites.value);
 
 
 const isPagesView = ref<boolean>(false);
@@ -33,7 +33,7 @@ async function showDetails(website: string) {
 
     watch(pending, () => {
         isLoading.value = true;
-        currentViewData.value = pagesData.value;
+        currentViewData.value = pagesData.value as any;
         isLoading.value = false;
     })
 

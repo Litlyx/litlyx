@@ -6,8 +6,9 @@ const remoteSnapshots = useFetch<TProjectSnapshot[]>('/api/project/snapshots', {
 });
 
 const activeProject = useActiveProject();
-watch(activeProject, () => {
-    remoteSnapshots.refresh();
+watch(activeProject, async () => {
+    await remoteSnapshots.refresh();
+    snapshot.value = snapshots.value[1];
 });
 
 const snapshots = computed(() => {
@@ -57,19 +58,14 @@ const snapshots = computed(() => {
 
 const snapshot = ref<TProjectSnapshot>(snapshots.value[1]);
 
-// watch(remoteSnapshots.data, () => {
-//     if (!remoteSnapshots.data.value) return;
-//     snapshot.value = remoteSnapshots.data.value[0];
-// });
-
 const safeSnapshotDates = computed(() => {
     const from = new Date(snapshot.value?.from || 0).toISOString();
     const to = new Date(snapshot.value?.to || Date.now()).toISOString();
     return { from, to }
 })
 
-function updateSnapshots() {
-    remoteSnapshots.refresh();
+async function updateSnapshots() {
+    await remoteSnapshots.refresh();
 }
 
 export function useSnapshot() {

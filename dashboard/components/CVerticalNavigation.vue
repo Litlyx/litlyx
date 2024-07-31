@@ -60,9 +60,29 @@ async function deleteSnapshot(close: () => any) {
     });
     await updateSnapshots();
     snapshot.value = snapshots.value[1];
-    createAlert('Snapshot deleted','Snapshot deleted successfully', 'far fa-circle-check', 5000);
+    createAlert('Snapshot deleted', 'Snapshot deleted successfully', 'far fa-circle-check', 5000);
     close();
 }
+
+async function generatePDF() {
+
+try {
+    const res = await $fetch<Blob>('/api/project/generate_pdf', {
+        ...signHeaders(),
+        responseType: 'blob'
+    });
+
+    const url = URL.createObjectURL(res);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Report.pdf`;
+    a.click();
+    URL.revokeObjectURL(url);
+} catch (ex: any) {
+    alert(ex.message);
+}
+}
+
 
 </script>
 
@@ -119,15 +139,22 @@ async function deleteSnapshot(close: () => any) {
                 <div v-if="snapshot" class="flex flex-col text-[.8rem] mt-2 px-2">
                     <div class="flex">
                         <div class="grow poppins"> From:</div>
-                        <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim() }} </div>
+                        <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim() }}
+                        </div>
                     </div>
                     <div class="flex">
                         <div class="grow poppins"> To:</div>
-                        <div class="poppins"> {{ new Date(snapshot.to).toLocaleString('it-IT').split(',')[0].trim() }}</div>
+                        <div class="poppins"> {{ new Date(snapshot.to).toLocaleString('it-IT').split(',')[0].trim() }}
+                        </div>
                     </div>
-                    <div class="mt-4" v-if="snapshot._id.toString().startsWith('default') === false">
+
+                    <LyxUiButton @click="generatePDF()" type="primary" class="w-full text-center mt-4">
+                        Download report
+                    </LyxUiButton>
+
+                    <div class="mt-2" v-if="snapshot._id.toString().startsWith('default') === false">
                         <UPopover placement="bottom">
-                            <LyxUiButton type="danger" class="w-full">
+                            <LyxUiButton type="danger" class="w-full text-center">
                                 Delete current snapshot
                             </LyxUiButton>
 

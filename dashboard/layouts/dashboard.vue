@@ -22,7 +22,7 @@ const sections: Section[] = [
             { label: 'Dashboard', to: '/', icon: 'far fa-home' },
             { label: 'Events', to: '/events', icon: 'far fa-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'far fa-microchip-ai' },
-            { label: 'Report', to: '/report', icon: 'far fa-notes' },
+            // { label: 'Report', to: '/report', icon: 'far fa-notes' },
             // { label: 'AI', to: '/dashboard/settings', icon: 'far fa-robot brightness-[.4]' },
             // { label: 'Visits', to: '/dashboard/visits', icon: 'far fa-eye' },
             // { label: 'Events', to: '/dashboard/events', icon: 'far fa-line-chart' },

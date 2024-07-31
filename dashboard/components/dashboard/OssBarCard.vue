@@ -22,7 +22,7 @@ function showMore() {
 
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-full">
         <DashboardBarsCard @showMore="showMore()" @dataReload="refresh" :data="oss || []"
             desc="The operating systems most commonly used by your website's visitors." :dataIcons="false"
             :loading="pending" label="Top OS" sub-label="OSs"></DashboardBarsCard>
