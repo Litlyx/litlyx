@@ -17,7 +17,7 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
 
     <div class="fixed top-4 right-8 z-[999] flex flex-col gap-2" v-if="alerts.length > 0">
       <div v-for="alert of alerts"
-        class="w-[30vw] min-w-[20rem] relative bg-[#151515] border-solid border-[2px] border-[#262626] rounded-lg p-6 drop-shadow-lg">
+        class="w-[30vw] min-w-[20rem] relative bg-[#151515] overflow-hidden border-solid border-[2px] border-[#262626] rounded-lg p-6 drop-shadow-lg">
         <div class="flex items-start gap-4">
           <div> <i :class="alert.icon"></i> </div>
           <div class="grow">
@@ -30,7 +30,8 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
             <i @click="closeAlert(alert.id)" class="fas fa-close hover:text-[#CCCCCC] cursor-pointer"></i>
           </div>
         </div>
-
+        <div :style="`width: ${Math.floor(100 / alert.ms * alert.remaining)}%; ${alert.transitionStyle}`"
+          class="absolute bottom-0 left-0 h-1 bg-lyx-primary z-100 alert-bar"></div>
       </div>
     </div>
 
@@ -62,3 +63,4 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
   </div>
 
 </template>
+

@@ -2,7 +2,7 @@
 
 export type ButtonType = 'primary' | 'secondary' | 'outline' | 'danger';
 
-const props = defineProps<{ type: ButtonType, }>();
+const props = defineProps<{ type: ButtonType, disabled?: boolean }>();
 
 </script>
 
@@ -12,6 +12,7 @@ const props = defineProps<{ type: ButtonType, }>();
         'bg-lyx-widget-lighter outline-lyx-widget-lighter hover:bg-lyx-widget-light': type === 'secondary',
         'bg-lyx-transparent outline-lyx-widget-lighter hover:bg-lyx-widget-light': type === 'outline',
         'bg-lyx-danger-dark outline-lyx-danger hover:bg-lyx-danger': type === 'danger',
+        'bg-lyx-widget-lighter outline-lyx-widget-lighter hover:bg-lyx-widget-lighter !cursor-not-allowed !text-lyx-text-darker': disabled === true
     }">
         <slot></slot>
     </div>

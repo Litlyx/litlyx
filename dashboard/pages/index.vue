@@ -70,6 +70,9 @@ const selectLabels = [
     // { label: 'Month', value: 'month' },
 ];
 
+function testAlert() {
+    createAlert('test', 'test', 'fas fa-home', 40000);
+}
 
 </script>
 

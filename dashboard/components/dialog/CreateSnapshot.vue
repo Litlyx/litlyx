@@ -12,7 +12,7 @@ const ranges = [
     { label: 'Last 6 months', duration: { months: 6 } },
     { label: 'Last year', duration: { years: 1 } }
 ]
-const selected = ref({ start: sub(new Date(), { days: 14 }), end: new Date() })
+const selected = ref<{ start: Date, end: Date }>({ start: sub(new Date(), { days: 14 }), end: new Date() })
 
 function isRangeSelected(duration: Duration) {
     return isSameDay(selected.value.start, sub(new Date(), duration)) && isSameDay(selected.value.end, new Date())
@@ -22,7 +22,7 @@ function selectRange(duration: Duration) {
     selected.value = { start: sub(new Date(), duration), end: new Date() }
 }
 
-const currentColor = ref<string>("");
+const currentColor = ref<string>("#5680F8");
 
 const colorpicker = ref<HTMLInputElement | null>(null);
 
@@ -34,29 +34,55 @@ function onColorChange() {
     currentColor.value = colorpicker.value?.value || '#000000';
 }
 
+const snapshotName = ref<string>("");
+
+const { updateSnapshots } = useSnapshot();
+const { createAlert } = useAlert()
+
+async function confirmSnapshot() {
+    await $fetch("/api/snapshot/create", {
+        method: 'POST',
+        ...signHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+            name: snapshotName.value,
+            color: currentColor.value,
+            from: selected.value.start.toISOString(),
+            to: selected.value.end.toISOString()
+        })
+    });
+
+    await updateSnapshots();
+    closeDialog();
+    createAlert('Snapshot created','Snapshot created successfully', 'far fa-circle-check', 5000);
+}
+
 </script>
 
 <template>
-    <div class="w-full h-full flex  flex-col">
+    <div class="w-full h-full flex flex-col">
 
         <div class="poppins text-center">
             Create a snapshot
         </div>
 
         <div class="mt-10 flex items-center gap-2">
-            <div :style="`background-color: ${currentColor};`" @click="showColorPicker" class="w-6 h-6 rounded-full aspect-[1/1] relative">
+            <div :style="`background-color: ${currentColor};`" @click="showColorPicker"
+                class="w-6 h-6 rounded-full aspect-[1/1] relative cursor-pointer">
                 <input @input="onColorChange" ref="colorpicker" class="relative w-0 h-0 z-[-100]" type="color">
             </div>
             <div class="grow">
-                <input placeholder="Snapshot name" class="px-4 py-2 w-full rounded-lg bg-lyx-widget-light" type="text">
+                <LyxUiInput placeholder="Snapshot name" v-model="snapshotName" class="px-4 py-1 w-full"></LyxUiInput>
             </div>
         </div>
 
         <div class="mt-4 justify-center flex w-full">
 
-            <UPopover :popper="{ placement: 'bottom' }">
-                <UButton icon="i-heroicons-calendar-days-20-solid">
-                    {{ selected.start.toLocaleDateString() }} - {{ selected.end.toLocaleDateString() }}
+            <UPopover class="w-full" :popper="{ placement: 'bottom' }">
+                <UButton class="w-full" color="primary" variant="solid">
+                    <div class="flex items-center justify-center w-full gap-2">
+                        <i class="i-heroicons-calendar-days-20-solid"></i>
+                        {{ selected.start.toLocaleDateString() }} - {{ selected.end.toLocaleDateString() }}
+                    </div>
                 </UButton>
                 <template #panel="{ close }">
                     <div class="flex items-center sm:divide-x divide-gray-200 dark:divide-gray-800">
@@ -76,13 +102,14 @@ function onColorChange() {
         </div>
 
         <div class="grow"></div>
-        <div class="flex items-center justify-around">
-            <div @click="closeDialog()">
+        <div class="flex items-center justify-around gap-4">
+            <LyxUiButton @click="closeDialog()" type="secondary" class="w-full text-center">
                 Cancel
-            </div>
-            <div @click="closeDialog()">
+            </LyxUiButton>
+            <LyxUiButton @click="confirmSnapshot()" type="primary" class="w-full text-center"
+                :disabled="snapshotName.length == 0">
                 Confirm
-            </div>
+            </LyxUiButton>
         </div>
 
     </div>

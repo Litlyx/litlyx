@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+
 import CreateSnapshot from './dialog/CreateSnapshot.vue';
 
 export type Entry = {
@@ -29,7 +30,7 @@ const debugMode = process.dev;
 
 const { isOpen, close } = useMenu();
 
-const { snapshots, snapshot } = useSnapshot();
+const { snapshots, snapshot, updateSnapshots } = useSnapshot();
 
 const snapshotsItems = computed(() => {
     if (!snapshots.value) return []
@@ -41,10 +42,26 @@ const { openDialogEx } = useCustomDialog();
 
 function openSnapshotDialog() {
     openDialogEx(CreateSnapshot, {
-        width: "20rem",
+        width: "24rem",
         height: "16rem",
         closable: false
     });
+}
+
+const { createAlert } = useAlert()
+
+async function deleteSnapshot(close: () => any) {
+    await $fetch("/api/snapshot/delete", {
+        method: 'DELETE',
+        ...signHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({
+            id: snapshot.value._id.toString(),
+        })
+    });
+    await updateSnapshots();
+    snapshot.value = snapshots.value[1];
+    createAlert('Snapshot deleted','Snapshot deleted successfully', 'far fa-circle-check', 5000);
+    close();
 }
 
 </script>
@@ -102,11 +119,31 @@ function openSnapshotDialog() {
                 <div v-if="snapshot" class="flex flex-col text-[.8rem] mt-2 px-2">
                     <div class="flex">
                         <div class="grow poppins"> From:</div>
-                        <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT') }} </div>
+                        <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim() }} </div>
                     </div>
                     <div class="flex">
                         <div class="grow poppins"> To:</div>
-                        <div class="poppins"> {{ new Date(snapshot.to).toLocaleString('it-IT') }}</div>
+                        <div class="poppins"> {{ new Date(snapshot.to).toLocaleString('it-IT').split(',')[0].trim() }}</div>
+                    </div>
+                    <div class="mt-4" v-if="snapshot._id.toString().startsWith('default') === false">
+                        <UPopover placement="bottom">
+                            <LyxUiButton type="danger" class="w-full">
+                                Delete current snapshot
+                            </LyxUiButton>
+
+                            <template #panel="{ close }">
+                                <div class="p-4 bg-lyx-widget">
+                                    <div class="poppins text-center font-medium">
+                                        Are you sure?
+                                    </div>
+                                    <div class="flex gap-2 mt-4">
+                                        <LyxUiButton @click="close()" type="secondary"> Cancel </LyxUiButton>
+                                        <LyxUiButton type="danger" @click="deleteSnapshot(close)"> Delete </LyxUiButton>
+                                    </div>
+                                </div>
+                            </template>
+                        </UPopover>
+
                     </div>
                 </div>
             </div>

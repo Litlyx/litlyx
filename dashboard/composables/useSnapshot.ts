@@ -5,6 +5,10 @@ const remoteSnapshots = useFetch<TProjectSnapshot[]>('/api/project/snapshots', {
     immediate: false
 });
 
+const activeProject = useActiveProject();
+watch(activeProject, () => {
+    remoteSnapshots.refresh();
+});
 
 const snapshots = computed(() => {
 
@@ -13,7 +17,7 @@ const snapshots = computed(() => {
     const getDefaultSnapshots: () => TProjectSnapshot[] = () => [
         {
             project_id: activeProject.value?._id as any,
-            _id: 'deafult0' as any,
+            _id: 'default0' as any,
             name: 'All',
             from: new Date(activeProject.value?.created_at || 0),
             to: new Date(Date.now()),
@@ -21,7 +25,7 @@ const snapshots = computed(() => {
         },
         {
             project_id: activeProject.value?._id as any,
-            _id: 'deafult1' as any,
+            _id: 'default1' as any,
             name: 'Last month',
             from: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
             to: new Date(Date.now()),
@@ -29,7 +33,7 @@ const snapshots = computed(() => {
         },
         {
             project_id: activeProject.value?._id as any,
-            _id: 'deafult2' as any,
+            _id: 'default2' as any,
             name: 'Last week',
             from: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
             to: new Date(Date.now()),
@@ -37,7 +41,7 @@ const snapshots = computed(() => {
         },
         {
             project_id: activeProject.value?._id as any,
-            _id: 'deafult3' as any,
+            _id: 'default3' as any,
             name: 'Last day',
             from: new Date(Date.now() - 1000 * 60 * 60 * 24),
             to: new Date(Date.now()),
@@ -51,7 +55,7 @@ const snapshots = computed(() => {
     ];
 })
 
-const snapshot = ref<TProjectSnapshot>(snapshots.value[0]);
+const snapshot = ref<TProjectSnapshot>(snapshots.value[1]);
 
 // watch(remoteSnapshots.data, () => {
 //     if (!remoteSnapshots.data.value) return;
@@ -64,9 +68,13 @@ const safeSnapshotDates = computed(() => {
     return { from, to }
 })
 
+function updateSnapshots() {
+    remoteSnapshots.refresh();
+}
+
 export function useSnapshot() {
     if (remoteSnapshots.status.value === 'idle') {
         remoteSnapshots.execute();
     }
-    return { snapshot, snapshots, safeSnapshotDates }
+    return { snapshot, snapshots, safeSnapshotDates, updateSnapshots }
 }
