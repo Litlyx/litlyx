@@ -16,14 +16,16 @@ export type TimelineAggregationOptions = {
 export type AdvancedTimelineAggregationOptions = TimelineAggregationOptions & {
     customMatch?: Record<string, any>,
     customGroup?: Record<string, any>,
-    customProjection?: Record<string, any>
+    customProjection?: Record<string, any>,
+    customIdGroup?: Record<string, any>
 }
 
-export async function executeAdvancedTimelineAggregation(options: AdvancedTimelineAggregationOptions) {
+export async function executeAdvancedTimelineAggregation<T = {}>(options: AdvancedTimelineAggregationOptions) {
 
     options.customMatch = options.customMatch || {};
     options.customGroup = options.customGroup || {};
     options.customProjection = options.customProjection || {};
+    options.customIdGroup = options.customIdGroup || {};
 
     const { group, sort, fromParts } = DateService.getQueryDateRange(options.slice);
 
@@ -35,7 +37,7 @@ export async function executeAdvancedTimelineAggregation(options: AdvancedTimeli
                 ...options.customMatch
             }
         },
-        { $group: { _id: group, count: { $sum: 1 }, ...options.customGroup } },
+        { $group: { _id: { ...group, ...options.customIdGroup }, count: { $sum: 1 }, ...options.customGroup } },
         { $sort: sort },
         { $project: { _id: { $dateFromParts: fromParts }, count: "$count", ...options.customProjection } }
     ]
@@ -44,7 +46,7 @@ export async function executeAdvancedTimelineAggregation(options: AdvancedTimeli
         console.log(JSON.stringify(aggregation, null, 2));
     }
 
-    const timeline: { _id: string, count: number }[] = await options.model.aggregate(aggregation);
+    const timeline: { _id: string, count: number & T }[] = await options.model.aggregate(aggregation);
 
     return timeline;
 

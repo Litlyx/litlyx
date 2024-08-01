@@ -12,7 +12,7 @@ const sections: Section[] = [
         title: 'General',
         entries: [
             { label: 'Projects', icon: 'far fa-table-layout', to: '/project_selector' },
-            { label: 'Members', icon: 'far fa-users', to: '/members' },
+            // { label: 'Members', icon: 'far fa-users', to: '/members' },
             { label: 'Admin', icon: 'fas fa-cat', adminOnly: true, to: '/admin' },
         ]
     },
@@ -22,6 +22,7 @@ const sections: Section[] = [
             { label: 'Dashboard', to: '/', icon: 'far fa-home' },
             { label: 'Events', to: '/events', icon: 'far fa-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'far fa-microchip-ai' },
+            { label: 'Settings', to: '/settings', icon: 'far fa-gear' },
             // { label: 'Report', to: '/report', icon: 'far fa-notes' },
             // { label: 'AI', to: '/dashboard/settings', icon: 'far fa-robot brightness-[.4]' },
             // { label: 'Visits', to: '/dashboard/visits', icon: 'far fa-eye' },
@@ -39,23 +40,8 @@ const sections: Section[] = [
                 label: 'Github', to: 'https://github.com/litlyx/litlyx', icon: 'fab fa-github', external: true,
                 action() { Lit.event('git_clicked') },
             },
-            { label: 'Billing', to: '/plans', icon: 'far fa-wallet' },
-            { label: 'Book a demo', to: '/book_demo', icon: 'far fa-calendar' },
-        ]
-    },
-    {
-        title: 'Actions',
-        entries: [
-            {
-                label: 'Logout',
-                icon: 'far fa-arrow-right-from-bracket',
-                action: () => {
-                    console.log('LOGOUT')
-                    setToken('');
-                    setLoggedUser(undefined);
-                    router.push('/login');
-                }
-            },
+            // { label: 'Billing', to: '/plans', icon: 'far fa-wallet' },
+            // { label: 'Book a demo', to: '/book_demo', icon: 'far fa-calendar' },
         ]
     }
 ];

@@ -17,7 +17,8 @@ const eventsStackedSelectIndex = ref<number>(0);
 
 
         <div class="flex gap-6 flex-col xl:flex-row">
-            <CardTitled class="p-4 flex-[4]" title="Events" sub="Events stacked bar chart.">
+
+            <CardTitled class="p-4 flex-[4] w-full" title="Events" sub="Events stacked bar chart.">
                 <template #header>
                     <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
                         :currentIndex="eventsStackedSelectIndex" :options="selectLabelsEvents">
@@ -29,19 +30,10 @@ const eventsStackedSelectIndex = ref<number>(0);
                 </div>
             </CardTitled>
 
-            <div class="bg-card p-4 rounded-xl flex-[2] flex flex-col gap-10 h-full">
-                <div class="flex flex-col gap-1">
-                    <div class="poppins font-semibold text-[1.4rem] text-text">
-                        Top events
-                    </div>
-                    <div class="poppins text-[1rem] text-text-sub/90">
-                        Displays key events.
-                    </div>
-                </div>
-
+            <CardTitled class="p-4 flex-[2] w-full h-full" title="Top events" sub="Displays key events.">
                 <DashboardEventsChart class="w-full"> </DashboardEventsChart>
+            </CardTitled>
 
-            </div>
         </div>
 
         <div class="flex">

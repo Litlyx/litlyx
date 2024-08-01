@@ -2,6 +2,7 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { getTimeline } from "./generic";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
+import { executeAdvancedTimelineAggregation } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
     const project_id = getRequestProjectId(event);
@@ -11,16 +12,23 @@ export default defineEventHandler(async event => {
     if (!project) return;
 
 
-    const { slice, duration } = await readBody(event);
+    const { slice, from, to } = await readBody(event);
+
+    if (!from) return setResponseStatus(event, 400, 'from is required');
+    if (!to) return setResponseStatus(event, 400, 'to is required');
+    if (!slice) return setResponseStatus(event, 400, 'slice is required');
 
 
-    return await Redis.useCache({ key: `timeline:events_stacked:${project_id}:${slice}`, exp: TIMELINE_EXPIRE_TIME }, async () => {
-        const timelineStackedEvents = await getTimeline(EventModel, project_id, slice, duration,
-            {},
-            {},
-            { name: "$_id.name" },
-            { name: '$name' }
-        );
+    return await Redis.useCache({ key: `timeline:events_stacked:${project_id}:${slice}:${from || 'none'}:${to || 'none'}`, exp: TIMELINE_EXPIRE_TIME }, async () => {
+
+        const timelineStackedEvents = await executeAdvancedTimelineAggregation<{ name: String }>({
+            model: EventModel,
+            projectId: project._id,
+            from, to, slice,
+            customProjection: { name: "$_id.name" },
+            customIdGroup: { name: '$name' },
+        })
+
         return timelineStackedEvents;
     });
 

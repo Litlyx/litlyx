@@ -27,8 +27,8 @@ export default defineEventHandler(async event => {
     const { slice, from, to } = await readBody(event);
 
     if (!from) return setResponseStatus(event, 400, 'from is required');
-    if (!from) return setResponseStatus(event, 400, 'to is required');
-    if (!from) return setResponseStatus(event, 400, 'slice is required');
+    if (!to) return setResponseStatus(event, 400, 'to is required');
+    if (!slice) return setResponseStatus(event, 400, 'slice is required');
 
     return await Redis.useCache({
         key: `timeline:sessions_duration:${project_id}:${slice}:${from || 'none'}:${to || 'none'}`,

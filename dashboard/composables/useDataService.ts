@@ -46,8 +46,8 @@ export function useFirstInteractionData() {
 }
 
 
-export function useTimelineAdvanced(endpoint: string, slice: Ref<Slice>, customBody: Object = {}) {
-    const response = useCustomFetch<{ _id: string, count: number }[]>(
+export function useTimelineAdvanced<T>(endpoint: string, slice: Ref<Slice>, customBody: Object = {}) {
+    const response = useCustomFetch<T>(
         `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`,
         () => signHeaders({ 'Content-Type': 'application/json' }).headers, {
         method: 'POST',
@@ -59,12 +59,16 @@ export function useTimelineAdvanced(endpoint: string, slice: Ref<Slice>, customB
 }
 
 
-export function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers', slice: Ref<Slice>) {
-    return useTimelineAdvanced(endpoint, slice);
+export function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers' | 'events_stacked', slice: Ref<Slice>) {
+    return useTimelineAdvanced<{ _id: string, count: number }[]>(endpoint, slice);
 }
 
 export async function useReferrersTimeline(referrer: string, slice: Ref<Slice>) {
-    return await useTimelineAdvanced('referrers', slice, { referrer });
+    return await useTimelineAdvanced<{ _id: string, count: number }[]>('referrers', slice, { referrer });
+}
+
+export function useEventsStackedTimeline(slice: Ref<Slice>) {
+    return useTimelineAdvanced<{ _id: string, name: string, count: number }[]>('events_stacked', slice);
 }
 
 
@@ -163,3 +167,4 @@ export function useDevicesData(limit: number = 10) {
     );
     return res;
 }
+

@@ -60,7 +60,6 @@ export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: 
         }
     }
 
-
     const allKeys = !options.advanced ? [] : Array.from(new Set(result.data.map((e: any) => e[options.advancedGroupKey])).values());
 
     const fixed: any[] = allDates.map(matchDate => {
@@ -84,6 +83,8 @@ export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: 
 
         return returnObject;
     });
+
+    console.log({ allKeys })
 
     if (slice === 'day' || slice == 'hour') fixed.pop();
 

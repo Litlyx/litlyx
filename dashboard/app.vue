@@ -36,7 +36,7 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
     </div>
 
     <div v-if="debugMode"
-      class="absolute bottom-8 left-4 bg-red-400 text-white text-[.9rem] font-bold px-4 py-[.2rem] rounded-lg z-[100]">
+      class="absolute bottom-8 right-4 bg-red-400 text-white text-[.9rem] font-bold px-4 py-[.2rem] rounded-lg z-[100]">
       <div class="poppins flex sm:hidden"> XS </div>
       <div class="poppins hidden sm:max-md:flex"> SM - MOBILE </div>
       <div class="poppins hidden md:max-lg:flex"> MD - TABLET </div>

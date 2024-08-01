@@ -9,7 +9,8 @@ export type Entry = {
     icon?: string,
     action?: () => any,
     adminOnly?: boolean,
-    external?: boolean
+    external?: boolean,
+    grow?: boolean
 }
 
 export type Section = {
@@ -66,22 +67,33 @@ async function deleteSnapshot(close: () => any) {
 
 async function generatePDF() {
 
-try {
-    const res = await $fetch<Blob>('/api/project/generate_pdf', {
-        ...signHeaders(),
-        responseType: 'blob'
-    });
+    try {
+        const res = await $fetch<Blob>('/api/project/generate_pdf', {
+            ...signHeaders(),
+            responseType: 'blob'
+        });
 
-    const url = URL.createObjectURL(res);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Report.pdf`;
-    a.click();
-    URL.revokeObjectURL(url);
-} catch (ex: any) {
-    alert(ex.message);
+        const url = URL.createObjectURL(res);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `Report.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (ex: any) {
+        alert(ex.message);
+    }
 }
+
+const { setToken } = useAccessToken();
+const router = useRouter();
+
+function onLogout() {
+    console.log('LOGOUT')
+    setToken('');
+    setLoggedUser(undefined);
+    router.push('/login');
 }
+
 
 
 </script>
@@ -95,10 +107,14 @@ try {
         <div class="p-4 gap-6 flex flex-col w-full">
 
             <div class="flex items-center gap-2 ml-2">
-                <div class="bg-black h-[2.4rem] aspect-[1/1] flex items-center justify-center rounded-lg">
+                
+                <!-- <div class="bg-black h-[2.4rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                     <img class="h-[2rem]" :src="'/logo.png'">
-                </div>
-                <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div>
+                </div> -->
+                
+                <!-- <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div> -->
+
+                <div class="text-center w-full"> PROJECT SELECTOR </div>
 
                 <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
                     <i @click="close()" class="fas fa-close"></i>
@@ -175,7 +191,7 @@ try {
                 </div>
             </div>
 
-            <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-4 h-full">
 
                 <div v-for="section of sections" class="flex flex-col gap-1">
 
@@ -185,7 +201,7 @@ try {
                             class="bg-lyx-background text-gray-300 py-2 px-4 rounded-lg" :class="{
                                 'text-gray-700 pointer-events-none': entry.disabled,
                                 'bg-lyx-background-lighter': route.path == (entry.to || '#'),
-                                'hover:bg-lyx-background-light': route.path != (entry.to || '#')
+                                'hover:bg-lyx-background-light': route.path != (entry.to || '#'),
                             }">
 
                             <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
@@ -202,6 +218,18 @@ try {
 
                     </div>
 
+                </div>
+
+                <div class="grow"></div>
+                <div class="bg-lyx-background hover:bg-lyx-background-light text-gray-300 py-2 px-4 rounded-lg">
+                    <div @click="onLogout()" class="flex cursor-pointer">
+                        <div class="flex items-center w-[1.8rem] justify-start">
+                            <i class="far fa-arrow-right-from-bracket"></i>
+                        </div>
+                        <div class="manrope">
+                            Logout
+                        </div>
+                    </div>
                 </div>
 
             </div>

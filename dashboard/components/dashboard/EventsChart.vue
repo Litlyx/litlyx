@@ -55,7 +55,7 @@ const chartData = ref<ChartData<'doughnut'>>({
         {
             rotation: 1,
             data: [],
-            backgroundColor: ['#6bbbe3','#5655d0', '#a6d5cb', '#fae0b9'],
+            backgroundColor: ['#6bbbe3', '#5655d0', '#a6d5cb', '#fae0b9'],
             borderColor: ['#1d1d1f'],
             borderWidth: 2
         },
@@ -65,27 +65,45 @@ const chartData = ref<ChartData<'doughnut'>>({
 
 const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({ chartData: chartData, options: chartOptions });
 
+
+const res = useEventsData();
+
 onMounted(async () => {
 
-    const activeProject = useActiveProject()
+    res.onResponse(resData => {
+        if (!resData.value) return;
 
-    const eventsData = await $fetch<EventsPie[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, signHeaders());
-    chartData.value.labels = eventsData.map(e => {
-        return `${e._id}`;
-    });
-    chartData.value.datasets[0].data = eventsData.map(e => e.count);
-    doughnutChartRef.value?.update();
+        chartData.value.labels = resData.value.map(e => {
+            return `${e._id}`;
+        });
 
-    if (window.innerWidth < 800) {
-        if (chartOptions.value?.plugins?.legend?.display) {
-            chartOptions.value.plugins.legend.display = false;
+        chartData.value.datasets[0].data = resData.value.map(e => e.count);
+        doughnutChartRef.value?.update();
+
+        if (window.innerWidth < 800) {
+            if (chartOptions.value?.plugins?.legend?.display) {
+                chartOptions.value.plugins.legend.display = false;
+            }
         }
-    }
+
+    });
+})
+
+
+const chartVisible = computed(() => {
+    if (res.pending.value) return false;
+    if (!res.data.value) return false;
+    return true;
 })
 
 </script>
 
 
 <template>
-    <DoughnutChart v-bind="doughnutChartProps"> </DoughnutChart>
+    <div>
+        <div v-if="!chartVisible" class="flex justify-center py-40">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+        </div>
+        <DoughnutChart v-if="chartVisible" v-bind="doughnutChartProps"> </DoughnutChart>
+    </div>
 </template>
