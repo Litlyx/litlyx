@@ -12,11 +12,26 @@ onMounted(async () => {
 const userFlowData = ref<any>();
 const analyzing = ref<boolean>(false);
 
-async function analyzeEvent() {
+const { safeSnapshotDates } = useSnapshot();
+
+async function getUserFlowData() {
     userFlowData.value = undefined;
     analyzing.value = true;
-    userFlowData.value = await $fetch(`/api/metrics/${activeProject.value?._id.toString()}/events/flow_from_name?name=${selectedEventName.value}`, signHeaders());
+
+    const queryParams: Record<string, any> = {
+        from: safeSnapshotDates.value.from,
+        to: safeSnapshotDates.value.to,
+        name: selectedEventName.value
+    }
+
+    const queryParamsString = Object.keys(queryParams).map((key) => `${key}=${queryParams[key]}`).join('&');
+
+    userFlowData.value = await $fetch(`/api/metrics/${activeProject.value?._id.toString()}/events/flow_from_name?${queryParamsString}`, signHeaders());
     analyzing.value = false;
+}
+
+async function analyzeEvent() {
+    getUserFlowData();
 }
 
 </script>
@@ -41,13 +56,15 @@ async function analyzeEvent() {
             </div>
 
             <div class="flex flex-col gap-2" v-if="userFlowData">
-                <div class="flex gap-4 items-center bg-bg py-1 px-2 rounded-lg" v-for="(count, referrer) in userFlowData">
+                <div class="flex gap-4 items-center bg-bg py-1 px-2 rounded-lg"
+                    v-for="(count, referrer) in userFlowData">
                     <div class="w-5 h-5 flex items-center justify-center">
-                        <img :src="`https://s2.googleusercontent.com/s2/favicons?domain=${referrer}&sz=64`" :alt="'referrer'">
+                        <img :src="`https://s2.googleusercontent.com/s2/favicons?domain=${referrer}&sz=64`"
+                            :alt="'referrer'">
                     </div>
                     <div> {{ referrer }} </div>
                     <div class="grow"></div>
-                    <div> {{ count }} </div>
+                    <div> {{ count.toFixed(2).replace('.', ',') }} % </div>
                 </div>
             </div>
 

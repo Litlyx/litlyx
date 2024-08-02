@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 
+import type { TProject } from '@schema/ProjectSchema';
 import CreateSnapshot from './dialog/CreateSnapshot.vue';
 
 export type Entry = {
@@ -94,7 +95,13 @@ function onLogout() {
     router.push('/login');
 }
 
+const { projects } = useProjectsList();
+const activeProject = useActiveProject();
 
+const selected = ref<TProject>(activeProject.value as TProject);
+watch(selected, () => {
+    setActiveProject(selected.value._id.toString())
+})
 
 </script>
 
@@ -104,17 +111,40 @@ function onLogout() {
             'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
             'hidden lg:flex': !isOpen
         }">
-        <div class="p-4 gap-6 flex flex-col w-full">
-
+        <div class="py-4 px-2 gap-6 flex flex-col w-full">
             <div class="flex items-center gap-2 ml-2">
-                
+
                 <!-- <div class="bg-black h-[2.4rem] aspect-[1/1] flex items-center justify-center rounded-lg">
                     <img class="h-[2rem]" :src="'/logo.png'">
                 </div> -->
-                
+
                 <!-- <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div> -->
 
-                <div class="text-center w-full"> PROJECT SELECTOR </div>
+                <USelectMenu class="w-full" v-if="projects" v-model="selected" :options="projects">
+
+                    <template #option="{ option, active, selected }">
+                        <div class="flex items-center gap-2">
+                            <div>
+                                <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                            </div>
+                            <div> {{ option.name }} </div>
+                        </div>
+                    </template>
+
+                    <template #label>
+                        <div class="flex items-center gap-2">
+                            <div>
+                                <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                            </div>
+                            <div> {{ activeProject?.name || '???' }} </div>
+                        </div>
+                    </template>
+                </USelectMenu>
+
+
+
+
+
 
                 <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
                     <i @click="close()" class="fas fa-close"></i>
@@ -198,15 +228,16 @@ function onLogout() {
                     <div v-for="entry of section.entries">
 
                         <div v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))"
-                            class="bg-lyx-background text-gray-300 py-2 px-4 rounded-lg" :class="{
+                            class="bg-lyx-background cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
+                            :class="{
                                 'text-gray-700 pointer-events-none': entry.disabled,
-                                'bg-lyx-background-lighter': route.path == (entry.to || '#'),
-                                'hover:bg-lyx-background-light': route.path != (entry.to || '#'),
+                                'bg-lyx-background-lighter !text-lyx-text/90': route.path == (entry.to || '#'),
+                                'hover:bg-lyx-background-light hover:!text-lyx-text/90': route.path != (entry.to || '#'),
                             }">
 
                             <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
-                                tag="div" class="flex" :to="entry.to || '/'">
-                                <div class="flex items-center w-[1.8rem] justify-start">
+                                tag="div" class="flex items-center" :to="entry.to || '/'">
+                                <div class="flex items-center w-[1.4rem] mr-2 text-[1.1rem] justify-center">
                                     <i :class="entry.icon"></i>
                                 </div>
                                 <div class="manrope">
@@ -221,16 +252,31 @@ function onLogout() {
                 </div>
 
                 <div class="grow"></div>
-                <div class="bg-lyx-background hover:bg-lyx-background-light text-gray-300 py-2 px-4 rounded-lg">
-                    <div @click="onLogout()" class="flex cursor-pointer">
-                        <div class="flex items-center w-[1.8rem] justify-start">
-                            <i class="far fa-arrow-right-from-bracket"></i>
-                        </div>
-                        <div class="manrope">
-                            Logout
-                        </div>
-                    </div>
+                <div class="text-lyx-text-dark poppins text-[.8rem] px-4">
+                    Litlyx is in Beta version.
                 </div>
+                <div class="bg-lyx-widget-lighter h-[2px] px-4 w-full"></div>
+                <div class="flex justify-end px-2">
+
+                    <div class="grow flex gap-3">
+                        <NuxtLink to="https://github.com/litlyx/litlyx" target="_blank"
+                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                            <i class="fab fa-github"></i>
+                        </NuxtLink>
+                        <NuxtLink to="https://discord.gg/9cQykjsmWX" target="_blank"
+                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                            <i class="fab fa-discord"></i>
+                        </NuxtLink>
+                    </div>
+
+                    <UTooltip text="Logout" :popper="{ arrow: true, placement: 'top' }">
+                        <div @click="onLogout()" class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                            <i class="far fa-arrow-right-from-bracket scale-x-[-100%]"></i>
+                        </div>
+                    </UTooltip>
+                </div>
+
+
 
             </div>
         </div>
@@ -239,10 +285,6 @@ function onLogout() {
 
 
 <style lang="scss" scoped>
-.CVerticalNavigation * {
-    font-family: 'Geist';
-}
-
 input:focus {
     outline: none;
 }

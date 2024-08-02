@@ -14,8 +14,7 @@ const eventsStackedSelectIndex = ref<number>(0);
 
 <template>
     <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
-
-
+        
         <div class="flex gap-6 flex-col xl:flex-row">
 
             <CardTitled class="p-4 flex-[4] w-full" title="Events" sub="Events stacked bar chart.">

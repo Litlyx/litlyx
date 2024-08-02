@@ -84,7 +84,6 @@ export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: 
         return returnObject;
     });
 
-    console.log({ allKeys })
 
     if (slice === 'day' || slice == 'hour') fixed.pop();
 

@@ -167,4 +167,3 @@ export function useDevicesData(limit: number = 10) {
     );
     return res;
 }
-

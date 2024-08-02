@@ -26,10 +26,25 @@ async function getMetadataFields() {
     currentSearchText.value = "";
 }
 
+const { safeSnapshotDates } = useSnapshot();
+
 async function getMetadataFieldGrouped() {
     if (!selectedMetadataField.value) return;
-    metadataFieldGrouped.value = await $fetch<string[]>(`/api/metrics/${activeProject.value?._id.toString()}/events/metadata_field_group?name=${selectedEventName.value}&field=${selectedMetadataField.value}`, signHeaders());
+
+
+    const queryParams: Record<string, any> = {
+        from: safeSnapshotDates.value.from,
+        to: safeSnapshotDates.value.to,
+        name: selectedEventName.value,
+        field: selectedMetadataField.value
+    }
+    
+    const queryParamsString = Object.keys(queryParams).map((key) => `${key}=${queryParams[key]}`).join('&');
+
+    metadataFieldGrouped.value = await $fetch<string[]>(`/api/metrics/${activeProject.value?._id.toString()}/events/metadata_field_group?${queryParamsString}`, signHeaders());
 }
+
+
 
 
 const metadataFieldGroupedFiltered = computed(() => {

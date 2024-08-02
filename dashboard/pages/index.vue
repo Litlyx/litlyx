@@ -31,14 +31,14 @@ const { createAlert } = useAlert();
 
 
 function copyProjectId() {
-    if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
     navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
 
 function copyScript() {
-    if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
 
 
     const createScriptText = () => {
@@ -55,7 +55,6 @@ function copyScript() {
 }
 
 const { data: firstInteraction, pending, refresh } = useFirstInteractionData();
-
 
 watch(pending, () => {
     if (pending.value === true) return;
@@ -77,7 +76,9 @@ const selectLabels = [
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction">
+        {{ changingProject }}
+
+        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction && !changingProject">
 
             <div class="w-full px-4 py-2">
                 <div v-if="limitsInfo && limitsInfo.limited"

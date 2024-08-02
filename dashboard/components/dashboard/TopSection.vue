@@ -9,7 +9,7 @@ onUnmounted(() => stopWatching());
 const { createAlert } = useAlert();
 
 function copyProjectId() {
-    if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
     navigator.clipboard.writeText((activeProject.value?._id || 0).toString());
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }

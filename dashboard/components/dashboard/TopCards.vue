@@ -91,6 +91,12 @@ async function loadData(timelineEndpointName: string, target: Data) {
 
     const response = useTimeline(timelineEndpointName as any, chartSlice);
 
+    response.onRequest(() => {
+        target.ready = false;
+        target.data = [];
+        target.labels = [];
+    })
+
     response.onResponse(data => {
 
         if (!data.value) return;

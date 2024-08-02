@@ -15,11 +15,24 @@ export default defineEventHandler(async event => {
     const project = await getUserProjectFromId(project_id, user);
     if (!project) return;
 
-    const { name: eventName, field } = getQuery(event);
-    if (!eventName || !field) return [];
+    const { name: eventName, field, from, to } = getQuery(event);
+
+    if (!from) return setResponseStatus(event, 400, 'from is required');
+    if (!to) return setResponseStatus(event, 400, 'to is required');
+    if (!eventName) return setResponseStatus(event, 400, 'name is required');
+    if (!field) return setResponseStatus(event, 400, 'field is required');
+
 
     const aggregation: PipelineStage[] = [
-        { $match: { project_id: project._id, name: eventName } },
+        {
+            $match: {
+                project_id: project._id, name: eventName,
+                created_at: {
+                    $gte: new Date(from.toString()),
+                    $lte: new Date(to.toString()),
+                }
+            }
+        },
         { $group: { _id: `$metadata.${field}`, count: { $sum: 1 } } },
         { $sort: { count: -1 } }
     ]

@@ -19,7 +19,7 @@ const sections: Section[] = [
     {
         title: 'Project',
         entries: [
-            { label: 'Dashboard', to: '/', icon: 'far fa-home' },
+            { label: 'Dashboard', to: '/', icon: 'far fa-table-layout' },
             { label: 'Events', to: '/events', icon: 'far fa-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'far fa-microchip-ai' },
             { label: 'Settings', to: '/settings', icon: 'far fa-gear' },
@@ -36,10 +36,10 @@ const sections: Section[] = [
                 label: 'Docs', to: 'https://docs.litlyx.com', icon: 'far fa-book-open', external: true,
                 action() { Lit.event('docs_clicked') },
             },
-            {
-                label: 'Github', to: 'https://github.com/litlyx/litlyx', icon: 'fab fa-github', external: true,
-                action() { Lit.event('git_clicked') },
-            },
+            // {
+            //     label: 'Github', to: 'https://github.com/litlyx/litlyx', icon: 'fab fa-github', external: true,
+            //     action() { Lit.event('git_clicked') },
+            // },
             // { label: 'Billing', to: '/plans', icon: 'far fa-wallet' },
             // { label: 'Book a demo', to: '/book_demo', icon: 'far fa-calendar' },
         ]
