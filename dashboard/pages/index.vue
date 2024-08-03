@@ -77,14 +77,17 @@ const limitAlertActions: any[] = [
     }
 ]
 
-</script>
+const { snapshot } = useSnapshot();
+const topCardsKey = computed(() => `${snapshot.value._id.toString()}`);
 
+
+</script>
 
 <template>
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction && !changingProject">
+        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction">
 
             <div class="w-full px-4 py-2">
                 <!-- <div v-if="limitsInfo && !limitsInfo.limited"
@@ -113,10 +116,10 @@ const limitAlertActions: any[] = [
 
             </div>
 
-            <DashboardTopSection></DashboardTopSection>
-            <DashboardTopCards></DashboardTopCards>
+            <!-- <DashboardTopSection></DashboardTopSection> -->
+            <DashboardTopCards :key="topCardsKey"></DashboardTopCards>
 
-
+<!-- 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
                 <CardTitled class="p-4 flex-1 w-full" title="Visits trends" sub="Shows trends in page visits.">
@@ -186,7 +189,7 @@ const limitAlertActions: any[] = [
                     <div class="flex-1">
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 
