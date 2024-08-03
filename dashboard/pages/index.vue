@@ -78,7 +78,8 @@ const limitAlertActions: any[] = [
 ]
 
 const { snapshot } = useSnapshot();
-const topCardsKey = computed(() => `${snapshot.value._id.toString()}`);
+
+const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
 
 
 </script>
@@ -116,13 +117,13 @@ const topCardsKey = computed(() => `${snapshot.value._id.toString()}`);
 
             </div>
 
-            <!-- <DashboardTopSection></DashboardTopSection> -->
-            <DashboardTopCards :key="topCardsKey"></DashboardTopCards>
+            <DashboardTopSection></DashboardTopSection>
+             <DashboardTopCards :key="refreshKey"></DashboardTopCards> 
 
-<!-- 
+
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
-                <CardTitled class="p-4 flex-1 w-full" title="Visits trends" sub="Shows trends in page visits.">
+                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends" sub="Shows trends in page visits.">
                     <template #header>
                         <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
                             :options="selectLabels">
@@ -134,7 +135,7 @@ const topCardsKey = computed(() => `${snapshot.value._id.toString()}`);
                     </div>
                 </CardTitled>
 
-                <CardTitled class="p-4 flex-1 w-full" title="Sessions" sub="Shows trends in sessions.">
+                 <CardTitled  :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions" sub="Shows trends in sessions.">
                     <template #header>
                         <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
                             :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
@@ -147,7 +148,7 @@ const topCardsKey = computed(() => `${snapshot.value._id.toString()}`);
                 </CardTitled>
 
             </div>
-
+<!-- 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">

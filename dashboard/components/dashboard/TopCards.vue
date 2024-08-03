@@ -101,7 +101,6 @@ const sessionsDurationData = useFetch(`/api/metrics/${activeProject.value?._id}/
 
 
 onMounted(async () => {
-    console.log('MOUNTED')
     visitsData.execute();
     eventsData.execute();
     sessionsData.execute();

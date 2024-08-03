@@ -81,8 +81,6 @@ const { lineChartProps, lineChartRef } = useLineChart({ chartData: chartData, op
 
 onMounted(async () => {
 
-    console.log('MOUNTED')
-
     const c = document.createElement('canvas');
     const ctx = c.getContext("2d");
     let gradient: any = `${props.color}22`;
@@ -98,7 +96,6 @@ onMounted(async () => {
     chartData.value.datasets[0].backgroundColor = [gradient];
 
     watch(props, () => {
-        console.log('UPDATE')
         chartData.value.labels = props.labels;
         chartData.value.datasets[0].data = props.data;
     });

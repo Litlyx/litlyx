@@ -62,6 +62,8 @@ export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: 
 
     const allKeys = !options.advanced ? [] : Array.from(new Set(result.data.map((e: any) => e[options.advancedGroupKey])).values());
 
+console.log({allKeys})
+
     const fixed: any[] = allDates.map(matchDate => {
 
         if (!options.advanced) {
