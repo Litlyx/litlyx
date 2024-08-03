@@ -13,12 +13,12 @@ const items = [
 </script>
 
 <template>
-    <div class="px-10 py-8 h-dvh overflow-y-auto">
+    <div class="px-10 py-8 h-dvh overflow-y-auto hide-scrollbars">
         <div class="poppins font-semibold text-[1.3rem]"> Settings </div>
 
-        <UTabs :items="items" class="mt-8">
+        <CustomTab :items="items" class="mt-8">
             <template #general>
-                TODO
+                <SettingsGeneral></SettingsGeneral>
             </template>
             <template #members>
                 <SettingsMembers></SettingsMembers>
@@ -27,8 +27,23 @@ const items = [
                 <SettingsBilling></SettingsBilling>
             </template>
             <template #account>
-                TODO
+                <SettingsAccount></SettingsAccount>
             </template>
-        </UTabs>
+        </CustomTab>
+
+        <!-- <UTabs :items="items" class="mt-8">
+            <template #general>
+                <SettingsGeneral></SettingsGeneral>
+            </template>
+            <template #members>
+                <SettingsMembers></SettingsMembers>
+            </template>
+            <template #billing>
+                <SettingsBilling></SettingsBilling>
+            </template>
+            <template #account>
+                <SettingsAccount></SettingsAccount>
+            </template>
+        </UTabs> -->
     </div>
 </template>

@@ -120,7 +120,14 @@ watch(selected, () => {
 
                 <!-- <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div> -->
 
-                <USelectMenu class="w-full" v-if="projects" v-model="selected" :options="projects">
+                <USelectMenu :uiMenu="{
+                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
+                    base: '!bg-lyx-widget',
+                    option: {
+                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
+                        active: '!bg-lyx-widget-lighter'
+                    }
+                }" class="w-full" v-if="projects" v-model="selected" :options="projects">
 
                     <template #option="{ option, active, selected }">
                         <div class="flex items-center gap-2">
@@ -152,7 +159,7 @@ watch(selected, () => {
 
             </div>
 
-            <div class="px-4 w-full flex-col">
+            <div class="px-2 w-full flex-col">
 
                 <div class="flex mb-2 px-2 items-center justify-between">
                     <div class="poppins text-[.8rem]">
@@ -165,7 +172,14 @@ watch(selected, () => {
                     </div>
                 </div>
 
-                <USelectMenu class="w-full" v-model="snapshot" :options="snapshotsItems">
+                <USelectMenu :uiMenu="{
+                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
+                    base: '!bg-lyx-widget',
+                    option: {
+                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
+                        active: '!bg-lyx-widget-lighter'
+                    }
+                }" class="w-full" v-model="snapshot" :options="snapshotsItems">
                     <template #label>
                         <div class="flex items-center gap-2">
                             <div :style="'background-color:' + snapshot?.color" class="w-2 h-2 rounded-full">
@@ -194,7 +208,7 @@ watch(selected, () => {
                         </div>
                     </div>
 
-                    <LyxUiButton @click="generatePDF()" type="primary" class="w-full text-center mt-4">
+                    <LyxUiButton @click="generatePDF()" type="secondary" class="w-full text-center mt-4">
                         Download report
                     </LyxUiButton>
 
@@ -236,7 +250,7 @@ watch(selected, () => {
                             }">
 
                             <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
-                                tag="div" class="flex items-center" :to="entry.to || '/'">
+                                tag="div" class="w-full flex items-center" :to="entry.to || '/'">
                                 <div class="flex items-center w-[1.4rem] mr-2 text-[1.1rem] justify-center">
                                     <i :class="entry.icon"></i>
                                 </div>
@@ -266,6 +280,18 @@ watch(selected, () => {
                         <NuxtLink to="https://discord.gg/9cQykjsmWX" target="_blank"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-discord"></i>
+                        </NuxtLink>
+                        <NuxtLink to="https://x.com/litlyx" target="_blank"
+                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                            <i class="fab fa-x-twitter"></i>
+                        </NuxtLink>
+                        <NuxtLink to="https://dev.to/litlyx-org" target="_blank"
+                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                            <i class="fab fa-dev"></i>
+                        </NuxtLink>
+                        <NuxtLink to="/admin" v-if="isAdmin"
+                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                            <i class="fas fa-cat"></i>
                         </NuxtLink>
                     </div>
 

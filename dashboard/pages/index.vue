@@ -69,6 +69,14 @@ const selectLabels = [
     // { label: 'Month', value: 'month' },
 ];
 
+
+const limitAlertActions: any[] = [
+    {
+        label: 'Upgrade', variant: "outline", color: 'white',
+        trailing: true, action: () => { }
+    }
+]
+
 </script>
 
 
@@ -76,18 +84,33 @@ const selectLabels = [
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        {{ changingProject }}
-
         <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction && !changingProject">
 
             <div class="w-full px-4 py-2">
-                <div v-if="limitsInfo && limitsInfo.limited"
+                <!-- <div v-if="limitsInfo && !limitsInfo.limited"
                     class="bg-orange-600 justify-center flex gap-2 py-2 px-4 font-semibold text-[1.2rem] rounded-lg">
                     <div class="poppins text-text"> Limit reached </div>
                     <NuxtLink to="/plans" class="poppins text-[#393972] underline cursor-pointer">
                         Upgrade project
                     </NuxtLink>
+                </div> -->
+
+
+                <div v-if="limitsInfo && limitsInfo.limited" class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex items-center">
+                    <div class="flex flex-col grow">
+                    <div class="poppins font-semibold text-[#fbbf24]">
+                        Limit reached
+                    </div>
+                    <div class="poppins text-[#fbbf24]">
+                        Litlyx has stopped to collect yur data. Please upgrade the plan for a minimal data loss.
+                    </div>
                 </div>
+                <div>
+                    <LyxUiButton type="outline"> Upgrade </LyxUiButton>
+                </div>
+
+                </div>
+
             </div>
 
             <DashboardTopSection></DashboardTopSection>
