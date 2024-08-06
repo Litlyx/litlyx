@@ -100,30 +100,32 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
                 </div> -->
 
 
-                <div v-if="limitsInfo && limitsInfo.limited" class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex items-center">
+                <div v-if="limitsInfo && limitsInfo.limited"
+                    class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex items-center">
                     <div class="flex flex-col grow">
-                    <div class="poppins font-semibold text-[#fbbf24]">
-                        Limit reached
+                        <div class="poppins font-semibold text-[#fbbf24]">
+                            Limit reached
+                        </div>
+                        <div class="poppins text-[#fbbf24]">
+                            Litlyx has stopped to collect yur data. Please upgrade the plan for a minimal data loss.
+                        </div>
                     </div>
-                    <div class="poppins text-[#fbbf24]">
-                        Litlyx has stopped to collect yur data. Please upgrade the plan for a minimal data loss.
+                    <div>
+                        <LyxUiButton type="outline"> Upgrade </LyxUiButton>
                     </div>
-                </div>
-                <div>
-                    <LyxUiButton type="outline"> Upgrade </LyxUiButton>
-                </div>
 
                 </div>
 
             </div>
 
             <DashboardTopSection></DashboardTopSection>
-             <DashboardTopCards :key="refreshKey"></DashboardTopCards> 
+            <DashboardTopCards :key="refreshKey"></DashboardTopCards>
 
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
-                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends" sub="Shows trends in page visits.">
+                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
+                    sub="Shows trends in page visits.">
                     <template #header>
                         <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
                             :options="selectLabels">
@@ -135,7 +137,8 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
                     </div>
                 </CardTitled>
 
-                 <CardTitled  :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions" sub="Shows trends in sessions.">
+                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions"
+                    sub="Shows trends in sessions.">
                     <template #header>
                         <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
                             :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
@@ -148,7 +151,7 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
                 </CardTitled>
 
             </div>
-<!-- 
+
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -159,6 +162,7 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
                     </div>
                 </div>
             </div>
+
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
@@ -190,7 +194,7 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
                     <div class="flex-1">
                     </div>
                 </div>
-            </div> -->
+            </div>
 
         </div>
 

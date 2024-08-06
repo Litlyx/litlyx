@@ -9,6 +9,11 @@ export function signHeaders(headers?: Record<string, string>) {
     return { headers: { ...(headers || {}), 'Authorization': 'Bearer ' + token.value } }
 }
 
+export const authorizationHeaderComputed = computed(() => {
+    const { token } = useAccessToken()
+    return token.value ? 'Bearer ' + token.value : '';
+});
+
 export function useAccessToken() {
 
     const tokenCookie = useCookie(ACCESS_TOKEN_COOKIE_KEY, { expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30) })
