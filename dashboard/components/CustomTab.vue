@@ -12,7 +12,7 @@ const activeTabIndex = ref<number>(0);
         <div class="flex">
             <div v-for="(tab, index) of items" @click="activeTabIndex = index"
                 class="px-6 pb-3 poppins font-medium text-lyx-text-darker border-b-[1px] border-lyx-text-darker" :class="{
-                    '!border-[#88A7FF] text-[#88A7FF]': activeTabIndex === index,
+                    '!border-[#88A7FF] !text-[#88A7FF]': activeTabIndex === index,
                     'hover:border-lyx-text-dark hover:text-lyx-text-dark cursor-pointer': activeTabIndex !== index
                 }">
                 {{ tab.label }}

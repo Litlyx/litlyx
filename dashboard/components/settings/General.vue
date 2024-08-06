@@ -12,6 +12,10 @@ const entries: SettingsTemplateEntry[] = [
 const activeProject = useActiveProject();
 const projectNameInputVal = ref<string>(activeProject.value?.name || '');
 
+watch(activeProject, () => {
+    projectNameInputVal.value = activeProject.value?.name || "";
+})
+
 const canChange = computed(() => {
     if (activeProject.value?.name == projectNameInputVal.value) return false;
     if (projectNameInputVal.value.length === 0) return false;
@@ -19,15 +23,25 @@ const canChange = computed(() => {
 });
 
 
+async function changeProjectName() {
+    await $fetch("/api/project/change_name", {
+        method: 'POST',
+        ...signHeaders({ 'Content-Type': 'application/json' }),
+        body: JSON.stringify({ name: projectNameInputVal.value })
+    });
+    location.reload();
+}
+
+
 </script>
 
 
 <template>
-    <SettingsTemplate :entries="entries">
+    <SettingsTemplate :entries="entries" :key="activeProject?.name || 'NONE'">
         <template #pname>
             <div class="flex items-center gap-4">
                 <LyxUiInput class="w-full px-4 py-2" v-model="projectNameInputVal"></LyxUiInput>
-                <LyxUiButton :disabled="!canChange" type="primary"> Change </LyxUiButton>
+                <LyxUiButton @click="changeProjectName()" :disabled="!canChange" type="primary"> Change </LyxUiButton>
             </div>
         </template>
         <template #pid>

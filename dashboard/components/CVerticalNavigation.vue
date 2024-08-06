@@ -98,6 +98,15 @@ function onLogout() {
 const { projects } = useProjectsList();
 const activeProject = useActiveProject();
 
+
+const { data: maxProjects } = useFetch("/api/user/max_projects", {
+    headers: computed(() => {
+        return {
+            Authorization: authorizationHeaderComputed.value
+        }
+    })
+});
+
 const selected = ref<TProject>(activeProject.value as TProject);
 watch(selected, () => {
     setActiveProject(selected.value._id.toString())
@@ -112,56 +121,57 @@ watch(selected, () => {
             'hidden lg:flex': !isOpen
         }">
         <div class="py-4 px-2 gap-6 flex flex-col w-full">
-            <div class="flex items-center gap-2 ml-2">
 
-                <!-- <div class="bg-black h-[2.4rem] aspect-[1/1] flex items-center justify-center rounded-lg">
-                    <img class="h-[2rem]" :src="'/logo.png'">
-                </div> -->
+            <div class="flex px-2 flex-col">
 
-                <!-- <div class="font-bold text-[1.4rem] text-gray-300"> Litlyx </div> -->
+                <div class="flex items-center gap-2 w-full">
 
-                <USelectMenu :uiMenu="{
-                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                    base: '!bg-lyx-widget',
-                    option: {
-                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                        active: '!bg-lyx-widget-lighter'
-                    }
-                }" class="w-full" v-if="projects" v-model="selected" :options="projects">
+                    <USelectMenu :uiMenu="{
+                        select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
+                        base: '!bg-lyx-widget',
+                        option: {
+                            base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
+                            active: '!bg-lyx-widget-lighter'
+                        }
+                    }" class="w-full" v-if="projects" v-model="selected" :options="projects">
 
-                    <template #option="{ option, active, selected }">
-                        <div class="flex items-center gap-2">
-                            <div>
-                                <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                        <template #option="{ option, active, selected }">
+                            <div class="flex items-center gap-2">
+                                <div>
+                                    <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                                </div>
+                                <div> {{ option.name }} </div>
                             </div>
-                            <div> {{ option.name }} </div>
-                        </div>
-                    </template>
+                        </template>
 
-                    <template #label>
-                        <div class="flex items-center gap-2">
-                            <div>
-                                <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                        <template #label>
+                            <div class="flex items-center gap-2">
+                                <div>
+                                    <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                                </div>
+                                <div> {{ activeProject?.name || '???' }} </div>
                             </div>
-                            <div> {{ activeProject?.name || '???' }} </div>
-                        </div>
-                    </template>
-                </USelectMenu>
+                        </template>
+                    </USelectMenu>
 
+                    <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
+                        <i @click="close()" class="fas fa-close"></i>
+                    </div>
 
-
-
-
-
-                <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
-                    <i @click="close()" class="fas fa-close"></i>
                 </div>
+
+                <NuxtLink to="/project_creation" v-if="projects && (projects.length < (maxProjects || 1))"
+                    class="flex items-center text-[.8rem] gap-1 justify-end pt-2 pr-2 text-lyx-text-dark hover:text-lyx-text cursor-pointer">
+                    <div><i class="fas fa-plus"></i></div>
+                    <div> Create new project </div>
+                </NuxtLink>
 
             </div>
 
-            <div class="px-2 w-full flex-col">
 
-                <div class="flex mb-2 px-2 items-center justify-between">
+            <div class="w-full flex-col px-2">
+
+                <div class="flex mb-2 items-center justify-between">
                     <div class="poppins text-[.8rem]">
                         Snapshots
                     </div>
@@ -196,7 +206,7 @@ watch(selected, () => {
                     </template>
                 </USelectMenu>
 
-                <div v-if="snapshot" class="flex flex-col text-[.8rem] mt-2 px-2">
+                <div v-if="snapshot" class="flex flex-col text-[.8rem] mt-2">
                     <div class="flex">
                         <div class="grow poppins"> From:</div>
                         <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim() }}
@@ -235,7 +245,9 @@ watch(selected, () => {
                 </div>
             </div>
 
-            <div class="flex flex-col gap-4 h-full">
+            <div class="bg-lyx-widget-lighter h-[2px] w-full"></div>
+
+            <div class="flex flex-col h-full">
 
                 <div v-for="section of sections" class="flex flex-col gap-1">
 
@@ -266,10 +278,10 @@ watch(selected, () => {
                 </div>
 
                 <div class="grow"></div>
-                <div class="text-lyx-text-dark poppins text-[.8rem] px-4">
+                <div class="text-lyx-text-dark poppins text-[.8rem] px-4 pb-3">
                     Litlyx is in Beta version.
                 </div>
-                <div class="bg-lyx-widget-lighter h-[2px] px-4 w-full"></div>
+                <div class="bg-lyx-widget-lighter h-[2px] px-4 w-full mb-3"></div>
                 <div class="flex justify-end px-2">
 
                     <div class="grow flex gap-3">

@@ -22,6 +22,7 @@ type TProjectsGrouped = {
         project_name: string,
         total_visits: number,
         total_events: number,
+        total_sessions: number
     }[]
 }
 
@@ -47,7 +48,8 @@ const projectsGrouped = computed(() => {
                 premium: project.premium,
                 project_name: project.project_name,
                 total_events: project.total_events,
-                total_visits: project.total_visits
+                total_visits: project.total_visits,
+                total_sessions: project.total_sessions
             });
 
         } else {
@@ -61,7 +63,8 @@ const projectsGrouped = computed(() => {
                     premium_type: project.premium_type,
                     project_name: project.project_name,
                     total_events: project.total_events,
-                    total_visits: project.total_visits
+                    total_visits: project.total_visits,
+                    total_sessions: project.total_sessions
                 }]
             }
 
@@ -70,6 +73,12 @@ const projectsGrouped = computed(() => {
         }
 
     }
+
+    result.sort((sa, sb) => {
+        const ca = sa.projects.reduce((a, e) => a + (e.total_visits + e.total_events), 0);
+        const cb = sb.projects.reduce((a, e) => a + (e.total_visits + e.total_events), 0);
+        return cb - ca;
+    })
 
     return result;
 
@@ -106,7 +115,6 @@ const totalVisits = computed(() => {
 const totalEvents = computed(() => {
     return projects.value?.reduce((a, e) => a + e.total_events, 0) || 0;
 });
-
 
 const details = ref<any>();
 const showDetails = ref<boolean>(false);
@@ -188,17 +196,17 @@ async function resetCount(project_id: string) {
                             <div> {{ project.total_visits }} </div>
                             <div> Events: </div>
                             <div> {{ project.total_events }} </div>
+                            <div> Sessions: </div>
+                            <div> {{ project.total_sessions }} </div>
                         </div>
 
-                        <div class="flex gap-4">
-                            <div class="bg-[#272727] hover:bg-[#313131] cursor-pointer px-8 py-2 mt-3 rounded-lg"
-                                @click="getProjectDetails(project._id)">
-                                Get details
-                            </div>
-                            <div class="bg-[#272727] hover:bg-[#313131] cursor-pointer px-8 py-2 mt-3 rounded-lg"
-                                @click="resetCount(project._id)">
-                                Reset counts
-                            </div>
+                        <div class="flex gap-4 items-center mt-4">
+                            <LyxUiButton type="secondary" @click="getProjectDetails(project._id)">
+                                Payment details
+                            </LyxUiButton>
+                            <LyxUiButton type="danger" @click="resetCount(project._id)">
+                                Refresh counts
+                            </LyxUiButton>
                         </div>
 
                     </div>

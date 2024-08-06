@@ -36,11 +36,11 @@ export default defineEventHandler(async event => {
                 $group: {
                     _id: "$project_id",
                     events: { $sum: "$events" },
-                    visits: { $sum: "$visits" }
+                    visits: { $sum: "$visits" },
+                    sessions: { $sum: "$sessions" },
                 }
             }
         ]);
-
 
         const sessionsVisitsCount: any[] = await Redis.useCache({
             key: `counts:${project_id}:sessions_count`,

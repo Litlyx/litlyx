@@ -3,9 +3,7 @@ import StripeService from '~/server/services/StripeService';
 import type Event from 'stripe';
 import { ProjectModel } from '@schema/ProjectSchema';
 import { PREMIUM_DATA, PREMIUM_PLAN, getPlanFromId, getPlanFromPrice, getPlanFromTag } from '@data/PREMIUM';
-import { ProjectCountModel } from '@schema/ProjectsCounts';
 import { ProjectLimitModel } from '@schema/ProjectsLimits';
-import { UserModel } from '@schema/UserSchema';
 
 
 

@@ -1,6 +1,7 @@
 
 import { ProjectCountModel } from "@schema/ProjectsCounts";
 import { EventModel } from "@schema/metrics/EventSchema";
+import { SessionModel } from "@schema/metrics/SessionSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 
 export default defineEventHandler(async event => {
@@ -13,8 +14,9 @@ export default defineEventHandler(async event => {
 
     const events = await EventModel.countDocuments({ project_id });
     const visits = await VisitModel.countDocuments({ project_id });
+    const sessions = await SessionModel.countDocuments({ project_id });
 
-    await ProjectCountModel.updateOne({ project_id, events, visits }, {}, { upsert: true });
+    await ProjectCountModel.updateOne({ project_id, events, visits, sessions }, {}, { upsert: true });
 
     return { ok: true };
 });

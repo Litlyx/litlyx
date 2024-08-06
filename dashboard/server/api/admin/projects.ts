@@ -14,7 +14,8 @@ export type AdminProjectsList = {
         created_at: Date
     },
     total_visits: number,
-    total_events: number
+    total_events: number,
+    total_sessions: number
 }
 
 export default defineEventHandler(async event => {
@@ -54,6 +55,9 @@ export default defineEventHandler(async event => {
                 },
                 total_events: {
                     $arrayElemAt: ["$counts.events", 0]
+                },
+                total_sessions: {
+                    $arrayElemAt: ["$counts.sessions", 0]
                 }
             }
         }
