@@ -54,14 +54,14 @@ function copyScript() {
     createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
 }
 
-const { data: firstInteraction, pending, refresh } = useFirstInteractionData();
+const firstInteractionUrl = computed(() => {
+    return `/api/metrics/${activeProject.value?._id}/first_interaction`
+});
 
-watch(pending, () => {
-    if (pending.value === true) return;
-    if (firstInteraction.value === false) {
-        setTimeout(() => { refresh(); }, 2000);
-    }
-})
+const firstInteraction = useFetch<boolean>(firstInteractionUrl, {
+    ...signHeaders(),
+    lazy: true
+});
 
 const selectLabels = [
     { label: 'Hour', value: 'hour' },
@@ -70,16 +70,10 @@ const selectLabels = [
 ];
 
 
-const limitAlertActions: any[] = [
-    {
-        label: 'Upgrade', variant: "outline", color: 'white',
-        trailing: true, action: () => { }
-    }
-]
 
 const { snapshot } = useSnapshot();
 
-const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
+const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
 
 
 </script>
@@ -88,16 +82,9 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction">
+        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction.data.value">
 
             <div class="w-full px-4 py-2">
-                <!-- <div v-if="limitsInfo && !limitsInfo.limited"
-                    class="bg-orange-600 justify-center flex gap-2 py-2 px-4 font-semibold text-[1.2rem] rounded-lg">
-                    <div class="poppins text-text"> Limit reached </div>
-                    <NuxtLink to="/plans" class="poppins text-[#393972] underline cursor-pointer">
-                        Upgrade project
-                    </NuxtLink>
-                </div> -->
 
 
                 <div v-if="limitsInfo && limitsInfo.limited"
@@ -118,7 +105,7 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
 
             </div>
 
-            <DashboardTopSection></DashboardTopSection>
+          <DashboardTopSection></DashboardTopSection>
             <DashboardTopCards :key="refreshKey"></DashboardTopCards>
 
 
@@ -150,38 +137,27 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
                     </div>
                 </CardTitled>
 
-            </div>
+            </div> 
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardWebsitesBarCard></DashboardWebsitesBarCard>
+                        <DashboardWebsitesBarCard :key="refreshKey"></DashboardWebsitesBarCard>
                     </div>
                     <div class="flex-1">
-                        <DashboardEventsBarCard></DashboardEventsBarCard>
+                         <DashboardEventsBarCard :key="refreshKey"></DashboardEventsBarCard>
                     </div>
                 </div>
             </div>
 
 
-            <div class="flex w-full justify-center mt-6 px-6">
+             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardReferrersBarCard></DashboardReferrersBarCard>
+                        <DashboardReferrersBarCard :key="refreshKey"></DashboardReferrersBarCard>
                     </div>
                     <div class="flex-1">
-                        <DashboardBrowsersBarCard></DashboardBrowsersBarCard>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
-                    <div class="flex-1">
-                        <DashboardOssBarCard></DashboardOssBarCard>
-                    </div>
-                    <div class="flex-1">
-                        <DashboardGeolocationBarCard></DashboardGeolocationBarCard>
+                        <DashboardBrowsersBarCard :key="refreshKey"></DashboardBrowsersBarCard>
                     </div>
                 </div>
             </div>
@@ -189,16 +165,27 @@ const refreshKey = computed(() => `${snapshot.value._id.toString()}`);
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardDevicesBarCard></DashboardDevicesBarCard>
+                        <DashboardOssBarCard :key="refreshKey"></DashboardOssBarCard>
+                    </div>
+                    <div class="flex-1">
+                        <DashboardGeolocationBarCard :key="refreshKey"></DashboardGeolocationBarCard>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex w-full justify-center mt-6 px-6">
+                <div class="flex w-full gap-6 flex-col xl:flex-row">
+                    <div class="flex-1">
+                        <DashboardDevicesBarCard :key="refreshKey"></DashboardDevicesBarCard>
                     </div>
                     <div class="flex-1">
                     </div>
                 </div>
-            </div>
+            </div> 
 
         </div>
 
-        <div v-if="!firstInteraction && activeProject" class="mt-[20vh] lg:mt-[36vh] flex flex-col gap-6">
+        <div v-if="!firstInteraction.data.value && activeProject" class="mt-[20vh] lg:mt-[36vh] flex flex-col gap-6">
             <div class="flex gap-4 items-center justify-center">
                 <div class="animate-pulse w-[1.5rem] h-[1.5rem] bg-accent rounded-full"> </div>
                 <div class="text-text/90 poppins text-[1.3rem] font-semibold">

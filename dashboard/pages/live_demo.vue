@@ -46,7 +46,7 @@ const selectLabelsEvents = [
     { label: 'Month', value: 'month' },
 ];
 
-
+const { snapshot } = useSnapshot();
 </script>
 
 
@@ -118,7 +118,7 @@ const selectLabelsEvents = [
 
 
             <div class="flex gap-6 flex-col xl:flex-row p-6">
-                <CardTitled class="p-4 flex-[4]" title="Events" sub="Events stacked bar chart.">
+                <!-- <CardTitled class="p-4 flex-[4]" title="Events" sub="Events stacked bar chart.">
                     <template #header>
                         <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
                             :currentIndex="eventsStackedSelectIndex" :options="selectLabelsEvents">
@@ -128,7 +128,7 @@ const selectLabelsEvents = [
                         <EventsStackedBarChart :slice="(selectLabelsEvents[eventsStackedSelectIndex].value as any)">
                         </EventsStackedBarChart>
                     </div>
-                </CardTitled>
+                </CardTitled> -->
 
                 <div class="bg-menu p-4 rounded-xl flex-[2] flex flex-col gap-10 h-full">
                     <div class="flex flex-col gap-1">

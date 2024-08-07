@@ -2,47 +2,21 @@
 
 import type { Section } from '~/components/CVerticalNavigation.vue';
 
-const router = useRouter();
-const { setToken } = useAccessToken();
-
 import { Lit } from 'litlyx-js';
 
 const sections: Section[] = [
-    {
-        title: 'General',
-        entries: [
-            // { label: 'Projects', icon: 'far fa-table-layout', to: '/project_selector' },
-            // { label: 'Members', icon: 'far fa-users', to: '/members' },
-            // { label: 'Admin', icon: 'fas fa-cat', adminOnly: true, to: '/admin' },
-        ]
-    },
     {
         title: 'Project',
         entries: [
             { label: 'Dashboard', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'fal fa-microchip-ai' },
-            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
-            // { label: 'Report', to: '/report', icon: 'far fa-notes' },
-            // { label: 'AI', to: '/dashboard/settings', icon: 'far fa-robot brightness-[.4]' },
-            // { label: 'Visits', to: '/dashboard/visits', icon: 'far fa-eye' },
-            // { label: 'Events', to: '/dashboard/events', icon: 'far fa-line-chart' },
+            { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             {
                 label: 'Docs', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
                 action() { Lit.event('docs_clicked') },
             },
-        ]
-    },
-    {
-        title: 'Non si vede',
-        entries: [
-          
-            // {
-            //     label: 'Github', to: 'https://github.com/litlyx/litlyx', icon: 'fab fa-github', external: true,
-            //     action() { Lit.event('git_clicked') },
-            // },
-            // { label: 'Billing', to: '/plans', icon: 'far fa-wallet' },
-            // { label: 'Book a demo', to: '/book_demo', icon: 'far fa-calendar' },
+            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
         ]
     }
 ];

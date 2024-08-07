@@ -14,7 +14,6 @@ const body = computed(() => {
         from: safeSnapshotDates.value.from,
         to: safeSnapshotDates.value.to,
         slice: slice.value,
-        Authorization: authorizationHeaderComputed.value,
     }
 });
 
@@ -54,7 +53,7 @@ function transformResponse(input: { _id: string, name: string, count: number }[]
 }
 
 const eventsStackedData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/events_stacked`, {
-    method: 'POST', body, lazy: true, immediate: false, transform: transformResponse
+    method: 'POST', body, lazy: true, immediate: false, transform: transformResponse, ...signHeaders()
 });
 
 

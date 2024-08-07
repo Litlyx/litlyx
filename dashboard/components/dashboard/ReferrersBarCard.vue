@@ -34,11 +34,11 @@ const referrersData = useFetch(`/api/metrics/${activeProject.value?._id}/data/re
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
-const customDialog = useCustomDialog();
+// const customDialog = useCustomDialog();
 
-function onShowDetails(referrer: string) {
-    customDialog.openDialog(ReferrerBarChart, { slice: 'day', referrer });
-}
+// function onShowDetails(referrer: string) {
+//     customDialog.openDialog(ReferrerBarChart, { slice: 'day', referrer });
+// }
 
 function showMore() {
 
@@ -59,10 +59,10 @@ onMounted(async () => {
 
 <template>
     <div class="flex flex-col gap-2">
-        <DashboardBarsCard @showDetails="onShowDetails" @showMore="showMore()"
+        <DashboardBarsCard @showMore="showMore()"
             :elementTextTransformer="elementTextTransformer" :iconProvider="iconProvider"
             @dataReload="referrersData.refresh()" :showLink=true :data="referrersData.data.value || []"
-            :interactive="true" desc="Where users find your website." :dataIcons="true" :loading="referrersData.pending.value"
+            :interactive="false" desc="Where users find your website." :dataIcons="true" :loading="referrersData.pending.value"
             label="Top Referrers" sub-label="Referrers"></DashboardBarsCard>
     </div>
 </template>

@@ -22,148 +22,148 @@ export function useMetricsData() {
 
 
 
-const { safeSnapshotDates, snapshot } = useSnapshot()
-const activeProject = useActiveProject();
+// const { safeSnapshotDates, snapshot } = useSnapshot()
+// const activeProject = useActiveProject();
 
-const createFromToHeaders = (headers: Record<string, string> = {}) => ({
-    'x-from': safeSnapshotDates.value.from,
-    'x-to': safeSnapshotDates.value.to,
-    ...headers
-});
+// const createFromToHeaders = (headers: Record<string, string> = {}) => ({
+//     'x-from': safeSnapshotDates.value.from,
+//     'x-to': safeSnapshotDates.value.to,
+//     ...headers
+// });
 
-const createFromToBody = (body: Record<string, any> = {}) => ({
-    from: safeSnapshotDates.value.from,
-    to: safeSnapshotDates.value.to,
-    ...body
-});
-
-
-
-export function useFirstInteractionData() {
-    const activeProject = useActiveProject();
-    const metricsInfo = useFetch<boolean>(`/api/metrics/${activeProject.value?._id}/first_interaction`, signHeaders());
-    return metricsInfo;
-}
-
-
-export function useTimelineAdvanced<T>(endpoint: string, slice: Ref<Slice>, customBody: Object = {}) {
-    const response = useCustomFetch<T>(
-        `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`,
-        () => signHeaders({ 'Content-Type': 'application/json' }).headers, {
-        method: 'POST',
-        getBody: () => createFromToBody({ slice: slice.value, ...customBody }),
-        lazy: true,
-        watchProps: [snapshot, slice]
-    });
-    return response;
-}
-
-
-export function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers' | 'events_stacked', slice: Ref<Slice>) {
-    return useTimelineAdvanced<{ _id: string, count: number }[]>(endpoint, slice);
-}
-
-export async function useReferrersTimeline(referrer: string, slice: Ref<Slice>) {
-    return await useTimelineAdvanced<{ _id: string, count: number }[]>('referrers', slice, { referrer });
-}
-
-export function useEventsStackedTimeline(slice: Ref<Slice>) {
-    return useTimelineAdvanced<{ _id: string, name: string, count: number }[]>('events_stacked', slice);
-}
+// const createFromToBody = (body: Record<string, any> = {}) => ({
+//     from: safeSnapshotDates.value.from,
+//     to: safeSnapshotDates.value.to,
+//     ...body
+// });
 
 
 
-export async function useTimelineDataRaw(timelineEndpointName: string, slice: SliceName) {
-    const activeProject = useActiveProject();
+// export function useFirstInteractionData() {
+//     const activeProject = useActiveProject();
+//     const metricsInfo = useFetch<boolean>(`/api/metrics/${activeProject.value?._id}/first_interaction`, signHeaders());
+//     return metricsInfo;
+// }
 
-    const response = await $fetch<{ data: MetricsTimeline[], from: string, to: string }>(
-        `/api/metrics/${activeProject.value?._id}/timeline/${timelineEndpointName}`, {
-        method: 'POST',
-        ...signHeaders({ 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ slice }),
-    });
 
-    return response;
-}
+// export function useTimelineAdvanced<T>(endpoint: string, slice: Ref<Slice>, customBody: Object = {}) {
+//     const response = useCustomFetch<T>(
+//         `/api/metrics/${activeProject.value?._id}/timeline/${endpoint}`,
+//         () => signHeaders({ 'Content-Type': 'application/json' }).headers, {
+//         method: 'POST',
+//         getBody: () => createFromToBody({ slice: slice.value, ...customBody }),
+//         lazy: true,
+//         watchProps: [snapshot, slice]
+//     });
+//     return response;
+// }
 
-export async function useTimelineData(timelineEndpointName: string, slice: SliceName) {
-    const response = await useTimelineDataRaw(timelineEndpointName, slice);
-    if (!response) return;
-    const fixed = fixMetrics(response, slice);
-    return fixed;
-}
 
-export function usePagesData(website: string, limit: number = 10) {
-    const activeProject = useActiveProject();
+// export function useTimeline(endpoint: 'visits' | 'sessions' | 'referrers' | 'events_stacked', slice: Ref<Slice>) {
+//     return useTimelineAdvanced<{ _id: string, count: number }[]>(endpoint, slice);
+// }
 
-    const res = useFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/pages`, {
-        ...signHeaders({
-            'x-query-limit': limit.toString(),
-            'x-website-name': website
-        }),
-        key: `pages_data:${website}:${limit}`,
-        lazy: true
-    });
+// export async function useReferrersTimeline(referrer: string, slice: Ref<Slice>) {
+//     return await useTimelineAdvanced<{ _id: string, count: number }[]>('referrers', slice, { referrer });
+// }
 
-    return res;
-
-}
+// export function useEventsStackedTimeline(slice: Ref<Slice>) {
+//     return useTimelineAdvanced<{ _id: string, name: string, count: number }[]>('events_stacked', slice);
+// }
 
 
 
+// export async function useTimelineDataRaw(timelineEndpointName: string, slice: SliceName) {
+//     const activeProject = useActiveProject();
 
-export function useWebsitesData(limit: number = 10) {
-    const res = useCustomFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+//     const response = await $fetch<{ data: MetricsTimeline[], from: string, to: string }>(
+//         `/api/metrics/${activeProject.value?._id}/timeline/${timelineEndpointName}`, {
+//         method: 'POST',
+//         ...signHeaders({ 'Content-Type': 'application/json' }),
+//         body: JSON.stringify({ slice }),
+//     });
 
-export function useEventsData(limit: number = 10) {
-    const res = useCustomFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/events`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+//     return response;
+// }
 
-export function useReferrersData(limit: number = 10) {
-    const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+// export async function useTimelineData(timelineEndpointName: string, slice: SliceName) {
+//     const response = await useTimelineDataRaw(timelineEndpointName, slice);
+//     if (!response) return;
+//     const fixed = fixMetrics(response, slice);
+//     return fixed;
+// }
 
-export function useBrowsersData(limit: number = 10) {
-    const res = useCustomFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+// export function usePagesData(website: string, limit: number = 10) {
+//     const activeProject = useActiveProject();
 
-export function useOssData(limit: number = 10) {
-    const res = useCustomFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+//     const res = useFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/pages`, {
+//         ...signHeaders({
+//             'x-query-limit': limit.toString(),
+//             'x-website-name': website
+//         }),
+//         key: `pages_data:${website}:${limit}`,
+//         lazy: true
+//     });
 
-export function useGeolocationData(limit: number = 10) {
-    const res = useCustomFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+//     return res;
 
-export function useDevicesData(limit: number = 10) {
-    const res = useCustomFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`,
-        () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
-        { lazy: false, watchProps: [snapshot] }
-    );
-    return res;
-}
+// }
+
+
+
+
+// export function useWebsitesData(limit: number = 10) {
+//     const res = useCustomFetch<VisitsWebsiteAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/websites`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }
+
+// export function useEventsData(limit: number = 10) {
+//     const res = useCustomFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/events`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }
+
+// export function useReferrersData(limit: number = 10) {
+//     const res = useCustomFetch<ReferrersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/referrers`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }
+
+// export function useBrowsersData(limit: number = 10) {
+//     const res = useCustomFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }
+
+// export function useOssData(limit: number = 10) {
+//     const res = useCustomFetch<OssAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/oss`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }
+
+// export function useGeolocationData(limit: number = 10) {
+//     const res = useCustomFetch<CountriesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/countries`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }
+
+// export function useDevicesData(limit: number = 10) {
+//     const res = useCustomFetch<DevicesAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/devices`,
+//         () => signHeaders(createFromToHeaders({ 'x-query-limit': limit.toString() })).headers,
+//         { lazy: false, watchProps: [snapshot] }
+//     );
+//     return res;
+// }

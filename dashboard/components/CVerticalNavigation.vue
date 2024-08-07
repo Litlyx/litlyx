@@ -256,7 +256,7 @@ watch(selected, () => {
                         <div v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))"
                             class="bg-lyx-background cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
                             :class="{
-                                'text-gray-700 pointer-events-none': entry.disabled,
+                                '!text-lyx-text-darker pointer-events-none': entry.disabled,
                                 'bg-lyx-background-lighter !text-lyx-text/90': route.path == (entry.to || '#'),
                                 'hover:bg-lyx-background-light hover:!text-lyx-text/90': route.path != (entry.to || '#'),
                             }">

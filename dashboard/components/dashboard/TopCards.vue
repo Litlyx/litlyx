@@ -112,7 +112,7 @@ onMounted(async () => {
 
 
 <template>
-    <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-cards-wrap:grid-cols-4" v-if="metricsInfo">
+    <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-cards-wrap:grid-cols-4">
 
         <DashboardCountCard :ready="!visitsData.pending.value" icon="far fa-earth" text="Total page visits"
             :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
