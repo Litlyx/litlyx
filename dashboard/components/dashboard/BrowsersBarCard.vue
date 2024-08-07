@@ -1,39 +1,46 @@
 <script lang="ts" setup>
 
-import type { BrowsersAggregated } from '~/server/api/metrics/[project_id]/data/browsers';
+const activeProject = useActiveProject();
 
-const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<BrowsersAggregated[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`, {
-    ...signHeaders(),
-    lazy: true
+const { safeSnapshotDates } = useSnapshot()
+
+const isShowMore = ref<boolean>(false);
+
+const headers = computed(() => {
+    return {
+        'x-from': safeSnapshotDates.value.from,
+        'x-to': safeSnapshotDates.value.to,
+        Authorization: authorizationHeaderComputed.value,
+        limit: isShowMore.value === true ? '200' : '10'
+    }
 });
 
+const browsersData = useFetch(`/api/metrics/${activeProject.value?._id}/data/browsers`, {
+    method: 'POST', headers, lazy: true, immediate: false
+});
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
+
 function showMore() {
-
-
+    isShowMore.value = true;
     showDialog.value = true;
-    dialogBarData.value = [];
-    isDataLoading.value = true;
-
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/data/browsers`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data;
-        isDataLoading.value = false;
-    });
+    dialogBarData.value = browsersData.data.value || [];
 
 }
+
+onMounted(() => {
+    browsersData.execute();
+});
 
 </script>
 
 
 <template>
     <div class="flex flex-col gap-2">
-        <DashboardBarsCard @showMore="showMore()" @dataReload="refresh" :data="events || []"
-            desc="The browsers most used to search your website." :dataIcons="false" :loading="pending"
-            label="Top Browsers" sub-label="Browsers"></DashboardBarsCard>
+        <DashboardBarsCard @showMore="showMore()" @dataReload="browsersData.refresh()"
+            :data="browsersData.data.value || []" desc="The browsers most used to search your website."
+            :dataIcons="false" :loading="browsersData.pending.value" label="Top Browsers" sub-label="Browsers">
+        </DashboardBarsCard>
     </div>
 </template>

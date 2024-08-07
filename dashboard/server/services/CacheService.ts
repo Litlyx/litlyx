@@ -21,11 +21,14 @@ export class Redis {
         url: runtimeConfig.REDIS_URL,
         username: runtimeConfig.REDIS_USERNAME,
         password: runtimeConfig.REDIS_PASSWORD,
-        database: process.dev ? 1 : 0
+        database: process.dev ? 1 : 0,
     });
 
     static async init() {
         await this.client.connect();
+        this.client.on('error', function (err) {
+            console.error('Redis error:', err);
+        });
     }
 
     static async setString(key: string, value: string, exp: number) {

@@ -10,11 +10,12 @@
     "postinstall": "nuxt prepare",
     "test": "vitest",
     "docker-build": "docker build -t litlyx-dashboard -f Dockerfile ../",
-		"docker-inspect": "docker run -it litlyx-dashboard sh"
+    "docker-inspect": "docker run -it litlyx-dashboard sh"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",
     "chart.js": "^3.9.1",
+    "date-fns": "^3.6.0",
     "dayjs": "^1.11.11",
     "google-auth-library": "^9.9.0",
     "jsonwebtoken": "^9.0.2",
@@ -29,6 +30,7 @@
     "redis": "^4.6.13",
     "sass": "^1.75.0",
     "stripe": "^15.8.0",
+    "v-calendar": "^3.1.2",
     "vue": "^3.4.21",
     "vue-chart-3": "^3.1.8",
     "vue-router": "^4.3.0"

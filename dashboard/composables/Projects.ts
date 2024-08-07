@@ -49,6 +49,11 @@ export function useActiveProject() {
 
 
 export async function setActiveProject(project_id: string) {
+    changingProject.value = true;
+    await new Promise(e => setTimeout(e, 500));
     await $fetch<string>(`/api/user/set_active_project?project_id=${project_id}`, signHeaders());
     await activeProjectId.refresh();
+    changingProject.value = false;
 }
+
+export const changingProject = ref<boolean>(false);

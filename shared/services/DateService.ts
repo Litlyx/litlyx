@@ -108,11 +108,13 @@ class DateService {
         const lastDate = dayjs(dates.at(-1));
         let currentDate = firstDate.clone();
 
+        allDates.push(currentDate);
+        
         while (currentDate.isBefore(lastDate, slice)) {
             currentDate = currentDate.add(1, slice);
             allDates.push(currentDate);
         }
-        
+
         return allDates;
     }
 

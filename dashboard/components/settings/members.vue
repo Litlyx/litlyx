@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import type { SettingsTemplateEntry } from './Template.vue';
+
+const activeProject = useActiveProject();
 
 definePageMeta({ layout: 'dashboard' });
 
-const activeProject = useActiveProject();
 
 const columns = [
     { key: 'me', label: '' },
@@ -13,7 +15,7 @@ const columns = [
     // { key: 'pending', label: 'Pending' },
 ]
 
-const { data: members, refresh: refreshMembers } = useFetch('/api/project/members/list', signHeaders());
+const { data: members, refresh: refreshMembers, pending: pendingMembers } = useFetch('/api/project/members/list', signHeaders());
 
 const showAddMember = ref<boolean>(false);
 
@@ -67,32 +69,35 @@ async function addMember() {
     } catch (ex: any) { }
 
 
-
 }
+
+watch(activeProject, () => {
+    refreshMembers();
+})
+
+const entries: SettingsTemplateEntry[] = [
+    { id: 'add', title: 'Add member', text: 'Add new member to project' },
+    { id: 'members', title: 'Members', text: 'Manage members of current project' },
+]
 
 </script>
 
-
 <template>
 
-    <div class="home w-full h-full px-10 lg:px-6 overflow-y-auto pb-[12rem] md:pb-0 py-2">
-
-
-        <div class="flex flex-col gap-4">
-
-            <div v-if="!isGuest" @click="showAddMember = !showAddMember;"
-                class="flex items-center gap-2 bg-menu w-fit px-3 py-2 rounded-lg hover:bg-menu/80 cursor-pointer">
-                <i class="fas fa-plus"></i>
-                <div> Add member </div>
-            </div>
-
-            <div v-if="showAddMember" class="flex gap-4 items-center">
-                <input v-model="addMemberEmail" class="focus:outline-none bg-menu px-4 py-1 rounded-lg" type="text"
-                    placeholder="user email">
-                <div @click="addMember" class="bg-menu w-fit py-1 px-4 rounded-lg hover:bg-menu/80 cursor-pointer">
-                    Add
+    <SettingsTemplate :entries="entries">
+        <template #add>
+            <div v-if="!isGuest" class="flex flex-col">
+                <div class="flex gap-4 items-center">
+                    <LyxUiInput class="px-4 py-1 w-full" placeholder="User email" v-model="addMemberEmail"></LyxUiInput>
+                    <LyxUiButton @click="addMember" type="secondary"> Add </LyxUiButton>
+                </div>
+                <div class="poppins text-[.8rem] mt-2 text-lyx-text-darker">
+                    User should have been registered to Litlyx
                 </div>
             </div>
+        </template>
+        <template #members>
+
 
             <UTable :rows="members || []" :columns="columns">
                 <template #me-data="e">
@@ -108,9 +113,7 @@ async function addMember() {
                 </template>
 
             </UTable>
-
-        </div>
-
-    </div>
+        </template>
+    </SettingsTemplate>
 
 </template>

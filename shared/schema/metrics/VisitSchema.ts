@@ -36,7 +36,7 @@ const VisitSchema = new Schema<TVisit>({
     website: { type: String, required: true },
     page: { type: String, required: true },
     referrer: { type: String, required: true },
-    created_at: { type: Date, default: () => Date.now() },
+    created_at: { type: Date, default: () => Date.now(), index: true },
 })
 
 export const VisitModel = model<TVisit>('visits', VisitSchema);

@@ -39,7 +39,8 @@ export default defineEventHandler(async event => {
         await ProjectCountModel.create({
             project_id: project._id,
             events: 0,
-            visits: 0
+            visits: 0,
+            sessions: 0
         });
 
         await ProjectLimitModel.updateOne({ project_id: project._id }, {
@@ -76,7 +77,8 @@ export default defineEventHandler(async event => {
         await ProjectCountModel.create({
             project_id: project._id,
             events: 0,
-            visits: 0
+            visits: 0,
+            sessions: 0
         });
 
         return project.toJSON() as TProject;

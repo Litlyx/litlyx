@@ -1,36 +1,41 @@
 <script lang="ts" setup>
 
-import type { CustomEventsAggregated } from '~/server/api/metrics/[project_id]/visits/events';
-
-const activeProject = await useActiveProject();
-const { data: events, pending, refresh } = await useFetch<CustomEventsAggregated[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, {
-    ...signHeaders(),
-    lazy: true
-});
-
 const router = useRouter();
 
 function goToView() {
     router.push('/dashboard/events');
 }
 
+const activeProject = useActiveProject();
+
+const { safeSnapshotDates } = useSnapshot()
+
+const isShowMore = ref<boolean>(false);
+
+const headers = computed(() => {
+    return {
+        'x-from': safeSnapshotDates.value.from,
+        'x-to': safeSnapshotDates.value.to,
+        Authorization: authorizationHeaderComputed.value,
+        limit: isShowMore.value === true ? '200' : '10'
+    }
+});
+
+const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/data/events`, {
+    method: 'POST', headers, lazy: true, immediate: false
+});
+
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
 function showMore() {
-
-
+    isShowMore.value = true;
     showDialog.value = true;
-    dialogBarData.value = [];
-    isDataLoading.value = true;
-
-    $fetch<any[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, signHeaders({
-        'x-query-limit': '200'
-    })).then(data => {
-        dialogBarData.value = data;
-        isDataLoading.value = false;
-    });
-
+    dialogBarData.value = eventsData.data.value || [];
 }
+
+onMounted(async () => {
+    eventsData.execute();
+});
 
 
 </script>
@@ -39,7 +44,8 @@ function showMore() {
 <template>
     <div class="flex flex-col gap-2 h-full">
         <DashboardBarsCard @showMore="showMore()" @showRawData="goToView()"
-            desc="Most frequent user events triggered in this project" @dataReload="refresh" :data="events || []"
-            :loading="pending" label="Top Events" sub-label="Events" :rawButton="!isLiveDemo()"></DashboardBarsCard>
+            desc="Most frequent user events triggered in this project" @dataReload="eventsData.refresh()"
+            :data="eventsData.data.value || []" :loading="eventsData.pending.value" label="Top Events"
+            sub-label="Events" :rawButton="!isLiveDemo()"></DashboardBarsCard>
     </div>
 </template>

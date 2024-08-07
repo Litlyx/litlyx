@@ -27,15 +27,18 @@ onMounted(async () => {
 });
 
 
+const { createAlert } = useAlert();
+
+
 function copyProjectId() {
-    if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
     navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
-    alert('Copiato !');
+    createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
 
 function copyScript() {
-    if (!navigator.clipboard) alert('NON PUOI COPIARE IN HTTP');
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
 
 
     const createScriptText = () => {
@@ -48,18 +51,17 @@ function copyScript() {
     }
 
     navigator.clipboard.writeText(createScriptText());
-    alert('Copiato !');
+    createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
 }
 
-const { data: firstInteraction, pending, refresh } = useFirstInteractionData();
+const firstInteractionUrl = computed(() => {
+    return `/api/metrics/${activeProject.value?._id}/first_interaction`
+});
 
-
-watch(pending, () => {
-    if (pending.value === true) return;
-    if (firstInteraction.value === false) {
-        setTimeout(() => { refresh(); }, 2000);
-    }
-})
+const firstInteraction = useFetch<boolean>(firstInteractionUrl, {
+    ...signHeaders(),
+    lazy: true
+});
 
 const selectLabels = [
     { label: 'Hour', value: 'hour' },
@@ -68,32 +70,49 @@ const selectLabels = [
 ];
 
 
-</script>
 
+const { snapshot } = useSnapshot();
+
+const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
+
+
+</script>
 
 <template>
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction">
+        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction.data.value">
 
             <div class="w-full px-4 py-2">
+
+
                 <div v-if="limitsInfo && limitsInfo.limited"
-                    class="bg-orange-600 justify-center flex gap-2 py-2 px-4 font-semibold text-[1.2rem] rounded-lg">
-                    <div class="poppins text-text"> Limit reached </div>
-                    <NuxtLink to="/plans" class="poppins text-[#393972] underline cursor-pointer">
-                        Upgrade project
-                    </NuxtLink>
+                    class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex items-center">
+                    <div class="flex flex-col grow">
+                        <div class="poppins font-semibold text-[#fbbf24]">
+                            Limit reached
+                        </div>
+                        <div class="poppins text-[#fbbf24]">
+                            Litlyx has stopped to collect yur data. Please upgrade the plan for a minimal data loss.
+                        </div>
+                    </div>
+                    <div>
+                        <LyxUiButton type="outline"> Upgrade </LyxUiButton>
+                    </div>
+
                 </div>
+
             </div>
 
-            <DashboardTopSection></DashboardTopSection>
-            <DashboardTopCards></DashboardTopCards>
+          <DashboardTopSection></DashboardTopSection>
+            <DashboardTopCards :key="refreshKey"></DashboardTopCards>
 
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
-                <CardTitled class="p-4 flex-1" title="Visits trends" sub="Shows trends in page visits.">
+                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
+                    sub="Shows trends in page visits.">
                     <template #header>
                         <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
                             :options="selectLabels">
@@ -105,7 +124,8 @@ const selectLabels = [
                     </div>
                 </CardTitled>
 
-                <CardTitled class="p-4 flex-1" title="Sessions" sub="Shows trends in sessions.">
+                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions"
+                    sub="Shows trends in sessions.">
                     <template #header>
                         <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
                             :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
@@ -117,39 +137,27 @@ const selectLabels = [
                     </div>
                 </CardTitled>
 
-            </div>
-
+            </div> 
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardWebsitesBarCard></DashboardWebsitesBarCard>
+                        <DashboardWebsitesBarCard :key="refreshKey"></DashboardWebsitesBarCard>
                     </div>
                     <div class="flex-1">
-                        <DashboardEventsBarCard></DashboardEventsBarCard>
+                         <DashboardEventsBarCard :key="refreshKey"></DashboardEventsBarCard>
                     </div>
                 </div>
             </div>
 
-      
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
-                    <div class="flex-1">
-                        <DashboardReferrersBarCard></DashboardReferrersBarCard>
-                    </div>
-                    <div class="flex-1">
-                        <DashboardBrowsersBarCard></DashboardBrowsersBarCard>
-                    </div>
-                </div>
-            </div>
 
-            <div class="flex w-full justify-center mt-6 px-6">
+             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardOssBarCard></DashboardOssBarCard>
+                        <DashboardReferrersBarCard :key="refreshKey"></DashboardReferrersBarCard>
                     </div>
                     <div class="flex-1">
-                        <DashboardGeolocationBarCard></DashboardGeolocationBarCard>
+                        <DashboardBrowsersBarCard :key="refreshKey"></DashboardBrowsersBarCard>
                     </div>
                 </div>
             </div>
@@ -157,7 +165,18 @@ const selectLabels = [
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardDevicesBarCard></DashboardDevicesBarCard>
+                        <DashboardOssBarCard :key="refreshKey"></DashboardOssBarCard>
+                    </div>
+                    <div class="flex-1">
+                        <DashboardGeolocationBarCard :key="refreshKey"></DashboardGeolocationBarCard>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex w-full justify-center mt-6 px-6">
+                <div class="flex w-full gap-6 flex-col xl:flex-row">
+                    <div class="flex-1">
+                        <DashboardDevicesBarCard :key="refreshKey"></DashboardDevicesBarCard>
                     </div>
                     <div class="flex-1">
                     </div>
@@ -166,10 +185,10 @@ const selectLabels = [
 
         </div>
 
-        <div v-if="!firstInteraction && activeProject" class="mt-[36vh] flex flex-col gap-6">
+        <div v-if="!firstInteraction.data.value && activeProject" class="mt-[20vh] lg:mt-[36vh] flex flex-col gap-6">
             <div class="flex gap-4 items-center justify-center">
                 <div class="animate-pulse w-[1.5rem] h-[1.5rem] bg-accent rounded-full"> </div>
-                <div class="text-text/90 poppins text-[1.4rem] font-bold">
+                <div class="text-text/90 poppins text-[1.3rem] font-semibold">
                     Waiting for your first Visit or Event
                 </div>
             </div>
@@ -200,7 +219,11 @@ const selectLabels = [
 
             </div>
 
-            <div></div>
+            <NuxtLink to="https://docs.litlyx.com" target="_blank"
+                class="flex justify-center poppins text-[1.2rem] text-accent gap-2 items-center">
+                <div> <i class="far fa-book"></i> </div>
+                <div class="poppins"> Go to docs </div>
+            </NuxtLink>
         </div>
 
 

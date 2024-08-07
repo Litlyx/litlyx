@@ -2,60 +2,21 @@
 
 import type { Section } from '~/components/CVerticalNavigation.vue';
 
-const router = useRouter();
-const { setToken } = useAccessToken();
-
 import { Lit } from 'litlyx-js';
 
 const sections: Section[] = [
     {
-        title: 'General',
-        entries: [
-            { label: 'Projects', icon: 'far fa-table-layout', to: '/project_selector' },
-            { label: 'Members', icon: 'far fa-users', to: '/members' },
-            { label: 'Admin', icon: 'fas fa-cat', adminOnly: true, to: '/admin' },
-        ]
-    },
-    {
         title: 'Project',
         entries: [
-            { label: 'Dashboard', to: '/', icon: 'far fa-home' },
-            { label: 'Events', to: '/events', icon: 'far fa-bolt' },
-            { label: 'Analyst', to: '/analyst', icon: 'far fa-microchip-ai' },
-            { label: 'Report', to: '/report', icon: 'far fa-notes' },
-            // { label: 'AI', to: '/dashboard/settings', icon: 'far fa-robot brightness-[.4]' },
-            // { label: 'Visits', to: '/dashboard/visits', icon: 'far fa-eye' },
-            // { label: 'Events', to: '/dashboard/events', icon: 'far fa-line-chart' },
-        ]
-    },
-    {
-        title: 'Non si vede',
-        entries: [
+            { label: 'Dashboard', to: '/', icon: 'fal fa-table-layout' },
+            { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
+            { label: 'Analyst', to: '/analyst', icon: 'fal fa-microchip-ai' },
+            { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             {
-                label: 'Docs', to: 'https://docs.litlyx.com', icon: 'far fa-book-open', external: true,
+                label: 'Docs', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
                 action() { Lit.event('docs_clicked') },
             },
-            {
-                label: 'Github', to: 'https://github.com/litlyx/litlyx', icon: 'fab fa-github', external: true,
-                action() { Lit.event('git_clicked') },
-            },
-            { label: 'Billing', to: '/plans', icon: 'far fa-wallet' },
-            { label: 'Book a demo', to: '/book_demo', icon: 'far fa-calendar' },
-        ]
-    },
-    {
-        title: 'Actions',
-        entries: [
-            {
-                label: 'Logout',
-                icon: 'far fa-arrow-right-from-bracket',
-                action: () => {
-                    console.log('LOGOUT')
-                    setToken('');
-                    setLoggedUser(undefined);
-                    router.push('/login');
-                }
-            },
+            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
         ]
     }
 ];
@@ -92,7 +53,7 @@ const { isOpen, close, open } = useMenu();
             </CVerticalNavigation>
 
 
-            <div class="overflow-hidden w-full bg-bg relative h-full">
+            <div class="overflow-hidden w-full bg-lyx-background-light relative h-full">
 
                 <div v-if="showDialog" class="barrier w-full h-full z-[34] absolute bg-black/50 backdrop-blur-[2px]">
                     <i

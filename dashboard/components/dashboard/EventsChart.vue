@@ -2,7 +2,7 @@
 
 import { Chart, registerables, type ChartData, type ChartOptions } from 'chart.js';
 import { DoughnutChart, useDoughnutChart } from 'vue-chart-3';
-import type { EventsPie } from '~/server/api/metrics/[project_id]/events_pie';
+import type { CustomEventsAggregated } from '~/server/api/metrics/[project_id]/data/events';
 
 definePageMeta({ layout: 'dashboard' });
 
@@ -20,15 +20,6 @@ const chartOptions = ref<ChartOptions<'doughnut'>>({
             ticks: { display: false },
             grid: { display: false, drawBorder: false },
         },
-        // r: {
-        //     ticks: { display: false },
-        //     grid: {
-        //         display: true,
-        //         drawBorder: false,
-        //         color: '#CCCCCC22',
-        //         borderDash: [20, 8]
-        //     },
-        // }
     },
     plugins: {
         legend: {
@@ -55,7 +46,7 @@ const chartData = ref<ChartData<'doughnut'>>({
         {
             rotation: 1,
             data: [],
-            backgroundColor: ['#6bbbe3','#5655d0', '#a6d5cb', '#fae0b9'],
+            backgroundColor: ['#6bbbe3', '#5655d0', '#a6d5cb', '#fae0b9'],
             borderColor: ['#1d1d1f'],
             borderWidth: 2
         },
@@ -65,15 +56,18 @@ const chartData = ref<ChartData<'doughnut'>>({
 
 const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({ chartData: chartData, options: chartOptions });
 
-onMounted(async () => {
+const activeProject = useActiveProject();
 
-    const activeProject = useActiveProject()
+const { safeSnapshotDates } = useSnapshot();
 
-    const eventsData = await $fetch<EventsPie[]>(`/api/metrics/${activeProject.value?._id}/visits/events`, signHeaders());
-    chartData.value.labels = eventsData.map(e => {
+
+
+function transformResponse(input: CustomEventsAggregated[]) {
+
+    chartData.value.labels = input.map(e => {
         return `${e._id}`;
     });
-    chartData.value.datasets[0].data = eventsData.map(e => e.count);
+    chartData.value.datasets[0].data = input.map(e => e.count);
     doughnutChartRef.value?.update();
 
     if (window.innerWidth < 800) {
@@ -81,11 +75,34 @@ onMounted(async () => {
             chartOptions.value.plugins.legend.display = false;
         }
     }
-})
+}
+
+const headers = computed(() => {
+    return {
+        'x-from': safeSnapshotDates.value.from,
+        'x-to': safeSnapshotDates.value.to,
+        Authorization: authorizationHeaderComputed.value,
+        limit: "10"
+    }
+});
+
+const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/data/events`, {
+    method: 'POST', headers, lazy: true, immediate: false,transform:transformResponse
+});
+
+onMounted(() => {
+    eventsData.execute();
+});
+
 
 </script>
 
 
 <template>
-    <DoughnutChart v-bind="doughnutChartProps"> </DoughnutChart>
+    <div>
+        <div v-if="eventsData.pending.value" class="flex justify-center py-40">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+        </div>
+        <DoughnutChart v-if="!eventsData.pending.value" v-bind="doughnutChartProps"> </DoughnutChart>
+    </div>
 </template>

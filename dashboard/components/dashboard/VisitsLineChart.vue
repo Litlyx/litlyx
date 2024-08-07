@@ -2,29 +2,45 @@
 import { onMounted } from 'vue';
 import DateService, { type Slice } from '@services/DateService';
 
-const data = ref<number[]>([]);
-const labels = ref<string[]>([]);
-const ready = ref<boolean>(false);
-
 const props = defineProps<{ slice: Slice }>();
 
-async function loadData() {
-    const response = await useTimeline('visits', props.slice);
-    if (!response) return;
-    data.value = response.map(e => e.count);
-    labels.value = response.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, props.slice));
-    ready.value = true;
+const activeProject = useActiveProject();
+
+const { safeSnapshotDates } = useSnapshot()
+
+function transformResponse(input: { _id: string, count: number }[]) {
+    const data = input.map(e => e.count);
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, props.slice));
+    return { data, labels }
 }
 
+const body = computed(() => {
+    return {
+        from: safeSnapshotDates.value.from,
+        to: safeSnapshotDates.value.to,
+        slice: props.slice
+    }
+});
+
+
+const visitsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/visits`, {
+    method: 'POST', ...signHeaders({ v2: 'true' }), body, transform: transformResponse,
+    lazy: true, immediate: false
+});
+
 onMounted(async () => {
-    await loadData();
-    watch(props, async () => { await loadData(); });
-})
+    visitsData.execute();
+});
 
 </script>
 
 <template>
     <div>
-        <AdvancedLineChart v-if="ready" :data="data" :labels="labels" color="#5655d7"></AdvancedLineChart>
+        <div v-if="visitsData.pending.value" class="flex justify-center py-40">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+        </div>
+        <AdvancedLineChart v-if="!visitsData.pending.value" :data="visitsData.data.value?.data || []"
+            :labels="visitsData.data.value?.labels || []" color="#5655d7">
+        </AdvancedLineChart>
     </div>
 </template>

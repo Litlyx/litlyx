@@ -1,17 +1,33 @@
 <script lang="ts" setup>
+import type { Slice } from '@services/DateService';
 import { onMounted } from 'vue';
 
-const datasets = ref<any[]>([]);
-const labels = ref<string[]>([]);
-const ready = ref<boolean>(false);
 
-const props = defineProps<{ slice: SliceName }>();
+const props = defineProps<{ slice: Slice }>();
+const slice = computed(() => props.slice);
 
-async function loadData() {
-    const response = await useTimelineDataRaw('events_stacked', props.slice);
-    if (!response) return;
+const activeProject = useActiveProject();
+const { safeSnapshotDates } = useSnapshot()
 
-    const fixed = fixMetrics(response, props.slice, { advanced: true, advancedGroupKey: 'name' });
+const body = computed(() => {
+    return {
+        from: safeSnapshotDates.value.from,
+        to: safeSnapshotDates.value.to,
+        slice: slice.value,
+    }
+});
+
+
+function transformResponse(input: { _id: string, name: string, count: number }[]) {
+
+    const fixed = fixMetrics({
+        data: input,
+        from: safeSnapshotDates.value.from,
+        to: safeSnapshotDates.value.to
+    }, slice.value, {
+        advanced: true,
+        advancedGroupKey: 'name'
+    });
 
     const parsedDatasets: any[] = [];
     const colors = ['#5655d0', '#6bbbe3', '#a6d5cb', '#fae0b9'];
@@ -28,25 +44,32 @@ async function loadData() {
             if (!target) return;
             line.data.push(target.value);
         });
-
     }
 
-    datasets.value = parsedDatasets;
-    labels.value = fixed.labels;
-    ready.value = true;
-
+    return {
+        datasets: parsedDatasets,
+        labels: fixed.labels
+    }
 }
 
+const eventsStackedData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/events_stacked`, {
+    method: 'POST', body, lazy: true, immediate: false, transform: transformResponse, ...signHeaders()
+});
+
+
 onMounted(async () => {
-    await loadData();
-    watch(props, async () => { await loadData(); });
-})
+    eventsStackedData.execute();
+});
 
 </script>
 
 <template>
     <div>
-        <AdvancedStackedBarChart v-if="ready" :datasets="datasets" :labels="labels">
+        <div v-if="eventsStackedData.pending.value" class="flex justify-center py-40">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+        </div>
+        <AdvancedStackedBarChart v-if="!eventsStackedData.pending.value" :datasets="eventsStackedData.data.value?.datasets || []"
+            :labels="eventsStackedData.data.value?.labels || []">
         </AdvancedStackedBarChart>
     </div>
 </template>

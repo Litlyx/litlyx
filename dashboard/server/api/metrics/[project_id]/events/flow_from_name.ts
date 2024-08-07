@@ -15,12 +15,24 @@ export default defineEventHandler(async event => {
     const project = await getUserProjectFromId(project_id, user);
     if (!project) return;
 
-    const { name: eventName } = getQuery(event);
-    if (!eventName) return [];
+    const { name: eventName, from, to } = getQuery(event);
+
+    if (!from) return setResponseStatus(event, 400, 'from is required');
+    if (!to) return setResponseStatus(event, 400, 'to is required');
+    if (!eventName) return setResponseStatus(event, 400, 'name is required');
 
 
 
-    const allEvents = await EventModel.find({ project_id: project_id, name: eventName }, { flowHash: 1 });
+    const allEvents = await EventModel.find({
+        project_id: project_id,
+        name: eventName,
+        created_at: {
+            $gte: new Date(from.toString()),
+            $lte: new Date(to.toString()),
+        }
+    }, { flowHash: 1 });
+
+
     const allFlowHashes = new Map<string, number>();
 
     allEvents.forEach(e => {
@@ -69,6 +81,17 @@ export default defineEventHandler(async event => {
         const referrer = referrerPlusHash.referrer;
         if (!grouped[referrer]) grouped[referrer] = 0
         grouped[referrer]++;
+    }
+
+
+    const eventsCount = allEvents.length;
+
+    const allGroupedValue = Object.keys(grouped)
+        .map(key => grouped[key])
+        .reduce((a, e) => a + e, 0);
+
+    for (const key in grouped) {
+        grouped[key] = 100 / allGroupedValue * grouped[key];
     }
 
     return grouped;

@@ -22,7 +22,7 @@ export async function startStreamLoop() {
         delay: { base: 100, empty: 5000 },
         readBlock: 2500
     }, processStreamEvent);
-    
+
 }
 
 
@@ -96,6 +96,11 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
 
     const { pid, instant, flowHash } = data;
+
+    const existingSession = await SessionModel.findOne({ project_id: pid }, { _id: 1 });
+    if (!existingSession) {
+        await ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'sessions': 1 } }, { upsert: true });
+    }
 
     if (instant == "true") {
         await SessionModel.updateOne({ project_id: pid, session: sessionHash, }, {
