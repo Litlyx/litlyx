@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { SettingsTemplateEntry } from './Template.vue';
 
+const activeProject = useActiveProject();
 
 definePageMeta({ layout: 'dashboard' });
 
@@ -14,7 +15,7 @@ const columns = [
     // { key: 'pending', label: 'Pending' },
 ]
 
-const { data: members, refresh: refreshMembers } = useFetch('/api/project/members/list', signHeaders());
+const { data: members, refresh: refreshMembers, pending: pendingMembers } = useFetch('/api/project/members/list', signHeaders());
 
 const showAddMember = ref<boolean>(false);
 
@@ -69,6 +70,10 @@ async function addMember() {
 
 
 }
+
+watch(activeProject, () => {
+    refreshMembers();
+})
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'add', title: 'Add member', text: 'Add new member to project' },

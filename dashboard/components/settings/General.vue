@@ -32,6 +32,36 @@ async function changeProjectName() {
     location.reload();
 }
 
+async function deleteProject() {
+    if (!activeProject.value) return;
+    const sure = confirm(`Are you sure to delete the project ${activeProject.value.name} ?`);
+    if (!sure) return;
+
+    try {
+
+        await $fetch('/api/project/delete', {
+            method: 'DELETE',
+            ...signHeaders({ 'Content-Type': 'application/json' }),
+            body: JSON.stringify({ project_id: activeProject.value._id.toString() })
+        });
+
+        const projectsList = useProjectsList()
+        await projectsList.refresh();
+        
+        const firstProjectId = projectsList.data.value?.[0]?._id.toString();
+        if (firstProjectId) {
+            await setActiveProject(firstProjectId);
+        }
+
+
+    } catch (ex: any) {
+        alert(ex.message);
+    }
+
+
+}
+
+
 
 </script>
 
@@ -62,7 +92,7 @@ async function changeProjectName() {
         </template>
         <template #pdelete>
             <div class="flex justify-end">
-                <LyxUiButton type="danger">
+                <LyxUiButton type="danger" @click="deleteProject()">
                     Delete project
                 </LyxUiButton>
             </div>

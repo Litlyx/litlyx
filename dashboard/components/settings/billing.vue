@@ -6,7 +6,10 @@ const activeProject = useActiveProject();
 
 definePageMeta({ layout: 'dashboard' });
 
-const { data: planData } = useFetch('/api/project/plan', signHeaders());
+const { data: planData, refresh: planRefresh, pending: planPending } = useFetch('/api/project/plan', {
+    ...signHeaders(),
+    lazy: true
+});
 
 const percent = computed(() => {
     if (!planData.value) return '-';
@@ -38,7 +41,10 @@ const prettyExpireDate = computed(() => {
 });
 
 
-const { data: invoices } = await useFetch(`/api/pay/${activeProject.value?._id.toString()}/invoices`, signHeaders())
+const { data: invoices, refresh: invoicesRefresh, pending: invoicesPending } = useFetch(`/api/pay/${activeProject.value?._id.toString()}/invoices`, {
+    ...signHeaders(),
+    lazy: true
+})
 
 const showPricingDrawer = ref<boolean>(false);
 function onPlanUpgradeClick() {
@@ -56,6 +62,12 @@ function getPremiumName(type: number) {
     return 'CUSTOM';
 
 }
+
+
+watch(activeProject, () => {
+    invoicesRefresh();
+    planRefresh();
+})
 
 
 const entries: SettingsTemplateEntry[] = [
@@ -77,7 +89,12 @@ const entries: SettingsTemplateEntry[] = [
             </PricingDrawer>
         </Transition>
 
-        <SettingsTemplate :entries="entries">
+        <div v-if="invoicesPending || planPending"
+            class="backdrop-blur-[1px] z-[20] mt-20 w-full h-full flex items-center justify-center font-bold">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+        </div>
+
+        <SettingsTemplate v-if="!invoicesPending && !planPending" :entries="entries">
             <template #plan>
                 <LyxUiCard v-if="planData" class="flex flex-col w-full">
                     <div class="flex flex-col gap-6 px-8 grow">
