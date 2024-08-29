@@ -11,6 +11,20 @@ nuxtApp.hook("page:finish", () => {
     scroller.value?.scrollTo(0, 0);
 })
 
+
+const gitstars = ref<string>('Loading...')
+
+async function getGithubStars() {
+    const res = await fetch('https://api.github.com/repos/litlyx/litlyx');
+    if (!res.ok) return gitstars.value = '340+'
+    const data = await res.json();
+    return gitstars.value = data.stargazers_count.toString() + '+';
+}
+
+onMounted(() => {
+    getGithubStars();
+})
+
 </script>
 
 
@@ -63,7 +77,7 @@ nuxtApp.hook("page:finish", () => {
                         </svg>
                     </div>
                     <div class="text-[1rem]">
-                        210+
+                        {{ gitstars }}
                     </div>
                 </NuxtLink>
 
@@ -123,7 +137,8 @@ nuxtApp.hook("page:finish", () => {
 
                     <div class="divider border-b border-gray-500/40"></div>
 
-                    <NuxtLink @click="isMenuOpen = false" to="/why-choose-litlyx" class="flex justify-between items-center mr-2">
+                    <NuxtLink @click="isMenuOpen = false" to="/why-choose-litlyx"
+                        class="flex justify-between items-center mr-2">
                         <div class="hover:text-text-sub/90 py-3">
                             Why choose Litlyx
                         </div>
@@ -148,7 +163,7 @@ nuxtApp.hook("page:finish", () => {
                         </div>
                         <div> <i class="fas fa-chevron-right"></i> </div>
                     </NuxtLink>
-                    
+
 
 
                     <div class="divider border-b border-gray-500/40"></div>
@@ -233,7 +248,8 @@ nuxtApp.hook("page:finish", () => {
                         <NuxtLink target="_blank" to="https://github.com/Litlyx/litlyx"
                             class="hover:text-accent cursor-pointer"> Github </NuxtLink>
                         <NuxtLink to="/pricing" class="hover:text-accent cursor-pointer"> Pricing </NuxtLink>
-                        <NuxtLink to="/why-choose-litlyx" class="hover:text-accent cursor-pointer"> Why choose Litlyx </NuxtLink>
+                        <NuxtLink to="/why-choose-litlyx" class="hover:text-accent cursor-pointer"> Why choose Litlyx
+                        </NuxtLink>
                     </div>
                     <div class="flex flex-col gap-4">
                         <div class="text-text-sub/60 font-semibold text-[1.3rem]"> Company </div>

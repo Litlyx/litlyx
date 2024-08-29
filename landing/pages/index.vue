@@ -51,6 +51,15 @@ const scriptDeferTokens = ref<string[]>([
 
 const snippetIndex = ref<number>(0);
 
+
+async function saveEmail() {
+    await fetch('http://savemail.litlyx.com/email/' + encodeURIComponent(email.value), {
+        mode: 'no-cors'
+    });
+    email.value = '';
+    alert('We will keep you updated');
+}
+
 </script>
 
 
@@ -331,7 +340,7 @@ const snippetIndex = ref<number>(0);
                 </div>
 
                 <div class="button-container">
-                    <LyxUiButton class="button" type="primary">
+                    <LyxUiButton class="button" type="primary" @click="saveEmail()">
                         Keep me updated
                     </LyxUiButton>
                 </div>
