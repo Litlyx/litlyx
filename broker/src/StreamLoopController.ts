@@ -28,17 +28,17 @@ export async function startStreamLoop() {
 
 
 
-async function processStreamEvent(data: Record<string, string>) {
+export async function processStreamEvent(data: Record<string, string>) {
     try {
         const eventType = data._type;
         if (!eventType) return;
-
 
 
         const { pid, sessionHash } = data;
 
         const project = await ProjectModel.exists({ _id: pid });
         if (!project) return;
+
 
         if (eventType === 'event') return await process_event(data, sessionHash);
         if (eventType === 'keep_alive') return await process_keep_alive(data, sessionHash);
@@ -50,17 +50,23 @@ async function processStreamEvent(data: Record<string, string>) {
 }
 
 
+
+async function checkLimits(project_id: string) {
+    const projectLimits = await ProjectLimitModel.findOne({ project_id });
+    if (!projectLimits) return false;
+    const TOTAL_COUNT = projectLimits.events + projectLimits.visits;
+    const COUNT_LIMIT = projectLimits.limit;
+    if ((TOTAL_COUNT) > COUNT_LIMIT * EVENT_LOG_LIMIT_PERCENT) return false;
+    await checkLimitsForEmail(projectLimits);
+    return true;
+}
+
 async function process_visit(data: Record<string, string>, sessionHash: string) {
 
     const { pid, ip, website, page, referrer, userAgent, flowHash } = data;
 
-    const projectLimits = await ProjectLimitModel.findOne({ project_id: pid });
-    if (!projectLimits) return;
-
-    const TOTAL_COUNT = projectLimits.events + projectLimits.visits;
-    const COUNT_LIMIT = projectLimits.limit;
-    if ((TOTAL_COUNT) > COUNT_LIMIT * EVENT_LOG_LIMIT_PERCENT) return;
-    await checkLimitsForEmail(projectLimits);
+    const canLog = await checkLimits(pid);
+    if (!canLog) return;
 
     let referrerParsed;
     try {
@@ -97,7 +103,10 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
     const { pid, instant, flowHash } = data;
 
-    const existingSession = await SessionModel.findOne({ project_id: pid }, { _id: 1 });
+    const canLog = await checkLimits(pid);
+    if (!canLog) return;
+
+    const existingSession = await SessionModel.findOne({ project_id: pid, session: sessionHash }, { _id: 1 });
     if (!existingSession) {
         await ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'sessions': 1 } }, { upsert: true });
     }
@@ -122,6 +131,9 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 async function process_event(data: Record<string, string>, sessionHash: string) {
 
     const { name, metadata, pid, flowHash } = data;
+
+    const canLog = await checkLimits(pid);
+    if (!canLog) return;
 
     let metadataObject;
     try {
