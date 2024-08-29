@@ -53,7 +53,7 @@ const snippetIndex = ref<number>(0);
 
 
 async function saveEmail() {
-    await fetch('http://savemail.litlyx.com/email/' + encodeURIComponent(email.value), {
+    await fetch('https://savemail.litlyx.com/email/' + encodeURIComponent(email.value), {
         mode: 'no-cors'
     });
     email.value = '';
