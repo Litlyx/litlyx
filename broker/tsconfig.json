@@ -1,9 +1,14 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
         "module": "NodeNext",
         "target": "ESNext",
         "esModuleInterop": true,
         "outDir": "dist",
+        "types": [
+            "node",
+            "jest"
+        ],
         "paths": {
             "@schema/*": [
                 "../shared/schema/*"
@@ -21,7 +26,9 @@
     },
     "include": [
         "src/**/*.ts",
-        "scripts/**/*.ts"
+        "scripts/**/*.ts",
+        "tests/**/*.test.ts",
+        "tests/utils.ts",
     ],
     "exclude": [
         "node_modules"

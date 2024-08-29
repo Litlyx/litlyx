@@ -5,3 +5,4 @@ dist
 scripts/start_dev.js
 package-lock.json
 build_all.bat
+tests
