@@ -27,6 +27,7 @@ export class RedisStreamService {
         await this.client.connect();
         setInterval(() => {
             console.log('Processed:', RedisStreamService.processed, '/s');
+            RedisStreamService.processed = 0;
         }, 1000)
 
     }
