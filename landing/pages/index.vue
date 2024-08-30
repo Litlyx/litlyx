@@ -83,9 +83,13 @@ async function saveEmail() {
                     All Your Analytics in a Single AI Powered Dashboard.
                 </div>
 
-                <div class="button-container">
+                <div class="button-container gap-3 flex-col lg:flex-row items-center">
                     <LyxUiButton link="https://dashboard.litlyx.com" target="_blank" class="button" type="primary">
                         Start for free
+                    </LyxUiButton>
+                    <LyxUiButton link="https://dashboard.litlyx.com/live_demo" target="_blank" class="button"
+                        type="outline">
+                        Go to live demo
                     </LyxUiButton>
                 </div>
 
@@ -201,6 +205,24 @@ async function saveEmail() {
                 </div>
             </div>
 
+            
+            <LyxUiCard class="section w-full p-8">
+                <div class="subtitle">
+                    Why choose Litlyx
+                </div>
+
+                <div class="paragraph">
+                    Litlyx vs Plausible vs Google Analytics
+                </div>
+
+                <div class="button-container">
+                    <LyxUiButton link="/why-choose-litlyx" target="_blank" class="button" type="outline">
+                        Read more
+                    </LyxUiButton>
+                </div>
+            </LyxUiCard>
+
+
 
             <div class="section">
 
@@ -308,22 +330,6 @@ async function saveEmail() {
 
             </div>
 
-
-            <div class="section">
-                <div class="subtitle">
-                    Why choose Litlyx
-                </div>
-
-                <div class="paragraph">
-                    Litlyx vs Plausible vs Google Analytics
-                </div>
-
-                <div class="button-container">
-                    <LyxUiButton link="/why-choose-litlyx" target="_blank" class="button" type="outline">
-                        Read more
-                    </LyxUiButton>
-                </div>
-            </div>
 
             <div class="section">
                 <div class="subtitle">

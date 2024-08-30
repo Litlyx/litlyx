@@ -124,7 +124,7 @@ const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProje
                     </div>
                 </CardTitled>
 
-                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions"
+                <!-- <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions"
                     sub="Shows trends in sessions.">
                     <template #header>
                         <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
@@ -135,7 +135,7 @@ const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProje
                         <DashboardSessionsLineChart :slice="(selectLabels[sessionsChartSelectIndex].value as any)">
                         </DashboardSessionsLineChart>
                     </div>
-                </CardTitled>
+                </CardTitled> -->
 
             </div> 
 

@@ -12,6 +12,7 @@ const sections: Section[] = [
             { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'fal fa-microchip-ai' },
             { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
+            { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             {
                 label: 'Docs', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
                 action() { Lit.event('docs_clicked') },
