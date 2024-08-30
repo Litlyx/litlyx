@@ -13,6 +13,8 @@ export type ReadingLoopOptions = {
 
 export class RedisStreamService {
 
+    private static processed = 0;
+
     private static client = createClient({
         url: requireEnv("REDIS_URL"),
         username: requireEnv("REDIS_USERNAME"),
@@ -23,6 +25,10 @@ export class RedisStreamService {
     static async connect() {
         console.log('RedisStreamService DEV_MODE=', process.env.DEV_MODE === 'true');
         await this.client.connect();
+        setInterval(() => {
+            console.log('Processed:', RedisStreamService.processed, '/s');
+        }, 1000)
+
     }
 
     private static async readingLoop(options: ReadingLoopOptions, processFunction: (content: Record<string, string>) => Promise<any>) {
@@ -33,6 +39,7 @@ export class RedisStreamService {
             return;
         }
         await processFunction(result);
+        RedisStreamService.processed++;
         await new Promise(r => setTimeout(r, options.delay?.base || 100));
         setTimeout(() => this.readingLoop(options, processFunction), 1);
         return;
@@ -41,9 +48,11 @@ export class RedisStreamService {
     static async startReadingLoop(options: ReadingLoopOptions, processFunction: (content: Record<string, string>) => Promise<any>) {
 
         try {
+            console.log('Start reading loop');
             await this.client.xGroupCreate(options.streamName, 'broker', '0', { MKSTREAM: true, });
+            console.log('Reading loop started');
         } catch (ex) {
-
+            console.error(ex);
         }
 
         this.readingLoop(options, processFunction)

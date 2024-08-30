@@ -19,13 +19,11 @@ export async function startStreamLoop() {
 
     await RedisStreamService.startReadingLoop({
         streamName: requireEnv('STREAM_NAME'),
-        delay: { base: 100, empty: 5000 },
-        readBlock: 2500
+        delay: { base: 10, empty: 5000 },
+        readBlock: 2000
     }, processStreamEvent);
 
 }
-
-
 
 
 export async function processStreamEvent(data: Record<string, string>) {
