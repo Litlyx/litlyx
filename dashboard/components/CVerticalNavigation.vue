@@ -278,9 +278,6 @@ watch(selected, () => {
                 </div>
 
                 <div class="grow"></div>
-                <div class="text-lyx-text-dark poppins text-[.8rem] px-4 pb-3">
-                    Litlyx is in Beta version.
-                </div>
                 <div class="bg-lyx-widget-lighter h-[2px] px-4 w-full mb-3"></div>
                 <div class="flex justify-end px-2">
 
