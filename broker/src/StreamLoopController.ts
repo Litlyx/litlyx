@@ -33,7 +33,6 @@ export async function processStreamEvent(data: Record<string, string>) {
         const eventType = data._type;
         if (!eventType) return;
 
-
         const { pid, sessionHash } = data;
 
         const project = await ProjectModel.exists({ _id: pid });

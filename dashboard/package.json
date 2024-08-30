@@ -13,6 +13,7 @@
     "docker-inspect": "docker run -it litlyx-dashboard sh"
   },
   "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
     "@nuxtjs/tailwindcss": "^6.12.0",
     "chart.js": "^3.9.1",
     "date-fns": "^3.6.0",

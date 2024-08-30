@@ -51,6 +51,7 @@ export default defineEventHandler(async event => {
     const savedUser = await newUser.save();
 
     setImmediate(() => {
+        console.log('SENDING WELCOME EMAIL TO', payload.email);
         if (payload.email) EmailService.sendWelcomeEmail(payload.email);
     });
 

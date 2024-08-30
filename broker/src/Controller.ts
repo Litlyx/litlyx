@@ -6,12 +6,7 @@ import { requireEnv } from "../../shared/utilts/requireEnv";
 import { TProjectLimit } from "@schema/ProjectsLimits";
 
 if (process.env.EMAIL_SERVICE) {
-    EmailService.createTransport(
-        requireEnv('EMAIL_SERVICE'),
-        requireEnv('EMAIL_HOST'),
-        requireEnv('EMAIL_USER'),
-        requireEnv('EMAIL_PASS'),
-    );
+    EmailService.init(requireEnv('BREVO_API_KEY'));
 }
 
 export async function checkLimitsForEmail(projectCounts: TProjectLimit) {

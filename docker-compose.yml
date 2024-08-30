@@ -40,10 +40,8 @@ services:
 
       # Optional - Used to send welcome and quota emails
 
-      # EMAIL_SERVICE: ""
-      # EMAIL_HOST: ""
-      # EMAIL_USER: ""
-      # EMAIL_PASS: ""
+      # NUXT_EMAIL_SERVICE: "Brevo"      
+      # NUXT_BREVO_API_KEY: ""
 
       PORT: "3999"
       MONGO_CONNECTION_STRING: "mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin"
@@ -77,10 +75,8 @@ services:
 
       # Optional - Used to send welcome and quota emails
 
-      # NUXT_EMAIL_SERVICE: ""
-      # NUXT_EMAIL_HOST: ""
-      # NUXT_EMAIL_USER: ""
-      # NUXT_EMAIL_PASS: ""
+      # NUXT_EMAIL_SERVICE: "Brevo"      
+      # NUXT_BREVO_API_KEY: ""
 
       NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
 

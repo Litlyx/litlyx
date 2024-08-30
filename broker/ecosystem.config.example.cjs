@@ -7,9 +7,7 @@ module.exports = {
             script: './dist/producer/src/index.js',
             env: {
                 EMAIL_SERVICE: "",
-                EMAIL_HOST: "",
-                EMAIL_USER: "",
-                EMAIL_PASS: "",
+                BREVO_API_KEY: "",
                 PORT: "",
                 MONGO_CONNECTION_STRING: "",
                 REDIS_URL: "",

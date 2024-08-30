@@ -17,9 +17,11 @@ export class RedisStreamService {
         url: requireEnv("REDIS_URL"),
         username: requireEnv("REDIS_USERNAME"),
         password: requireEnv("REDIS_PASSWORD"),
+        database: process.env.DEV_MODE === 'true' ? 1 : 0
     });
 
     static async connect() {
+        console.log('RedisStreamService DEV_MODE=', process.env.DEV_MODE === 'true');
         await this.client.connect();
     }
 

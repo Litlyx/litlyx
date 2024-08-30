@@ -11,7 +11,7 @@ export default async () => {
     console.log('[SERVER] Initializing');
 
     if (config.EMAIL_SERVICE) {
-        EmailService.createTransport(config.EMAIL_SERVICE, config.EMAIL_HOST, config.EMAIL_USER, config.EMAIL_PASS);
+        EmailService.init(config.BREVO_API_KEY);
         console.log('[EMAIL] Initialized')
     }
 
