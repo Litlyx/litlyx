@@ -1,22 +1,16 @@
 
 <p align="center">
-  <img src="assets/claim-t.png"/>
+  <img src="assets/claim.png"/>
 </p>
 
 <h4 align="center">
-🌐 <a href="https://litlyx.com">Website</a> 📚 <a href="https://docs.litlyx.com">Docs</a> 🔥 <a href="https://dashboard.litlyx.com">Start for Free!</a>
+🌐 <a href="https://litlyx.com">Website</a> 📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Join Discord</a> 🔥 <a href="https://dashboard.litlyx.com">Start for free!</a> 
 </h4>
 
-![GitHub Repo stars](https://img.shields.io/github/stars/Litlyx/litlyx)
-![NPM Version](https://img.shields.io/npm/v/litlyx?logo=npm&color=orange)
-![npm bundle size](https://img.shields.io/bundlephobia/min/litlyx)
-
-<br />
-
 #
-
 <p align="center">
-  The easiest dev-centric analytics tool.<br>Litlyx is an open-source analytics solution for any JavaScript framework. Setup takes less then 30 seconds and just one line of code!
+  The easiest, developer-centric analytics tool.<br>
+  Litlyxis an open-source, self-hostable analytics solution for modern framework. Setup takes less than 30 seconds!
 </p>
 
 #
@@ -24,12 +18,12 @@
 <br />
 
 <p align="center">
-  <img src="assets/screen.png"/>
+  <img src="assets/dashboard-clip.png"/>
 </p>
 
 #
 
-## Pre-Requisites
+## Pre-Requisites on Cloud Version
 
 Sign-up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then simply use your project_id to connect Litlyx to your website OR Self-Host Litlyx with Docker.
 
@@ -52,7 +46,7 @@ npm i litlyx-js
 Litlyx natively works with all JavaScript / TypeScript frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a plug-in. Litlyx also works in serverless enviroments with Cloud (or Edge) Functions.
 
 <p align="center">
-  <img src="assets/techs.png" />
+  <img src="assets/tech.png" />
 </p>
 
 # Import
@@ -92,14 +86,21 @@ Lit.event('click_on_buy_item', {
 
 Litlyx makes it easy for you to tailor your analytics to your project's needs.
 
-# AI Data-Analyst
 
-<p align="center">
-  <img src="assets/agent.png" width="180px"/>
-</p>
+# Fire Your First Event with cURL
 
-Lit is an AI chatbot which you can use to compare data, query specific metadata, visualize charts, and much more with a simple conversation.
+Want to quickly see how Litlyx works with events? Use the cURL command below to send a test event. Just replace the `project_id` with your actual project ID in your terminal.
 
+```bash
+curl -X POST "https://broker.litlyx.com/event" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "pid": "project_id",
+    "name": "testEvent1",
+    "metadata": "{\"test\": \"something\"}",
+    "website": "something",
+    "user
+```
 
 # Self-Hosting with Docker
 
@@ -123,11 +124,11 @@ For more info read our [documentation](https://docs.litlyx.com). (will be improv
 
 # Join Discord
 
-If you need more information, help, or want to provide general feedback, feel free to join us on the Litlyx [Discord](https://discord.gg/9cQykjsmWX)
+If you need more information, interact with us or the community, help, or want to provide  feedbacks, feel free to join us on the Litlyx [Discord](https://discord.gg/9cQykjsmWX)
 
 # Contributors
 
-Every kind of contribution is accepted in this stage of the project. In the future we will improve the contributor onboarding process. 
+Every kind of contribution is accepted in this stage of the project. In the future we will improve the contributor onboarding process.
 
 ### Thank you!
 <a href="https://github.com/litlyx/litlyx/graphs/contributors">
