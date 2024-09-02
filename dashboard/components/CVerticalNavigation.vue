@@ -138,7 +138,7 @@ watch(selected, () => {
                         <template #option="{ option, active, selected }">
                             <div class="flex items-center gap-2">
                                 <div>
-                                    <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                                    <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
                                 </div>
                                 <div> {{ option.name }} </div>
                             </div>
@@ -147,7 +147,7 @@ watch(selected, () => {
                         <template #label>
                             <div class="flex items-center gap-2">
                                 <div>
-                                    <img class="h-5 bg-black rounded-full" :src="'logo_32.png'" alt="Litlyx logo">
+                                    <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
                                 </div>
                                 <div> {{ activeProject?.name || '???' }} </div>
                             </div>

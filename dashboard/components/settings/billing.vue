@@ -46,11 +46,6 @@ const { data: invoices, refresh: invoicesRefresh, pending: invoicesPending } = u
     lazy: true
 })
 
-const showPricingDrawer = ref<boolean>(false);
-function onPlanUpgradeClick() {
-    showPricingDrawer.value = true;
-}
-
 function openInvoice(link: string) {
     window.open(link, '_blank');
 }
@@ -77,17 +72,12 @@ const entries: SettingsTemplateEntry[] = [
 ]
 
 
+const { visible } = usePricingDrawer();
+
 </script>
 
 <template>
     <div class="relative">
-
-        <Transition name="pdrawer">
-            <PricingDrawer @onCloseClick="showPricingDrawer = false" :currentSub="planData?.premium_type || 0"
-                class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]"
-                v-if=showPricingDrawer>
-            </PricingDrawer>
-        </Transition>
 
         <div v-if="invoicesPending || planPending"
             class="backdrop-blur-[1px] z-[20] mt-20 w-full h-full flex items-center justify-center font-bold">
@@ -138,7 +128,7 @@ const entries: SettingsTemplateEntry[] = [
                             <div class="poppins"> Expire date:</div>
                             <div> {{ prettyExpireDate }}</div>
                         </div>
-                        <div v-if="!isGuest" @click="onPlanUpgradeClick()"
+                        <div v-if="!isGuest" @click="visible = true"
                             class="cursor-pointer flex items-center gap-2 text-[.9rem] text-white font-semibold bg-accent px-4 py-1 rounded-lg drop-shadow-[0_0_8px_#000000]">
                             <div class="poppins"> Upgrade plan </div>
                             <i class="fas fa-arrow-up-right"></i>

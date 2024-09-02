@@ -18,6 +18,10 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
+    const PREMIUM_TYPE = project.premium_type;
+
+    if (PREMIUM_TYPE === 0) return setResponseStatus(event, 400, 'Project not premium');
+
     const { mode, slice } = getQuery(event);
 
     let timeSub = 1000 * 60 * 60 * 24;

@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import type { PricingCardProp } from './PricingCardGeneric.vue';
 
-
-const activeProject = useActiveProject();
-
 const props = defineProps<{ currentSub: number }>();
 
 const freePricing: PricingCardProp[] = [
@@ -20,7 +17,7 @@ const freePricing: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 10',
             'Server type: SHARED',
-            'Projects: max 2',
+            'Projects: max 1',
             'Data retention: 2 Months'
         ],
         cta: 'Start For Free now!',

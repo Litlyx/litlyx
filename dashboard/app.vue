@@ -9,11 +9,27 @@ const debugMode = process.dev;
 const { alerts, closeAlert } = useAlert();
 
 const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dialogClosable } = useCustomDialog();
+
+const { visible } = usePricingDrawer();
+
+const { data: planData } = useFetch('/api/project/plan', {
+  ...signHeaders(),
+  lazy: true
+});
+
+
 </script>
 
 <template>
 
   <div class="w-dvw h-dvh bg-lyx-background-light relative">
+
+    <Transition name="pdrawer">
+      <LazyPricingDrawer @onCloseClick="visible = false" :currentSub="planData?.premium_type || 0"
+        class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if=visible>
+      </LazyPricingDrawer>
+    </Transition> 
+
 
     <div class="fixed top-4 right-8 z-[999] flex flex-col gap-2" v-if="alerts.length > 0">
       <div v-for="alert of alerts"
@@ -64,3 +80,19 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
 
 </template>
 
+<style scoped lang="scss">
+.pdrawer-enter-active,
+.pdrawer-leave-active {
+  transition: all .5s ease-in-out;
+}
+
+.pdrawer-enter-from,
+.pdrawer-leave-to {
+  transform: translateX(100%)
+}
+
+.pdrawer-enter-to,
+.pdrawer-leave-from {
+  transform: translateX(0)
+}
+</style>

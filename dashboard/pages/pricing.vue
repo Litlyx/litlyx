@@ -7,7 +7,7 @@ definePageMeta({ layout: 'header' });
 
 <template>
 
-    <div class="home h-full overflow-y-auto relative">
+    <!-- <div class="home h-full overflow-y-auto relative">
 
         <div class="absolute top-0 left-0 w-full h-full flex flex-col items-center z-0 overflow-hidden">
             <HomeBgGrid :size="50" :spacing="18" opacity="0.3" class="w-fit h-fit"></HomeBgGrid>
@@ -96,6 +96,6 @@ definePageMeta({ layout: 'header' });
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </template>

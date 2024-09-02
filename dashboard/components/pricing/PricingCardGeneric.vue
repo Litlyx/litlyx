@@ -69,7 +69,7 @@ async function onUpgradeClick() {
         <div class="flex flex-col gap-2">
             <div class="flex gap-2" v-for="feature of data.features">
                 <div class="h-6 w-6">
-                    <img class="w-full h-full" :src="'check.png'" alt="Check">
+                    <img class="w-full h-full" :src="'/check.png'" alt="Check">
                 </div>
                 <div>{{ feature }}</div>
             </div>

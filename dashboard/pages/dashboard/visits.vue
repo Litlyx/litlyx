@@ -6,6 +6,8 @@ definePageMeta({ layout: 'dashboard' });
 
 const activeProject = useActiveProject();
 
+const isPremium = computed(() => (activeProject.value?.premium_type || 0) > 0);
+
 const metricsInfo = ref<number>(0);
 
 const columns = [
@@ -68,6 +70,12 @@ const showWarning = computed(() => {
     return options.indexOf(selectedTimeFrom.value) > 1
 })
 
+const pricingDrawer = usePricingDrawer();
+
+function goToUpgrade() {
+    pricingDrawer.visible.value = true;
+}
+
 </script>
 
 
@@ -83,7 +91,9 @@ const showWarning = computed(() => {
             </div>
         </div>
 
+
         <div class="flex justify-end px-12 py-3 items-center gap-2">
+
             <div v-if="showWarning" class="text-orange-400 flex gap-2 items-center">
                 <i class="far fa-warning "></i>
                 <div> It can take a few minutes </div>
@@ -91,11 +101,20 @@ const showWarning = computed(() => {
             <div class="w-[15rem] flex flex-col gap-0">
                 <USelectMenu v-model="selectedTimeFrom" :options="options"></USelectMenu>
             </div>
-            <div @click="downloadCSV()"
+
+            <div v-if="isPremium" @click="downloadCSV()"
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 Download CSV
             </div>
+
+            <div v-if="!isPremium" @click="goToUpgrade()"
+                class="bg-[#57c78f46] hover:bg-[#57c78f42] flex gap-4 items-center cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
+                <i class="far fa-lock"></i>
+                Upgrade plan for CSV
+            </div>
+
         </div>
+
 
         <UTable v-if="tableData" class="utable px-8" :ui="{
             wrapper: 'overflow-auto w-full h-full',

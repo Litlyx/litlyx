@@ -75,6 +75,12 @@ const { snapshot } = useSnapshot();
 
 const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
 
+const pricingDrawer = usePricingDrawer();
+
+function goToUpgrade() {
+    pricingDrawer.visible.value = true;
+}
+
 
 </script>
 
@@ -94,11 +100,11 @@ const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProje
                             Limit reached
                         </div>
                         <div class="poppins text-[#fbbf24]">
-                            Litlyx has stopped to collect yur data. Please upgrade the plan for a minimal data loss.
+                            Litlyx cannot receive new data as you reached your plan's limit. Resume all the great features and collect even more data with a higher plan.
                         </div>
                     </div>
                     <div>
-                        <LyxUiButton type="outline"> Upgrade </LyxUiButton>
+                        <LyxUiButton type="outline" @click="goToUpgrade()"> Upgrade </LyxUiButton>
                     </div>
 
                 </div>

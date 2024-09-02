@@ -6,6 +6,8 @@ definePageMeta({ layout: 'dashboard' });
 
 const activeProject = useActiveProject();
 
+const isPremium = computed(() => (activeProject.value?.premium_type || 0) > 0);
+
 const metricsInfo = ref<number>(0);
 
 const columns = [
@@ -36,7 +38,36 @@ onMounted(async () => {
     metricsInfo.value = counts.eventsCount;
 });
 
+const creatingCsv = ref<boolean>(false);
 
+async function downloadCSV() {
+    creatingCsv.value = true;
+    const result = await $fetch(`/api/project/generate_csv?mode=events&slice=${options.indexOf(selectedTimeFrom.value)}`, signHeaders());
+    const blob = new Blob([result], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ReportVisits.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+    creatingCsv.value = false;
+}
+
+const options = ['Last day', 'Last week', 'Last month', 'Total']
+const selectedTimeFrom = ref<string>(options[0]);
+
+const showWarning = computed(() => {
+    return options.indexOf(selectedTimeFrom.value) > 1
+})
+
+
+const pricingDrawer = usePricingDrawer();
+
+function goToUpgrade() {
+    pricingDrawer.visible.value = true;
+}
 </script>
 
 
@@ -47,13 +78,37 @@ onMounted(async () => {
 
     <div class="w-full h-dvh flex flex-col">
 
+        <div v-if="creatingCsv"
+            class="fixed z-[100] flex items-center justify-center left-0 top-0 w-full h-full bg-black/60 backdrop-blur-[4px]">
+            <div class="poppins text-[2rem]">
+                Creating csv...
+            </div>
+        </div>
 
-        <div class="flex justify-end px-12 py-3">
-            <div
+
+        <div class="flex justify-end px-12 py-3 items-center gap-2">
+
+            <div v-if="showWarning" class="text-orange-400 flex gap-2 items-center">
+                <i class="far fa-warning "></i>
+                <div> It can take a few minutes </div>
+            </div>
+            <div class="w-[15rem] flex flex-col gap-0">
+                <USelectMenu v-model="selectedTimeFrom" :options="options"></USelectMenu>
+            </div>
+
+            <div v-if="isPremium" @click="downloadCSV()"
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 Download CSV
             </div>
+
+            <div v-if="!isPremium" @click="goToUpgrade()"
+                class="bg-[#57c78f46] hover:bg-[#57c78f42] flex gap-4 items-center cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
+                <i class="far fa-lock"></i>
+                Upgrade plan for CSV
+            </div>
+
         </div>
+
 
         <UTable v-if="tableData" class="utable px-8" :ui="{
             wrapper: 'overflow-auto w-full h-full',
