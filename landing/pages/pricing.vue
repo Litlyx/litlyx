@@ -20,7 +20,6 @@ const freePricing: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 10',
             'Server type: SHARED',
-            'Projects: max 2',
             'Data retention: 2 Months'
         ],
         cta: 'Start For Free now!'
@@ -63,7 +62,6 @@ const slidePricings: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 30',
             'Server type: SHARED',
-            'Projects: max 3',
             'Data retention: 6 Months'
         ],
         cta: 'Go to Cloud Dashboard'
@@ -81,7 +79,6 @@ const slidePricings: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 100',
             'Server type: SHARED',
-            'Projects: max 3',
             'Data retention: 9 Months'
         ],
         cta: 'Go to Cloud Dashboard'
@@ -99,7 +96,6 @@ const slidePricings: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 3.000',
             'Server type: SHARED',
-            'Projects: max 3',
             'Data retention: 1 Year'
         ],
         cta: 'Go to Cloud Dashboard'
@@ -117,7 +113,6 @@ const slidePricings: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 5.000',
             'Server type: SHARED',
-            'Projects: max 3',
             'Data retention: 1 Year'
         ],
         cta: 'Go to Cloud Dashboard'
@@ -135,7 +130,6 @@ const slidePricings: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 10.000',
             'Server type: DEDICATED',
-            'Projects: max 3',
             'Data retention: 2 Years'
         ],
         cta: 'Go to Cloud Dashboard'
@@ -153,7 +147,6 @@ const slidePricings: PricingCardProp[] = [
             'Unlimited reports',
             'AI Tokens: 20.000',
             'Server type: DEDICATED',
-            'Projects: max 3',
             'Data retention: 3 Years'
         ],
         cta: 'Go to Cloud Dashboard'
