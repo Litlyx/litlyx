@@ -100,7 +100,8 @@ function goToUpgrade() {
                             Limit reached
                         </div>
                         <div class="poppins text-[#fbbf24]">
-                            Litlyx cannot receive new data as you reached your plan's limit. Resume all the great features and collect even more data with a higher plan.
+                            Litlyx cannot receive new data as you reached your plan's limit. Resume all the great
+                            features and collect even more data with a higher plan.
                         </div>
                     </div>
                     <div>
@@ -111,7 +112,7 @@ function goToUpgrade() {
 
             </div>
 
-          <DashboardTopSection></DashboardTopSection>
+            <DashboardTopSection></DashboardTopSection>
             <DashboardTopCards :key="refreshKey"></DashboardTopCards>
 
 
@@ -143,7 +144,7 @@ function goToUpgrade() {
                     </div>
                 </CardTitled> -->
 
-            </div> 
+            </div>
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
@@ -151,13 +152,13 @@ function goToUpgrade() {
                         <DashboardWebsitesBarCard :key="refreshKey"></DashboardWebsitesBarCard>
                     </div>
                     <div class="flex-1">
-                         <DashboardEventsBarCard :key="refreshKey"></DashboardEventsBarCard>
+                        <DashboardEventsBarCard :key="refreshKey"></DashboardEventsBarCard>
                     </div>
                 </div>
             </div>
 
 
-             <div class="flex w-full justify-center mt-6 px-6">
+            <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <DashboardReferrersBarCard :key="refreshKey"></DashboardReferrersBarCard>
@@ -187,7 +188,7 @@ function goToUpgrade() {
                     <div class="flex-1">
                     </div>
                 </div>
-            </div> 
+            </div>
 
         </div>
 

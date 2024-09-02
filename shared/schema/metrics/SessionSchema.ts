@@ -16,7 +16,7 @@ const SessionSchema = new Schema<TSession>({
     flowHash: { type: String },
     duration: { type: Number, required: true, default: 0 },
     updated_at: { type: Date, default: () => Date.now() },
-    created_at: { type: Date, default: () => Date.now() },
+    created_at: { type: Date, default: () => Date.now(), index: true },
 })
 
 export const SessionModel = model<TSession>('sessions', SessionSchema);
