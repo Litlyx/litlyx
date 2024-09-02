@@ -46,7 +46,7 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
         console.log(JSON.stringify(aggregation, null, 2));
     }
 
-    const timeline: { _id: string, count: number & T }[] = await options.model.aggregate(aggregation, { explain: options.debug === true });
+    const timeline: { _id: string, count: number & T }[] = await options.model.aggregate(aggregation);
 
     return timeline;
 
