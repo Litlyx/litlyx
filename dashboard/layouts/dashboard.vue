@@ -4,23 +4,44 @@ import type { Section } from '~/components/CVerticalNavigation.vue';
 
 import { Lit } from 'litlyx-js';
 
+const activeProject = useActiveProject();
+const isPremium = computed(() => {
+    return activeProject.value?.premium;
+});
+
+const pricingDrawer = usePricingDrawer();
+
 const sections: Section[] = [
     {
-        title: 'Project',
+        title: '',
         entries: [
             { label: 'Dashboard', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'Analyst', to: '/analyst', icon: 'fal fa-microchip-ai' },
             { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
+            { label: 'Integrations (soon)', to: '#', icon: 'fal fa-cube', disabled: true },
+            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
-                label: 'Docs', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
+                grow: true,
+                label: 'Documentation', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
                 action() { Lit.event('docs_clicked') },
             },
-            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
+            {
+                label: 'Slack support', icon: 'fab fa-slack',
+                premiumOnly: true,
+                action() {
+                    if (isPremium.value === true) {
+                        window.open('https://join.slack.com/t/litlyx/shared_invite/zt-2q3oawn29-hZlu_fBUBlc4052Ooe3FZg', '_blank');
+                    } else {
+                        pricingDrawer.visible.value = true;
+                    }
+                },
+            },
         ]
     }
 ];
+
 
 const { showDialog, closeDialog } = useBarCardDialog();
 

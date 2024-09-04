@@ -10,6 +10,7 @@ export type Entry = {
     icon?: string,
     action?: () => any,
     adminOnly?: boolean,
+    premiumOnly?:boolean,
     external?: boolean,
     grow?: boolean
 }
@@ -110,6 +111,10 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 const selected = ref<TProject>(activeProject.value as TProject);
 watch(selected, () => {
     setActiveProject(selected.value._id.toString())
+})
+
+const isPremium = computed(()=>{
+    return activeProject.value?.premium;
 })
 
 </script>
@@ -249,9 +254,9 @@ watch(selected, () => {
 
             <div class="flex flex-col h-full">
 
-                <div v-for="section of sections" class="flex flex-col gap-1">
+                <div v-for="section of sections" class="flex flex-col gap-1 h-full pb-6">
 
-                    <div v-for="entry of section.entries">
+                    <div v-for="entry of section.entries" :class="{ 'grow flex items-end': entry.grow }">
 
                         <div v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))"
                             class="bg-lyx-background cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
@@ -266,8 +271,11 @@ watch(selected, () => {
                                 <div class="flex items-center w-[1.4rem] mr-2 text-[1.1rem] justify-center">
                                     <i :class="entry.icon"></i>
                                 </div>
-                                <div class="manrope">
+                                <div class="manrope grow">
                                     {{ entry.label }}
+                                </div>
+                                <div v-if="entry.premiumOnly && !isPremium" class="flex items-center">
+                                    <i class="fal fa-lock"></i>
                                 </div>
                             </NuxtLink>
 

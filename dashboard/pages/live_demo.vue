@@ -71,14 +71,9 @@ const { snapshot } = useSnapshot();
                     </div>
                     <div class="grow"></div>
                     <div class="flex gap-2 md:pt-0 pt-4">
-                        <NuxtLink target="_blank" to="https://cal.com/litlyx/30min"
-                            class="bg-white hover:bg-white/90 px-4 py-3 text-black poppins font-semibold text-[.9rem] lg:text-[1.2rem] rounded-lg">
-                            Book a demo
-                        </NuxtLink>
-                        <NuxtLink to="/"
-                            class="bg-accent hover:bg-accent/90 px-4 py-3 poppins font-semibold text-[.9rem] lg:text-[1.2rem] rounded-lg">
-                            Go to dashboard
-                        </NuxtLink>
+                        <LyxUiButton link="/" type="primary" class="poppins font-semibold text-[.9rem] lg:text-[1.2rem] flex items-center !px-14 py-4">
+                            Get started for free
+                        </LyxUiButton>
                     </div>
                 </div>
             </div>
@@ -102,7 +97,7 @@ const { snapshot } = useSnapshot();
                     </div>
                 </CardTitled>
 
-                <CardTitled class="p-4 flex-1" title="Sessions" sub="Shows trends in sessions.">
+                <!-- <CardTitled class="p-4 flex-1" title="Sessions" sub="Shows trends in sessions.">
                     <template #header>
                         <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
                             :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
@@ -112,13 +107,14 @@ const { snapshot } = useSnapshot();
                         <DashboardSessionsLineChart :slice="(selectLabels[sessionsChartSelectIndex].value as any)">
                         </DashboardSessionsLineChart>
                     </div>
-                </CardTitled>
+                </CardTitled> -->
 
             </div>
 
 
             <div class="flex gap-6 flex-col xl:flex-row p-6">
-                <!-- <CardTitled class="p-4 flex-[4]" title="Events" sub="Events stacked bar chart.">
+
+                <CardTitled class="p-4 flex-[4] w-full h-full" title="Events" sub="Events stacked bar chart.">
                     <template #header>
                         <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
                             :currentIndex="eventsStackedSelectIndex" :options="selectLabelsEvents">
@@ -128,25 +124,17 @@ const { snapshot } = useSnapshot();
                         <EventsStackedBarChart :slice="(selectLabelsEvents[eventsStackedSelectIndex].value as any)">
                         </EventsStackedBarChart>
                     </div>
-                </CardTitled> -->
+                </CardTitled>
 
-                <div class="bg-menu p-4 rounded-xl flex-[2] flex flex-col gap-10 h-full">
-                    <div class="flex flex-col gap-1">
-                        <div class="poppins font-semibold text-[1.4rem] text-text">
-                            Top events
-                        </div>
-                        <div class="poppins text-[1rem] text-text-sub/90">
-                            Displays key events.
-                        </div>
+                <CardTitled title="Top events" sub=" Displays key events." class="p-4 flex-[2] w-full h-full">
+                    <div>
+                        <DashboardEventsChart class="w-full"> </DashboardEventsChart>
                     </div>
-
-                    <DashboardEventsChart class="w-full"> </DashboardEventsChart>
-
-                </div>
+                </CardTitled>
             </div>
 
 
-            <div class="flex w-full justify-center mt-6 px-6">
+            <div class="flex w-full justify-center px-6">
                 <div class="flex w-full gap-6 flex-col lg:flex-row">
                     <div class="flex-1">
                         <DashboardWebsitesBarCard></DashboardWebsitesBarCard>
@@ -203,15 +191,14 @@ const { snapshot } = useSnapshot();
                             Do you want this KPIs for your website ?
                         </div>
                         <div class="poppins font-semibold text-text-sub">
-                            Start now ! It's free.
+                            Start now! It's free.
                         </div>
                     </div>
 
                     <div class="flex gap-2 flex-col md:flex-row">
-                        <NuxtLink to="/"
-                            class="bg-accent hover:bg-accent/90 px-14 py-4 poppins font-semibold text-[1.1rem] lg:text-[1.6rem] rounded-lg">
+                        <LyxUiButton link="/" type="primary" class="poppins font-semibold text-[1.1rem] lg:text-[1.6rem] flex items-center !px-14">
                             Get started
-                        </NuxtLink>
+                        </LyxUiButton>
                         <NuxtLink target="_blank" to="https://cal.com/litlyx/30min"
                             class="bg-white hover:bg-white/90 text-black px-14 py-4 poppins font-semibold text-[1.1rem] lg:text-[1.6rem] rounded-lg">
                             Book a demo

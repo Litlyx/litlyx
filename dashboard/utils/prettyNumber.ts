@@ -9,6 +9,7 @@ export function formatNumberK(value: string | number, decimals: number = 1) {
 
     if (num > 1_000_000) return (num / 1_000_000).toFixed(decimals) + ' M';
     if (num > 1_000) return (num / 1_000).toFixed(decimals) + ' K';
-    return num.toFixed();
+    
+    return isNaN(num) ? '0' : num.toFixed();
 
 }

@@ -36,7 +36,7 @@ const props = defineProps<{
                         {{ trend.toFixed(0) }} %
                     </div>
                 </div>
-                <div class="poppins text-text-sub text-[.7rem]"> Daily variation </div>
+                <div class="poppins text-text-sub text-[.7rem]"> Trend </div>
             </div>
 
         </div>

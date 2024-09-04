@@ -134,7 +134,7 @@ onMounted(async () => {
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer" text="Avg session time"
+        <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer" text="Total avg session time"
             :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
             :data="sessionsDurationData.data.value?.data" :labels="sessionsDurationData.data.value?.labels"
             color="#f56523">
