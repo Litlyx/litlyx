@@ -57,7 +57,7 @@ const slidePricings: PricingCardProp[] = [
             'CPM 0,10€ per visit/event'
         ],
         features: [
-            'Discord support',
+            'Slack support',
             'Unlimited domains',
             'Unlimited reports',
             'AI Tokens: 30',
@@ -74,7 +74,7 @@ const slidePricings: PricingCardProp[] = [
             'CPM 0,06€ per visit/event'
         ],
         features: [
-            'Discord support',
+            'Slack support',
             'Unlimited domains',
             'Unlimited reports',
             'AI Tokens: 100',
@@ -91,7 +91,7 @@ const slidePricings: PricingCardProp[] = [
             'CPM 0,059€ per visit/event'
         ],
         features: [
-            'Discord support',
+            'Slack support',
             'Unlimited domains',
             'Unlimited reports',
             'AI Tokens: 3.000',
@@ -108,7 +108,7 @@ const slidePricings: PricingCardProp[] = [
             'CPM 0,059€ per visit/event'
         ],
         features: [
-            'Discord support',
+            'Slack support',
             'Unlimited domains',
             'Unlimited reports',
             'AI Tokens: 5.000',
@@ -125,7 +125,7 @@ const slidePricings: PricingCardProp[] = [
             'CPM 0,039€ per visit/event'
         ],
         features: [
-            'Discord support',
+            'Slack support',
             'Unlimited domains',
             'Unlimited reports',
             'AI Tokens: 10.000',
@@ -142,7 +142,7 @@ const slidePricings: PricingCardProp[] = [
             'CPM 0,029€ per visit/event'
         ],
         features: [
-            'Discord support',
+            'Slack support',
             'Unlimited domains',
             'Unlimited reports',
             'AI Tokens: 20.000',
