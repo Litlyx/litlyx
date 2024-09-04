@@ -76,11 +76,13 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 
     const userAgentParsed = UAParser(userAgent);
 
+    const device = userAgentParsed.device.type;
+
     const visit = new VisitModel({
         project_id: pid, website, page, referrer: referrerParsed.hostname,
         browser: userAgentParsed.browser.name || 'NO_BROWSER',
         os: userAgentParsed.os.name || 'NO_OS',
-        device: userAgentParsed.device.type,
+        device: device ? device : (userAgentParsed.browser.name ? 'desktop' : undefined),
         session: sessionHash,
         flowHash,
         continent: geoLocation[0],
