@@ -51,7 +51,7 @@ onMounted(() => {
                     Blog
                 </NuxtLink>
                 <NuxtLink target="_blank" to="https://dashboard.litlyx.com/live_demo"
-                    class="poppins hover:text-text-sub/90">
+                    class="poppins hover:text-text-sub/90 whitespace-nowrap">
                     Live demo
                 </NuxtLink>
                 <NuxtLink target="_blank" to="https://docs.litlyx.com" class="poppins hover:text-text-sub/90">
@@ -85,9 +85,9 @@ onMounted(() => {
             <div class="px-10 pt-6 lg:pt-0">
 
 
-                <MainButton link="https://dashboard.litlyx.com">
+                <button class="poppins w-fit cursor-pointer px-4 py-1 rounded-md outline outline-[1px] text-text bg-lyx-primary-dark outline-lyx-primary hover:bg-lyx-primary-hover button !whitespace-nowrap" onclick="window.location='https://dashboard.litlyx.com';">
                     Get started
-                </MainButton>
+                </button>
 
 
             </div>
