@@ -99,7 +99,8 @@ curl -X POST "https://broker.litlyx.com/event" \
     "name": "testEvent1",
     "metadata": "{\"test\": \"something\"}",
     "website": "something",
-    "user
+    "userAgent": "something"
+  }'
 ```
 
 # Self-Hosting with Docker
