@@ -84,11 +84,9 @@ onMounted(() => {
             </div>
             <div class="px-10 pt-6 lg:pt-0">
 
-
-                <button class="poppins w-fit cursor-pointer px-4 py-1 rounded-md outline outline-[1px] text-text bg-lyx-primary-dark outline-lyx-primary hover:bg-lyx-primary-hover button !whitespace-nowrap" onclick="window.location='https://dashboard.litlyx.com';">
+                <MainButton link="https://dashboard.litlyx.com" class="!whitespace-nowrap">
                     Get started
-                </button>
-
+                </MainButton>
 
             </div>
         </div>

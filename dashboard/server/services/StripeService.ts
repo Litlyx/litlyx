@@ -1,4 +1,4 @@
-import { getPlanFromTag } from '@data/PREMIUM';
+import { getPlanFromId, getPlanFromTag } from '@data/PREMIUM';
 import Stripe from 'stripe';
 
 class StripeService {
@@ -29,6 +29,33 @@ class StripeService {
         return this.stripe.webhooks.constructEvent(body, sig, this.webhookSecret);
     }
 
+
+    async createOnetimePayment(price: string, success_url: string, pid: string, customer?: string) {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
+
+        const checkout = await this.stripe.checkout.sessions.create({
+            allow_promotion_codes: true,
+            payment_method_types: ['card'],
+            invoice_creation: {
+                enabled: true,
+            },
+            line_items: [
+                { price, quantity: 1 }
+            ],
+            payment_intent_data: {
+                metadata: {
+                    pid, price
+                }
+            },
+            customer,
+            success_url,
+            mode: 'payment'
+        });
+
+        return checkout;
+    }
+
     async cretePayment(price: string, success_url: string, pid: string, customer?: string) {
         if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
@@ -48,6 +75,13 @@ class StripeService {
         });
 
         return checkout;
+    }
+
+    async getPriceData(priceId: string) {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const priceData = await this.stripe.prices.retrieve(priceId);
+        return priceData;
     }
 
     async deleteSubscription(subscriptionId: string) {
@@ -78,7 +112,6 @@ class StripeService {
         return invoices;
     }
 
-
     async getCustomer(customer_id: string) {
         if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
@@ -100,8 +133,27 @@ class StripeService {
         return deleted;
     }
 
+    async createOneTimeCoupon() {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
+    }
 
+    async createOneTimeSubscriptionDummy(customer_id: string, planId: number) {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
 
+        const PLAN = getPlanFromId(planId);
+        if (!PLAN) throw Error('Plan not found');
+
+        const subscription = await this.stripe.subscriptions.create({
+            customer: customer_id,
+            items: [
+                { price: this.testMode ? PLAN.PRICE_TEST : PLAN.PRICE, quantity: 1 }
+            ],
+        });
+
+        return subscription;
+    }
 
     async createFreeSubscription(customer_id: string) {
         if (this.disabledMode) return;

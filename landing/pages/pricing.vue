@@ -40,7 +40,6 @@ const customPricing: PricingCardProp[] = [
             'DB instance: DEDICATED',
             'Dedicated operator',
             'White label',
-            'Custom Charts',
             'Custom Data Aggregation'
         ],
         cta: 'Let\'s Talk!',
@@ -182,6 +181,54 @@ const slidePricings: PricingCardProp[] = [
                 </PricingCardGeneric>
             </div>
 
+            <div class="flex justify-center">
+                <LyxUiCard class="w-full mt-6 max-w-[96rem]">
+                    <div class="flex flex-col lg:flex-row">
+                        <div class="flex flex-col gap-3">
+                            <div>
+                                <span class="text-lyx-primary font-semibold text-[1.4rem]">
+                                    LIFETIME DEAL
+                                </span>
+                                <span class="text-lyx-text-dark text-[.8rem]"> (Growh plan) </span>
+                            </div>
+                            <div class="text-[2rem]"> € 2.399,00 </div>
+                            <div> Up to 500.000 visits/events per month </div>
+                            <LyxUiButton type="primary" link="https://dashboard.litlyx.com"> Start for free now </LyxUiButton>
+                        </div>
+                        <div class="flex justify-evenly grow flex-col gap-2 lg:gap-0 lg:flex-row mt-4 lg:mt-0">
+                            <div class="flex flex-col justify-evenly gap-2 lg:gap-0">
+                                <div class="flex items-center gap-2">
+                                    <img class="h-6" :src="'/check.png'" alt="Check">
+                                    <div> Slack support </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <img class="h-6" :src="'/check.png'" alt="Check">
+                                    <div> Unlimited domanis </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <img class="h-6" :src="'/check.png'" alt="Check">
+                                    <div> Unlimited reports </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col justify-evenly gap-2 lg:gap-0">
+                                <div class="flex items-center gap-2">
+                                    <img class="h-6" :src="'/check.png'" alt="Check">
+                                    <div> AI Tokens: 3.000 / month </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <img class="h-6" :src="'/check.png'" alt="Check">
+                                    <div> Server type: SHARED </div>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <img class="h-6" :src="'/check.png'" alt="Check">
+                                    <div> Data retention: 1 Year </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </LyxUiCard>
+            </div>
+
             <!-- <div class="flex gap-8 h-max flex-col lg:flex-row">
                 <PricingCard class="flex-1" :data="starterTierCardData"></PricingCard>
                 <PricingCard class="flex-1" :data="accelerationTierCardData"></PricingCard>
@@ -233,7 +280,7 @@ const slidePricings: PricingCardProp[] = [
                 <UAccordion :ui="{
                     wrapper: 'w-full',
                     item: {
-                        padding: 'pl-8'
+                        padding: 'pl-8',
                     }
                 }" color="white" variant="ghost" size="xl" :items="[
                     {

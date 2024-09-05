@@ -16,6 +16,25 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
+
+    if (project.subscription_id === 'onetime') {
+
+        const projectLimits = await ProjectLimitModel.findOne({ project_id });
+        if (!projectLimits) return setResponseStatus(event, 400, 'Project limits not found');
+
+        const result = {
+            premium: project.premium,
+            premium_type: project.premium_type,
+            billing_start_at: projectLimits.billing_start_at,
+            billing_expire_at: projectLimits.billing_expire_at,
+            limit: projectLimits.limit,
+            count: projectLimits.events + projectLimits.visits,
+            subscription_status: StripeService.isDisabled() ? 'Disabled mode' : ('One time payment')
+        }
+
+        return result;
+    }
+
     const subscription = await StripeService.getSubscription(project.subscription_id);
 
     const projectLimits = await ProjectLimitModel.findOne({ project_id });

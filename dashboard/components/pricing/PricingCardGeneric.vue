@@ -13,11 +13,11 @@ export type PricingCardProp = {
     planId: number
 }
 
-const props = defineProps<{ datas: PricingCardProp[] }>();
+const props = defineProps<{ datas: PricingCardProp[], defaultIndex?: number }>();
 
 const activeProject = useActiveProject();
 
-const currentIndex = ref<number>(0);
+const currentIndex = ref<number>(props.defaultIndex || 0);
 
 const data = computed(() => {
     return props.datas[currentIndex.value];
@@ -37,13 +37,19 @@ async function onUpgradeClick() {
 
 
 <template>
-    <div class="relative bg-[#151515] outline outline-[1px] outline-[#262626] py-8 px-10 rounded-lg w-full max-w-[30rem]">
+    <div
+        class="relative bg-[#151515] outline outline-[1px] outline-[#262626] py-8 px-10 rounded-lg w-full max-w-[30rem]">
 
-        <div class="flex flex-col gap-3 text-center">
-            <div class="poppins text-xl font-light"> {{ data.title }} </div>
-            <div v-if="data.active" class="absolute right-6 top-3 poppins text-[.75rem] bg-[#222A42] outline outline-[1px] outline-[#5680F8] px-3 py-[.1rem] rounded-xl">
+        <div class="flex flex-col gap-3 text-center pt-3">
+            <div v-if="data.active"
+                class="absolute right-6 top-3 poppins text-[.75rem] bg-[#222A42] outline outline-[1px] outline-[#5680F8] px-3 py-[.1rem] rounded-sm">
                 Active
             </div>
+            <div v-if="!data.active && data.title === 'Growth'"
+                class="absolute right-6 top-3 poppins text-[.75rem] bg-[#fbbe244f] outline outline-[1px] outline-[#fbbf24] px-3 py-[.1rem] rounded-sm">
+                Most popular
+            </div>
+            <div class="poppins text-xl font-light"> {{ data.title }} </div>
             <div class="poppins text-4xl font-medium"> {{ data.price }} </div>
         </div>
 

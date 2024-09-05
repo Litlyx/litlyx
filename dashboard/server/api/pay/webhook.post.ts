@@ -63,6 +63,36 @@ async function onPaymentFailed(event: Event.InvoicePaymentFailedEvent) {
 
 }
 
+
+async function onPaymentOnetimeSuccess(event: Event.PaymentIntentSucceededEvent) {
+    const customer_id = event.data.object.customer as string;
+    const project = await ProjectModel.findOne({ customer_id });
+    if (!project) return { error: 'CUSTOMER NOT EXIST' }
+
+    if (event.data.object.status === 'succeeded') {
+
+        const PLAN = getPlanFromPrice(event.data.object.metadata.price, StripeService.testMode || false);
+        if (!PLAN) return { error: 'Plan not found' }
+        const dummyPlan = PLAN.ID + 3000;
+
+        const subscription = await StripeService.createOneTimeSubscriptionDummy(customer_id, dummyPlan);
+        if (!subscription) return { error: 'Error creating subscription' }
+
+        const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
+        if (!allSubscriptions) return;
+        for (const subscription of allSubscriptions.data) {
+            if (subscription.id === subscription.id) continue;
+            await StripeService.deleteSubscription(subscription.id);
+        }
+
+        await addSubscriptionToProject(project._id.toString(), PLAN, subscription.id, subscription.current_period_start, subscription.current_period_end)
+
+        return { ok: true };
+    }
+
+    return { received: true, warn: 'object status not succeeded' }
+}
+
 async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
     const customer_id = event.data.object.customer as string;
@@ -76,7 +106,7 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
         if (!allSubscriptions) return;
-        
+
         const currentSubscription = allSubscriptions.data.find(e => e.id === subscription_id);
         if (!currentSubscription) return { error: 'SUBSCRIPTION NOT EXIST' }
 
@@ -201,7 +231,11 @@ export default defineEventHandler(async event => {
 
     const eventData = StripeService.parseWebhook(body, signature);
     if (!eventData) return;
+
+    // console.log('WEBHOOK FIRED', eventData.type);
+
     if (eventData.type === 'invoice.paid') return await onPaymentSuccess(eventData);
+    if (eventData.type === 'payment_intent.succeeded') return await onPaymentOnetimeSuccess(eventData);
     if (eventData.type === 'invoice.payment_failed') return await onPaymentFailed(eventData);
     if (eventData.type === 'customer.subscription.deleted') return await onSubscriptionDeleted(eventData);
     if (eventData.type === 'customer.subscription.created') return await onSubscriptionCreated(eventData);

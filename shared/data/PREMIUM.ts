@@ -12,7 +12,9 @@ export const PREMIUM_TAGS = [
     'GROWTH',
     'EXPANSION',
     'SCALING',
-    'UNICORN'
+    'UNICORN',
+    'LIFETIME_GROWTH_ONETIME',
+    'GROWTH_DUMMY'
 ] as const;
 
 
@@ -95,6 +97,20 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         PRICE: 'price_1Pdt2LB2lPUiVs9VGBFAIG9G',
         PRICE_TEST: ''
     },
+    LIFETIME_GROWTH_ONETIME: {
+        ID: 2001,
+        COUNT_LIMIT: 500_000,
+        AI_MESSAGE_LIMIT: 3_000,
+        PRICE: 'price_1PvewGB2lPUiVs9VLheJC8s1',
+        PRICE_TEST: 'price_1Pvf7LB2lPUiVs9VMFNyzpim'
+    },
+    GROWTH_DUMMY: {
+        ID: 5001,
+        COUNT_LIMIT: 500_000,
+        AI_MESSAGE_LIMIT: 3_000,
+        PRICE: 'price_1PvgoRB2lPUiVs9VC51YBT7J',
+        PRICE_TEST: 'price_1PvgRTB2lPUiVs9V3kFSNC3G'     
+    }
 }
 
 CustomPremiumPriceModel.find({}).then(custom_prices => {
