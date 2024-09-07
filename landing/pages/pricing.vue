@@ -189,7 +189,7 @@ const slidePricings: PricingCardProp[] = [
                                 <span class="text-lyx-primary font-semibold text-[1.4rem]">
                                     LIFETIME DEAL
                                 </span>
-                                <span class="text-lyx-text-dark text-[.8rem]"> (Growh plan) </span>
+                                <span class="text-lyx-text-dark text-[.8rem]"> (Growth plan) </span>
                             </div>
                             <div class="text-[2rem]"> € 2.399,00 </div>
                             <div> Up to 500.000 visits/events per month </div>
@@ -221,7 +221,7 @@ const slidePricings: PricingCardProp[] = [
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <img class="h-6" :src="'/check.png'" alt="Check">
-                                    <div> Data retention: 1 Year </div>
+                                    <div> Data retention: 5 Years </div>
                                 </div>
                             </div>
                         </div>

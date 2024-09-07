@@ -11,15 +11,63 @@ if (process.env.EMAIL_SERVICE) {
 
 export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
-    if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit / 2)) {
-        const notify = await LimitNotifyModel.findOne({ project_id: projectCounts._id });
-        if (notify && notify.limit1 === true) return;
-        const project = await ProjectModel.findById(projectCounts.project_id);
+    console.log('CHECK LIMIT EMAIL');
+
+    const project_id = projectCounts.project_id;
+    const hasNotifyEntry = await LimitNotifyModel.findOne({ project_id });
+    if (!hasNotifyEntry) {
+        await LimitNotifyModel.create({ project_id, limit1: false, limit2: false, limit3: false })
+    }
+
+    if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit)) {
+        console.log('LIMIT 3');
+
+        const notify = await LimitNotifyModel.findOne({ project_id });
+        if (notify && notify.limit3 === true) return;
+
+        const project = await ProjectModel.findById(project_id);
         if (!project) return;
+
         const owner = await UserModel.findById(project.owner);
         if (!owner) return;
-        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmail50(owner.email);
-        await LimitNotifyModel.updateOne({ project_id: projectCounts._id }, { limit1: true, limit2: false, limit3: false }, { upsert: true });
+
+        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmailMax(owner.email, project.name);
+        await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: true, limit3: true });
+
+    } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.9)) {
+        console.log('LIMIT 2');
+
+        const notify = await LimitNotifyModel.findOne({ project_id });
+        if (notify && notify.limit2 === true) return;
+
+        const project = await ProjectModel.findById(project_id);
+        if (!project) return;
+
+        const owner = await UserModel.findById(project.owner);
+        if (!owner) return;
+
+        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmail90(owner.email, project.name);
+        await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: true, limit3: false });
+
+    } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.5)) {
+
+        console.log('LIMIT 1');
+
+        const notify = await LimitNotifyModel.findOne({ project_id });
+        if (notify && notify.limit1 === true) return;
+
+        const project = await ProjectModel.findById(project_id);
+        if (!project) return;
+
+        const owner = await UserModel.findById(project.owner);
+        if (!owner) return;
+
+        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmail50(owner.email, project.name);
+        await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: false, limit3: false });
+
     }
+
+
+
 
 }

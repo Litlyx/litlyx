@@ -1,6 +1,8 @@
 import { TransactionalEmailsApi, SendSmtpEmail } from '@getbrevo/brevo';
 import { WELCOME_EMAIL } from './email_templates/WelcomeEmail';
 import { LIMIT_50_EMAIL } from './email_templates/Limit50Email';
+import { LIMIT_90_EMAIL } from './email_templates/Limit90Email';
+import { LIMIT_MAX_EMAIL } from './email_templates/LimitMaxEmail';
 
 
 class EmailService {
@@ -11,13 +13,51 @@ class EmailService {
         this.apiInstance.setApiKey(0, apiKey);
     }
 
-    async sendLimitEmail50(target: string) {
+    async sendLimitEmail50(target: string, projectName: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "Litlyx project limit 50%";
+            sendSmtpEmail.subject = "You've reached 50% limit on Litlyx";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
-            sendSmtpEmail.htmlContent = LIMIT_50_EMAIL;
+
+            sendSmtpEmail.htmlContent = LIMIT_50_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .toString();
+
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    async sendLimitEmail90(target: string, projectName: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "You've reached 90% limit on Litlyx";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = LIMIT_90_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .toString();
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    async sendLimitEmailMax(target: string, projectName: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "You've reached your limit on Litlyx!";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = LIMIT_MAX_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
         } catch (ex) {
@@ -28,9 +68,8 @@ class EmailService {
 
     async sendWelcomeEmail(target: string) {
         try {
-            console.log('SENDING WELCOME EMAIL_EMAIL SERVICE')
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "Welcome to Litlyx";
+            sendSmtpEmail.subject = "Welcome to Litlyx!";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = WELCOME_EMAIL;
