@@ -1,9 +1,11 @@
-import { ProjectModel } from "@schema/ProjectSchema";
-import { TeamMemberModel } from "@schema/TeamMemberSchema";
-import { UserModel } from "@schema/UserSchema";
+
+import { ApiSettingsModel } from "@schema/ApiSettingsSchema";
 import { UserSettingsModel } from "@schema/UserSettings";
+import { ProjectModel } from "@schema/ProjectSchema";
 
 export default defineEventHandler(async event => {
+
+    const body = await readBody(event);
 
     const userData = getRequestUser(event);
     if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
@@ -20,13 +22,7 @@ export default defineEventHandler(async event => {
         return setResponseStatus(event, 400, 'You are not the owner');
     }
 
-    const { name } = await readBody(event);
-    
-    if (name.length == 0) return setResponseStatus(event, 400, 'name is required');
-
-    project.name = name;
-    await project.save();
-
-    return { ok: true };
+    const deletation = await ApiSettingsModel.deleteOne({ _id: body.api_id });
+    return { ok: deletation.acknowledged };
 
 });

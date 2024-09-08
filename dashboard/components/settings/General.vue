@@ -1,9 +1,11 @@
 <script lang="ts" setup>
+import type { TApiSettings } from '@schema/ApiSettingsSchema';
 import type { SettingsTemplateEntry } from './Template.vue';
 
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'pname', title: 'Name', text: 'Project name' },
+    { id: 'api', title: 'ApiKeys', text: 'Manage your authorization token' },
     { id: 'pid', title: 'Id', text: 'Project id' },
     { id: 'pscript', title: 'Script', text: 'Universal javascript integration' },
     { id: 'pdelete', title: 'Delete', text: 'Delete current project' },
@@ -12,8 +14,54 @@ const entries: SettingsTemplateEntry[] = [
 const activeProject = useActiveProject();
 const projectNameInputVal = ref<string>(activeProject.value?.name || '');
 
+
+const apiKeys = ref<TApiSettings[]>([]);
+
+const newApiKeyName = ref<string>('');
+
+async function updateApiKeys() {
+    newApiKeyName.value = '';
+    apiKeys.value = await $fetch<TApiSettings[]>('/api/keys/get_all', signHeaders());
+}
+
+async function createApiKey() {
+    try {
+        const res = await $fetch<TApiSettings>('/api/keys/create', {
+            method: 'POST', ...signHeaders({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({ name: newApiKeyName.value })
+        });
+        apiKeys.value.push(res);
+        newApiKeyName.value = '';
+    } catch (ex: any) {
+        alert(ex.message);
+    }
+}
+
+async function deleteApiKey(api_id: string) {
+    try {
+        const res = await $fetch<TApiSettings>('/api/keys/delete', {
+            method: 'DELETE', ...signHeaders({
+                'Content-Type': 'application/json'
+            }),
+            body: JSON.stringify({ api_id })
+        });
+        newApiKeyName.value = '';
+        await updateApiKeys();
+    } catch (ex: any) {
+        alert(ex.message);
+    }
+
+}
+
+onMounted(() => {
+    updateApiKeys();
+})
+
 watch(activeProject, () => {
     projectNameInputVal.value = activeProject.value?.name || "";
+    updateApiKeys();
 })
 
 const canChange = computed(() => {
@@ -47,7 +95,7 @@ async function deleteProject() {
 
         const projectsList = useProjectsList()
         await projectsList.refresh();
-        
+
         const firstProjectId = projectsList.data.value?.[0]?._id.toString();
         if (firstProjectId) {
             await setActiveProject(firstProjectId);
@@ -59,6 +107,32 @@ async function deleteProject() {
     }
 
 
+}
+
+const { createAlert } = useAlert()
+
+function copyScript() {
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
+
+
+    const createScriptText = () => {
+        return [
+            '<script defer ',
+            `data-project="${activeProject.value?._id}" `,
+            'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
+            'script>'
+        ].join('')
+    }
+
+    navigator.clipboard.writeText(createScriptText());
+    createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
+}
+
+
+function copyProjectId() {
+    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
+    navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
+    createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
 
@@ -74,10 +148,31 @@ async function deleteProject() {
                 <LyxUiButton @click="changeProjectName()" :disabled="!canChange" type="primary"> Change </LyxUiButton>
             </div>
         </template>
+        <template #api>
+            <div class="flex items-center gap-4" v-if="apiKeys && apiKeys.length < 5">
+                <LyxUiInput class="grow px-4 py-2" placeholder="ApiKeyName" v-model="newApiKeyName"></LyxUiInput>
+                <LyxUiButton @click="createApiKey()" :disabled="newApiKeyName.length < 3" type="primary">
+                    <i class="far fa-plus"></i>
+                </LyxUiButton>
+            </div>
+            <LyxUiCard v-if="apiKeys && apiKeys.length > 0" class="w-full flex flex-col gap-4 items-center mt-4">
+                <div v-for="apiKey of apiKeys" class="flex flex-col w-full">
+
+                    <div class="flex gap-8 items-center">
+                        <div class="grow">Name: {{ apiKey.apiName }}</div>
+                        <div>{{ apiKey.apiKey }}</div>
+                        <div class="flex justify-end">
+                            <i class="far fa-trash cursor-pointer" @click="deleteApiKey(apiKey._id.toString())"></i>
+                        </div>
+                    </div>
+
+                </div>
+            </LyxUiCard>
+        </template>
         <template #pid>
             <LyxUiCard class="w-full flex items-center">
                 <div class="grow">{{ activeProject?._id.toString() }}</div>
-                <div><i class="far fa-copy"></i></div>
+                <div><i class="far fa-copy" @click="copyProjectId()"></i></div>
             </LyxUiCard>
         </template>
         <template #pscript>
@@ -87,7 +182,7 @@ async function deleteProject() {
                     <script defer data-project="${activeProject?._id}"
                         src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>` }}
                 </div>
-                <div><i class="far fa-copy"></i></div>
+                <div><i class="far fa-copy" @click="copyScript()"></i></div>
             </LyxUiCard>
         </template>
         <template #pdelete>

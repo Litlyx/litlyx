@@ -1,7 +1,13 @@
-import { ProjectModel } from "@schema/ProjectSchema";
-import { TeamMemberModel } from "@schema/TeamMemberSchema";
-import { UserModel } from "@schema/UserSchema";
+
+import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
+import { ApiSettingsModel, TApiSettings } from "@schema/ApiSettingsSchema";
 import { UserSettingsModel } from "@schema/UserSettings";
+import { ProjectModel } from "@schema/ProjectSchema";
+
+
+function cryptApiKeyName(apiSettings: TApiSettings): TApiSettings {
+    return { ...apiSettings, apiKey: apiSettings.apiKey.substring(0, 6) + '******' }
+}
 
 export default defineEventHandler(async event => {
 
@@ -20,13 +26,8 @@ export default defineEventHandler(async event => {
         return setResponseStatus(event, 400, 'You are not the owner');
     }
 
-    const { name } = await readBody(event);
-    
-    if (name.length == 0) return setResponseStatus(event, 400, 'name is required');
+    const apiKeys = await ApiSettingsModel.find({ project_id }, { project_id: 0 })
 
-    project.name = name;
-    await project.save();
-
-    return { ok: true };
+    return apiKeys.map(e => cryptApiKeyName(e.toJSON())) as TApiSettings[];
 
 });

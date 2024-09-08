@@ -127,7 +127,7 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
             messages.push({ tool_call_id: toolCall.id, role: "tool", content: JSON.stringify(functionResponse) });
             await addMessageToChat({ tool_call_id: toolCall.id, role: "tool", content: JSON.stringify(functionResponse) }, chat_id);
         }
-        response = await openai.chat.completions.create({ model: 'gpt-3.5-turbo', messages, n: 1, tools });
+        response = await openai.chat.completions.create({ model: 'gpt-4o', messages, n: 1, tools });
         responseMessage = response.choices[0].message;
         toolCalls = responseMessage.tool_calls;
 

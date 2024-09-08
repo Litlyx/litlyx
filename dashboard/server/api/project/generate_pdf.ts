@@ -8,6 +8,7 @@ import { ProjectModel, TProject } from "@schema/ProjectSchema";
 import { UserSettingsModel } from "@schema/UserSettings";
 import { VisitModel } from '@schema/metrics/VisitSchema';
 import { EventModel } from '@schema/metrics/EventSchema';
+import { ProjectSnapshotModel } from '@schema/ProjectSnapshot';
 
 
 type PDF_Data = {
@@ -114,8 +115,11 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
+    const fromHeader = getHeader(event, 'x-from');
+    const toHeader = getHeader(event, 'x-from');
 
-
+    const from = fromHeader;
+    const to = toHeader;
 
     const eventsCount = await EventModel.countDocuments({ project_id: project._id });
     const visitsCount = await VisitModel.countDocuments({ project_id: project._id });
