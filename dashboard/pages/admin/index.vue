@@ -5,6 +5,8 @@ import type { AdminProjectsList } from '~/server/api/admin/projects';
 definePageMeta({ layout: 'dashboard' });
 
 const { data: projects } = await useFetch<AdminProjectsList[]>('/api/admin/projects', signHeaders());
+const { data: counts } = await useFetch('/api/admin/counts', signHeaders());
+
 
 type TProjectsGrouped = {
     user: {
@@ -88,11 +90,6 @@ function onHideClicked() {
     isAdminHidden.value = true;
 }
 
-
-const projectsCount = computed(() => {
-    return projects.value?.length || 0;
-});
-
 const premiumCount = computed(() => {
     let premiums = 0;
     projects.value?.forEach(e => {
@@ -101,12 +98,6 @@ const premiumCount = computed(() => {
     return premiums;
 })
 
-
-const usersCount = computed(() => {
-    const uniqueUsers = new Set<string>();
-    projects.value?.forEach(e => uniqueUsers.add(e.user.email));
-    return uniqueUsers.size;
-});
 
 
 const totalVisits = computed(() => {
@@ -155,10 +146,10 @@ async function resetCount(project_id: string) {
 
             <div class="grid grid-cols-2">
                 <div>
-                    Users: {{ usersCount }}
+                    Users: {{ counts?.users }}
                 </div>
                 <div>
-                    Projects: {{ projectsCount }} ( {{ premiumCount }} premium )
+                    Projects: {{ counts?.projects }} ( {{ premiumCount }} premium )
                 </div>
                 <div>
                     Total visits: {{ formatNumberK(totalVisits) }}

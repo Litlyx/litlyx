@@ -2,19 +2,25 @@
 import pdfkit from 'pdfkit';
 
 import { PassThrough } from 'node:stream';
-import fs from 'fs';
 
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/ProjectSchema";
 import { UserSettingsModel } from "@schema/UserSettings";
 import { VisitModel } from '@schema/metrics/VisitSchema';
 import { EventModel } from '@schema/metrics/EventSchema';
-import { ProjectSnapshotModel } from '@schema/ProjectSnapshot';
 
 
-type PDF_Data = {
-    pageVisits: number, customEvents: number,
-    visitsDay: number, eventsDay: number, visitsSessions: number,
-    visitsSessionsDay: number
+type PDFGenerationData = {
+    projectName: string,
+    snapshotName: string,
+    totalVisits: string,
+    avgVisitsDay: string,
+    totalEvents: string,
+    topDomain: string,
+    topDevice: string,
+    topCountries: string[],
+    topReferrers: string[],
+    avgGrowthText: string,
+
 }
 
 function formatNumberK(value: string | number, decimals: number = 1) {
@@ -26,81 +32,53 @@ function formatNumberK(value: string | number, decimals: number = 1) {
 
 }
 
-function createPdf(projectName: string, data: PDF_Data) {
-    const pdf = new pdfkit({
-        size: 'A4',
-        margins: { top: 50, bottom: 50, left: 50, right: 50 },
+const LINE_SPACING = 0.5;
+
+function createPdf(data: PDFGenerationData) {
+
+    const pdf = new pdfkit({ size: 'A4', margins: { top: 50, bottom: 50, left: 50, right: 50 }, });
+    pdf.fillColor('#ffffff').rect(0, 0, pdf.page.width, pdf.page.height).fill('#000000');
+
+    pdf.font('pdf_fonts/Poppins-Bold.ttf').fontSize(16).fillColor('#ffffff');
+
+    pdf.text(`Project name: ${data.projectName}`, { align: 'left' }).moveDown(LINE_SPACING);
+    pdf.text(`Snapshot name: ${data.snapshotName}`, { align: 'left' }).moveDown(LINE_SPACING);
+
+    pdf.font('pdf_fonts/Poppins-Regular.ttf').fontSize(12).fillColor('#ffffff')
+
+    pdf.text(`Total visits: ${data.totalVisits}`, { align: 'left' }).moveDown(LINE_SPACING);
+    pdf.text(`Average visits per day: ${data.avgVisitsDay}`, { align: 'left' }).moveDown(LINE_SPACING);
+    pdf.text(`Total events: ${data.totalEvents}`, { align: 'left' }).moveDown(LINE_SPACING);
+    pdf.text(`Top domain: ${data.topDomain}`, { align: 'left' }).moveDown(LINE_SPACING);
+    pdf.text(`Top device: ${data.topDevice}`, { align: 'left' }).moveDown(LINE_SPACING);
+
+    pdf.text('Top 3 countries:', { align: 'left' }).moveDown(LINE_SPACING);
+    data.topCountries.forEach((country: any) => {
+        pdf.text(`• ${country}`, { align: 'left' }).moveDown(LINE_SPACING);
     });
 
-    pdf.pipe(fs.createWriteStream('out.pdf'));
+    pdf.text('Top 3 best acquisition channels (referrers):', { align: 'left' }).moveDown(LINE_SPACING);
+    data.topReferrers.forEach((channel: any) => {
+        pdf.text(`• ${channel}`, { align: 'left' }).moveDown(LINE_SPACING);
+    });
 
-    // Set up fonts and colors
-    pdf
+    pdf.text('Average growth:', { align: 'left' }).moveDown(LINE_SPACING);
+    pdf.text(`${data.avgGrowthText}`, { align: 'left' }).moveDown(LINE_SPACING);
+
+    pdf.font('pdf_fonts/Poppins-Italic.ttf')
+        .text('This gives you an idea of the average growth your website is experiencing over time.', { align: 'left' })
+        .moveDown(LINE_SPACING);
+
+    pdf.font('pdf_fonts/Poppins-Regular.ttf')
+        .fontSize(10)
         .fillColor('#ffffff')
-        .rect(0, 0, pdf.page.width, pdf.page.height)
-        .fill('#000000');
+        .text('Created with Litlyx.com', 50, 760, { align: 'center' });
 
-    // Title
-    pdf
-        .font('pdf_fonts/Poppins-Bold.ttf')
-        .fontSize(26)
-        .fillColor('#ffffff')
-        .text(`Report of: ${projectName}`, 50, 50);
+    pdf.image('pdf_images/logo.png', 460, 700, { width: 100 });
 
-    // Section 1
-    pdf
-        .font('pdf_fonts/Poppins-SemiBold.ttf')
-        .fontSize(20)
-        .fillColor('#ffffff')
-        .text('-> This month has seen a lot of visits!', 50, 120);
-
-    pdf
-        .image('pdf_images/d.png', 50, 160, { width: 300 })
-        .font('pdf_fonts/Poppins-Bold.ttf')
-        .fontSize(28)
-        .fillColor('#ffffff')
-        .text(`${formatNumberK(data.pageVisits, 2)}`, 400, 180)
-        .text('WOW!', 400, 210);
-
-    // Section 2
-    pdf
-        .font('pdf_fonts/Poppins-SemiBold.ttf')
-        .fontSize(20)
-        .fillColor('#ffffff')
-        .text('-> There are also many recorded events!', 50, 350);
-
-    pdf
-        .image('pdf_images/c.png', 50, 390, { width: 300 })
-        .font('pdf_fonts/Poppins-Bold.ttf')
-        .fontSize(28)
-        .fillColor('#ffffff')
-        .text(`${formatNumberK(data.customEvents, 2)}`, 400, 420)
-        .text('Let\'s go!', 400, 450);
-
-    // Final section
-    pdf
-        .font('pdf_fonts/Poppins-SemiBold.ttf')
-        .fontSize(20)
-        .fillColor('#ffffff')
-        .text('This report is not final, it only serves to demonstrate the potential of this tool. LitLyx will improve soon! Stay tuned!', 50, 600);
-
-    pdf
-        .font('pdf_fonts/Poppins-Regular.ttf')
-        .fontSize(14)
-        .fillColor('#ffffff')
-        .text('Generated on litlyx.com', 50, 760);
-    pdf
-        .image('pdf_images/logo.png', 460, 700, { width: 100 }) // replace with the correct path to your Unsplash image
-
-    // End PDF creation and save to file
     pdf.end();
     return pdf;
 }
-
-
-
-
-
 
 export default defineEventHandler(async event => {
 
@@ -115,54 +93,73 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
+    const snapshotHeader = getHeader(event, 'x-snapshot-name');
     const fromHeader = getHeader(event, 'x-from');
-    const toHeader = getHeader(event, 'x-from');
+    const toHeader = getHeader(event, 'x-to');
 
-    const from = fromHeader;
-    const to = toHeader;
+    const from = fromHeader ? new Date(fromHeader) : new Date(2020, 0);
+    const to = toHeader ? new Date(toHeader) : new Date(3001, 0);
 
-    const eventsCount = await EventModel.countDocuments({ project_id: project._id });
-    const visitsCount = await VisitModel.countDocuments({ project_id: project._id });
+    const eventsCount = await EventModel.countDocuments({
+        project_id: project._id,
+        created_at: { $gte: from, $lte: to }
+    });
 
-    const sessionsVisitsCount: any[] = await VisitModel.aggregate([
-        { $match: { project_id: project._id } },
-        { $group: { _id: "$session" } },
-        { $count: "count" }
-    ]);
-
-    const firstEventDate = await EventModel.findOne({ project_id: project._id }, { created_at: 1 }, { sort: { created_at: 1 } });
-    const firstViewDate = await VisitModel.findOne({ project_id: project._id }, { created_at: 1 }, { sort: { created_at: 1 } });
-
-    // if (!firstEventDate || !firstViewDate) {
-    //     return setResponseStatus(event, 400, 'Not enough data to generate report');
-    // }    
-
-    const avgEventsDay = () => {
-        const days = (Date.now() - (firstEventDate?.created_at.getTime() || 0)) / 1000 / 60 / 60 / 24;
-        const avg = eventsCount / Math.max(days, 1);
-        return avg;
-    };
+    const visitsCount = await VisitModel.countDocuments({
+        project_id: project._id,
+        created_at: { $gte: from, $lte: to }
+    });
 
     const avgVisitDay = () => {
-        const days = (Date.now() - (firstViewDate?.created_at.getTime() || 0)) / 1000 / 60 / 60 / 24;
+        const days = (Date.now() - (from.getTime())) / 1000 / 60 / 60 / 24;
         const avg = visitsCount / Math.max(days, 1);
         return avg;
     };
 
-    const avgVisitsSessionsDay = () => {
-        const days = (Date.now() - (firstViewDate?.created_at.getTime() || 0)) / 1000 / 60 / 60 / 24;
-        const avg = sessionsVisitsCount[0].count / Math.max(days, 1);
-        return avg;
-    };
+    const topDevices = await VisitModel.aggregate([
+        { $match: { project_id: project._id, created_at: { $gte: from, $lte: to } } },
+        { $group: { _id: "$device", count: { $sum: 1 } } },
+        { $match: { _id: { $ne: null } } },
+        { $sort: { count: -1 } },
+        { $limit: 1 }
+    ]);
 
-    const pdf = createPdf(
-        project.name, {
-        customEvents: eventsCount,
-        eventsDay: avgEventsDay(),
-        pageVisits: visitsCount,
-        visitsDay: avgVisitDay(),
-        visitsSessions: sessionsVisitsCount[0].count,
-        visitsSessionsDay: avgVisitsSessionsDay()
+    const topDevice = topDevices?.[0]?._id || 'Not enough data';
+
+    const topDomains = await VisitModel.aggregate([
+        { $match: { project_id: project._id, created_at: { $gte: from, $lte: to } } },
+        { $group: { _id: "$website", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 1 }
+    ]);
+
+    const topDomain = topDomains?.[0]?._id || 'Not enough data';
+
+    const topCountries = await VisitModel.aggregate([
+        { $match: { project_id: project._id, created_at: { $gte: from, $lte: to } } },
+        { $group: { _id: "$country", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 3 }
+    ]);
+
+    const topReferrers = await VisitModel.aggregate([
+        { $match: { project_id: project._id, created_at: { $gte: from, $lte: to } } },
+        { $group: { _id: "$referrer", count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 3 }
+    ]);
+
+    const pdf = createPdf({
+        projectName: project.name,
+        snapshotName: snapshotHeader || 'NO_NAME',
+        totalVisits: formatNumberK(visitsCount),
+        avgVisitsDay: formatNumberK(avgVisitDay()) + '/day',
+        totalEvents: formatNumberK(eventsCount),
+        avgGrowthText: 'Insufficient Data (Requires at least 2 months of tracking)',
+        topDevice: topDevice,
+        topDomain: topDomain,
+        topCountries: topCountries.map(e => e._id),
+        topReferrers: topReferrers.map(e => e._id)
     });
 
     const passThrough = new PassThrough();

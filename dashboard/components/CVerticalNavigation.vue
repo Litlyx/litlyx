@@ -71,7 +71,11 @@ async function generatePDF() {
 
     try {
         const res = await $fetch<Blob>('/api/project/generate_pdf', {
-            ...signHeaders(),
+            ...signHeaders({
+                'x-snapshot-name': snapshot.value.name,
+                'x-from': snapshot.value.from.toISOString(),
+                'x-to': snapshot.value.to.toISOString(),
+            }),
             responseType: 'blob'
         });
 

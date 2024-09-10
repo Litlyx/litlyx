@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { Slice } from '@services/DateService';
 import { onMounted } from 'vue';
 
+import DateService, { type Slice } from '@services/DateService';
 
 const props = defineProps<{ slice: Slice }>();
 const slice = computed(() => props.slice);
@@ -22,7 +22,7 @@ function transformResponse(input: { _id: string, name: string, count: number }[]
 
     const fixed = fixMetrics({
         data: input,
-        from: safeSnapshotDates.value.from,
+        from: input[0]._id,
         to: safeSnapshotDates.value.to
     }, slice.value, {
         advanced: true,
@@ -68,7 +68,8 @@ onMounted(async () => {
         <div v-if="eventsStackedData.pending.value" class="flex justify-center py-40">
             <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
         </div>
-        <AdvancedStackedBarChart v-if="!eventsStackedData.pending.value" :datasets="eventsStackedData.data.value?.datasets || []"
+        <AdvancedStackedBarChart v-if="!eventsStackedData.pending.value"
+            :datasets="eventsStackedData.data.value?.datasets || []"
             :labels="eventsStackedData.data.value?.labels || []">
         </AdvancedStackedBarChart>
     </div>

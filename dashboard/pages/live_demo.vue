@@ -2,6 +2,7 @@
 
 definePageMeta({ layout: 'none' });
 
+const { snapshot, snapshots } = useSnapshot();
 
 const { data: project } = useLiveDemo();
 
@@ -9,7 +10,7 @@ let interval: any;
 
 onMounted(async () => {
     await getOnlineUsers();
-
+    snapshot.value = snapshots.value[0];
     interval = setInterval(async () => {
         await getOnlineUsers();
     }, 5000);
@@ -46,7 +47,7 @@ const selectLabelsEvents = [
     { label: 'Month', value: 'month' },
 ];
 
-const { snapshot } = useSnapshot();
+
 </script>
 
 
@@ -71,7 +72,8 @@ const { snapshot } = useSnapshot();
                     </div>
                     <div class="grow"></div>
                     <div class="flex gap-2 md:pt-0 pt-4">
-                        <LyxUiButton link="/" type="primary" class="poppins font-semibold text-[.9rem] lg:text-[1.2rem] flex items-center !px-14 py-4">
+                        <LyxUiButton link="/" type="primary"
+                            class="poppins font-semibold text-[.9rem] lg:text-[1.2rem] flex items-center !px-14 py-4">
                             Get started for free
                         </LyxUiButton>
                     </div>
@@ -85,7 +87,7 @@ const { snapshot } = useSnapshot();
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
-                <CardTitled class="p-4 flex-1" title="Visits trends" sub="Shows trends in page visits.">
+                <CardTitled class="p-4 flex-1 w-full" title="Visits trends" sub="Shows trends in page visits.">
                     <template #header>
                         <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
                             :options="selectLabels">
@@ -196,7 +198,8 @@ const { snapshot } = useSnapshot();
                     </div>
 
                     <div class="flex gap-2 flex-col md:flex-row">
-                        <LyxUiButton link="/" type="primary" class="poppins font-semibold text-[1.1rem] lg:text-[1.6rem] flex items-center !px-14">
+                        <LyxUiButton link="/" type="primary"
+                            class="poppins font-semibold text-[1.1rem] lg:text-[1.6rem] flex items-center !px-14">
                             Get started
                         </LyxUiButton>
                         <NuxtLink target="_blank" to="https://cal.com/litlyx/30min"
