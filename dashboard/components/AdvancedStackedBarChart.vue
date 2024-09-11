@@ -67,7 +67,7 @@ const chartData = ref<ChartData<'bar'>>({
             label: e.label || '?',
             backgroundColor: [e.color],
             borderWidth: 0,
-            borderRadius: 8
+            borderRadius: 0
         }
     })
 });

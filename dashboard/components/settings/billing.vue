@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs';
 import type { SettingsTemplateEntry } from './Template.vue';
+import { getPlanFromId, PREMIUM_PLAN, type PREMIUM_TAG } from '@data/PREMIUM';
 
 const activeProject = useActiveProject();
 
@@ -51,11 +52,17 @@ function openInvoice(link: string) {
 }
 
 function getPremiumName(type: number) {
-    if (type === 0) return 'FREE';
-    if (type === 1) return 'ACCELERATION';
-    if (type === 2) return 'EXPANSION';
-    return 'CUSTOM';
 
+    return Object.keys(PREMIUM_PLAN).map(e => ({
+        ...PREMIUM_PLAN[e as PREMIUM_TAG], name: e
+    })).find(e => e.ID == type)?.name;
+
+}
+
+function getPremiumPrice(type: number) {
+    const PLAN = getPlanFromId(type);
+    if (!PLAN) return '0,00';
+    return (PLAN.COST / 100).toFixed(2).replace('.', ',')
 }
 
 
@@ -104,7 +111,8 @@ const { visible } = usePricingDrawer();
                                 </div>
                             </div>
                             <div class="flex items-center gap-1">
-                                <div class="poppins font-semibold text-[2rem]"> $0 </div>
+                                <div class="poppins font-semibold text-[2rem]"> €
+                                    {{ getPremiumPrice(planData.premium_type) }} </div>
                                 <div class="poppins text-text-sub mt-2"> per month </div>
                             </div>
                         </div>

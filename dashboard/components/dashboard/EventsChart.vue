@@ -46,7 +46,28 @@ const chartData = ref<ChartData<'doughnut'>>({
         {
             rotation: 1,
             data: [],
-            backgroundColor: ['#6bbbe3', '#5655d0', '#a6d5cb', '#fae0b9'],
+            backgroundColor: [
+                "#5655d0",
+                "#6bbbe3",
+                "#a6d5cb",
+                "#fae0b9",
+                "#f28e8e",
+                "#e3a7e4",
+                "#c4a8e1",
+                "#8cc1d8",
+                "#f9c2cd",
+                "#b4e3b2",
+                "#ffdfba",
+                "#e9c3b5",
+                "#d5b8d6",
+                "#add7f6",
+                "#ffd1dc",
+                "#ffe7a1",
+                "#a8e6cf",
+                "#d4a5a5",
+                "#f3d6e4",
+                "#c3aed6"
+            ],
             borderColor: ['#1d1d1f'],
             borderWidth: 2
         },
@@ -87,7 +108,7 @@ const headers = computed(() => {
 });
 
 const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/data/events`, {
-    method: 'POST', headers, lazy: true, immediate: false,transform:transformResponse
+    method: 'POST', headers, lazy: true, immediate: false, transform: transformResponse
 });
 
 onMounted(() => {

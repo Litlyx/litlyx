@@ -30,7 +30,29 @@ function transformResponse(input: { _id: string, name: string, count: number }[]
     });
 
     const parsedDatasets: any[] = [];
-    const colors = ['#5655d0', '#6bbbe3', '#a6d5cb', '#fae0b9'];
+
+    const colors = [
+        "#5655d0", 
+        "#6bbbe3", 
+        "#a6d5cb", 
+        "#fae0b9", 
+        "#f28e8e", 
+        "#e3a7e4", 
+        "#c4a8e1", 
+        "#8cc1d8", 
+        "#f9c2cd", 
+        "#b4e3b2", 
+        "#ffdfba", 
+        "#e9c3b5", 
+        "#d5b8d6", 
+        "#add7f6", 
+        "#ffd1dc", 
+        "#ffe7a1", 
+        "#a8e6cf", 
+        "#d4a5a5", 
+        "#f3d6e4", 
+        "#c3aed6"  
+    ];
 
     for (let i = 0; i < fixed.allKeys.length; i++) {
         const line: any = {
