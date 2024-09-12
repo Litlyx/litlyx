@@ -3,6 +3,7 @@ import { WELCOME_EMAIL } from './email_templates/WelcomeEmail';
 import { LIMIT_50_EMAIL } from './email_templates/Limit50Email';
 import { LIMIT_90_EMAIL } from './email_templates/Limit90Email';
 import { LIMIT_MAX_EMAIL } from './email_templates/LimitMaxEmail';
+import { PURCHASE_EMAIL } from './email_templates/PurchaseEmail';
 
 
 class EmailService {
@@ -17,7 +18,7 @@ class EmailService {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "You've reached 50% limit on Litlyx";
-            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
 
             sendSmtpEmail.htmlContent = LIMIT_50_EMAIL
@@ -36,7 +37,7 @@ class EmailService {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "You've reached 90% limit on Litlyx";
-            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = LIMIT_90_EMAIL
                 .replace(/\[Project Name\]/, projectName)
@@ -53,7 +54,7 @@ class EmailService {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "You've reached your limit on Litlyx!";
-            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = LIMIT_MAX_EMAIL
                 .replace(/\[Project Name\]/, projectName)
@@ -70,9 +71,24 @@ class EmailService {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "Welcome to Litlyx!";
-            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = WELCOME_EMAIL;
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    async sendPurchaseEmail(target: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "Thank You for Upgrading Your Litlyx Plan!";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = PURCHASE_EMAIL;
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
         } catch (ex) {

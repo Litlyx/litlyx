@@ -36,7 +36,11 @@ export class RedisStreamService {
             setTimeout(() => this.readingLoop(options, processFunction), 1);
             return;
         }
-        await processFunction(result);
+        try {
+            await processFunction(result);
+        } catch (ex) {
+            console.error('Error on processing function');
+        }
         RedisStreamService.processed++;
         await new Promise(r => setTimeout(r, options.delay?.base || 100));
         setTimeout(() => this.readingLoop(options, processFunction), 1);
@@ -49,7 +53,7 @@ export class RedisStreamService {
             console.log('Processed:', (RedisStreamService.processed / 30).toFixed(), '/s');
             RedisStreamService.processed = 0;
         }, 30_000)
-        
+
         try {
             console.log('Start reading loop');
             await this.client.xGroupCreate(options.streamName, 'broker', '0', { MKSTREAM: true, });

@@ -38,7 +38,7 @@ async function analyzeEvent() {
 
 <template>
     <CardTitled title="Event User Flow"
-        sub="Track your user's journey from external links to custom events within your platform." class="w-full p-4">
+        sub="Track your user's journey from external links to in-app events, maintaining a complete view of their path from entry to engagement." class="w-full p-4">
 
         <div class="p-2 flex flex-col gap-3">
             <USelectMenu searchable searchable-placeholder="Search an event..." class="w-full"

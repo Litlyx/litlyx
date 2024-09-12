@@ -115,24 +115,29 @@ function goToUpgrade() {
 
             </div>
 
-            <DashboardTopSection></DashboardTopSection>
-            <DashboardTopCards :key="refreshKey"></DashboardTopCards>
+            <!-- <DashboardTopSection></DashboardTopSection>
+            <DashboardTopCards :key="refreshKey"></DashboardTopCards> -->
 
+
+
+            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
+                <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
+            </div>
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
-                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
+                <!-- <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
                     sub="Shows trends in page visits.">
                     <template #header>
                         <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
                             :options="selectLabels">
                         </SelectButton>
                     </template>
-                    <div>
-                        <DashboardVisitsLineChart :slice="(selectLabels[mainChartSelectIndex].value as any)">
-                        </DashboardVisitsLineChart>
-                    </div>
-                </CardTitled>
+<div>
+    <DashboardVisitsLineChart :slice="(selectLabels[mainChartSelectIndex].value as any)">
+    </DashboardVisitsLineChart>
+</div>
+</CardTitled> -->
 
                 <!-- <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions"
                     sub="Shows trends in sessions.">
@@ -149,7 +154,7 @@ function goToUpgrade() {
 
             </div>
 
-            <div class="flex w-full justify-center mt-6 px-6">
+            <!-- <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <DashboardWebsitesBarCard :key="refreshKey"></DashboardWebsitesBarCard>
@@ -159,7 +164,6 @@ function goToUpgrade() {
                     </div>
                 </div>
             </div>
-
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
@@ -191,7 +195,7 @@ function goToUpgrade() {
                     <div class="flex-1">
                     </div>
                 </div>
-            </div>
+            </div> -->
 
         </div>
 

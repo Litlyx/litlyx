@@ -10,7 +10,7 @@ export type Entry = {
     icon?: string,
     action?: () => any,
     adminOnly?: boolean,
-    premiumOnly?:boolean,
+    premiumOnly?: boolean,
     external?: boolean,
     grow?: boolean
 }
@@ -117,9 +117,12 @@ watch(selected, () => {
     setActiveProject(selected.value._id.toString())
 })
 
-const isPremium = computed(()=>{
+const isPremium = computed(() => {
     return activeProject.value?.premium;
 })
+
+
+const pricingDrawer = usePricingDrawer();
 
 </script>
 
@@ -130,6 +133,13 @@ const isPremium = computed(()=>{
             'hidden lg:flex': !isOpen
         }">
         <div class="py-4 px-2 gap-6 flex flex-col w-full">
+
+            <div class="flex px-2" v-if="!isPremium">
+                <LyxUiButton type="primary" class="w-full text-center text-[.8rem] font-medium" @click="pricingDrawer.visible.value = true;">
+                    Upgrade plan
+                </LyxUiButton>
+            </div>
+
 
             <div class="flex px-2 flex-col">
 

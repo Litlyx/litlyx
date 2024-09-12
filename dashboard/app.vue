@@ -12,12 +12,6 @@ const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dia
 
 const { visible } = usePricingDrawer();
 
-const { data: planData } = useFetch('/api/project/plan', {
-  ...signHeaders(),
-  lazy: true
-});
-
-
 </script>
 
 <template>
@@ -25,10 +19,10 @@ const { data: planData } = useFetch('/api/project/plan', {
   <div class="w-dvw h-dvh bg-lyx-background-light relative">
 
     <Transition name="pdrawer">
-      <LazyPricingDrawer @onCloseClick="visible = false" :currentSub="planData?.premium_type || 0"
+      <LazyPricingDrawer @onCloseClick="visible = false"
         class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if=visible>
       </LazyPricingDrawer>
-    </Transition> 
+    </Transition>
 
 
     <div class="fixed top-4 right-8 z-[999] flex flex-col gap-2" v-if="alerts.length > 0">
