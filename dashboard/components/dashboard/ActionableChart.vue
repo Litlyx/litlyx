@@ -106,11 +106,12 @@ const externalTooltipElement = ref<null | HTMLDivElement>(null);
 function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'line' | 'bar'> }) {
     const { chart, tooltip } = context;
     const tooltipEl = externalTooltipElement.value;
-
-    currentTooltipData.value = [0,0,0,''];
-    currentTooltipData.value.push(...tooltip.dataPoints.map(e => e.raw) as number[]);
-    currentTooltipData.value[2] = ((tooltip.dataPoints[2]?.raw as any)?.r2 || 0) as number;
-    currentTooltipData.value[3] = new Date(allDatesFull.value[tooltip.dataPoints[0].dataIndex]).toLocaleDateString();
+    
+    currentTooltipData.value.visits = (tooltip.dataPoints.find(e=> e.datasetIndex == 0)?.raw) as number;
+    currentTooltipData.value.sessions = (tooltip.dataPoints.find(e=> e.datasetIndex == 1)?.raw) as number;
+    currentTooltipData.value.events = ((tooltip.dataPoints.find(e=> e.datasetIndex == 2)?.raw) as any)?.r2 as number;
+    
+    currentTooltipData.value.date = new Date(allDatesFull.value[tooltip.dataPoints[0].dataIndex]).toLocaleDateString();
 
     if (!tooltipEl) return;
     if (tooltip.opacity === 0) {
@@ -147,7 +148,6 @@ function transformResponse(input: { _id: string, count: number }[]) {
 }
 
 const body = computed(() => {
-    console.log('INDEX IS', selectedLabelIndex.value, 'VALUE IS', selectLabels[selectedLabelIndex.value].value)
     return {
         from: safeSnapshotDates.value.from,
         to: safeSnapshotDates.value.to,
@@ -214,7 +214,8 @@ function onDataReady() {
     chartData.value.datasets[0].data = visitsData.data.value.data;
     chartData.value.datasets[1].data = sessionsData.data.value.data;
     chartData.value.datasets[2].data = eventsData.data.value.data.map(e => {
-        return { x: 0, y: maxChartY + 70, r: 25 / maxEventSize * e, r2: e }
+        const rValue = 25 / maxEventSize * e;
+        return { x: 0, y: maxChartY + 70, r: isNaN(rValue) ? 0 : rValue, r2: e }
     });
 
     chartData.value.datasets[0].backgroundColor = [createGradient('#5655d7')];
@@ -226,7 +227,14 @@ function onDataReady() {
 
 }
 
-const currentTooltipData = ref<[number, number, number, string]>([0, 0, 0, '']);
+const currentTooltipData = ref<{ visits: number, events: number, sessions: number, date: string }>({
+    visits: 0,
+    events: 0,
+    sessions: 0,
+    date: ''
+});
+
+const tooltipNameIndex = ['visits', 'sessions', 'events'];
 
 function onLegendChange(dataset: any, index: number, checked: any) {
     dataset.hidden = !checked;
@@ -273,14 +281,14 @@ onMounted(async () => {
             <LyxUiCard>
                 <div class="flex gap-2 items-center">
                     <div> Date: </div>
-                    <div v-if="currentTooltipData"> {{ currentTooltipData[3] }}</div>
+                    <div v-if="currentTooltipData"> {{ currentTooltipData.date }}</div>
                 </div>
                 <div v-for="(dataset, index) of chartData.datasets" class="flex gap-2 items-center">
                     <div :style="`background-color: ${legendColors[index]}`" class="h-4 w-4 rounded-full">
                     </div>
                     <div> {{ dataset.label }}</div>
                     <div v-if="currentTooltipData" class="grow text-right px-4">
-                        {{ currentTooltipData[index] }}
+                        {{ (currentTooltipData as any)[tooltipNameIndex[index]] }}
                     </div>
                 </div>
                 <!-- <div class="bg-lyx-background-lighter h-[2px] w-full my-2"> </div> -->

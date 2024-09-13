@@ -62,3 +62,9 @@ export function fillAndMergeTimelineAggregation(timeline: { _id: string, count: 
     const merged = DateService.mergeFilledDates(filledDates, timeline, '_id', slice, { count: 0 });
     return merged;
 }
+
+export function fillAndMergeTimelineAggregationV2(timeline: { _id: string, count: number }[], slice: Slice, from: string, to: string) {
+    const filledDates = DateService.createBetweenDates(from, to, slice);
+    const merged = DateService.mergeFilledDates(filledDates.dates, timeline, '_id', slice, { count: 0 });
+    return merged;
+}

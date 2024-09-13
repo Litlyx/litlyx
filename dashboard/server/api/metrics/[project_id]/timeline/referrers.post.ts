@@ -1,9 +1,7 @@
-import { getTimeline } from "./generic";
 import { VisitModel } from "@schema/metrics/VisitSchema";
-import DateService from "@services/DateService";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { executeAdvancedTimelineAggregation, fillAndMergeTimelineAggregation } from "~/server/services/TimelineService";
+import { executeAdvancedTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
     const project_id = getRequestProjectId(event);
@@ -31,7 +29,7 @@ export default defineEventHandler(async event => {
                 referrer
             }
         });
-        const timelineFilledMerged = fillAndMergeTimelineAggregation(timelineData, slice);
+        const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
         return timelineFilledMerged;
     });
 

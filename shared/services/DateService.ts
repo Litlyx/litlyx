@@ -102,6 +102,18 @@ class DateService {
         }
     }
 
+    createBetweenDates(from: string, to: string, slice: Slice) {
+        let start = dayjs(from);
+        const end = dayjs(to);
+        const filledDates: dayjs.Dayjs[] = [];
+        while (start.isBefore(end) || start.isSame(end)) {
+            filledDates.push(start);
+            start = start.add(1, slice);
+        }
+        return { dates: filledDates, from, to };
+    }
+
+
     fillDates(dates: string[], slice: Slice) {
         const allDates: dayjs.Dayjs[] = [];
         const firstDate = dayjs(dates.at(0));
@@ -109,7 +121,7 @@ class DateService {
         let currentDate = firstDate.clone();
 
         allDates.push(currentDate);
-        
+
         while (currentDate.isBefore(lastDate, slice)) {
             currentDate = currentDate.add(1, slice);
             allDates.push(currentDate);
@@ -121,7 +133,7 @@ class DateService {
     mergeFilledDates<T extends Record<string, any>, K extends keyof T>(dates: dayjs.Dayjs[], items: T[], dateField: K, slice: Slice, fillData: Omit<T, K>) {
         const result = new Array<T>();
         for (const date of dates) {
-            const item = items.find(e => dayjs(e[dateField]).isSame(date), slice);
+            const item = items.find(e => dayjs(e[dateField]).isSame(date, slice));
             result.push(item ?? { ...fillData, [dateField]: date.format() } as T);
         }
         return result;

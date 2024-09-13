@@ -81,6 +81,33 @@ function handleOnError(errorResponse: any) {
     alert('Error' + errorResponse);
 };
 
+function getRandomHex(size: number) {
+    const bytes = new Uint8Array(size);
+    window.crypto.getRandomValues(bytes);
+    return Array.from(bytes)
+        .map((byte) => byte.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+function githubLogin() {
+    const client_id = config.public.GITHUB_CLIENT_ID;
+    const redirect_uri = window.location.origin + '/api';
+    console.log({ redirect_uri })
+    const state = getRandomHex(16);
+    localStorage.setItem("latestCSRFToken", state);
+    const link = `https://github.com/login/oauth/authorize?client_id=${client_id}&response_type=code&scope=repo&redirect_uri=${redirect_uri}/integrations/github/oauth2/callback&state=${state}`;
+    window.location.assign(link);
+}
+
+const route = useRoute();
+
+onMounted(() => {
+    if (route.query.github_access_token) {
+        //TODO: Something
+    }
+})
+
+
 </script>
 
 
@@ -103,23 +130,34 @@ function handleOnError(errorResponse: any) {
                 </div>
 
                 <div class="text-text/80 text-[1.2rem] text-center w-[70%] poppins mt-2">
-                    Real-time analytics for 15+ JS/TS frameworks
+                    Track web analytics and custom events
                     <br>
-                    with one-line code setup.
+                    with extreme simplicity in under 30 sec.
                     <br>
-                    <div class="font-bold poppins mt-4">
+                    <!-- <div class="font-bold poppins mt-4">
                         Start for Free now! Up to 3k visits/events monthly.
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="mt-12">
 
-                    <div v-if="!isNoAuth" @click="login"
-                        class="hover:bg-accent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
-                        <div class="flex items-center">
-                            <i class="fab fa-google"></i>
+
+                    <div v-if="!isNoAuth" class="flex flex-col gap-2">
+                        <div @click="login"
+                            class="hover:bg-accent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                            <div class="flex items-center">
+                                <i class="fab fa-google"></i>
+                            </div>
+                            Continue with Google
                         </div>
-                        Continue with Google
+
+                        <div
+                            class=" opacity-35 cursor-not-allowed flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                            <div class="flex items-center">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            Continue with GitHub
+                        </div>
                     </div>
 
                     <div v-if="isNoAuth" @click="loginWithoutAuth"
@@ -133,7 +171,7 @@ function handleOnError(errorResponse: any) {
                 </div>
 
                 <div class="text-[.9rem] poppins mt-12 text-text-sub text-center relative z-[2]">
-                    By continuing you are indicating that you accept
+                    By continuing you are accepting
                     <br>
                     our
                     <a class="underline" href="https://litlyx.com/terms" target="_blank">Terms of Service</a> and

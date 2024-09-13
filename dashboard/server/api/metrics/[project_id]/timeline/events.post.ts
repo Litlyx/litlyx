@@ -2,7 +2,7 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { getTimeline } from "./generic";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { executeTimelineAggregation, fillAndMergeTimelineAggregation } from "~/server/services/TimelineService";
+import { executeTimelineAggregation, fillAndMergeTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
     const project_id = getRequestProjectId(event);
@@ -27,7 +27,7 @@ export default defineEventHandler(async event => {
             model: EventModel,
             from, to, slice
         });
-        const timelineFilledMerged = fillAndMergeTimelineAggregation(timelineData, slice);
+        const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
         return timelineFilledMerged;
     });
 

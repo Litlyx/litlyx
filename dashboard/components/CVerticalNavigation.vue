@@ -134,11 +134,11 @@ const pricingDrawer = usePricingDrawer();
         }">
         <div class="py-4 px-2 gap-6 flex flex-col w-full">
 
-            <div class="flex px-2" v-if="!isPremium">
+            <!-- <div class="flex px-2" v-if="!isPremium">
                 <LyxUiButton type="primary" class="w-full text-center text-[.8rem] font-medium" @click="pricingDrawer.visible.value = true;">
                     Upgrade plan
                 </LyxUiButton>
-            </div>
+            </div> -->
 
 
             <div class="flex px-2 flex-col">

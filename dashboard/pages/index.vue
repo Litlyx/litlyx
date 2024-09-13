@@ -78,6 +78,10 @@ const { snapshot } = useSnapshot();
 
 const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
 
+const isPremium = computed(() => {
+    return activeProject.value?.premium;
+})
+
 const pricingDrawer = usePricingDrawer();
 
 function goToUpgrade() {
@@ -93,9 +97,7 @@ function goToUpgrade() {
 
         <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction.data.value">
 
-            <div class="w-full px-4 py-2">
-
-
+            <div class="w-full px-4 py-2 gap-2 flex flex-col">
                 <div v-if="limitsInfo && limitsInfo.limited"
                     class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex items-center">
                     <div class="flex flex-col grow">
@@ -110,23 +112,38 @@ function goToUpgrade() {
                     <div>
                         <LyxUiButton type="outline" @click="goToUpgrade()"> Upgrade </LyxUiButton>
                     </div>
-
                 </div>
-
+                <div v-if="!isPremium" class="w-full bg-[#5680f822] p-4 rounded-lg text-[.9rem] flex items-center">
+                    <div class="flex flex-col grow">
+                        <div class="poppins font-semibold text-lyx-primary">
+                            Launch offer: 25% off
+                        </div>
+                        <div class="poppins text-lyx-primary">
+                            We're offering an exclusive 25% discount forever on all plans starting from the Acceleration
+                            Plan for our first 100 users who believe in our project.
+                            <br>
+                            Redeem Code: <span class="text-white font-bold text-[1rem]">LIT25</span> at checkout to
+                            claim your discount.
+                        </div>
+                    </div>
+                    <div>
+                        <LyxUiButton type="outline" @click="goToUpgrade()"> Upgrade </LyxUiButton>
+                    </div>
+                </div>
             </div>
 
-            <!-- <DashboardTopSection></DashboardTopSection>
-            <DashboardTopCards :key="refreshKey"></DashboardTopCards> -->
+            <DashboardTopSection></DashboardTopSection>
+            <DashboardTopCards :key="refreshKey"></DashboardTopCards>
 
 
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
                 <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
             </div>
-
+            <!-- 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
 
-                <!-- <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
+                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
                     sub="Shows trends in page visits.">
                     <template #header>
                         <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
@@ -137,24 +154,23 @@ function goToUpgrade() {
     <DashboardVisitsLineChart :slice="(selectLabels[mainChartSelectIndex].value as any)">
     </DashboardVisitsLineChart>
 </div>
-</CardTitled> -->
+</CardTitled>
 
-                <!-- <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions"
-                    sub="Shows trends in sessions.">
-                    <template #header>
+<CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions" sub="Shows trends in sessions.">
+    <template #header>
                         <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
                             :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
                         </SelectButton>
                     </template>
-                    <div>
-                        <DashboardSessionsLineChart :slice="(selectLabels[sessionsChartSelectIndex].value as any)">
-                        </DashboardSessionsLineChart>
-                    </div>
-                </CardTitled> -->
+    <div>
+        <DashboardSessionsLineChart :slice="(selectLabels[sessionsChartSelectIndex].value as any)">
+        </DashboardSessionsLineChart>
+    </div>
+</CardTitled>
 
-            </div>
+</div> -->
 
-            <!-- <div class="flex w-full justify-center mt-6 px-6">
+            <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <DashboardWebsitesBarCard :key="refreshKey"></DashboardWebsitesBarCard>
@@ -195,7 +211,7 @@ function goToUpgrade() {
                     <div class="flex-1">
                     </div>
                 </div>
-            </div> -->
+            </div>
 
         </div>
 
