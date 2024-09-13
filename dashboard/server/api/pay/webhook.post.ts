@@ -94,7 +94,7 @@ async function onPaymentOnetimeSuccess(event: Event.PaymentIntentSucceededEvent)
         if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
 
         setTimeout(() => {
-            EmailService.sendPurchaseEmail(user.email);
+            EmailService.sendPurchaseEmail(user.email, project.name);
         }, 1);
 
         return { ok: true };
@@ -139,9 +139,10 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
         if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
 
         setTimeout(() => {
-            EmailService.sendPurchaseEmail(user.email);
+            if (PLAN.ID == 0) return;
+            EmailService.sendPurchaseEmail(user.email, project.name);
         }, 1);
-        
+
         return { ok: true };
 
 

@@ -82,13 +82,15 @@ class EmailService {
         }
     }
 
-    async sendPurchaseEmail(target: string) {
+    async sendPurchaseEmail(target: string, projectName: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "Thank You for Upgrading Your Litlyx Plan!";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
-            sendSmtpEmail.htmlContent = PURCHASE_EMAIL;
+            sendSmtpEmail.htmlContent = PURCHASE_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .toString();;
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
         } catch (ex) {
