@@ -4,6 +4,8 @@ import { LIMIT_50_EMAIL } from './email_templates/Limit50Email';
 import { LIMIT_90_EMAIL } from './email_templates/Limit90Email';
 import { LIMIT_MAX_EMAIL } from './email_templates/LimitMaxEmail';
 import { PURCHASE_EMAIL } from './email_templates/PurchaseEmail';
+import { ANOMALY_VISITS_EVENTS_EMAIL } from './email_templates/AnomalyUsageEmail';
+import { ANOMALY_DOMAIN_EMAIL } from './email_templates/AnomalyDomainEmail';
 
 
 class EmailService {
@@ -89,6 +91,40 @@ class EmailService {
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = PURCHASE_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .toString();;
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    async sendAnomalyVisitsEventsEmail(target: string, projectName: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "🚨 Unexpected Activity Detected by our AI";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = ANOMALY_VISITS_EVENTS_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .toString();;
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    async sendAnomalyDomainEmail(target: string, projectName: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "🚨 Anomaly detected by our AI";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = ANOMALY_DOMAIN_EMAIL
                 .replace(/\[Project Name\]/, projectName)
                 .toString();;
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);

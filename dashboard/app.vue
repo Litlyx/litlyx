@@ -20,7 +20,7 @@ const { visible } = usePricingDrawer();
 
     <Transition name="pdrawer">
       <LazyPricingDrawer @onCloseClick="visible = false"
-        class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if=visible>
+        class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if="visible">
       </LazyPricingDrawer>
     </Transition>
 

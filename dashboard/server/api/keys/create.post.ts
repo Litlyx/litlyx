@@ -29,7 +29,7 @@ export default defineEventHandler(async event => {
 
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
-
+    
     if (project.owner.toString() != userData.id) {
         return setResponseStatus(event, 400, 'You are not the owner');
     }

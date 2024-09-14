@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 
 const allowAnyType = () => true;
-const jsonOptions = { limit: '5mb', type: allowAnyType }
+const jsonOptions = { limit: '25kb', type: allowAnyType }
 
 const streamName = requireEnv('STREAM_NAME');
 

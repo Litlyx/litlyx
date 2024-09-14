@@ -6,7 +6,7 @@ import { RedisStreamService } from "@services/RedisStreamService";
 const router = Router();
 
 const allowAnyType = () => true;
-const jsonOptions = { limit: '5mb', type: allowAnyType }
+const jsonOptions = { limit: '25kb', type: allowAnyType }
 
 const streamName = requireEnv('STREAM_NAME');
 

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export const ANOMALY_VISITS_EVENTS_EMAIL = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,7 +9,6 @@
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
 
     <!-- Email Content -->
-    <h2 style="color: #D32F2F;">🚨 Unexpected Activity Detected by our AI</h2>
 
     <p>Dear User,</p>
 
@@ -40,3 +39,4 @@
 
 </body>
 </html>
+`

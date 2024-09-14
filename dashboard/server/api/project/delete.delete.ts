@@ -18,6 +18,8 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not exist');
 
+    if (userData.id != project.owner.toString()) return setResponseStatus(event, 400, 'You cannot delete a project as guest');
+
     const projects = await ProjectModel.countDocuments({ owner: userData.id });
     if (projects == 1) return setResponseStatus(event, 400, 'Cannot delete last project');
 

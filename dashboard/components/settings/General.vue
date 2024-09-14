@@ -14,7 +14,6 @@ const entries: SettingsTemplateEntry[] = [
 const activeProject = useActiveProject();
 const projectNameInputVal = ref<string>(activeProject.value?.name || '');
 
-
 const apiKeys = ref<TApiSettings[]>([]);
 
 const newApiKeyName = ref<string>('');
@@ -145,13 +144,15 @@ function copyProjectId() {
         <template #pname>
             <div class="flex items-center gap-4">
                 <LyxUiInput class="w-full px-4 py-2" v-model="projectNameInputVal"></LyxUiInput>
-                <LyxUiButton @click="changeProjectName()" :disabled="!canChange" type="primary"> Change </LyxUiButton>
+                <LyxUiButton v-if="!isGuest" @click="changeProjectName()" :disabled="!canChange" type="primary"> Change
+                </LyxUiButton>
             </div>
         </template>
         <template #api>
             <div class="flex items-center gap-4" v-if="apiKeys && apiKeys.length < 5">
                 <LyxUiInput class="grow px-4 py-2" placeholder="ApiKeyName" v-model="newApiKeyName"></LyxUiInput>
-                <LyxUiButton @click="createApiKey()" :disabled="newApiKeyName.length < 3" type="primary">
+                <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length < 3"
+                    type="primary">
                     <i class="far fa-plus"></i>
                 </LyxUiButton>
             </div>
@@ -185,8 +186,8 @@ function copyProjectId() {
                 <div><i class="far fa-copy" @click="copyScript()"></i></div>
             </LyxUiCard>
         </template>
-        <template #pdelete>
-            <div class="flex justify-end">
+        <template #pdelete >
+            <div class="flex justify-end" v-if="!isGuest">
                 <LyxUiButton type="danger" @click="deleteProject()">
                     Delete project
                 </LyxUiButton>

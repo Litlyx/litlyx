@@ -9,8 +9,12 @@ export default defineEventHandler(async event => {
     if (!project_id) return;
 
     const user = getRequestUser(event);
+    if (!user?.logged) return setResponseStatus(event, 400, 'User need to be logged'); 
+
     const project = await getUserProjectFromId(project_id, user);
     if (!project) return;
+
+    if (project.owner.toString() != user.id) return setResponseStatus(event, 400, 'You cannot upgrade a project as guest'); 
 
     const body = await readBody(event);
 

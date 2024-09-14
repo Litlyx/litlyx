@@ -143,6 +143,7 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
             EmailService.sendPurchaseEmail(user.email, project.name);
         }, 1);
 
+        
         return { ok: true };
 
 

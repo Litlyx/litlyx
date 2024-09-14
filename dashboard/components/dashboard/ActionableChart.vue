@@ -106,11 +106,11 @@ const externalTooltipElement = ref<null | HTMLDivElement>(null);
 function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'line' | 'bar'> }) {
     const { chart, tooltip } = context;
     const tooltipEl = externalTooltipElement.value;
-    
-    currentTooltipData.value.visits = (tooltip.dataPoints.find(e=> e.datasetIndex == 0)?.raw) as number;
-    currentTooltipData.value.sessions = (tooltip.dataPoints.find(e=> e.datasetIndex == 1)?.raw) as number;
-    currentTooltipData.value.events = ((tooltip.dataPoints.find(e=> e.datasetIndex == 2)?.raw) as any)?.r2 as number;
-    
+
+    currentTooltipData.value.visits = (tooltip.dataPoints.find(e => e.datasetIndex == 0)?.raw) as number;
+    currentTooltipData.value.sessions = (tooltip.dataPoints.find(e => e.datasetIndex == 1)?.raw) as number;
+    currentTooltipData.value.events = ((tooltip.dataPoints.find(e => e.datasetIndex == 2)?.raw) as any)?.r2 as number;
+
     currentTooltipData.value.date = new Date(allDatesFull.value[tooltip.dataPoints[0].dataIndex]).toLocaleDateString();
 
     if (!tooltipEl) return;
@@ -118,11 +118,12 @@ function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'li
         tooltipEl.style.opacity = '0';
         return;
     }
-    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+    const { left: positionX, top: positionY } = chart.canvas.getBoundingClientRect();
     tooltipEl.style.opacity = '1';
     tooltipEl.style.left = positionX + tooltip.caretX + 'px';
     tooltipEl.style.top = positionY + tooltip.caretY + 'px';
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+
 }
 
 

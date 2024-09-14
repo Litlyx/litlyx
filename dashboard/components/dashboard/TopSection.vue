@@ -13,6 +13,19 @@ function copyProjectId() {
     navigator.clipboard.writeText((activeProject.value?._id || 0).toString());
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
+
+
+function showAnomalyInfoAlert() {
+    createAlert('AI Anomaly Detector info',
+        `Anomaly detector is running. It helps you detect a spike in visits or events, it could mean an
+         attack or simply higher traffic due to good performance. Additionally, it can detect if someone is
+         stealing parts of your website and hosting a duplicate version—an unfortunately common practice.
+         Litlyx will notify you via email with actionable advices`,
+        'far fa-bug',
+        10000
+    )
+
+}
 </script>
 
 
@@ -29,8 +42,10 @@ function copyProjectId() {
 
         <div class="flex md:gap-2 items-center md:justify-start flex-col md:flex-row">
             <div class="poppins font-medium text-lyx-text-darker text-[1.2rem]">Project:</div>
-            <div class="text-lyx-text poppins font-medium text-[1.2rem]"> {{ activeProject?.name || 'Loading...' }} </div>
+            <div class="text-lyx-text poppins font-medium text-[1.2rem]"> {{ activeProject?.name || 'Loading...' }}
+            </div>
         </div>
+
         <div class="flex flex-col md:flex-row md:gap-2 items-center md:justify-start">
             <div class="poppins font-medium text-lyx-text-darker text-[1.2rem]">Project id:</div>
             <div class="flex gap-2">
@@ -38,9 +53,20 @@ function copyProjectId() {
                     {{ activeProject?._id || 'Loading...' }}
                 </div>
                 <div class="flex items-center ml-3">
-                    <i @click="copyProjectId()" class="far fa-copy text-lyx-text hover:text-lyx-primary cursor-pointer text-[1.2rem]"></i>
+                    <i @click="copyProjectId()"
+                        class="far fa-copy text-lyx-text hover:text-lyx-primary cursor-pointer text-[1.2rem]"></i>
                 </div>
             </div>
         </div>
+
+        <div class="flex gap-2 items-center text-text/90 justify-center md:justify-start">
+            <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
+            <div class="poppins font-regular text-[1rem]"> AI Anomaly Detector </div>
+            <div class="flex items-center">
+                <i class="far fa-info-circle text-[.9rem] hover:text-lyx-primary cursor-pointer"
+                    @click="showAnomalyInfoAlert"></i>
+            </div>
+        </div>
+
     </div>
 </template>

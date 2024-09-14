@@ -28,6 +28,7 @@ const route = useRoute();
 const props = defineProps<Props>();
 
 const { isAdmin } = useUserRoles();
+const loggedUser = useLoggedUser()
 
 const debugMode = process.dev;
 
@@ -101,8 +102,15 @@ function onLogout() {
 }
 
 const { projects } = useProjectsList();
+const { data: guestProjects } = useGuestProjectsList()
 const activeProject = useActiveProject();
 
+const selectorProjects = computed(() => {
+    const result: TProject[] = [];
+    if (projects.value) result.push(...projects.value);
+    if (guestProjects.value) result.push(...guestProjects.value);
+    return result;
+});
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", {
     headers: computed(() => {
@@ -121,6 +129,11 @@ const isPremium = computed(() => {
     return activeProject.value?.premium;
 })
 
+function isProjectMine(owner?: string) {
+    if (!owner) return false;
+    if (!loggedUser.value?.logged) return;
+    return loggedUser.value.id == owner;
+}
 
 const pricingDrawer = usePricingDrawer();
 
@@ -152,14 +165,14 @@ const pricingDrawer = usePricingDrawer();
                             base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
                             active: '!bg-lyx-widget-lighter'
                         }
-                    }" class="w-full" v-if="projects" v-model="selected" :options="projects">
+                    }" class="w-full" v-if="selectorProjects" v-model="selected" :options="selectorProjects">
 
                         <template #option="{ option, active, selected }">
                             <div class="flex items-center gap-2">
                                 <div>
                                     <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
                                 </div>
-                                <div> {{ option.name }} </div>
+                                <div> {{ option.name }} {{ !isProjectMine(option.owner) ? '(Guest)' : '' }}</div>
                             </div>
                         </template>
 
@@ -168,7 +181,10 @@ const pricingDrawer = usePricingDrawer();
                                 <div>
                                     <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
                                 </div>
-                                <div> {{ activeProject?.name || '???' }} </div>
+                                <div>
+                                    {{ activeProject?.name || '-' }}
+                                    {{ !isProjectMine(activeProject?.owner?.toString()) ? '(Guest)' : '' }}
+                                </div>
                             </div>
                         </template>
                     </USelectMenu>
@@ -178,6 +194,7 @@ const pricingDrawer = usePricingDrawer();
                     </div>
 
                 </div>
+
 
                 <NuxtLink to="/project_creation" v-if="projects && (projects.length < (maxProjects || 1))"
                     class="flex items-center text-[.8rem] gap-1 justify-end pt-2 pr-2 text-lyx-text-dark hover:text-lyx-text cursor-pointer">

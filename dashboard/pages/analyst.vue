@@ -124,7 +124,7 @@ async function deleteChat(chat_id: string) {
 
         <div class="flex flex-row h-full">
 
-            <div class="flex-[5] py-8 flex flex-col items-center relative">
+            <div class="flex-[5] py-8 flex flex-col items-center relative bg-lyx-background-light">
 
                 <div class="flex flex-col items-center mt-[20vh] px-28" v-if="currentChatMessages.length == 0">
                     <div class="w-[10rem]">
@@ -138,7 +138,7 @@ async function deleteChat(chat_id: string) {
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-6" v-if="!isGuest">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
-                            class="bg-[#2f2f2f] hover:bg-[#424242] cursor-pointer p-4 rounded-lg poppins text-center">
+                            class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center">
                             {{ prompt }}
                         </div>
                     </div>
@@ -148,7 +148,7 @@ async function deleteChat(chat_id: string) {
 
                     <div class="flex w-full" v-for="message of currentChatMessages">
                         <div class="flex justify-end w-full poppins text-[1.1rem]" v-if="message.role === 'user'">
-                            <div class="bg-[#303030] px-5 py-3 rounded-lg">
+                            <div class="bg-lyx-widget-light px-5 py-3 rounded-lg">
                                 {{ message.content }}
                             </div>
                         </div>
@@ -177,13 +177,13 @@ async function deleteChat(chat_id: string) {
 
                 <div v-if="!isGuest" class="flex gap-2 items-center absolute bottom-8 left-0 w-full px-10 xl:px-28">
                     <input @keydown="onKeyDown" v-model="currentText"
-                        class="bg-[#303030] w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
+                        class="bg-lyx-widget-light w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
                     <div @click="sendMessage()"
-                        class="bg-[#303030] hover:bg-[#464646] cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-lyx-widget-light hhover:bg-lyx-widget-lighter cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-arrow-up"></i>
                     </div>
                     <div @click="menuOpen = !menuOpen"
-                        class="bg-[#303030] lg:hidden hover:bg-[#464646] cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-lyx-widget-light lg:hidden hhover:bg-lyx-widget-lighter cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-message"></i>
                     </div>
                 </div>
@@ -194,7 +194,7 @@ async function deleteChat(chat_id: string) {
             <div :class="{
                 'absolute': menuOpen,
                 'hidden lg:flex': !menuOpen
-            }" class="flex-[2] bg-[#303030] p-6 flex flex-col gap-4 h-full overflow-hidden">
+            }" class="flex-[2] bg-lyx-widget-light p-6 flex flex-col gap-4 h-full overflow-hidden">
 
                 <div class="gap-2 flex flex-col">
                     <div class="lg:hidden absolute right-4 top-4 text-[1.5rem]">
@@ -219,7 +219,7 @@ async function deleteChat(chat_id: string) {
 
                 <div class="px-2">
                     <div @click="openChat()"
-                        class="bg-menu cursor-pointer hover:bg-menu/80 rounded-lg px-4 py-3 poppins flex gap-2 items-center">
+                        class="bg-lyx-widget-lighter cursor-pointer hover:bg-lyx-widget rounded-lg px-4 py-3 poppins flex gap-4 items-center">
                         <div> <i class="fas fa-plus"></i> </div>
                         <div> New chat </div>
                     </div>
@@ -228,12 +228,11 @@ async function deleteChat(chat_id: string) {
 
                 <div class="overflow-y-auto">
                     <div class="flex flex-col gap-2 px-2">
-                        <div class="flex items-center gap-4 w-full" v-for="chat of chatsList?.toReversed()">
+                        <div :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }" class="flex rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-lighter hover:bg-lyx-widget" v-for="chat of chatsList?.toReversed()">
                             <i @click="deleteChat(chat._id.toString())"
-                                class="fas fa-trash hover:text-gray-300 cursor-pointer"></i>
+                                class="far fa-trash hover:text-gray-300 cursor-pointer"></i>
                             <div @click="openChat(chat._id.toString())"
-                                class="bg-menu px-4 py-3 w-full cursor-pointer hover:bg-menu/80 poppins rounded-lg"
-                                :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }">
+                                class="py-3 w-full cursor-pointer poppins rounded-lg">
                                 {{ chat.title }}
                             </div>
                         </div>

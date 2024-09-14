@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+export const ANOMALY_DOMAIN_EMAIL = `<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,17 +9,12 @@
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
 
     <!-- Email Content -->
-    <h2 style="color: #D32F2F;">❗️ Anomaly detected by our AI</h2>
 
     <p>Dear User,</p>
 
-    <p>We wanted to let you know that <strong>[Project Name]</strong> on <strong>Litlyx</strong> has an anomaly that our AI agent detected. Here is the report:</p>
+    <p>We wanted to let you know that <strong>[Project Name]</strong> on <strong>Litlyx</strong> has an anomaly that our AI agent detected.</p>
 
-    <p><strong>Anomaly:</strong> Suspicious DNS</p>
-    <p><strong>Message:</strong> [Suspicious DNS name] is logging data in your project. Is that you?</p>
-    <p><strong>Date:</strong> Current date!</p>
-
-    <p>You can analyze the suspicious DNS on your Litlyx dashboard. We put a symbol next to each suspicious DNS to let users know something might be wrong!</p>
+    <p>You can analyze a suspicious DNS on your Litlyx dashboard. We put a symbol next to each suspicious DNS to let users know something might be wrong!</p>
 
     <h3>What can I do?</h3>
 
@@ -45,3 +40,4 @@
 
 </body>
 </html>
+`

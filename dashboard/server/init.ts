@@ -2,9 +2,16 @@ import mongoose from "mongoose";
 import { Redis } from "~/server/services/CacheService";
 import EmailService from '@services/EmailService';
 import StripeService from '~/server/services/StripeService';
+import { anomalyLoop } from "./services/AnomalyService";
 
 const config = useRuntimeConfig();
 let connection: mongoose.Mongoose;
+
+
+let anomalyMinutesCount = 0;
+function anomalyCheck() {
+
+}
 
 export default async () => {
 
@@ -36,5 +43,8 @@ export default async () => {
     console.log('[REDIS] Connected');
 
     console.log('[SERVER] Completed');
+
+    console.log('[ANOMALY LOOP] Started');
+    anomalyLoop();
 
 };
