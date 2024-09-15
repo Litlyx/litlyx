@@ -1,4 +1,4 @@
-import { getPlanFromId, getPlanFromTag } from '@data/PREMIUM';
+import { getPlanFromId, getPlanFromTag, PREMIUM_TAG } from '@data/PREMIUM';
 import Stripe from 'stripe';
 
 class StripeService {
@@ -133,9 +133,23 @@ class StripeService {
         return deleted;
     }
 
-    async createOneTimeCoupon() {
+    async createStripeCode(plan: PREMIUM_TAG) {
         if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
+
+        const INCUBATION_COUPON = 'sDD7Weh3';
+
+        if (plan === 'INCUBATION') {
+            await this.stripe.promotionCodes.create({
+                coupon: INCUBATION_COUPON,
+                active: true,
+                code: 'TESTCACCA1',
+                max_redemptions: 1,
+            })
+            return true;
+        }
+
+        return false;
     }
 
     async createOneTimeSubscriptionDummy(customer_id: string, planId: number) {

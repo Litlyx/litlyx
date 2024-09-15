@@ -1,10 +1,15 @@
 <script lang="ts" setup>
-definePageMeta({ layout: 'dashboard' });
 
+definePageMeta({ layout: 'dashboard' });
 
 const activeProject = useActiveProject();
 
-const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/${activeProject.value?._id}/chats_list`, signHeaders());
+const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/${activeProject.value?._id}/chats_list`, {
+    ...signHeaders(),
+    transform: (data) => {
+        return data?.toReversed();
+    }
+});
 
 const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/ai/${activeProject.value?._id}/chats_remaining`, signHeaders());
 
@@ -12,7 +17,7 @@ const currentText = ref<string>("");
 const loading = ref<boolean>(false);
 
 const currentChatId = ref<string>("");
-const currentChatMessages = ref<any[]>([]);
+const currentChatMessages = ref<{ role: string, content: string, charts?: any[] }[]>([]);
 
 const scroller = ref<HTMLDivElement | null>(null);
 
@@ -39,7 +44,7 @@ async function sendMessage() {
             body: JSON.stringify(body),
             ...signHeaders({ 'Content-Type': 'application/json' })
         });
-        currentChatMessages.value.push({ role: 'assistant', content: res });
+        currentChatMessages.value.push({ role: 'assistant', content: res.content || 'nocontent', charts: res.charts.map(e => JSON.parse(e)) });
 
         await reloadChatsRemaining();
         await reloadChatsList();
@@ -75,7 +80,8 @@ async function openChat(chat_id?: string) {
     currentChatId.value = chat_id;
     const messages = await $fetch(`/api/ai/${activeProject.value._id}/${chat_id}/get_messages`, signHeaders());
     if (!messages) return;
-    currentChatMessages.value = messages;
+
+    currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
     setTimeout(() => scrollToBottom(), 1);
 
 }
@@ -146,14 +152,15 @@ async function deleteChat(chat_id: string) {
 
                 <div ref="scroller" class="flex flex-col w-full gap-6 px-6 xl:px-28 overflow-y-auto pb-20">
 
-                    <div class="flex w-full" v-for="message of currentChatMessages">
+                    <div class="flex w-full flex-col" v-for="message of currentChatMessages">
+
                         <div class="flex justify-end w-full poppins text-[1.1rem]" v-if="message.role === 'user'">
                             <div class="bg-lyx-widget-light px-5 py-3 rounded-lg">
                                 {{ message.content }}
                             </div>
                         </div>
                         <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
-                            v-if="message.role === 'assistant'">
+                            v-if="message.role === 'assistant' && message.content">
                             <div class="flex items-center justify-center shrink-0">
                                 <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                             </div>
@@ -161,6 +168,15 @@ async function deleteChat(chat_id: string) {
                                 class="max-w-[70%] text-text/90 whitespace-pre-wrap">
                             </div>
                         </div>
+
+                        <div v-if="message.charts && message.charts.length > 0"
+                            class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem] flex-col mt-4">
+                            <div v-for="chart of message.charts" class="w-full">
+                                 <AnalystComposableChart :datasets="chart.datasets" :labels="chart.labels" :title="chart.title">
+                                </AnalystComposableChart>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div v-if="loading"
@@ -228,7 +244,9 @@ async function deleteChat(chat_id: string) {
 
                 <div class="overflow-y-auto">
                     <div class="flex flex-col gap-2 px-2">
-                        <div :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }" class="flex rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-lighter hover:bg-lyx-widget" v-for="chat of chatsList?.toReversed()">
+                        <div :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }"
+                            class="flex rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-lighter hover:bg-lyx-widget"
+                            v-for="chat of chatsList">
                             <i @click="deleteChat(chat._id.toString())"
                                 class="far fa-trash hover:text-gray-300 cursor-pointer"></i>
                             <div @click="openChat(chat._id.toString())"

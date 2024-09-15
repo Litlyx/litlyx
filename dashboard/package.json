@@ -26,7 +26,7 @@
     "nodemailer": "^6.9.13",
     "nuxt": "^3.11.2",
     "nuxt-vue3-google-signin": "^0.0.11",
-    "openai": "^4.47.1",
+    "openai": "^4.61.0",
     "pdfkit": "^0.15.0",
     "primevue": "^3.52.0",
     "redis": "^4.6.13",

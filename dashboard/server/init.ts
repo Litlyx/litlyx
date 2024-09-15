@@ -8,11 +8,6 @@ const config = useRuntimeConfig();
 let connection: mongoose.Mongoose;
 
 
-let anomalyMinutesCount = 0;
-function anomalyCheck() {
-
-}
-
 export default async () => {
 
     console.log('[SERVER] Initializing');

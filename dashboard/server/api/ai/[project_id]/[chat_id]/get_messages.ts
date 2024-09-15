@@ -1,8 +1,7 @@
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { AiChatModel } from "@schema/ai/AiChatSchema";
-import { sendMessageOnChat } from "~/server/services/AiService";
-
-
+import type OpenAI from "openai";
+import { getChartsInMessage } from "~/server/services/AiService";
 
 export default defineEventHandler(async event => {
 
@@ -19,11 +18,14 @@ export default defineEventHandler(async event => {
     const chat = await AiChatModel.findOne({ _id: chat_id, project_id });
     if (!chat) return;
 
-    const messages = chat.messages.filter(e => {
-        return (e.role == 'user' || (e.role == 'assistant' && e.content != undefined))
-    }).map(e => {
-        return { role: e.role, content: e.content }
-    });
-
-    return messages;
+    return (chat.messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[])
+        .filter(e => e.role === 'assistant' || e.role === 'user')
+        .map(e => {
+            const charts = getChartsInMessage(e);
+            const content = e.content;
+            return { role: e.role, content, charts }
+        })
+        .filter(e=>{
+            return e.charts.length > 0 || e.content
+        })
 });

@@ -73,11 +73,16 @@ watch(activeProject, () => {
 
 
 const entries: SettingsTemplateEntry[] = [
+    // { id: 'info', title: 'Billing informations', text: 'Manage billing informations for this project' },
     { id: 'plan', title: 'Current plan', text: 'Manage current plat for this project' },
     { id: 'usage', title: 'Usage', text: 'Show usage of current project' },
     { id: 'invoices', title: 'Invoices', text: 'Manage invoices of current project' },
 ]
 
+
+const currentBillingInfo = ref<any>({
+    address: ''
+});
 
 const { visible } = usePricingDrawer();
 
@@ -114,6 +119,9 @@ const { visible } = usePricingDrawer();
                                 <div class="poppins font-semibold text-[2rem]"> €
                                     {{ getPremiumPrice(planData.premium_type) }} </div>
                                 <div class="poppins text-text-sub mt-2"> per month </div>
+                                <div class="flex items-center ml-2">
+                                    <i class="far fa-info-circle text-[.8rem]"></i>
+                                </div>
                             </div>
                         </div>
                         <div class="flex flex-col">

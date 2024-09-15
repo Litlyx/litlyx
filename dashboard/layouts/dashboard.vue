@@ -31,7 +31,7 @@ const sections: Section[] = [
                 label: 'Slack support', icon: 'fab fa-slack',
                 premiumOnly: true,
                 action() {
-                    if (isGuest) return;
+                    if (isGuest.value === true) return;
                     if (isPremium.value === true) {
                         window.open('https://join.slack.com/t/litlyx/shared_invite/zt-2q3oawn29-hZlu_fBUBlc4052Ooe3FZg', '_blank');
                     } else {

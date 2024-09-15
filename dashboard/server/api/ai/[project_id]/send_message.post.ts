@@ -23,5 +23,6 @@ export default defineEventHandler(async event => {
     if (chatsRemaining <= 0) return setResponseStatus(event, 400, 'CHAT_LIMIT_REACHED');
 
     const response = await sendMessageOnChat(text, project._id.toString(), chat_id);
-    return response || 'Error getting response';
+
+    return response;
 });

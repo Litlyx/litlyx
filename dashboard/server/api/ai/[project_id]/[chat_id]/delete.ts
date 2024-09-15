@@ -1,8 +1,5 @@
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { AiChatModel } from "@schema/ai/AiChatSchema";
-import { sendMessageOnChat } from "~/server/services/AiService";
-
-
 
 export default defineEventHandler(async event => {
 

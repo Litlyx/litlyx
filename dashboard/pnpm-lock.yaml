@@ -48,8 +48,8 @@ importers:
         specifier: ^0.0.11
         version: 0.0.11(@types/node@20.12.12)(rollup@4.18.0)(typescript@5.4.2)(vite@5.2.12(@types/node@20.12.12)(sass@1.77.2)(terser@5.31.0))(vue@3.4.27(typescript@5.4.2))
       openai:
-        specifier: ^4.47.1
-        version: 4.47.2(encoding@0.1.13)
+        specifier: ^4.61.0
+        version: 4.61.0(encoding@0.1.13)
       pdfkit:
         specifier: ^0.15.0
         version: 0.15.0
@@ -1189,6 +1189,9 @@ packages:
   '@types/pdfkit@0.13.4':
     resolution: {integrity: sha512-ixGNDHYJCCKuamY305wbfYSphZ2WPe8FPkjn8oF4fHV+PgPV4V+hecPh2VOS2h4RNtpSB3zQcR4sCpNvvrEb1A==}
 
+  '@types/qs@6.9.16':
+    resolution: {integrity: sha512-7i+zxXdPD0T4cKDuxCUXJ4wHcsJLwENa6Z3dCu8cfCK743OGy5Nu1RmAGqDPsoTDINVEcdXKRvR/zre+P2Ku1A==}
+
   '@types/resize-observer-browser@0.1.11':
     resolution: {integrity: sha512-cNw5iH8JkMkb3QkCoe7DaZiawbDQEUX8t7iuQaRTyLOyQCR2h+ibBD4GJt7p5yhUHrlOeL7ZtbxNHeipqNsBzQ==}
 
@@ -1428,20 +1431,20 @@ packages:
   '@vue/reactivity@3.4.27':
     resolution: {integrity: sha512-kK0g4NknW6JX2yySLpsm2jlunZJl2/RJGZ0H9ddHdfBVHcNzxmQ0sS0b09ipmBoQpY8JM2KmUw+a6sO8Zo+zIA==}
 
-  '@vue/reactivity@3.5.4':
-    resolution: {integrity: sha512-HKKbEuP7tYSGCq4e4nK6ZW6l5hyG66OUetefBp4budUyjvAYsnQDf+bgFzg2RAgnH0CInyqXwD9y47jwJEHrQw==}
+  '@vue/reactivity@3.5.5':
+    resolution: {integrity: sha512-V4tTWElZQhT73PSK3Wnax9R9m4qvMX+LeKHnfylZc6SLh4Jc5/BPakp6e3zEhKWi5AN8TDzRkGnLkp8OqycYng==}
 
   '@vue/runtime-core@3.4.27':
     resolution: {integrity: sha512-7aYA9GEbOOdviqVvcuweTLe5Za4qBZkUY7SvET6vE8kyypxVgaT1ixHLg4urtOlrApdgcdgHoTZCUuTGap/5WA==}
 
-  '@vue/runtime-core@3.5.4':
-    resolution: {integrity: sha512-f3ek2sTA0AFu0n+w+kCtz567Euqqa3eHewvo4klwS7mWfSj/A+UmYTwsnUFo35KeyAFY60JgrCGvEBsu1n/3LA==}
+  '@vue/runtime-core@3.5.5':
+    resolution: {integrity: sha512-2/CFaRN17jgsXy4MpigWFBCAMmLkXPb4CjaHrndglwYSra7ajvkH2cat21dscuXaH91G8fXAeg5gCyxWJ+wCRA==}
 
   '@vue/runtime-dom@3.4.27':
     resolution: {integrity: sha512-ScOmP70/3NPM+TW9hvVAz6VWWtZJqkbdf7w6ySsws+EsqtHvkhxaWLecrTorFxsawelM5Ys9FnDEMt6BPBDS0Q==}
 
-  '@vue/runtime-dom@3.5.4':
-    resolution: {integrity: sha512-ofyc0w6rbD5KtjhP1i9hGOKdxGpvmuB1jprP7Djlj0X7R5J/oLwuNuE98GJ8WW31Hu2VxQHtk/LYTAlW8xrJdw==}
+  '@vue/runtime-dom@3.5.5':
+    resolution: {integrity: sha512-0bQGgCuL+4Muz5PsCLgF4Ata9BTdhHi5VjsxtTDyI0Wy4MgoSvBGaA6bDc7W7CGgZOyirf9LNeetMYHQ05pgpw==}
 
   '@vue/server-renderer@3.4.27':
     resolution: {integrity: sha512-dlAMEuvmeA3rJsOMJ2J1kXU7o7pOxgsNHVr9K8hB3ImIkSuBrIdy0vF66h8gf8Tuinf1TK3mPAz2+2sqyf3KzA==}
@@ -1451,8 +1454,8 @@ packages:
   '@vue/shared@3.4.27':
     resolution: {integrity: sha512-DL3NmY2OFlqmYYrzp39yi3LDkKxa5vZVwxWdQ3rG0ekuWscHraeIbnI8t+aZK7qhYqEqWKTUdijadunb9pnrgA==}
 
-  '@vue/shared@3.5.4':
-    resolution: {integrity: sha512-L2MCDD8l7yC62Te5UUyPVpmexhL9ipVnYRw9CsWfm/BGRL5FwDX4a25bcJ/OJSD3+Hx+k/a8LDKcG2AFdJV3BA==}
+  '@vue/shared@3.5.5':
+    resolution: {integrity: sha512-0KyMXyEgnmFAs6rNUL+6eUHtUCqCaNrVd+AW3MX3LyA0Yry5SA0Km03CDKiOua1x1WWnIr+W9+S0GMFoSDWERQ==}
 
   '@vueuse/components@10.10.0':
     resolution: {integrity: sha512-HiA10NQ9HJAGnju+8ZK4TyA8LIc0a6BnJmVWDa/k+TRhaYCVacSDU04k0BQ2otV+gghUDdwu98upf6TDRXpoeg==}
@@ -3704,9 +3707,14 @@ packages:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
 
-  openai@4.47.2:
-    resolution: {integrity: sha512-E3Wq9mYdDSLajmcJm9RO/lCegTKrQ7ilAkMbhob4UgGhTjHwIHI+mXNDNPl5+sGIUp2iVUkpoi772FjYa7JlqA==}
+  openai@4.61.0:
+    resolution: {integrity: sha512-xkygRBRLIUumxzKGb1ug05pWmJROQsHkGuj/N6Jiw2dj0dI19JvbFpErSZKmJ/DA+0IvpcugZqCAyk8iLpyM6Q==}
     hasBin: true
+    peerDependencies:
+      zod: ^3.23.8
+    peerDependenciesMeta:
+      zod:
+        optional: true
 
   openapi-typescript@6.7.6:
     resolution: {integrity: sha512-c/hfooPx+RBIOPM09GSxABOZhYPblDoyaGhqBkD/59vtpN21jEuWKDlM0KYTvqJVlSYjKs0tBcIdeXKChlSPtw==}
@@ -5083,10 +5091,6 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
-
-  web-streams-polyfill@3.3.3:
-    resolution: {integrity: sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==}
-    engines: {node: '>= 8'}
 
   web-streams-polyfill@4.0.0-beta.3:
     resolution: {integrity: sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==}
@@ -6547,7 +6551,7 @@ snapshots:
 
   '@types/node-fetch@2.6.11':
     dependencies:
-      '@types/node': 18.19.33
+      '@types/node': 20.12.12
       form-data: 4.0.0
 
   '@types/node@18.19.33':
@@ -6565,6 +6569,8 @@ snapshots:
   '@types/pdfkit@0.13.4':
     dependencies:
       '@types/node': 20.12.12
+
+  '@types/qs@6.9.16': {}
 
   '@types/resize-observer-browser@0.1.11': {}
 
@@ -6995,7 +7001,7 @@ snapshots:
       '@volar/language-core': 1.11.1
       '@volar/source-map': 1.11.1
       '@vue/compiler-dom': 3.4.27
-      '@vue/shared': 3.5.4
+      '@vue/shared': 3.5.5
       computeds: 0.0.1
       minimatch: 9.0.4
       muggle-string: 0.3.1
@@ -7008,19 +7014,19 @@ snapshots:
     dependencies:
       '@vue/shared': 3.4.27
 
-  '@vue/reactivity@3.5.4':
+  '@vue/reactivity@3.5.5':
     dependencies:
-      '@vue/shared': 3.5.4
+      '@vue/shared': 3.5.5
 
   '@vue/runtime-core@3.4.27':
     dependencies:
       '@vue/reactivity': 3.4.27
       '@vue/shared': 3.4.27
 
-  '@vue/runtime-core@3.5.4':
+  '@vue/runtime-core@3.5.5':
     dependencies:
-      '@vue/reactivity': 3.5.4
-      '@vue/shared': 3.5.4
+      '@vue/reactivity': 3.5.5
+      '@vue/shared': 3.5.5
 
   '@vue/runtime-dom@3.4.27':
     dependencies:
@@ -7028,11 +7034,11 @@ snapshots:
       '@vue/shared': 3.4.27
       csstype: 3.1.3
 
-  '@vue/runtime-dom@3.5.4':
+  '@vue/runtime-dom@3.5.5':
     dependencies:
-      '@vue/reactivity': 3.5.4
-      '@vue/runtime-core': 3.5.4
-      '@vue/shared': 3.5.4
+      '@vue/reactivity': 3.5.5
+      '@vue/runtime-core': 3.5.5
+      '@vue/shared': 3.5.5
       csstype: 3.1.3
 
   '@vue/server-renderer@3.4.27(vue@3.4.27(typescript@5.4.2))':
@@ -7043,7 +7049,7 @@ snapshots:
 
   '@vue/shared@3.4.27': {}
 
-  '@vue/shared@3.5.4': {}
+  '@vue/shared@3.5.5': {}
 
   '@vueuse/components@10.10.0(vue@3.4.27(typescript@5.4.2))':
     dependencies:
@@ -9585,16 +9591,17 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.47.2(encoding@0.1.13):
+  openai@4.61.0(encoding@0.1.13):
     dependencies:
       '@types/node': 18.19.33
       '@types/node-fetch': 2.6.11
+      '@types/qs': 6.9.16
       abort-controller: 3.0.0
       agentkeepalive: 4.5.0
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0(encoding@0.1.13)
-      web-streams-polyfill: 3.3.3
+      qs: 6.12.1
     transitivePeerDependencies:
       - encoding
 
@@ -11035,8 +11042,8 @@ snapshots:
 
   vue-chart-3@3.1.8(chart.js@3.9.1)(vue@3.4.27(typescript@5.4.2)):
     dependencies:
-      '@vue/runtime-core': 3.5.4
-      '@vue/runtime-dom': 3.5.4
+      '@vue/runtime-core': 3.5.5
+      '@vue/runtime-dom': 3.5.5
       chart.js: 3.9.1
       csstype: 3.1.3
       lodash-es: 4.17.21
@@ -11104,8 +11111,6 @@ snapshots:
       '@vue/shared': 3.4.27
     optionalDependencies:
       typescript: 5.4.2
-
-  web-streams-polyfill@3.3.3: {}
 
   web-streams-polyfill@4.0.0-beta.3: {}
 
