@@ -44,6 +44,5 @@ export default async () => {
 
     logger.warn('[ANOMALY LOOP] Disabled');
     // anomalyLoop();
-    logger.error(new Error('test error'))
 
 };
