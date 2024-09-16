@@ -17,12 +17,12 @@ const anomalyData = { minutes: 0 }
 
 async function anomalyCheckAll() {
     const start = performance.now();
-    console.log('START ANOMALY CHECK');
+    console.log('[ANOMALY] START ANOMALY CHECK');
     const projects = await ProjectModel.find({}, { _id: 1 });
     for (const project of projects) {
         await findAnomalies(project.id);
     }
-    const end = start - performance.now();
+    const end = performance.now() - start;
     console.log('END ANOMALY CHECK', end, 'ms');
 }
 
@@ -31,6 +31,7 @@ export function anomalyLoop() {
         anomalyCheckAll();
         anomalyData.minutes = 0;
     }
+    anomalyData.minutes++;
     setTimeout(() => anomalyLoop(), 1000 * 60);
 }
 
@@ -83,21 +84,24 @@ export async function findAnomalies(project_id: string) {
     ]);
 
 
-    const rootWebsite = websites.reduce((a, e) => {
-        return a.count > e.count ? a : e;
-    });
-
-    const rootDomain = new url.URL(getUrlFromString(rootWebsite._id)).hostname;
-
     const detectedWebsites: string[] = [];
 
-    for (const website of websites) {
-        const websiteDomain = new url.URL(getUrlFromString(website._id)).hostname;
+    if (websites.length > 0) {
+        const rootWebsite = websites.reduce((a, e) => {
+            return a.count > e.count ? a : e;
+        });
+        const rootDomain = new url.URL(getUrlFromString(rootWebsite._id)).hostname;
+        for (const website of websites) {
+            const websiteDomain = new url.URL(getUrlFromString(website._id)).hostname;
 
-        if (!websiteDomain.includes(rootDomain)) {
-            detectedWebsites.push(website._id);
+            if (websiteDomain === 'localhost') continue;
+            if (websiteDomain === '127.0.0.1') continue;
+            if (websiteDomain === '0.0.0.0') continue;
+
+            if (!websiteDomain.includes(rootDomain)) { detectedWebsites.push(website._id); }
         }
     }
+
 
     const visitAnomalies = movingAverageAnomaly(visitsTimelineData, WINDOW_SIZE, THRESHOLD);
     const eventAnomalies = movingAverageAnomaly(eventsTimelineData, WINDOW_SIZE, THRESHOLD);

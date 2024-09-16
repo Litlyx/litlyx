@@ -3,6 +3,9 @@ import { Redis } from "~/server/services/CacheService";
 import EmailService from '@services/EmailService';
 import StripeService from '~/server/services/StripeService';
 import { anomalyLoop } from "./services/AnomalyService";
+import { logger } from "./Logger";
+
+
 
 const config = useRuntimeConfig();
 let connection: mongoose.Mongoose;
@@ -10,36 +13,37 @@ let connection: mongoose.Mongoose;
 
 export default async () => {
 
-    console.log('[SERVER] Initializing');
+    logger.info('[SERVER] Initializing');
 
     if (config.EMAIL_SERVICE) {
         EmailService.init(config.BREVO_API_KEY);
-        console.log('[EMAIL] Initialized')
+        logger.info('[EMAIL] Initialized');
     }
 
 
     if (config.STRIPE_SECRET) {
         StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, false);
-        console.log('[STRIPE] Initialized')
+        logger.info('[STRIPE] Initialized');
     } else {
         StripeService.disable();
-        console.log('[STRIPE] No stripe key - Disabled mode')
+        logger.warn('[STRIPE] No stripe key - Disabled mode');
     }
 
 
     if (!connection || connection.connection.readyState == mongoose.ConnectionStates.disconnected) {
-        console.log('[DATABASE] Connecting');
+        logger.info('[DATABASE] Connecting');
         connection = await mongoose.connect(config.MONGO_CONNECTION_STRING);
-        console.log('[DATABASE] Connected');
+        logger.info('[DATABASE] Connected');
     }
 
-    console.log('[REDIS] Connecting');
+    logger.info('[REDIS] Connecting');
     await Redis.init();
-    console.log('[REDIS] Connected');
+    logger.info('[REDIS] Connected');
 
-    console.log('[SERVER] Completed');
+    logger.info('[SERVER] Completed');
 
-    console.log('[ANOMALY LOOP] Started');
-    anomalyLoop();
+    logger.warn('[ANOMALY LOOP] Disabled');
+    // anomalyLoop();
+    logger.error(new Error('test error'))
 
 };
