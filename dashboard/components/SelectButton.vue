@@ -16,10 +16,10 @@ const emits = defineEmits<{
 
 <template>
 
-    <div class="flex gap-2 border-[1px] border-gray-400 p-1 md:p-2 rounded-xl">
+    <div class="flex gap-2 border-[1px] border-lyx-widget-lighter p-1 md:p-2 rounded-xl bg-lyx-widget">
         <div @click="$emit('changeIndex', index)" v-for="(opt, index) of options"
-            class="hover:bg-white/10 select-btn-animated cursor-pointer rounded-lg poppins font-semibold px-2 md:px-3 py-1 text-[.8rem] md:text-[1rem]"
-            :class="{ 'bg-accent hover:!bg-accent': currentIndex == index }">
+            class="hover:bg-lyx-widget-lighter/60 select-btn-animated cursor-pointer rounded-lg poppins font-regular px-2 md:px-3 py-1 text-[.8rem] md:text-[1rem]"
+            :class="{ 'bg-lyx-widget-lighter hover:!bg-lyx-widget-lighter': currentIndex == index }">
             {{ opt.label }}
         </div>
     </div>

@@ -262,17 +262,25 @@ onMounted(async () => {
 <template>
     <CardTitled title="Trend chart" sub="Easily match Visits, Unique sessions and Events trends." class="w-full">
         <template #header>
-            <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event" :currentIndex="selectedLabelIndex"
-                :options="selectLabels">
-            </SelectButton>
+                <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event"
+                    :currentIndex="selectedLabelIndex" :options="selectLabels">
+                </SelectButton>
         </template>
 
-        <div class="flex gap-6 w-full justify-end">
-            <div v-for="(dataset, index) of chartData.datasets" class="flex gap-2 items-center text-[.9rem]">
-                <UCheckbox :ui="{
-                    color: `text-[${legendColors[index]}]`
-                }" :model-value="true" @change="onLegendChange(dataset, index, $event)"></UCheckbox>
-                <label class="mt-[2px]"> {{ dataset.label }} </label>
+        <div class="flex gap-6 w-full justify-between">
+            <LyxUiButton type="secondary" to="/analyst">
+                <div class="flex items-center gap-2 px-10">
+                    <i class="far fa-sparkles text-yellow-400"></i>
+                    <div class="poppins text-lyx-text"> Ask AI </div>
+                </div>
+            </LyxUiButton>
+            <div class="flex gap-6">
+                <div v-for="(dataset, index) of chartData.datasets" class="flex gap-2 items-center text-[.9rem]">
+                    <UCheckbox :ui="{
+                        color: `text-[${legendColors[index]}]`
+                    }" :model-value="true" @change="onLegendChange(dataset, index, $event)"></UCheckbox>
+                    <label class="mt-[2px]"> {{ dataset.label }} </label>
+                </div>
             </div>
         </div>
 

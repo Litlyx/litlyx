@@ -17,7 +17,7 @@ const sections: Section[] = [
         entries: [
             { label: 'Dashboard', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
-            { label: 'Analyst', to: '/analyst', icon: 'fal fa-microchip-ai' },
+            { label: 'AI Analyst', to: '/analyst', icon: 'fal fa-sparkles' },
             { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             { label: 'Integrations (soon)', to: '#', icon: 'fal fa-cube', disabled: true },
@@ -29,6 +29,7 @@ const sections: Section[] = [
             },
             {
                 label: 'Slack support', icon: 'fab fa-slack',
+                to:'#',
                 premiumOnly: true,
                 action() {
                     if (isGuest.value === true) return;

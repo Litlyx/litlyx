@@ -9,10 +9,10 @@ const props = defineProps<{ title: string, sub?: string }>();
         <div class="flex flex-col gap-4">
             <div class="flex items-center">
                 <div class="flex flex-col grow">
-                    <div class="poppins font-semibold text-[1.1rem] md:text-[1.4rem] text-text">
+                    <div class="poppins font-semibold text-[1rem] md:text-[1.3rem] text-text">
                         {{ props.title }}
                     </div>
-                    <div v-if="props.sub" class="poppins text-[.8rem] md:text-[1.1rem] text-text-sub">
+                    <div v-if="props.sub" class="poppins text-[.7rem] md:text-[1rem] text-text-sub">
                         {{ props.sub }}
                     </div>
                 </div>

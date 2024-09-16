@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 
+import VueMarkdown from 'vue-markdown-render';
+
 definePageMeta({ layout: 'dashboard' });
 
 const activeProject = useActiveProject();
 
 const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/${activeProject.value?._id}/chats_list`, {
-    ...signHeaders(),
-    transform: (data) => {
-        return data?.toReversed();
-    }
+    ...signHeaders()
 });
+
+
+
+const viewChatsList = computed(() => (chatsList.value || []).toReversed());
 
 const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/ai/${activeProject.value?._id}/chats_remaining`, signHeaders());
 
@@ -72,8 +75,10 @@ async function sendMessage() {
 async function openChat(chat_id?: string) {
     menuOpen.value = false;
     if (!activeProject.value) return;
+
+    currentChatMessages.value = [];
+
     if (!chat_id) {
-        currentChatMessages.value = [];
         currentChatId.value = '';
         return;
     }
@@ -105,10 +110,10 @@ function onKeyDown(e: KeyboardEvent) {
 const menuOpen = ref<boolean>(false);
 
 const defaultPrompts = [
-    'How many visits i got last week ?',
-    'How many visits i got last month ?',
-    'How many visits i got today ?',
-    'How many events i got last week ?',
+    "Create a line chart with this data: \n[100, 200, 30, 300, 500, 40]",
+    "Create a chart with Events (bar) and Visits (line) data from last week.",
+    "How many visits did I get last week?",
+    "Create a line chart of last week's visits."
 ]
 
 async function deleteChat(chat_id: string) {
@@ -122,6 +127,8 @@ async function deleteChat(chat_id: string) {
     await $fetch(`/api/ai/${activeProject.value._id}/${chat_id}/delete`, signHeaders());
     await reloadChatsList();
 }
+
+const { visible: pricingDrawerVisible } = usePricingDrawer()
 
 </script>
 
@@ -144,7 +151,7 @@ async function deleteChat(chat_id: string) {
                     </div>
                     <div class="grid grid-cols-2 gap-4 mt-6" v-if="!isGuest">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
-                            class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center">
+                            class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center whitespace-pre-wrap flex items-center justify-center text-[.9rem]">
                             {{ prompt }}
                         </div>
                     </div>
@@ -164,15 +171,20 @@ async function deleteChat(chat_id: string) {
                             <div class="flex items-center justify-center shrink-0">
                                 <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                             </div>
-                            <div v-html="parseMessageContent(message.content)"
-                                class="max-w-[70%] text-text/90 whitespace-pre-wrap">
+                            <div class="max-w-[70%] text-text/90 ai-message">
+                                <vue-markdown :source="message.content" :options="{
+                                    html: true,
+                                    breaks: true,
+                                }" />
                             </div>
+
                         </div>
 
                         <div v-if="message.charts && message.charts.length > 0"
                             class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem] flex-col mt-4">
                             <div v-for="chart of message.charts" class="w-full">
-                                 <AnalystComposableChart :datasets="chart.datasets" :labels="chart.labels" :title="chart.title">
+                                <AnalystComposableChart :datasets="chart.datasets" :labels="chart.labels"
+                                    :title="chart.title">
                                 </AnalystComposableChart>
                             </div>
                         </div>
@@ -217,21 +229,26 @@ async function deleteChat(chat_id: string) {
                         <i @click="menuOpen = false" class="fas fa-close cursor-pointer"></i>
                     </div>
                     <div class="poppins font-semibold text-[1.5rem]">
-                        Lit, your AI Analyst is here!
+                        What Lit can do for you?
                     </div>
                     <div class="poppins text-text/75">
-                        Ask anything you want on your analytics,
-                        and understand more Trends and Key Points to take Strategic moves!
+                        Ask anything from your data history, visualize and overlap charts, explore events or metadata,
+                        and enjoy a highly personalized data analysis experience.
                     </div>
                 </div>
 
-                <div class="flex gap-2 items-center py-3">
+                <div class="flex gap-2 items-center pt-3">
                     <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
                     </div>
-                    <div class="manrope font-semibold"> {{ chatsRemaining }} remaining messages </div>
+                    <div class="manrope font-semibold"> {{ chatsRemaining }} remaining AI requests </div>
                 </div>
 
-                <div class="poppins font-semibold text-[1.1rem]"> History: </div>
+                <LyxUiButton type="primary" class="text-[.9rem] text-center w-full"
+                    @click="pricingDrawerVisible = true">
+                    Upgrade plan for more requests
+                </LyxUiButton>
+
+                <div class="poppins font-semibold text-[1.1rem]"> History </div>
 
                 <div class="px-2">
                     <div @click="openChat()"
@@ -246,7 +263,7 @@ async function deleteChat(chat_id: string) {
                     <div class="flex flex-col gap-2 px-2">
                         <div :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }"
                             class="flex rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-lighter hover:bg-lyx-widget"
-                            v-for="chat of chatsList">
+                            v-for="chat of viewChatsList">
                             <i @click="deleteChat(chat._id.toString())"
                                 class="far fa-trash hover:text-gray-300 cursor-pointer"></i>
                             <div @click="openChat(chat._id.toString())"
@@ -266,3 +283,82 @@ async function deleteChat(chat_id: string) {
 
     </div>
 </template>
+
+<style lang="scss">
+.ai-message {
+
+    /* Ensure headings stand out */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-weight: bold;
+        margin-top: 1.5em;
+        margin-bottom: 0.5em;
+        color: white;
+    }
+
+    /* Paragraphs for better line spacing */
+    p {
+        line-height: 1.8;
+        margin-bottom: 1em;
+        max-width: 750px;
+        /* Prevent very wide paragraphs for readability */
+    }
+
+    /* Blockquotes */
+    blockquote {
+        margin: 1.5em 10px;
+        padding: 10px 20px;
+        color: #555;
+        border-left: 5px solid #ccc;
+        background-color: #f5f5f5;
+    }
+
+    /* Code blocks */
+    pre {
+        background-color: #f4f4f4;
+        padding: 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        overflow-x: auto;
+    }
+
+    code {
+        background-color: #f1f1f1;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-size: 90%;
+    }
+
+    /* Lists */
+    ul,
+    ol {
+        margin-left: 30px;
+        margin-bottom: 1.5em;
+    }
+
+    li {
+        margin-bottom: 0.5em;
+    }
+
+    /* Links */
+    a {
+        color: #007acc;
+        text-decoration: none;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+    /* Horizontal rules */
+    hr {
+        border: 1px solid #ddd;
+        margin: 2em 0;
+    }
+
+}
+</style>

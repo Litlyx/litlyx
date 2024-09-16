@@ -5,14 +5,16 @@ import * as datefns from 'date-fns';
 
 registerChartComponents();
 
+const errored = ref<boolean>(false);
+
 const props = defineProps<{
     labels: string[],
-    title:string,
+    title: string,
     datasets: {
         points: number[],
         color: string,
-        type: string,
-        name:string
+        chartType: string,
+        name: string
     }[]
 }>();
 
@@ -46,7 +48,7 @@ const chartOptions = ref<ChartOptions<'line'>>({
     },
     plugins: {
         legend: { display: true },
-        title: { 
+        title: {
             display: true,
             text: props.title
         },
@@ -67,7 +69,11 @@ const chartOptions = ref<ChartOptions<'line'>>({
 
 const chartData = ref<ChartData<'line'>>({
     labels: props.labels.map(e => {
-        return datefns.format(new Date(e), 'dd/MM');
+        try {
+            return datefns.format(new Date(e), 'dd/MM');
+        } catch (ex) {
+            return e;
+        }
     }),
     datasets: props.datasets.map(e => ({
         data: e.points,
@@ -82,7 +88,7 @@ const chartData = ref<ChartData<'line'>>({
         hoverBackgroundColor: e.color,
         hoverBorderColor: 'white',
         hoverBorderWidth: 2,
-        type: e.type
+        type: e.chartType
     } as any))
 });
 
@@ -106,10 +112,18 @@ function createGradient(startColor: string) {
 }
 
 onMounted(async () => {
-
-    chartData.value.datasets.forEach(dataset => {
-        dataset.backgroundColor = [createGradient(dataset.borderColor as string)]
-    });
+    try {
+        chartData.value.datasets.forEach(dataset => {
+            if (dataset.borderColor && dataset.borderColor.toString().startsWith('#')) {
+                dataset.backgroundColor = [createGradient(dataset.borderColor as string)]
+            } else {
+                dataset.backgroundColor = [createGradient('#3d59a4')]
+            }
+        });
+    } catch (ex) {
+        errored.value = true;
+        console.error(ex);
+    }
 
 });
 
@@ -117,5 +131,8 @@ onMounted(async () => {
 
 
 <template>
-    <LineChart ref="lineChartRef" v-bind="lineChartProps"> </LineChart>
+    <div>
+        <div v-if="errored"> ERROR CREATING CHART </div>
+        <LineChart v-if="!errored" ref="lineChartRef" v-bind="lineChartProps"> </LineChart>
+    </div>
 </template>

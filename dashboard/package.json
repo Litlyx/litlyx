@@ -35,11 +35,13 @@
     "v-calendar": "^3.1.2",
     "vue": "^3.4.21",
     "vue-chart-3": "^3.1.8",
+    "vue-markdown-render": "^2.2.1",
     "vue-router": "^4.3.0"
   },
   "devDependencies": {
     "@nuxt/ui": "^2.15.2",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/markdown-it": "^14.1.2",
     "@types/nodemailer": "^6.4.15",
     "@types/pdfkit": "^0.13.4",
     "autoprefixer": "^10.4.19",

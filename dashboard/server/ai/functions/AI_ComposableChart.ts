@@ -43,7 +43,7 @@ export class AiComposableChart extends AIPlugin<['createComposableChart']> {
                                             },
                                             color: {
                                                 type: 'string',
-                                                description: 'Color used to represent the dataset'
+                                                description: 'Color used to represent the dataset in format "#RRGGBB"'
                                             },
                                             name: {
                                                 type: 'string',
