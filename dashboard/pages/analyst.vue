@@ -287,7 +287,6 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 <style lang="scss">
 .ai-message {
 
-    /* Ensure headings stand out */
     h1,
     h2,
     h3,
@@ -300,15 +299,13 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         color: white;
     }
 
-    /* Paragraphs for better line spacing */
+  
     p {
         line-height: 1.8;
         margin-bottom: 1em;
         max-width: 750px;
-        /* Prevent very wide paragraphs for readability */
     }
 
-    /* Blockquotes */
     blockquote {
         margin: 1.5em 10px;
         padding: 10px 20px;
@@ -317,7 +314,6 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         background-color: #f5f5f5;
     }
 
-    /* Code blocks */
     pre {
         background-color: #f4f4f4;
         padding: 15px;
@@ -333,7 +329,6 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         font-size: 90%;
     }
 
-    /* Lists */
     ul,
     ol {
         margin-left: 30px;
@@ -344,7 +339,6 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         margin-bottom: 0.5em;
     }
 
-    /* Links */
     a {
         color: #007acc;
         text-decoration: none;
@@ -354,7 +348,6 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         text-decoration: underline;
     }
 
-    /* Horizontal rules */
     hr {
         border: 1px solid #ddd;
         margin: 2em 0;

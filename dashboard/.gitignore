@@ -12,6 +12,7 @@ node_modules
 # Logs
 logs
 *.log
+winston-*.ndjson
 
 # Misc
 .DS_Store
