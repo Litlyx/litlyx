@@ -11,8 +11,6 @@ if (process.env.EMAIL_SERVICE) {
 
 export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
-    console.log('CHECK LIMIT EMAIL');
-
     const project_id = projectCounts.project_id;
     const hasNotifyEntry = await LimitNotifyModel.findOne({ project_id });
     if (!hasNotifyEntry) {
@@ -20,7 +18,6 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
     }
 
     if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit)) {
-        console.log('LIMIT 3');
 
         const notify = await LimitNotifyModel.findOne({ project_id });
         if (notify && notify.limit3 === true) return;
@@ -35,7 +32,6 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
         await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: true, limit3: true });
 
     } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.9)) {
-        console.log('LIMIT 2');
 
         const notify = await LimitNotifyModel.findOne({ project_id });
         if (notify && notify.limit2 === true) return;
@@ -50,8 +46,6 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
         await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: true, limit3: false });
 
     } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.5)) {
-
-        console.log('LIMIT 1');
 
         const notify = await LimitNotifyModel.findOne({ project_id });
         if (notify && notify.limit1 === true) return;
