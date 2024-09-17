@@ -50,8 +50,10 @@ export class RedisStreamService {
     static async startReadingLoop(options: ReadingLoopOptions, processFunction: (content: Record<string, string>) => Promise<any>) {
 
         setInterval(() => {
-            console.log('Processed:', (RedisStreamService.processed / 30).toFixed(), '/s');
-            RedisStreamService.processed = 0;
+            if (RedisStreamService.processed > 0) {
+                console.log('Processed:', (RedisStreamService.processed / 30).toFixed(2), '/s');
+                RedisStreamService.processed = 0;
+            }
         }, 30_000)
 
         try {
