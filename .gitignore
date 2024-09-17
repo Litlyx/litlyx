@@ -3,3 +3,4 @@ PROCESS_EVENT
 docker
 dev
 docker-compose.admin.yml
+full_reload.sh
