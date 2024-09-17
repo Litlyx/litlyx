@@ -24,29 +24,21 @@ async function authorizationMiddleware(event: H3Event<EventHandlerRequest>) {
     const authorization = event.headers.get('Authorization');
 
     if (!authorization) {
-        event.context.auth = { logged: false, }
+
+        event.context.auth = { logged: false }
+
     } else {
 
         const [type, token] = authorization.split(' ');
+        
         const valid = readUserJwt(token);
-
         if (!valid) return event.context.auth = { logged: false }
 
         const user = await UserModel.findOne({ email: valid.email })
-
         if (!user) return event.context.auth = { logged: false };
 
-        const premium: any = null;//await PremiumModel.findOne({ user_id: user.id });
-
         const roles: string[] = [];
-
-        if (premium && premium.ends_at.getTime() < Date.now()) {
-            // await PremiumModel.deleteOne({ user_id: user.id });
-        } else if (premium) {
-            roles.push('PREMIUM');
-            roles.push('PREMIUM_' + premium.type);
-        }
-
+        
         if (ADMIN_EMAILS.includes(user.email)) {
             roles.push('ADMIN');
         }
@@ -61,6 +53,7 @@ async function authorizationMiddleware(event: H3Event<EventHandlerRequest>) {
             },
             id: user._id.toString()
         }
+        
         event.context.auth = authContext;
 
     }

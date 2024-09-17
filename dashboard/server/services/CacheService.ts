@@ -4,15 +4,14 @@ import { createClient } from 'redis';
 const runtimeConfig = useRuntimeConfig();
 
 export const DATA_EXPIRE_TIME = 30;
-export const TIMELINE_EXPIRE_TIME = 60 * 5;
+export const TIMELINE_EXPIRE_TIME = 60;
 export const COUNTS_EXPIRE_TIME = 10;
 
-export const COUNTS_OLD_SESSIONS_EXPIRE_TIME = 60 * 5;
 export const COUNTS_SESSIONS_EXPIRE_TIME = 60 * 3;
 
 export const EVENT_NAMES_EXPIRE_TIME = 60;
 
-export const EVENT_METADATA_FIELDS_EXPIRE_TIME = 120;
+export const EVENT_METADATA_FIELDS_EXPIRE_TIME = 30;
 
 
 export class Redis {

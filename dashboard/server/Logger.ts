@@ -23,6 +23,7 @@ export const logger = winston.createLogger({
     ],
     transports: [
         new winston.transports.Console({
+            level: 'debug',
             format: combine(
                 winston.format.colorize({ all: true }),
                 errors({ stack: true }),
@@ -36,6 +37,10 @@ export const logger = winston.createLogger({
                 })
             ),
         }),
-        new winston.transports.File({ filename: 'winston-logs.ndjson' })
+        new winston.transports.File({ filename: 'winston-logs.ndjson' }),
+        new winston.transports.File({
+            level: 'debug',
+            filename: 'winston-debug.ndjson'
+        })
     ]
 });

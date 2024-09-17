@@ -9,6 +9,7 @@ export async function getUserProjectFromId(project_id: string, user: AuthContext
         return project;
     } else {
         if (!user?.logged) return;
+        if (!project_id) return;
         const project = await ProjectModel.findById(project_id);
         if (!project) return;
         const [hasAccess, role] = await hasAccessToProject(user.id, project_id, project);
