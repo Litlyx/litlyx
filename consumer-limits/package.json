@@ -11,15 +11,14 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
-  "name": "consumer-database",
+  "name": "consumer-limits",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "dev": "node scripts/start_dev.js",
     "compile": "tsc",
     "build": "node ../scripts/build.js",
-    "create_db": "cd scripts && ts-node create_database.ts",
-    "build_all": "npm run compile && npm run build && npm run create_db"
+    "build_all": "npm run compile && npm run build"
   },
   "keywords": [],
   "author": "Emily",
