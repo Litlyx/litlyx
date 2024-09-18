@@ -1,12 +1,10 @@
 module.exports = {
     apps: [
         {
-            name: 'consumer-limits',
+            name: 'consumer',
             exec_mode: 'fork',
-            script: './dist/consumer-limits/src/index.js',
+            script: './dist/consumer/src/index.js',
             env: {
-                EMAIL_SERVICE: "",
-                BREVO_API_KEY: "",
                 MONGO_CONNECTION_STRING: "",
                 REDIS_URL: "",
                 REDIS_USERNAME: "",

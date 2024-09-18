@@ -19,8 +19,7 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
     if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit)) {
 
-        const notify = await LimitNotifyModel.findOne({ project_id });
-        if (notify && notify.limit3 === true) return;
+        if (hasNotifyEntry.limit3 === true) return;
 
         const project = await ProjectModel.findById(project_id);
         if (!project) return;
@@ -33,8 +32,7 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
     } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.9)) {
 
-        const notify = await LimitNotifyModel.findOne({ project_id });
-        if (notify && notify.limit2 === true) return;
+        if (hasNotifyEntry.limit2 === true) return;
 
         const project = await ProjectModel.findById(project_id);
         if (!project) return;
@@ -47,8 +45,7 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
     } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.5)) {
 
-        const notify = await LimitNotifyModel.findOne({ project_id });
-        if (notify && notify.limit1 === true) return;
+        if (hasNotifyEntry.limit1 === true) return;
 
         const project = await ProjectModel.findById(project_id);
         if (!project) return;

@@ -6,6 +6,7 @@ export type TProjectCount = {
     events: number,
     visits: number,
     sessions: number,
+    lastRecheck?: Date
 }
 
 const ProjectCountSchema = new Schema<TProjectCount>({
@@ -13,6 +14,7 @@ const ProjectCountSchema = new Schema<TProjectCount>({
     events: { type: Number, required: true, default: 0 },
     visits: { type: Number, required: true, default: 0 },
     sessions: { type: Number, required: true, default: 0 },
+    lastRecheck: { type: Date }
 });
 
 export const ProjectCountModel = model<TProjectCount>('project_counts', ProjectCountSchema);
