@@ -21,6 +21,9 @@
             ],
             "@functions/*": [
                 "../shared/functions/*"
+            ],
+            "@utils/*": [
+                "../shared/utils/*"
             ]
         }
     },

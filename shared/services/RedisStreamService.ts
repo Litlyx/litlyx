@@ -1,15 +1,20 @@
 import { createClient } from 'redis';
-import { requireEnv } from '../utilts/requireEnv';
+import { requireEnv } from '../utils/requireEnv';
 
 export type ReadingLoopOptions = {
-    delay?: {
-        base?: number,
-        empty?: number
-    },
-    readBlock?: number,
-    streamName: string,
-    consumer?: string
+    stream_name: string,
+    group_name: ConsumerGroup,
+    consumer_name: string
 }
+
+
+type xReadGroupMessage = { id: string, message: { [x: string]: string } }
+type xReadGgroupResult = { name: string, messages: xReadGroupMessage[] }[] | null
+
+const consumerGroups = ['DATABASE', 'LIMITS'] as const;
+
+type ConsumerGroup = typeof consumerGroups[number];
+
 
 export class RedisStreamService {
 
@@ -23,65 +28,69 @@ export class RedisStreamService {
     });
 
     static async connect() {
-        console.log('RedisStreamService DEV_MODE=', process.env.DEV_MODE === 'true');
         await this.client.connect();
+    }
 
+    static async readFromStream(stream_name: string, group_name: string, consumer_name: string, process_function: (content: Record<string, string>) => Promise<any>) {
+
+        const result: xReadGgroupResult = await this.client.xReadGroup(group_name, consumer_name, [{ key: stream_name, id: '>' }], { COUNT: 5, BLOCK: 10000 });
+
+        if (!result) {
+            setTimeout(() => this.readFromStream(stream_name, group_name, consumer_name, process_function), 10);
+            return;
+        }
+
+        for (const entry of result) {
+            console.log(`[${group_name}-${consumer_name}]`, 'Processing', entry.messages.length, 'messages');
+            for (const messageData of entry.messages) {
+                await process_function(messageData.message);
+                await this.client.xAck(stream_name, group_name, messageData.id);
+                await this.client.set(`ACK:${group_name}`, messageData.id);
+                RedisStreamService.processed++;
+            }
+        }
+
+        await this.trimStream(stream_name);
+
+        setTimeout(() => this.readFromStream(stream_name, group_name, consumer_name, process_function), 10);
+        return;
 
     }
 
-    private static async readingLoop(options: ReadingLoopOptions, processFunction: (content: Record<string, string>) => Promise<any>) {
-        const result = await this.readFromStream(options.streamName, options.readBlock || 2500, options.consumer || 'base_consumer');
-        if (!result) {
-            await new Promise(r => setTimeout(r, options.delay?.empty || 5000));
-            setTimeout(() => this.readingLoop(options, processFunction), 1);
-            return;
+    private static async trimStream(stream_name: string) {
+
+        let lastMessageAck = '0';
+
+        for (const consumerGroup of consumerGroups) {
+            const lastAck = await this.client.get(`ACK:${consumerGroup}`);
+            if (!lastAck) continue;
+            if (lastAck > lastMessageAck) lastMessageAck = lastAck;
         }
-        try {
-            await processFunction(result);
-        } catch (ex) {
-            console.error('Error on processing function');
-        }
-        RedisStreamService.processed++;
-        await new Promise(r => setTimeout(r, options.delay?.base || 100));
-        setTimeout(() => this.readingLoop(options, processFunction), 1);
-        return;
+
+        await this.client.xTrim(stream_name, 'MINID', lastMessageAck as any);
+
     }
 
     static async startReadingLoop(options: ReadingLoopOptions, processFunction: (content: Record<string, string>) => Promise<any>) {
 
+        if (!consumerGroups.includes(options.group_name)) return console.error('GROUP NAME NOT ALLOWED');
+
         setInterval(() => {
             if (RedisStreamService.processed > 0) {
-                console.log('Processed:', (RedisStreamService.processed / 30).toFixed(2), '/s');
+                console.log('Processed:', (RedisStreamService.processed / 10).toFixed(2), '/s');
                 RedisStreamService.processed = 0;
             }
-        }, 30_000)
+        }, 10_000);
+
+        console.log('Start reading loop')
 
         try {
-            console.log('Start reading loop');
-            await this.client.xGroupCreate(options.streamName, 'broker', '0', { MKSTREAM: true, });
-            console.log('Reading loop started');
+            await this.client.xGroupCreate(options.stream_name, options.group_name, '0', { MKSTREAM: true });
         } catch (ex) {
-            console.error(ex);
+            console.log('Group', options.group_name, 'already exist');
         }
 
-        this.readingLoop(options, processFunction)
-    }
-
-    private static async readFromStream(streamName: string, readBlock: number, consumer: string) {
-        const result = await this.client.xReadGroup(
-            'broker', consumer,
-            [{ key: streamName, id: '>' }],
-            { COUNT: 1, BLOCK: readBlock }
-        );
-        if (!result) return;
-        if (result.length == 0) return;
-        if (!result[0].messages) return;
-        if (result[0].messages.length == 0) return;
-        const message = result[0].messages[0];
-        await this.client.xAck(streamName, 'broker', message.id);
-        await this.client.xDel(streamName, message.id);
-        const content = message.message;
-        return content;
+        this.readFromStream(options.stream_name, options.group_name, options.consumer_name, processFunction);
     }
 
     static async addToStream(streamName: string, data: Record<string, string>) {

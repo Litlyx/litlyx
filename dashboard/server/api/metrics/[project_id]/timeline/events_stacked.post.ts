@@ -2,7 +2,8 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { getTimeline } from "./generic";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { executeAdvancedTimelineAggregation } from "~/server/services/TimelineService";
+import { executeAdvancedTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
+import DateService from '@services/DateService';
 
 export default defineEventHandler(async event => {
     const project_id = getRequestProjectId(event);
@@ -28,6 +29,9 @@ export default defineEventHandler(async event => {
             customProjection: { name: "$_id.name" },
             customIdGroup: { name: '$name' },
         })
+
+        // const filledDates = DateService.createBetweenDates(from, to, slice);
+        // const merged = DateService.mergeFilledDates(filledDates.dates, timelineStackedEvents, '_id', slice, { count: 0, name: '' });
 
         return timelineStackedEvents;
     });

@@ -1,6 +1,6 @@
 import { Router, json } from "express";
 import { createSessionHash, getIPFromRequest } from "./utils";
-import { requireEnv } from "../../shared/utilts/requireEnv";
+import { requireEnv } from "@utils/requireEnv";
 import { RedisStreamService } from "@services/RedisStreamService";
 
 const router = Router();

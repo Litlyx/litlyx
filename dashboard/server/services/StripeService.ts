@@ -56,7 +56,7 @@ class StripeService {
         return checkout;
     }
 
-    async cretePayment(price: string, success_url: string, pid: string, customer?: string) {
+    async createPayment(price: string, success_url: string, pid: string, customer?: string) {
         if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');
 
@@ -124,6 +124,22 @@ class StripeService {
         if (!this.stripe) throw Error('Stripe not initialized');
         const customer = await this.stripe.customers.create({ email });
         return customer;
+    }
+
+    async setCustomerInfo(customer_id: string, address: { line1: string, line2: string, city: string, country: string, postal_code: string, state: string }) {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
+        const customer = await this.stripe.customers.update(customer_id, {
+            address: {
+                line1: address.line1,
+                line2: address.line2,
+                city: address.city,
+                country: address.country,
+                postal_code: address.postal_code,
+                state: address.state
+            }
+        })
+        return customer.id;
     }
 
     async deleteCustomer(customer_id: string) {

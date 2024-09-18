@@ -1,4 +1,4 @@
-import { requireEnv } from "../../shared/utilts/requireEnv";
+import { requireEnv } from "@utils/requireEnv";
 import { RedisStreamService } from "@services/RedisStreamService";
 
 import express from 'express';

@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 
-import { requireEnv } from '../../shared/utilts/requireEnv';
+import { requireEnv } from '@utils/requireEnv';
 import { connectDatabase } from '@services/DatabaseService';
 import { startStreamLoop } from './StreamLoopController';
 

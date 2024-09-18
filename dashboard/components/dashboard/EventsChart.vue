@@ -77,7 +77,7 @@ const chartData = ref<ChartData<'doughnut'>>({
 
 const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({ chartData: chartData, options: chartOptions });
 
-const activeProject = useActiveProject();
+const activeProjectId = useActiveProjectId();
 
 const { safeSnapshotDates } = useSnapshot();
 
@@ -102,12 +102,14 @@ const headers = computed(() => {
     return {
         'x-from': safeSnapshotDates.value.from,
         'x-to': safeSnapshotDates.value.to,
-        Authorization: authorizationHeaderComputed.value,
-        limit: "10"
+        'Authorization': authorizationHeaderComputed.value,
+        'x-schema': 'events',
+        'x-limit': "10",
+        'x-pid': activeProjectId.data.value || ''
     }
 });
 
-const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/data/events`, {
+const eventsData = useFetch(`/api/data/query`, {
     method: 'POST', headers, lazy: true, immediate: false, transform: transformResponse
 });
 

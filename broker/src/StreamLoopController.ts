@@ -1,6 +1,6 @@
 
 import { RedisStreamService } from '@services/RedisStreamService';
-import { requireEnv } from '../../shared/utilts/requireEnv';
+import { requireEnv } from '@utils/requireEnv';
 import { EventModel } from '@schema/metrics/EventSchema';
 import { SessionModel } from '@schema/metrics/SessionSchema';
 import { ProjectModel } from '@schema/ProjectSchema';

@@ -27,7 +27,7 @@ export default defineEventHandler(async event => {
         return setResponseStatus(event, 400, 'Plan not exist');
     }
 
-    const checkout = await StripeService.cretePayment(
+    const checkout = await StripeService.createPayment(
         StripeService.testMode ? PLAN.PRICE_TEST : PLAN.PRICE,
         'https://dashboard.litlyx.com/payment_ok',
         project_id,

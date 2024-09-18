@@ -8,8 +8,11 @@ const activeProject = useActiveProject();
 definePageMeta({ layout: 'dashboard' });
 
 const { data: planData, refresh: planRefresh, pending: planPending } = useFetch('/api/project/plan', {
-    ...signHeaders(),
-    lazy: true
+    ...signHeaders(), lazy: true
+});
+
+const { data: customerAddress, refresh: refreshCustomerAddress } = useFetch(`/api/pay/${activeProject.value?._id.toString()}/customer_info`, {
+    ...signHeaders(), lazy: true
 });
 
 const percent = computed(() => {
@@ -43,8 +46,7 @@ const prettyExpireDate = computed(() => {
 
 
 const { data: invoices, refresh: invoicesRefresh, pending: invoicesPending } = useFetch(`/api/pay/${activeProject.value?._id.toString()}/invoices`, {
-    ...signHeaders(),
-    lazy: true
+    ...signHeaders(), lazy: true
 })
 
 function openInvoice(link: string) {
@@ -65,24 +67,49 @@ function getPremiumPrice(type: number) {
     return (PLAN.COST / 100).toFixed(2).replace('.', ',')
 }
 
-
-watch(activeProject, () => {
-    invoicesRefresh();
-    planRefresh();
-})
-
-
 const entries: SettingsTemplateEntry[] = [
-    // { id: 'info', title: 'Billing informations', text: 'Manage billing informations for this project' },
+    { id: 'info', title: 'Billing informations', text: 'Manage billing informations for this project' },
     { id: 'plan', title: 'Current plan', text: 'Manage current plat for this project' },
     { id: 'usage', title: 'Usage', text: 'Show usage of current project' },
     { id: 'invoices', title: 'Invoices', text: 'Manage invoices of current project' },
 ]
 
+watch(customerAddress, () => {
+    console.log('UPDATE',customerAddress.value)
+    if (!customerAddress.value) return;
+    currentBillingInfo.value = customerAddress.value;
+});
 
 const currentBillingInfo = ref<any>({
-    address: ''
+    line1: '',
+    line2: '',
+    city: '',
+    country: '',
+    postal_code: '',
+    state: ''
 });
+
+const { createAlert } = useAlert()
+
+async function saveBillingInfo() {
+    
+    try {
+    const res = await $fetch(`/api/pay/${activeProject.value?._id.toString()}/update_customer`, {
+        method: 'POST',
+        ...signHeaders({
+            'Content-Type': 'application/json'
+        }),
+        body: JSON.stringify(currentBillingInfo.value)
+    });
+
+    createAlert('Customer updated','Customer updated successfully', 'far fa-check', 5000);
+
+} catch(ex) {
+    createAlert('Error updating customer','An error occurred while updating the customer', 'far fa-error', 8000);
+}
+
+}
+
 
 const { visible } = usePricingDrawer();
 
@@ -97,6 +124,35 @@ const { visible } = usePricingDrawer();
         </div>
 
         <SettingsTemplate v-if="!invoicesPending && !planPending" :entries="entries">
+            <template #info>
+                <div>
+                    <div class="flex flex-col gap-2">
+                        <LyxUiInput class="px-2 py-1" placeholder="Address line 1" v-model="currentBillingInfo.line1">
+                        </LyxUiInput>
+                        <LyxUiInput class="px-2 py-1" placeholder="Address line 2" v-model="currentBillingInfo.line2">
+                        </LyxUiInput>
+                        <div class="flex gap-2 w-full">
+                            <LyxUiInput class="px-2 py-1 w-full" placeholder="Country"
+                                v-model="currentBillingInfo.country">
+                            </LyxUiInput>
+                            <LyxUiInput class="px-2 py-1 w-full" placeholder="Postal code"
+                                v-model="currentBillingInfo.postal_code">
+                            </LyxUiInput>
+                        </div>
+                        <div class="flex gap-2 w-full">
+                            <LyxUiInput class="px-2 py-1 w-full" placeholder="City" v-model="currentBillingInfo.city">
+                            </LyxUiInput>
+                            <LyxUiInput class="px-2 py-1 w-full" placeholder="State" v-model="currentBillingInfo.state">
+                            </LyxUiInput>
+                        </div>
+                    </div>
+                    <div class="mt-5 flex justify-end">
+                        <LyxUiButton type="primary" @click="saveBillingInfo">
+                            Save
+                        </LyxUiButton>
+                    </div>
+                </div>
+            </template>
             <template #plan>
                 <LyxUiCard v-if="planData" class="flex flex-col w-full">
                     <div class="flex flex-col gap-6 px-8 grow">

@@ -2,7 +2,7 @@ import { ProjectModel } from "@schema/ProjectSchema";
 import { UserModel } from "@schema/UserSchema";
 import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
 import EmailService from '@services/EmailService';
-import { requireEnv } from "../../shared/utilts/requireEnv";
+import { requireEnv } from "@utils/requireEnv";
 import { TProjectLimit } from "@schema/ProjectsLimits";
 
 if (process.env.EMAIL_SERVICE) {

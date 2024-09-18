@@ -13,6 +13,8 @@ export const EVENT_NAMES_EXPIRE_TIME = 60;
 
 export const EVENT_METADATA_FIELDS_EXPIRE_TIME = 30;
 
+type UseCacheV2Callback<T> = (noStore: () => void, updateExp: (value: number) => void) => Promise<T>
+
 
 export class Redis {
 
@@ -62,6 +64,19 @@ export class Redis {
         const result = await action(noStore);
         if (!storeResult) return result;
         await this.set(options.key, result, options.exp);
+        return result;
+    }
+
+    static async useCacheV2<T extends any>(key: string, exp: number, callback: UseCacheV2Callback<T>) {
+        const cached = await this.get<T>(key);
+        if (cached) return cached;
+        let expireValue = exp;
+        let shouldStore = true;
+        const noStore = () => shouldStore = false;
+        const updateExp = (newExp: number) => expireValue = newExp;
+        const result = await callback(noStore, updateExp);
+        if (!shouldStore) return result;
+        await this.set(key, result, expireValue);
         return result;
     }
 
