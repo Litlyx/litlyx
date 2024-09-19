@@ -1,7 +1,7 @@
 import { ProjectModel, TProject } from "@schema/ProjectSchema";
 import { ProjectLimitModel } from "@schema/ProjectsLimits";
 import { UserSettingsModel } from "@schema/UserSettings";
-import { EVENT_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
+import { MAX_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
 
 export default defineEventHandler(async event => {
 
@@ -25,8 +25,8 @@ export default defineEventHandler(async event => {
     return {
         total: TOTAL_COUNT,
         limit: COUNT_LIMIT,
-        maxLimit: Math.round(COUNT_LIMIT * EVENT_LOG_LIMIT_PERCENT),
-        limited: TOTAL_COUNT > COUNT_LIMIT * EVENT_LOG_LIMIT_PERCENT,
+        maxLimit: Math.round(COUNT_LIMIT * MAX_LOG_LIMIT_PERCENT),
+        limited: TOTAL_COUNT > COUNT_LIMIT * MAX_LOG_LIMIT_PERCENT,
         percent: Math.round(100 / COUNT_LIMIT * TOTAL_COUNT)
     }
 

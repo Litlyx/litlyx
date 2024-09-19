@@ -1,38 +1,48 @@
 import mongoose from "mongoose";
-import { executeTimelineAggregation } from "./TimelineService";
-import { VisitModel } from "@schema/metrics/VisitSchema";
 import { AnomalyDomainModel } from '@schema/anomalies/AnomalyDomainSchema';
 import { AnomalyVisitModel } from '@schema/anomalies/AnomalyVisitSchema';
 import { AnomalyEventsModel } from '@schema/anomalies/AnomalyEventsSchema';
 import { EventModel } from "@schema/metrics/EventSchema";
+import { VisitModel } from '@schema/metrics/VisitSchema'
 import EmailService from "@services/EmailService";
-
 import * as url from 'url';
 import { ProjectModel } from "@schema/ProjectSchema";
 import { UserModel } from "@schema/UserSchema";
+import { getAggregation } from "./Aggregations";
 
 type TAvgInput = { _id: string, count: number }
 
+export type AnomalyReport = {
+    visits: TAvgInput[],
+    events: TAvgInput[],
+    dns: string[],
+    pid: string
+}
+
+export type AnomalyCallback = (report: AnomalyReport) => any;
+
 const anomalyData = { minutes: 0 }
 
-async function anomalyCheckAll() {
+export async function anomalyCheckAll(callback: AnomalyCallback) {
     const start = performance.now();
     console.log('[ANOMALY] START ANOMALY CHECK');
     const projects = await ProjectModel.find({}, { _id: 1 });
+    let i = 0;
     for (const project of projects) {
-        await findAnomalies(project.id);
+        console.log('Project:', i++, '/', projects.length);
+        await findAnomalies(project.id, callback);
     }
     const end = performance.now() - start;
     console.log('END ANOMALY CHECK', end, 'ms');
 }
 
-export function anomalyLoop() {
+export function anomalyLoop(callback: AnomalyCallback) {
     if (anomalyData.minutes == 60 * 12) {
-        anomalyCheckAll();
+        anomalyCheckAll(callback);
         anomalyData.minutes = 0;
     }
     anomalyData.minutes++;
-    setTimeout(() => anomalyLoop(), 1000 * 60);
+    setTimeout(() => anomalyLoop(callback), 1000 * 60);
 }
 
 
@@ -56,7 +66,7 @@ function getUrlFromString(str: string) {
     return res;
 }
 
-export async function findAnomalies(project_id: string) {
+export async function findAnomalies(project_id: string, callback: AnomalyCallback) {
 
     const THRESHOLD = 6;
     const WINDOW_SIZE = 14;
@@ -66,17 +76,10 @@ export async function findAnomalies(project_id: string) {
     const from = Date.now() - 1000 * 60 * 60 * 24 * 30;
     const to = Date.now() - 1000 * 60 * 60 * 24;
 
-    const visitsTimelineData = await executeTimelineAggregation({
-        projectId: pid,
-        model: VisitModel,
-        from, to, slice: 'day'
-    });
+    const visitsTimelineData = await getAggregation(VisitModel, pid, from, to, 'day');
 
-    const eventsTimelineData = await executeTimelineAggregation({
-        projectId: pid,
-        model: EventModel,
-        from, to, slice: 'day'
-    });
+    const eventsTimelineData = await getAggregation(EventModel, pid, from, to, 'day');
+
 
     const websites: { _id: string, count: number }[] = await VisitModel.aggregate([
         { $match: { project_id: pid, created_at: { $gte: new Date(from), $lte: new Date(to) } }, },
@@ -102,51 +105,52 @@ export async function findAnomalies(project_id: string) {
         }
     }
 
-
     const visitAnomalies = movingAverageAnomaly(visitsTimelineData, WINDOW_SIZE, THRESHOLD);
     const eventAnomalies = movingAverageAnomaly(eventsTimelineData, WINDOW_SIZE, THRESHOLD);
 
-    const shouldSendMail = {
-        visitsEvents: false,
-        domains: false
+    const report: AnomalyReport = {
+        visits: [],
+        events: [],
+        dns: [],
+        pid: project_id
     }
 
     for (const visit of visitAnomalies) {
         const anomalyAlreadyExist = await AnomalyVisitModel.findOne({ visitDate: visit._id }, { _id: 1 });
         if (anomalyAlreadyExist) continue;
         await AnomalyVisitModel.create({ project_id: pid, visitDate: visit._id, created_at: Date.now() });
-        shouldSendMail.visitsEvents = true;
+        report.visits.push(visit);
     }
 
     for (const event of eventAnomalies) {
         const anomalyAlreadyExist = await AnomalyEventsModel.findOne({ eventDate: event._id }, { _id: 1 });
         if (anomalyAlreadyExist) continue;
         await AnomalyEventsModel.create({ project_id: pid, eventDate: event._id, created_at: Date.now() });
-        shouldSendMail.visitsEvents = true;
+        report.events.push(event);
     }
 
     for (const website of detectedWebsites) {
         const anomalyAlreadyExist = await AnomalyDomainModel.findOne({ domain: website }, { _id: 1 });
         if (anomalyAlreadyExist) continue;
         await AnomalyDomainModel.create({ project_id: pid, domain: website, created_at: Date.now() });
-        shouldSendMail.domains = true;
+        report.dns.push(website);
     }
 
+    // const project = await ProjectModel.findById(pid);
+    // if (!project) return { ok: false, error: 'Cannot find project with id ' + pid.toString() }
+    // const user = await UserModel.findById(project.owner);
+    // if (!user) return { ok: false, error: 'Cannot find user with id ' + project.owner.toString() }
 
-    const project = await ProjectModel.findById(pid);
-    if (!project) return { ok: false, error: 'Cannot find project with id ' + pid.toString() }
-    const user = await UserModel.findById(project.owner);
-    if (!user) return { ok: false, error: 'Cannot find user with id ' + project.owner.toString() }
-
-    if (shouldSendMail.visitsEvents === true) {
-        await EmailService.sendAnomalyVisitsEventsEmail(user.email, project.name);
-    }
-    if (shouldSendMail.domains === true) {
-        await EmailService.sendAnomalyDomainEmail(user.email, project.name);
-    }
+    // if (shouldSendMail.visitsEvents === true) {
+    //     await EmailService.sendAnomalyVisitsEventsEmail(user.email, project.name);
+    // }
+    // if (shouldSendMail.domains === true) {
+    //     await EmailService.sendAnomalyDomainEmail(user.email, project.name);
+    // }
 
 
-    return { ok: true };
+    callback(report);
+    return report;
 
 
 }

@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "dayjs": "^1.11.13",
+    "mongoose": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.13",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "name": "security",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "node scripts/start_dev.js",
+    "compile": "tsc",
+    "build": "node ../scripts/build.js",
+    "build_all": "npm run compile && npm run build"
+  },
+  "keywords": [],
+  "author": "Emily",
+  "license": "MIT",
+  "description": "."
+}

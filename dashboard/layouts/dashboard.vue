@@ -21,6 +21,7 @@ const sections: Section[] = [
             { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             { label: 'Integrations (soon)', to: '#', icon: 'fal fa-cube', disabled: true },
+            { label: 'Security', to: '/security', icon: 'fal fa-lock' },
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,
@@ -29,7 +30,7 @@ const sections: Section[] = [
             },
             {
                 label: 'Slack support', icon: 'fab fa-slack',
-                to:'#',
+                to: '#',
                 premiumOnly: true,
                 action() {
                     if (isGuest.value === true) return;
