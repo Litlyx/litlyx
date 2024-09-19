@@ -1,10 +1,10 @@
 module.exports = {
     apps: [
         {
-            name: 'Producer',
+            name: 'producer',
             port: '3000',
             exec_mode: 'cluster',
-            instances: '2',
+            instances: '1',
             script: './dist/broker/src/index.js',
             env: {
                 PORT: "",

@@ -55,7 +55,7 @@ async function processStreamEntry(data: Record<string, string>) {
 
         const duration = Date.now() - start;
 
-        console.log('Entry processed in', duration, 'ms');
+        // console.log('Entry processed in', duration, 'ms');
 
     } catch (ex: any) {
         console.error('ERROR PROCESSING STREAM EVENT', ex.message);
