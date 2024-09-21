@@ -18,10 +18,10 @@ const sections: Section[] = [
             { label: 'Dashboard', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'AI Analyst', to: '/analyst', icon: 'fal fa-sparkles' },
+            { label: 'Security', to: '/security', icon: 'fal fa-shield' },
             { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             { label: 'Integrations (soon)', to: '#', icon: 'fal fa-cube', disabled: true },
-            { label: 'Security', to: '/security', icon: 'fal fa-lock' },
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,

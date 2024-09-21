@@ -21,7 +21,7 @@ function showAnomalyInfoAlert() {
          attack or simply higher traffic due to good performance. Additionally, it can detect if someone is
          stealing parts of your website and hosting a duplicate version—an unfortunately common practice.
          Litlyx will notify you via email with actionable advices`,
-        'far fa-bug',
+        'far fa-shield',
         10000
     )
 
