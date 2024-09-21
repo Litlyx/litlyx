@@ -23,7 +23,7 @@ const props = defineProps<SettingsTemplateProp>();
                     <div class="poppins font-medium text-lyx-text">
                         {{ entry.title }}
                     </div>
-                    <div class="poppins font-regular text-lyx-text-dark">
+                    <div class="poppins font-regular text-lyx-text-dark whitespace-pre-wrap">
                         {{ entry.text }}
                     </div>
                 </div>

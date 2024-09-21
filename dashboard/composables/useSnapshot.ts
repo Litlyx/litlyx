@@ -68,9 +68,15 @@ async function updateSnapshots() {
     await remoteSnapshots.refresh();
 }
 
+const snapshotDuration = computed(() => {
+    const from = new Date(snapshot.value?.from || 0).getTime();
+    const to = new Date(snapshot.value?.to || 0).getTime();
+    return (to - from) / (1000 * 60 * 60 * 24);
+});
+
 export function useSnapshot() {
     if (remoteSnapshots.status.value === 'idle') {
         remoteSnapshots.execute();
     }
-    return { snapshot, snapshots, safeSnapshotDates, updateSnapshots }
+    return { snapshot, snapshots, safeSnapshotDates, updateSnapshots, snapshotDuration }
 }

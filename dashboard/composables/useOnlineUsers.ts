@@ -15,7 +15,7 @@ function startWatching(instant: boolean = true) {
     if (instant) getOnlineUsers();
     watching = setInterval(async () => {
         await getOnlineUsers();
-    }, 5000);
+    }, 20000);
 }
 
 function stopWatching() {

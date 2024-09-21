@@ -6,6 +6,8 @@ const { snapshot, snapshots } = useSnapshot();
 
 const { data: project } = useLiveDemo();
 
+const ready = ref<boolean>(false);
+
 let interval: any;
 
 onMounted(async () => {
@@ -13,8 +15,11 @@ onMounted(async () => {
     snapshot.value = snapshots.value[0];
     interval = setInterval(async () => {
         await getOnlineUsers();
-    }, 5000);
+    }, 20000);
 
+    setTimeout(() => {
+        ready.value = true;
+    }, 2000);
 })
 
 onUnmounted(() => {
@@ -54,8 +59,7 @@ const selectLabelsEvents = [
 <template>
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20">
-
-        <div v-if="project">
+        <div v-if="project && ready">
 
             <div
                 class="bg-bg w-full px-6 py-6 text-text/90 flex flex-collg:flex-row text-lg lg:text-2xl gap-2 lg:gap-12">
@@ -85,34 +89,9 @@ const selectLabelsEvents = [
                 <DashboardTopCards></DashboardTopCards>
             </div>
 
-            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
-
-                <CardTitled class="p-4 flex-1 w-full" title="Visits trends" sub="Shows trends in page visits.">
-                    <template #header>
-                        <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
-                            :options="selectLabels">
-                        </SelectButton>
-                    </template>
-                    <div>
-                        <DashboardVisitsLineChart :slice="(selectLabels[mainChartSelectIndex].value as any)">
-                        </DashboardVisitsLineChart>
-                    </div>
-                </CardTitled>
-
-                <!-- <CardTitled class="p-4 flex-1" title="Sessions" sub="Shows trends in sessions.">
-                    <template #header>
-                        <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
-                            :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
-                        </SelectButton>
-                    </template>
-                    <div>
-                        <DashboardSessionsLineChart :slice="(selectLabels[sessionsChartSelectIndex].value as any)">
-                        </DashboardSessionsLineChart>
-                    </div>
-                </CardTitled> -->
-
+            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
+                <DashboardActionableChart></DashboardActionableChart>
             </div>
-
 
             <div class="flex gap-6 flex-col xl:flex-row p-6">
 
@@ -212,6 +191,9 @@ const selectLabelsEvents = [
             </div>
 
 
+        </div>
+        <div v-if="!ready || !project" class="flex justify-center py-40">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
         </div>
     </div>
 

@@ -30,33 +30,6 @@ onMounted(async () => {
 });
 
 
-const { createAlert } = useAlert();
-
-
-function copyProjectId() {
-    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-    navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
-    createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
-}
-
-
-function copyScript() {
-    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-
-
-    const createScriptText = () => {
-        return [
-            '<script defer ',
-            `data-project="${activeProject.value?._id}" `,
-            'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
-            'script>'
-        ].join('')
-    }
-
-    navigator.clipboard.writeText(createScriptText());
-    createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
-}
-
 const firstInteractionUrl = computed(() => {
     return `/api/metrics/${activeProject.value?._id}/first_interaction`
 });
@@ -95,7 +68,7 @@ function goToUpgrade() {
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && firstInteraction.data.value">
+        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && (firstInteraction.data.value === true)">
 
             <div class="w-full px-4 py-2 gap-2 flex flex-col">
                 <div v-if="limitsInfo && limitsInfo.limited"
@@ -215,47 +188,8 @@ function goToUpgrade() {
 
         </div>
 
-        <div v-if="!firstInteraction.data.value && activeProject" class="mt-[20vh] lg:mt-[36vh] flex flex-col gap-6">
-            <div class="flex gap-4 items-center justify-center">
-                <div class="animate-pulse w-[1.5rem] h-[1.5rem] bg-accent rounded-full"> </div>
-                <div class="text-text/90 poppins text-[1.3rem] font-semibold">
-                    Waiting for your first Visit or Event
-                </div>
-            </div>
 
-            <div class="flex justify-center gap-10 flex-col lg:flex-row items-center lg:items-stretch px-10">
-
-                <div class="bg-menu p-6 rounded-xl flex flex-col gap-2 w-full">
-                    <div class="poppins font-semibold"> Copy your project_id: </div>
-                    <div class="flex items-center gap-2">
-                        <div> <i @click="copyProjectId()" class="cursor-pointer hover:text-text far fa-copy"></i> </div>
-                        <div class="text-[.9rem] text-[#acacac]"> {{ activeProject?._id }} </div>
-                    </div>
-                </div>
-
-                <div class="bg-menu p-6 rounded-xl flex flex-col gap-2 w-full lg:max-w-[40vw]">
-                    <div class="poppins font-semibold">
-                        Start logging visits in 1 click | Plug anywhere !
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <div> <i @click="copyScript()" class="cursor-pointer hover:text-text far fa-copy"></i> </div>
-                        <div class="text-[.9rem] text-[#acacac] lg:w-min">
-                            {{ `
-                            <script defer data-project="${activeProject?._id}"
-                                src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>` }}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <NuxtLink to="https://docs.litlyx.com" target="_blank"
-                class="flex justify-center poppins text-[1.2rem] text-accent gap-2 items-center">
-                <div> <i class="far fa-book"></i> </div>
-                <div class="poppins"> Go to docs </div>
-            </NuxtLink>
-        </div>
-
+        <FirstInteraction :refresh-interaction="firstInteraction.refresh" :first-interaction="(firstInteraction.data.value || false)"></FirstInteraction>
 
         <div class="text-text/85 mt-8 ml-8 poppis text-[1.2rem]" v-if="projects && projects.length == 0">
             Create your first project...

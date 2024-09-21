@@ -12,6 +12,16 @@ const props = defineProps<{
     ready?: boolean
 }>();
 
+const { snapshotDuration } = useSnapshot()
+
+const uTooltipText = computed(() => {
+    const duration = snapshotDuration.value;
+    if (!duration) return '';
+    if (duration > 25) return 'Monthly trend';
+    if (duration > 7) return 'Weekly trend';
+    return 'Daily trend';
+})
+
 </script>
 
 <template>
@@ -29,14 +39,17 @@ const props = defineProps<{
                 <div class="poppins text-text-sub text-[.9rem] 2xl:text-base"> {{ text }} </div>
             </div>
             <div v-if="trend" class="flex flex-col items-center gap-1">
-                <div class="flex items-center gap-3 rounded-xl px-2 py-1" :style="`background-color: ${props.color}33`">
-                    <i :class="trend > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"
-                        class="far text-[.9rem] 2xl:text-[1rem]" :style="`color: ${props.color}`"></i>
-                    <div :style="`color: ${props.color}`" class="font-semibold text-[.75rem] 2xl:text-[.875rem]">
-                        {{ trend.toFixed(0) }} %
+                <UTooltip :text="uTooltipText">
+                    <div class="flex items-center gap-3 rounded-xl px-2 py-1"
+                        :style="`background-color: ${props.color}33`">
+                        <i :class="trend > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"
+                            class="far text-[.9rem] 2xl:text-[1rem]" :style="`color: ${props.color}`"></i>
+                        <div :style="`color: ${props.color}`" class="font-semibold text-[.75rem] 2xl:text-[.875rem]">
+                            {{ trend.toFixed(0) }} %
+                        </div>
                     </div>
-                </div>
-                <div class="poppins text-text-sub text-[.7rem]"> Trend </div>
+                </UTooltip>
+                <!-- <div class="poppins text-text-sub text-[.7rem]"> Trend </div> -->
             </div>
 
         </div>

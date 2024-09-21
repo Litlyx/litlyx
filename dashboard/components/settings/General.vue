@@ -110,6 +110,8 @@ async function deleteProject() {
 
 const { createAlert } = useAlert()
 
+const activeProjectId = useActiveProjectId()
+
 function copyScript() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
 
@@ -117,7 +119,7 @@ function copyScript() {
     const createScriptText = () => {
         return [
             '<script defer ',
-            `data-project="${activeProject.value?._id}" `,
+            `data-project="${activeProjectId.data.value}" `,
             'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
             'script>'
         ].join('')
@@ -130,7 +132,7 @@ function copyScript() {
 
 function copyProjectId() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-    navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
+    navigator.clipboard.writeText(activeProjectId.data.value || '');
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
@@ -186,7 +188,7 @@ function copyProjectId() {
                 <div><i class="far fa-copy" @click="copyScript()"></i></div>
             </LyxUiCard>
         </template>
-        <template #pdelete >
+        <template #pdelete>
             <div class="flex justify-end" v-if="!isGuest">
                 <LyxUiButton type="danger" @click="deleteProject()">
                     Delete project

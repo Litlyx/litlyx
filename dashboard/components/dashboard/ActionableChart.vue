@@ -255,20 +255,20 @@ onMounted(async () => {
 });
 
 
-
+const inLiveDemo = isLiveDemo();
 
 </script>
 
 <template>
     <CardTitled title="Trend chart" sub="Easily match Visits, Unique sessions and Events trends." class="w-full">
         <template #header>
-                <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event"
-                    :currentIndex="selectedLabelIndex" :options="selectLabels">
-                </SelectButton>
+            <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event" :currentIndex="selectedLabelIndex"
+                :options="selectLabels">
+            </SelectButton>
         </template>
 
         <div class="flex gap-6 w-full justify-between">
-            <LyxUiButton type="secondary" to="/analyst">
+            <LyxUiButton type="secondary" :to="inLiveDemo ? '#' : '/analyst'" :disabled="inLiveDemo">
                 <div class="flex items-center gap-2 px-10">
                     <i class="far fa-sparkles text-yellow-400"></i>
                     <div class="poppins text-lyx-text"> Ask AI </div>

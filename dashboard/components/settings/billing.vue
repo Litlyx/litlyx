@@ -68,9 +68,9 @@ function getPremiumPrice(type: number) {
 }
 
 const entries: SettingsTemplateEntry[] = [
-    { id: 'info', title: 'Billing informations', text: 'Manage billing informations for this project' },
     { id: 'plan', title: 'Current plan', text: 'Manage current plat for this project' },
     { id: 'usage', title: 'Usage', text: 'Show usage of current project' },
+    { id: 'info', title: 'Billing address', text: 'This will be reflected in every upcoming invoice,\npast invoices are not affected' },
     { id: 'invoices', title: 'Invoices', text: 'Manage invoices of current project' },
 ]
 

@@ -5,9 +5,9 @@ export function isLiveDemo() {
     return route.path == '/live_demo';
 }
 
+const liveDemoData = useFetch('/api/live_demo');
+
 export function useLiveDemo() {
-    return useFetch('/api/live_demo', {
-        key: 'live_demo_project'
-    });
+    return liveDemoData;
 }
 
