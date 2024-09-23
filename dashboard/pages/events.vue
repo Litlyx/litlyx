@@ -20,15 +20,15 @@ const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProje
 <template>
     <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
 
-        <div class="flex gap-6 flex-col xl:flex-row">
+        <div class="flex gap-6 flex-col xl:flex-row h-full">
 
-            <CardTitled :key="refreshKey" class="p-4 flex-[4] w-full" title="Events" sub="Events stacked bar chart.">
+            <CardTitled :key="refreshKey" class="p-4 flex-[4] w-full h-full" title="Events" sub="Events stacked bar chart.">
                 <template #header>
                     <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
                         :currentIndex="eventsStackedSelectIndex" :options="selectLabelsEvents">
                     </SelectButton>
                 </template>
-                <div>
+                <div class="h-full">
                     <EventsStackedBarChart :slice="(selectLabelsEvents[eventsStackedSelectIndex].value as any)">
                     </EventsStackedBarChart>
                 </div>

@@ -29,6 +29,17 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
 
     const { group, sort, fromParts } = DateService.getQueryDateRange(options.slice);
 
+    if (!sort) throw Error('Slice is probably not correct');
+
+    const dateDistDays = (new Date(options.to).getTime() - new Date(options.from).getTime()) / (1000 * 60 * 60 * 24)
+    // 15 Days
+    if (options.slice === 'hour' && (dateDistDays > 15)) throw Error('Date gap too big for this slice');
+    // 1 Year
+    if (options.slice === 'day' && (dateDistDays > 365)) throw Error('Date gap too big for this slice');
+    // 3 Years
+    if (options.slice === 'month' && (dateDistDays > 365 * 3)) throw Error('Date gap too big for this slice');
+
+
     const aggregation = [
         {
             $match: {

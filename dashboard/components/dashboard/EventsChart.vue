@@ -104,7 +104,7 @@ const headers = computed(() => {
         'x-to': safeSnapshotDates.value.to,
         'Authorization': authorizationHeaderComputed.value,
         'x-schema': 'events',
-        'x-limit': "10",
+        'x-limit': "6",
         'x-pid': activeProjectId.data.value || ''
     }
 });

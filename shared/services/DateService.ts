@@ -25,8 +25,10 @@ class DateService {
 
     getChartLabelFromISO(iso: string, locale: string, slice: Slice) {
         const date = dayjs(iso).locale(locale);
-        if (slice === 'hour') return date.format('HH:mm')
-        if (slice === 'day') return date.format('DD/MM')
+        if (slice === 'hour') return date.format('HH:mm');
+        if (slice === 'day') return date.format('DD/MM');
+        if (slice === 'month') return date.format('MM MMMM');
+        if (slice === 'year') return date.format('YYYY');
         return date.format();
     }
 

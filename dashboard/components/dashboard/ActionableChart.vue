@@ -5,6 +5,10 @@ import type { ChartData, ChartOptions, TooltipModel } from 'chart.js';
 import { useLineChart, LineChart } from 'vue-chart-3';
 registerChartComponents();
 
+const errorData = ref<{ errored: boolean, text: string }>({
+    errored: false,
+    text: ''
+})
 
 const chartOptions = ref<ChartOptions<'line'>>({
     responsive: true,
@@ -130,6 +134,7 @@ function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'li
 const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Hour', value: 'hour' },
     { label: 'Day', value: 'day' },
+    { label: 'Month', value: 'month' },
 ];
 
 const selectedLabelIndex = ref<number>(1);
@@ -157,19 +162,35 @@ const body = computed(() => {
 });
 
 
+function onResponseError(e: any) {
+    console.log('ON RESPONSE ERROR')
+    errorData.value = { errored: true, text: e.response._data.message ?? 'Generic error' }
+}
+
+function onResponse(e: any) {
+    console.log('ON RESPONSE')
+    if (e.response.status != 500) errorData.value = { errored: false, text: '' }
+}
+
 const visitsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/visits`, {
     method: 'POST', ...signHeaders({ v2: 'true' }), body, transform: transformResponse,
-    lazy: true, immediate: false
+    lazy: true, immediate: false,
+    onResponseError,
+    onResponse
 });
 
 const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/events`, {
     method: 'POST', ...signHeaders({ v2: 'true' }), body, transform: transformResponse,
-    lazy: true, immediate: false
+    lazy: true, immediate: false,
+    onResponseError,
+    onResponse
 });
 
 const sessionsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/sessions`, {
     method: 'POST', ...signHeaders({ v2: 'true' }), body, transform: transformResponse,
-    lazy: true, immediate: false
+    lazy: true, immediate: false,
+    onResponseError,
+    onResponse
 });
 
 
@@ -310,9 +331,14 @@ const inLiveDemo = isLiveDemo();
             <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
         </div>
 
-        <div class="flex flex-col items-end" v-if="readyToDisplay">
+        <div class="flex flex-col items-end" v-if="readyToDisplay && !errorData.errored">
             <LineChart ref="lineChartRef" class="w-full h-full" v-bind="lineChartProps"> </LineChart>
         </div>
+
+        <div v-if="errorData.errored" class="flex items-center justify-center py-8">
+            {{ errorData.text }}
+        </div>
+
     </CardTitled>
 </template>
 
