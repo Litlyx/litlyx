@@ -4,12 +4,13 @@ import winston from 'winston';
 const { combine, timestamp, json, errors } = winston.format;
 
 
+const timestampFormat = () => { return new Date().toLocaleString('it-IT', { timeZone: 'Europe/Rome' }); }
 
 export const logger = winston.createLogger({
     format: combine(
         errors({ stack: true }),
         timestamp({
-            format: 'DD-MM-YYYY hh:mm:ss'
+            format: timestampFormat
         }),
         json()
     ),
@@ -27,7 +28,7 @@ export const logger = winston.createLogger({
             format: combine(
                 winston.format.colorize({ all: true }),
                 errors({ stack: true }),
-                timestamp({ format: 'DD-MM-YYYY hh:mm:ss' }),
+                timestamp({ format: timestampFormat }),
                 winston.format.printf((info) => {
                     if (info instanceof Error) {
                         return `${info.timestamp} [${info.level}]: ${info.message}\n${info.stack}`;

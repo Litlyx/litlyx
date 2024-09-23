@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 import { Redis } from "~/server/services/CacheService";
 import EmailService from '@services/EmailService';
 import StripeService from '~/server/services/StripeService';
-import { anomalyLoop } from "./services/AnomalyService";
 import { logger } from "./Logger";
 
 
