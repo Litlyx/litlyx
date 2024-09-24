@@ -14,6 +14,14 @@ export const ANOMALY_VISITS_EVENTS_EMAIL = `<!DOCTYPE html>
 
     <p>We wanted to let you know that <strong>[Project Name]</strong> on <strong>Litlyx</strong> is receiving an unexpected amount of visits or events. This could indicate unusual activity that might require your attention.</p>
 
+    <p> <strong>Anomaly</strong>: Unexpected usage </p>
+
+    <p> Message: </p>
+
+    <ul>
+        [ENTRIES]
+    </ul>
+
     <p>If this spike in activity is expected, there’s no need to worry. However, if you believe this could be unexpected or suspicious, we recommend taking a closer look at your data on the <strong>Litlyx Dashboard</strong>. You can analyze your recent traffic and event logs to identify any irregularities or potential issues.</p>
 
     <h3>What can I do?</h3>

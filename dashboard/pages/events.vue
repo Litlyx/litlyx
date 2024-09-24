@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import EventsFunnelChart from '~/components/events/EventsFunnelChart.vue';
+
 
 definePageMeta({ layout: 'dashboard' });
 
@@ -22,7 +24,8 @@ const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProje
 
         <div class="flex gap-6 flex-col xl:flex-row h-full">
 
-            <CardTitled :key="refreshKey" class="p-4 flex-[4] w-full h-full" title="Events" sub="Events stacked bar chart.">
+            <CardTitled :key="refreshKey" class="p-4 flex-[4] w-full h-full" title="Events"
+                sub="Events stacked bar chart.">
                 <template #header>
                     <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
                         :currentIndex="eventsStackedSelectIndex" :options="selectLabelsEvents">
@@ -39,6 +42,10 @@ const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProje
                 <DashboardEventsChart class="w-full"> </DashboardEventsChart>
             </CardTitled>
 
+        </div>
+
+        <div class="flex">
+            <EventsFunnelChart :key="refreshKey" class="w-full"></EventsFunnelChart>
         </div>
 
         <div class="flex">

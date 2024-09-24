@@ -14,7 +14,19 @@ export const ANOMALY_DOMAIN_EMAIL = `<!DOCTYPE html>
 
     <p>We wanted to let you know that <strong>[Project Name]</strong> on <strong>Litlyx</strong> has an anomaly that our AI agent detected.</p>
 
-    <p>You can analyze a suspicious DNS on your Litlyx dashboard. We put a symbol next to each suspicious DNS to let users know something might be wrong!</p>
+    <p> <strong>Anomaly</strong>: Suspicious DNS </p>
+
+    <p> Message: </p>
+
+    <ul>
+        [DNS_ENTRIES]
+    </ul>
+
+    <p> Date: [CURRENT_DATE] </p>
+
+    <p> Are logging data in your project. Is that you? </p>
+
+    <p>You can analyze a suspicious DNS on your Litlyx dashboard. Visit the Security tab to find out more.</p>
 
     <h3>What can I do?</h3>
 

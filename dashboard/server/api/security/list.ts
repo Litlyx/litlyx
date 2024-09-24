@@ -38,7 +38,7 @@ export default defineEventHandler(async event => {
         report.push({ type: 'domain', data: domain });
     }
 
-    return report.toSorted((a, b) => a.data.created_at.getTime() - b.data.created_at.getTime());
+    return report.toSorted((a, b) => b.data.created_at.getTime() - a.data.created_at.getTime());
 
 
 });

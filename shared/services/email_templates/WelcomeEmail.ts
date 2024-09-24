@@ -18,7 +18,7 @@ export const WELCOME_EMAIL = `
     <ol>
         <li><strong><a href="https://dashboard.litlyx.com" style="color: #007BFF; text-decoration: none;">Create a new project</a></strong> – by just naming it</li>
         <li><strong><a style="color: #0a0a0a; text-decoration: none;">Copy the universal Script</a></strong> – we provide you the snippets to copy in your index.html file and start instantly to track metrics on your website or web app.</li>
-        <li><strong><a style="color: #0a0a0a; text-decoration: none;">Third Step</a></strong> – Encourage engagement or interaction.</li>
+        <li><strong><a style="color: #0a0a0a; text-decoration: none;">Deploy</a></strong> – Litlyx is production ready.</li>
     </ol>
     
     <p>If you have any questions or need support, visit <a href="http://docs.litlyx.com" style="color: #007BFF;">docs.litlyx.com</a>.</p>

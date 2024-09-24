@@ -4,10 +4,9 @@ import { AnomalyVisitModel } from '@schema/anomalies/AnomalyVisitSchema';
 import { AnomalyEventsModel } from '@schema/anomalies/AnomalyEventsSchema';
 import { EventModel } from "@schema/metrics/EventSchema";
 import { VisitModel } from '@schema/metrics/VisitSchema'
-import EmailService from "@services/EmailService";
+
 import * as url from 'url';
 import { ProjectModel } from "@schema/ProjectSchema";
-import { UserModel } from "@schema/UserSchema";
 import { getAggregation } from "./Aggregations";
 
 type TAvgInput = { _id: string, count: number }
@@ -112,7 +111,7 @@ export async function findAnomalies(project_id: string, callback: AnomalyCallbac
         visits: [],
         events: [],
         dns: [],
-        pid: project_id
+        pid: project_id,
     }
 
     for (const visit of visitAnomalies) {
@@ -135,19 +134,6 @@ export async function findAnomalies(project_id: string, callback: AnomalyCallbac
         await AnomalyDomainModel.create({ project_id: pid, domain: website, created_at: Date.now() });
         report.dns.push(website);
     }
-
-    // const project = await ProjectModel.findById(pid);
-    // if (!project) return { ok: false, error: 'Cannot find project with id ' + pid.toString() }
-    // const user = await UserModel.findById(project.owner);
-    // if (!user) return { ok: false, error: 'Cannot find user with id ' + project.owner.toString() }
-
-    // if (shouldSendMail.visitsEvents === true) {
-    //     await EmailService.sendAnomalyVisitsEventsEmail(user.email, project.name);
-    // }
-    // if (shouldSendMail.domains === true) {
-    //     await EmailService.sendAnomalyDomainEmail(user.email, project.name);
-    // }
-
 
     callback(report);
     return report;

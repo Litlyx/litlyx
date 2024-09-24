@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+import type { } from '#ui/types/tabs'
+
 definePageMeta({ layout: 'dashboard' });
 const activeProjectId = useActiveProjectId();
 
@@ -25,6 +27,15 @@ function showAnomalyInfoAlert() {
     )
 }
 
+
+const rows = computed(() => reportList.data.value || [])
+
+const columns = [
+    { key: 'scan', label: 'Scan date' },
+    { key: 'type', label: 'Type' },
+    { key: 'data', label: 'Data' },
+];
+
 </script>
 
 
@@ -41,35 +52,72 @@ function showAnomalyInfoAlert() {
             </div>
         </div>
 
+        <div class="pb-[10rem]">
+            <UTable :rows="rows" :columns="columns">
 
 
-        <div class="w-full h-full py-8 px-12">
+                <template #scan-data="{ row }">
+                    <div class="text-lyx-text-dark">
+                        {{ new Date(row.data.created_at).toLocaleString() }}
+                    </div>
+                </template>
+
+                <template #type-data="{ row }">
+                    <UBadge color="white" class="w-[4rem] flex justify-center">
+                        {{ row.type }}
+                    </UBadge>
+                </template>
+
+                <template #data-data="{ row }">
+                    <div class="text-lyx-text-dark">
+                        <div v-if="row.type === 'domain'">
+                            {{ row.data.domain }}
+                        </div>
+                        <div v-if="row.type === 'visit'">
+                            {{ row.data.visit }}
+                        </div>
+                        <div v-if="row.type === 'event'">
+                            {{ row.data.event }}
+                        </div>
+                    </div>
+                </template>
+
+                <!-- <template #actions-data="{ row }">
+                <UDropdown :items="items(row)">
+                    <UButton color="gray" variant="ghost" icon="i-heroicons-ellipsis-horizontal-20-solid" />
+                </UDropdown>
+            </template> -->
+
+            </UTable>
+        </div>
+
+        <!-- <div class="w-full py-8 px-12 pb-[10rem]">
             <div v-if="reportList.data.value" class="flex flex-col gap-2">
-                <div v-for="entry of reportList.data.value">
-                    <div v-if="entry.type === 'event'" class="flex gap-2">
+                <div v-for="entry of reportList.data.value" class="flex flex-col gap-4">
+                    <div v-if="entry.type === 'event'" class="flex gap-2 flex-col lg:flex-row items-center lg:items-start">
                         <div class="text-lyx-text-darker">{{ new Date(entry.data.created_at).toLocaleString() }}</div>
                         <UBadge class="w-[4rem] flex justify-center"> {{ entry.type }} </UBadge>
                         <div class="text-lyx-text-dark">
                             Event date: {{ new Date(entry.data.eventDate).toLocaleString() }}
                         </div>
                     </div>
-                    <div v-if="entry.type === 'visit'" class="flex gap-2">
+                    <div v-if="entry.type === 'visit'" class="flex gap-2 flex-col lg:flex-row items-center lg:items-start">
                         <div class="text-lyx-text-darker">{{ new Date(entry.data.created_at).toLocaleString() }}</div>
                         <UBadge class="w-[4rem] flex justify-center"> {{ entry.type }} </UBadge>
                         <div class="text-lyx-text-dark">
                             Visit date: {{ new Date(entry.data.visitDate).toLocaleString() }}
                         </div>
                     </div>
-                    <div v-if="entry.type === 'domain'" class="flex gap-2">
+                    <div v-if="entry.type === 'domain'" class="flex gap-2 flex-col py-2 lg:flex-row items-center lg:items-start">
                         <div class="text-lyx-text-darker">{{ new Date(entry.data.created_at).toLocaleString() }}</div>
                         <UBadge class="w-[4rem] flex justify-center"> {{ entry.type }} </UBadge>
                         <div class="text-lyx-text-dark">
-                            Domain found: {{ entry.data.domain }}
+                            {{ entry.data.domain }}
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
     </div>
 

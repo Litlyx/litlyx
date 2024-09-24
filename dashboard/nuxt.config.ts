@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   postcss: {
     plugins: {
       tailwindcss: {},
-      autoprefixer: {}
+      autoprefixer: {},
     }
   },
   colorMode: {
@@ -60,6 +60,9 @@ export default defineNuxtConfig({
   nitro: {
     plugins: ['~/server/init.ts']
   },
+  plugins: [
+    { src: '~/plugins/chartjs.ts', mode: 'client' }
+  ],
   ...gooleSignInConfig,
   modules: ['@nuxt/ui', 'nuxt-vue3-google-signin'],
   devServer: {

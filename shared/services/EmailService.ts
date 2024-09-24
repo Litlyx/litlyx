@@ -92,7 +92,7 @@ class EmailService {
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = PURCHASE_EMAIL
                 .replace(/\[Project Name\]/, projectName)
-                .toString();;
+                .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
         } catch (ex) {
@@ -101,7 +101,11 @@ class EmailService {
         }
     }
 
-    async sendAnomalyVisitsEventsEmail(target: string, projectName: string) {
+    async sendAnomalyVisitsEventsEmail(target: string, projectName: string,
+        data: {
+            visits: { _id: string, count: number }[],
+            events: { _id: string, count: number }[]
+        }) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "🚨 Unexpected Activity Detected by our AI";
@@ -109,7 +113,14 @@ class EmailService {
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = ANOMALY_VISITS_EVENTS_EMAIL
                 .replace(/\[Project Name\]/, projectName)
-                .toString();;
+                .replace(/\[ENTRIES\]/,
+                    [
+                        ...data.visits.map(e => (`<li> Visits in date ${e._id} [ ${e.count} ] </li>`)),
+                        ...data.events.map(e => (`<li> Events in date ${e._id} [ ${e.count} ] </li>`))
+                    ]
+                        .join('<br>')
+                )
+                .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
         } catch (ex) {
@@ -118,7 +129,7 @@ class EmailService {
         }
     }
 
-    async sendAnomalyDomainEmail(target: string, projectName: string) {
+    async sendAnomalyDomainEmail(target: string, projectName: string, domains: string[]) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "🚨 Anomaly detected by our AI";
@@ -126,7 +137,11 @@ class EmailService {
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = ANOMALY_DOMAIN_EMAIL
                 .replace(/\[Project Name\]/, projectName)
-                .toString();;
+                .replace(/\[CURRENT_DATE\]/, new Date().toLocaleDateString('en-EN'))
+                .replace(/\[DNS_ENTRIES\]/,
+                    domains.map(e => (`<li> ${e} </li>`)).join('<br>')
+                )
+                .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
         } catch (ex) {

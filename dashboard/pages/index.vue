@@ -20,6 +20,10 @@ const limitsInfo = ref<{
     percent: number
 }>();
 
+const justLogged = computed(() => {
+    return route.query.just_logged;
+})
+
 
 onMounted(async () => {
     if (route.query.just_logged) return location.href = '/';
@@ -68,7 +72,8 @@ function goToUpgrade() {
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()" v-if="projects && activeProject && (firstInteraction.data.value === true)">
+        <div :key="'home-' + isLiveDemo()"
+            v-if="projects && activeProject && (firstInteraction.data.value === true) && !justLogged">
 
             <div class="w-full px-4 py-2 gap-2 flex flex-col">
                 <div v-if="limitsInfo && limitsInfo.limited"
@@ -188,11 +193,15 @@ function goToUpgrade() {
 
         </div>
 
+        <FirstInteraction v-if="!justLogged" :refresh-interaction="firstInteraction.refresh"
+            :first-interaction="(firstInteraction.data.value || false)"></FirstInteraction>
 
-        <FirstInteraction :refresh-interaction="firstInteraction.refresh" :first-interaction="(firstInteraction.data.value || false)"></FirstInteraction>
-
-        <div class="text-text/85 mt-8 ml-8 poppis text-[1.2rem]" v-if="projects && projects.length == 0">
+        <div class="text-text/85 mt-8 ml-8 poppis text-[1.2rem]" v-if="projects && projects.length == 0 && !justLogged">
             Create your first project...
+        </div>
+
+        <div v-if="justLogged" class="text-[2rem]">
+            The page will refresh soon
         </div>
 
     </div>
