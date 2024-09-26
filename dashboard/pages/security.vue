@@ -1,7 +1,5 @@
 <script setup lang="ts">
 
-import type { } from '#ui/types/tabs'
-
 definePageMeta({ layout: 'dashboard' });
 const activeProjectId = useActiveProjectId();
 
