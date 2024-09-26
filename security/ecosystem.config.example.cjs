@@ -3,7 +3,7 @@ module.exports = {
         {
             name: 'security',
             exec_mode: 'fork',
-            script: './.output/security/src/index.mjs',
+            script: './dist/security/src/index.js',
             env: {
                 MONGO_CONNECTION_STRING: "",
                 EMAIL_SERVICE: "",
