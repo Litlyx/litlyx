@@ -21,7 +21,7 @@ const sections: Section[] = [
             { label: 'Security', to: '/security', icon: 'fal fa-shield' },
             { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
-            { label: 'Integrations (soon)', to: '#', icon: 'fal fa-cube', disabled: true },
+            { label: 'Integrations (soon)', to: '/integrations', icon: 'fal fa-cube', disabled: true },
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,

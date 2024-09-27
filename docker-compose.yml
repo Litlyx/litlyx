@@ -32,7 +32,7 @@ services:
 
 
   broker:
-    image: litlyx-broker
+    image: litlyx-consumer
     restart: always
     ports:
       - "3999:3999"

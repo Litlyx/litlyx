@@ -76,7 +76,6 @@ async function confirmSnapshot() {
         </div>
 
         <div class="mt-4 justify-center flex w-full">
-
             <UPopover class="w-full" :popper="{ placement: 'bottom' }">
                 <UButton class="w-full" color="primary" variant="solid">
                     <div class="flex items-center justify-center w-full gap-2">
@@ -97,8 +96,6 @@ async function confirmSnapshot() {
                     </div>
                 </template>
             </UPopover>
-
-
         </div>
 
         <div class="grow"></div>

@@ -4,6 +4,7 @@
 const ACCESS_TOKEN_STATE_KEY = 'access_token';
 const ACCESS_TOKEN_COOKIE_KEY = 'access_token';
 
+
 export function signHeaders(headers?: Record<string, string>) {
     const { token } = useAccessToken()
     return { headers: { ...(headers || {}), 'Authorization': 'Bearer ' + token.value } }
