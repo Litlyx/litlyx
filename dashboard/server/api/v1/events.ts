@@ -5,7 +5,7 @@ import { useCors } from '~/server/utils/useCors';
 
 export default defineEventHandler(async event => {
 
-    useCors(event);
+    if (useCors(event)) return '';
 
     const { row, from, to, limit } = getQuery(event);
 
