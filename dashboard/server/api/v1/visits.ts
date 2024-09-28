@@ -2,8 +2,11 @@
 import { ApiSettingsModel } from '@schema/ApiSettingsSchema';
 import { VisitModel } from '@schema/metrics/VisitSchema';
 import { checkApiKey, checkAuthorization, visitsListApi } from '~/server/services/ApiService';
+import { useCors } from '~/server/utils/useCors';
 
 export default defineEventHandler(async event => {
+
+    useCors(event);
 
     const { row, from, to, limit } = getQuery(event);
 

@@ -4,53 +4,60 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: litlyx
       MONGO_INITDB_ROOT_PASSWORD: litlyx
-    ports:
-      - 27017:27017
+    
+    # Uncomment to expose database
+    
+    # ports:
+    #   - 27017:27017
+
     volumes:
       - mongo-data:/data/db
 
   cache:
     image: redis:alpine
     restart: always
-    ports:
-      - "6379:6379"
+    
+    # Uncomment to expose redis
+
+    # ports:
+    #   - "6379:6379"
+
     command: redis-server --save 20 1 --loglevel warning --requirepass litlyx
 
-  producer:
-    image: litlyx-producer
-    restart: always
-    ports:
-      - "3099:3099"
-    environment:
-      PORT: "3099"
-      REDIS_URL: "redis://cache"
-      REDIS_USERNAME: "default"
-      REDIS_PASSWORD: "litlyx"
-      STREAM_NAME: "lib-events"
-    build:
-      dockerfile: ./producer/Dockerfile
+  # producer:
+  #   image: litlyx-producer
+  #   restart: always
+  #   ports:
+  #     - "3099:3099"
+  #   environment:
+  #     PORT: "3099"
+  #     REDIS_URL: "redis://cache"
+  #     REDIS_USERNAME: "default"
+  #     REDIS_PASSWORD: "litlyx"
+  #     STREAM_NAME: "lib-events"
+  #   build:
+  #     dockerfile: ./producer/Dockerfile
 
+  # broker:
+  #   image: litlyx-consumer
+  #   restart: always
+  #   ports:
+  #     - "3999:3999"
+  #   environment:
 
-  broker:
-    image: litlyx-consumer
-    restart: always
-    ports:
-      - "3999:3999"
-    environment:
+  #     # Optional - Used to send welcome and quota emails
 
-      # Optional - Used to send welcome and quota emails
+  #     # NUXT_EMAIL_SERVICE: "Brevo"      
+  #     # NUXT_BREVO_API_KEY: ""
 
-      # NUXT_EMAIL_SERVICE: "Brevo"      
-      # NUXT_BREVO_API_KEY: ""
-
-      PORT: "3999"
-      MONGO_CONNECTION_STRING: "mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin"
-      REDIS_URL: "redis://cache"
-      REDIS_USERNAME: "default"
-      REDIS_PASSWORD: "litlyx"
-      STREAM_NAME: "lib-events"
-    build:
-      dockerfile: ./broker/Dockerfile 
+  #     PORT: "3999"
+  #     MONGO_CONNECTION_STRING: "mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin"
+  #     REDIS_URL: "redis://cache"
+  #     REDIS_USERNAME: "default"
+  #     REDIS_PASSWORD: "litlyx"
+  #     STREAM_NAME: "lib-events"
+  #   build:
+  #     dockerfile: ./broker/Dockerfile 
 
   dashboard:
     image: litlyx-dashboard
@@ -65,8 +72,7 @@ services:
       NUXT_REDIS_USERNAME: "default"
       NUXT_REDIS_PASSWORD: "litlyx"
 
-
-      # Optional - Used to use Lit, the AI analyst
+      # Optional - Used for Lit, the AI analyst
 
       # NUXT_AI_ORG: 'OPEN_AI_ORGANIZATION'
       # NUXT_AI_PROJECT: 'OPEN_AI_PROJECT'
@@ -80,14 +86,13 @@ services:
 
       NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
 
-
       # Optional - Used to register / login via google
       
       # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
       # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
 
       # NO_AUTH or GOOGLE
-      
+
       NUXT_PUBLIC_AUTH_MODE: 'NO_AUTH'
 
       # Default user created in NO_AUTH mode
@@ -100,7 +105,6 @@ services:
 
       # NUXT_STRIPE_SECRET_TEST: ""
       # NUXT_STRIPE_WH_SECRET_TEST: ""
-
 
       # Optional - Stripe secret - Used to change plans of the projects
 

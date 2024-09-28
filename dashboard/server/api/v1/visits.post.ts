@@ -1,10 +1,13 @@
 
 import { checkApiKey, checkAuthorization } from '~/server/services/ApiService';
 import { visitsListApi } from '../../services/ApiService';
+import { useCors } from '~/server/utils/useCors';
 
 
 export default defineEventHandler(async event => {
 
+    useCors(event);
+    
     const { rows, from, to, limit } = await readBody(event);
 
     const token = checkAuthorization(event);

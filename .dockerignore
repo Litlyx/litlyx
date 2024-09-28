@@ -1,8 +1,15 @@
+shared/node_modules
+shared/.output
 
-# Consumer
-**/node_modules
-**/ecosystem.config.cjs
-**/ecosystem.config.example.cjs
-**/dist
-**/.nuxt
-**/.env
+lyx-ui/node_modules
+lyx-ui/.nuxt
+lyx-ui/.output
+
+dashboard/node_modules
+dashboard/.nuxt
+dashboard/.output
+dashboard/explains
+dashboard/tests
+dashboard/.env
+dashboard/winston-*.ndjson
+
