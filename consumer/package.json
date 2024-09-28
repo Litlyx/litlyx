@@ -19,7 +19,9 @@
     "compile": "tsc",
     "build": "node ../scripts/build.js",
     "create_db": "cd scripts && ts-node create_database.ts",
-    "build_all": "npm run compile && npm run build && npm run create_db"
+    "build_all": "npm run compile && npm run build && npm run create_db",
+    "docker-build": "docker build -t litlyx-consumer -f Dockerfile ../",
+		"docker-inspect": "docker run -it litlyx-consumer sh"
   },
   "keywords": [],
   "author": "Emily",

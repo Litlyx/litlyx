@@ -11,7 +11,7 @@
     "test": "vitest",
     "docker-build": "docker build -t litlyx-dashboard -f Dockerfile ../",
     "docker-inspect": "docker run -it litlyx-dashboard sh",
-    "docker-run": "docker run -p 3000:3000 --name litlyx-dashboard litlyx-dashboard"
+    "docker-run": "docker run -p 3000:3000 litlyx-dashboard"
   },
   "dependencies": {
     "@getbrevo/brevo": "^2.2.0",

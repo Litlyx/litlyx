@@ -1,9 +1,19 @@
 shared/node_modules
 shared/.output
 
+scripts/node_modules
+
 lyx-ui/node_modules
 lyx-ui/.nuxt
 lyx-ui/.output
+
+producer/node_modules
+producer/scripts/start_dev.js
+producer/ecosystem.config.cjs
+
+consumer/node_modules
+consumer/scripts/start_dev.js
+consumer/ecosystem.config.cjs
 
 dashboard/node_modules
 dashboard/.nuxt
@@ -12,4 +22,5 @@ dashboard/explains
 dashboard/tests
 dashboard/.env
 dashboard/winston-*.ndjson
+dashboard/ecosystem.config.cjs
 

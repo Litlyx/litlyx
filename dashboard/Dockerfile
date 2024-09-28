@@ -34,6 +34,7 @@ COPY --link ./shared ./shared
 
 # Build the dashboard
 WORKDIR /home/app/dashboard
+
 RUN pnpm run build
 
 # Use a smaller base image for the final production build
