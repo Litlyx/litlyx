@@ -52,7 +52,7 @@ services:
       STREAM_NAME: "LITLYX"
       GROUP_NAME: "DATABASE"
     build:
-      dockerfile: ./broker/Dockerfile 
+      dockerfile: ./consumer/Dockerfile 
 
   dashboard:
     image: litlyx-dashboard
