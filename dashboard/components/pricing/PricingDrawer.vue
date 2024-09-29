@@ -222,7 +222,7 @@ async function onLifetimeUpgradeClick() {
             <PricingCardGeneric class="flex-1" :datas="getPricingsData().customPricing"></PricingCardGeneric>
         </div>
 
-        <LyxUiCard class="w-full mt-6">
+        <!-- <LyxUiCard class="w-full mt-6">
             <div class="flex">
                 <div class="flex flex-col gap-3">
                     <div>
@@ -266,7 +266,7 @@ async function onLifetimeUpgradeClick() {
                     </div>
                 </div>
             </div>
-        </LyxUiCard>
+        </LyxUiCard> -->
 
         <div class="flex justify-between items-center mt-10 flex-col xl:flex-row">
             <div class="flex flex-col gap-2">
