@@ -21,12 +21,12 @@ const avgVisitDay = computed(() => {
     return avg.toFixed(2);
 });
 
-const avgEventsDay = computed(() => {
-    if (!eventsData.data.value) return '0.00';
-    const counts = eventsData.data.value.data.reduce((a, e) => e + a, 0);
-    const avg = counts / Math.max(snapshotDays.value, 1);
-    return avg.toFixed(2);
-});
+// const avgEventsDay = computed(() => {
+//     if (!eventsData.data.value) return '0.00';
+//     const counts = eventsData.data.value.data.reduce((a, e) => e + a, 0);
+//     const avg = counts / Math.max(snapshotDays.value, 1);
+//     return avg.toFixed(2);
+// });
 
 const avgSessionsDay = computed(() => {
     if (!sessionsData.data.value) return '0.00';
@@ -35,6 +35,16 @@ const avgSessionsDay = computed(() => {
     return avg.toFixed(2);
 });
 
+const avgBouncingRate = computed(() => {
+    if (!bouncingRateData.data.value) return '0.00 %'
+
+    const counts = bouncingRateData.data.value.data
+        .filter(e => e > 0)
+        .reduce((a, e) => e + a, 0);
+
+    const avg = counts / Math.max(bouncingRateData.data.value.data.filter(e => e > 0).length, 1);
+    return avg.toFixed(2) + ' %';
+})
 
 const avgSessionDuration = computed(() => {
     if (!metricsInfo.value) return '0.00';
@@ -47,6 +57,8 @@ const avgSessionDuration = computed(() => {
     while (minutes > 60) { minutes -= 60; hours += 1; }
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds.toFixed()}s`
 });
+
+
 
 
 const chartSlice = computed(() => {
@@ -79,15 +91,25 @@ function getBody() {
     });
 }
 
+const computedHeaders = computed(() => {
+    return {
+        ...signHeaders().headers,
+        'x-pid': activeProject.value?._id.toString() || '',
+        'x-from': safeSnapshotDates.value.from,
+        'x-to': safeSnapshotDates.value.to,
+        'x-slice': chartSlice.value
+    }
+})
+
 const visitsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/visits`, {
     method: 'POST', ...signHeaders({ v2: 'true' }), body: getBody(), transform: transformResponse,
     lazy: true, immediate: false
 });
 
-const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/events`, {
-    method: 'POST', ...signHeaders({ v2: 'true' }), body: getBody(), transform: transformResponse,
-    lazy: true, immediate: false
-});
+// const eventsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/events`, {
+//     method: 'POST', ...signHeaders({ v2: 'true' }), body: getBody(), transform: transformResponse,
+//     lazy: true, immediate: false
+// });
 
 const sessionsData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/sessions`, {
     method: 'POST', ...signHeaders({ v2: 'true' }), body: getBody(), transform: transformResponse,
@@ -99,12 +121,26 @@ const sessionsDurationData = useFetch(`/api/metrics/${activeProject.value?._id}/
     lazy: true, immediate: false
 });
 
+const bouncingRateData = useFetch(`/api/data/bouncing_rate`, {
+    headers: computedHeaders, lazy: true, immediate: false,
+    transform: (input: { data: string, value: number | null }[]) => {
+        const data = input.map(e => e.value || 0);
+        const labels = input.map(e => DateService.getChartLabelFromISO(e.data, navigator.language, chartSlice.value));
+        const pool = [...input.map(e => e.value || 0)];
+        pool.pop();
+        const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
+        const diffPercent: number = (100 / avg * (input.at(-1)?.value || 0)) - 100;
+        const trend = Math.max(Math.min(diffPercent, 99), -99);
+        return { data, labels, trend }
+    }
+})
+
 
 onMounted(async () => {
     visitsData.execute();
-    eventsData.execute();
+    bouncingRateData.execute();
     sessionsData.execute();
-    sessionsDurationData.execute();
+    sessionsDurationData.execute()
 });
 
 
@@ -120,10 +156,10 @@ onMounted(async () => {
             :data="visitsData.data.value?.data" :labels="visitsData.data.value?.labels" color="#5655d7">
         </DashboardCountCard>
 
-        <DashboardCountCard :ready="!eventsData.pending.value" icon="far fa-flag" text="Total custom events"
-            :value="formatNumberK(eventsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
-            :avg="formatNumberK(avgEventsDay) + '/day'" :trend="eventsData.data.value?.trend"
-            :data="eventsData.data.value?.data" :labels="eventsData.data.value?.labels" color="#1e9b86">
+        <DashboardCountCard :ready="!bouncingRateData.pending.value" icon="far fa-chart-user" text="Bouncing rate"
+            :value="avgBouncingRate" :trend="bouncingRateData.data.value?.trend"
+            :slow="true"
+            :data="bouncingRateData.data.value?.data" :labels="bouncingRateData.data.value?.labels" color="#1e9b86">
         </DashboardCountCard>
 
 

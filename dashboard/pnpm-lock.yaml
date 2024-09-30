@@ -33,8 +33,11 @@ importers:
         specifier: ^1.11.11
         version: 1.11.11
       google-auth-library:
-        specifier: ^9.9.0
+        specifier: ^9.10.0
         version: 9.10.0(encoding@0.1.13)
+      googleapis:
+        specifier: ^144.0.0
+        version: 144.0.0(encoding@0.1.13)
       highlight.js:
         specifier: ^11.10.0
         version: 11.10.0
@@ -1499,20 +1502,20 @@ packages:
   '@vue/reactivity@3.4.27':
     resolution: {integrity: sha512-kK0g4NknW6JX2yySLpsm2jlunZJl2/RJGZ0H9ddHdfBVHcNzxmQ0sS0b09ipmBoQpY8JM2KmUw+a6sO8Zo+zIA==}
 
-  '@vue/reactivity@3.5.8':
-    resolution: {integrity: sha512-mlgUyFHLCUZcAYkqvzYnlBRCh0t5ZQfLYit7nukn1GR96gc48Bp4B7OIcSfVSvlG1k3BPfD+p22gi1t2n9tsXg==}
+  '@vue/reactivity@3.5.10':
+    resolution: {integrity: sha512-kW08v06F6xPSHhid9DJ9YjOGmwNDOsJJQk0ax21wKaUYzzuJGEuoKNU2Ujux8FLMrP7CFJJKsHhXN9l2WOVi2g==}
 
   '@vue/runtime-core@3.4.27':
     resolution: {integrity: sha512-7aYA9GEbOOdviqVvcuweTLe5Za4qBZkUY7SvET6vE8kyypxVgaT1ixHLg4urtOlrApdgcdgHoTZCUuTGap/5WA==}
 
-  '@vue/runtime-core@3.5.8':
-    resolution: {integrity: sha512-fJuPelh64agZ8vKkZgp5iCkPaEqFJsYzxLk9vSC0X3G8ppknclNDr61gDc45yBGTaN5Xqc1qZWU3/NoaBMHcjQ==}
+  '@vue/runtime-core@3.5.10':
+    resolution: {integrity: sha512-9Q86I5Qq3swSkFfzrZ+iqEy7Vla325M7S7xc1NwKnRm/qoi1Dauz0rT6mTMmscqx4qz0EDJ1wjB+A36k7rl8mA==}
 
   '@vue/runtime-dom@3.4.27':
     resolution: {integrity: sha512-ScOmP70/3NPM+TW9hvVAz6VWWtZJqkbdf7w6ySsws+EsqtHvkhxaWLecrTorFxsawelM5Ys9FnDEMt6BPBDS0Q==}
 
-  '@vue/runtime-dom@3.5.8':
-    resolution: {integrity: sha512-DpAUz+PKjTZPUOB6zJgkxVI3GuYc2iWZiNeeHQUw53kdrparSTG6HeXUrYDjaam8dVsCdvQxDz6ZWxnyjccUjQ==}
+  '@vue/runtime-dom@3.5.10':
+    resolution: {integrity: sha512-t3x7ht5qF8ZRi1H4fZqFzyY2j+GTMTDxRheT+i8M9Ph0oepUxoadmbwlFwMoW7RYCpNQLpP2Yx3feKs+fyBdpA==}
 
   '@vue/server-renderer@3.4.27':
     resolution: {integrity: sha512-dlAMEuvmeA3rJsOMJ2J1kXU7o7pOxgsNHVr9K8hB3ImIkSuBrIdy0vF66h8gf8Tuinf1TK3mPAz2+2sqyf3KzA==}
@@ -1521,6 +1524,9 @@ packages:
 
   '@vue/shared@3.4.27':
     resolution: {integrity: sha512-DL3NmY2OFlqmYYrzp39yi3LDkKxa5vZVwxWdQ3rG0ekuWscHraeIbnI8t+aZK7qhYqEqWKTUdijadunb9pnrgA==}
+
+  '@vue/shared@3.5.10':
+    resolution: {integrity: sha512-VkkBhU97Ki+XJ0xvl4C9YJsIZ2uIlQ7HqPpZOS3m9VCvmROPaChZU6DexdMJqvz9tbgG+4EtFVrSuailUq5KGQ==}
 
   '@vue/shared@3.5.8':
     resolution: {integrity: sha512-mJleSWbAGySd2RJdX1RBtcrUBX6snyOc0qHpgk3lGi4l9/P/3ny3ELqFWqYdkXIwwNN/kdm8nD9ky8o6l/Lx2A==}
@@ -2733,6 +2739,14 @@ packages:
   google-auth-library@9.10.0:
     resolution: {integrity: sha512-ol+oSa5NbcGdDqA+gZ3G3mev59OHBZksBTxY/tYwjtcp1H/scAFwJfSQU9/1RALoyZ7FslNbke8j4i3ipwlyuQ==}
     engines: {node: '>=14'}
+
+  googleapis-common@7.2.0:
+    resolution: {integrity: sha512-/fhDZEJZvOV3X5jmD+fKxMqma5q2Q9nZNSF3kn1F18tpxmA86BcTxAGBQdM0N89Z3bEaIs+HVznSmFJEAmMTjA==}
+    engines: {node: '>=14.0.0'}
+
+  googleapis@144.0.0:
+    resolution: {integrity: sha512-ELcWOXtJxjPX4vsKMh+7V+jZvgPwYMlEhQFiu2sa9Qmt5veX8nwXPksOWGGN6Zk4xCiLygUyaz7xGtcMO+Onxw==}
+    engines: {node: '>=14.0.0'}
 
   gopd@1.0.1:
     resolution: {integrity: sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==}
@@ -4983,6 +4997,9 @@ packages:
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
+
+  url-template@2.0.8:
+    resolution: {integrity: sha512-XdVKMF4SJ0nP/O7XIPB0JwAEuT9lDIYnNsK8yGVe43y0AWoKeJNdv3ZNWh7ksJ6KqQFjOO6ox/VEitLnaVNufw==}
 
   urlpattern-polyfill@8.0.2:
     resolution: {integrity: sha512-Qp95D4TPJl1kC9SKigDcqgyM2VDVO4RiJc2d4qe5GrYm+zbIQCWWKAFaJNQ4BhdFeDGwBmAxqJBwWSJDb9T3BQ==}
@@ -7241,19 +7258,19 @@ snapshots:
     dependencies:
       '@vue/shared': 3.4.27
 
-  '@vue/reactivity@3.5.8':
+  '@vue/reactivity@3.5.10':
     dependencies:
-      '@vue/shared': 3.5.8
+      '@vue/shared': 3.5.10
 
   '@vue/runtime-core@3.4.27':
     dependencies:
       '@vue/reactivity': 3.4.27
       '@vue/shared': 3.4.27
 
-  '@vue/runtime-core@3.5.8':
+  '@vue/runtime-core@3.5.10':
     dependencies:
-      '@vue/reactivity': 3.5.8
-      '@vue/shared': 3.5.8
+      '@vue/reactivity': 3.5.10
+      '@vue/shared': 3.5.10
 
   '@vue/runtime-dom@3.4.27':
     dependencies:
@@ -7261,11 +7278,11 @@ snapshots:
       '@vue/shared': 3.4.27
       csstype: 3.1.3
 
-  '@vue/runtime-dom@3.5.8':
+  '@vue/runtime-dom@3.5.10':
     dependencies:
-      '@vue/reactivity': 3.5.8
-      '@vue/runtime-core': 3.5.8
-      '@vue/shared': 3.5.8
+      '@vue/reactivity': 3.5.10
+      '@vue/runtime-core': 3.5.10
+      '@vue/shared': 3.5.10
       csstype: 3.1.3
 
   '@vue/server-renderer@3.4.27(vue@3.4.27(typescript@5.4.2))':
@@ -7275,6 +7292,8 @@ snapshots:
       vue: 3.4.27(typescript@5.4.2)
 
   '@vue/shared@3.4.27': {}
+
+  '@vue/shared@3.5.10': {}
 
   '@vue/shared@3.5.8': {}
 
@@ -8567,6 +8586,26 @@ snapshots:
       gcp-metadata: 6.1.0(encoding@0.1.13)
       gtoken: 7.1.0(encoding@0.1.13)
       jws: 4.0.0
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  googleapis-common@7.2.0(encoding@0.1.13):
+    dependencies:
+      extend: 3.0.2
+      gaxios: 6.6.0(encoding@0.1.13)
+      google-auth-library: 9.10.0(encoding@0.1.13)
+      qs: 6.12.1
+      url-template: 2.0.8
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  googleapis@144.0.0(encoding@0.1.13):
+    dependencies:
+      google-auth-library: 9.10.0(encoding@0.1.13)
+      googleapis-common: 7.2.0(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
       - supports-color
@@ -11143,6 +11182,8 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
+  url-template@2.0.8: {}
+
   urlpattern-polyfill@8.0.2: {}
 
   util-deprecate@1.0.2: {}
@@ -11347,8 +11388,8 @@ snapshots:
 
   vue-chart-3@3.1.8(chart.js@3.9.1)(vue@3.4.27(typescript@5.4.2)):
     dependencies:
-      '@vue/runtime-core': 3.5.8
-      '@vue/runtime-dom': 3.5.8
+      '@vue/runtime-core': 3.5.10
+      '@vue/runtime-dom': 3.5.10
       chart.js: 3.9.1
       csstype: 3.1.3
       lodash-es: 4.17.21

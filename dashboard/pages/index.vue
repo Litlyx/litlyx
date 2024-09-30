@@ -110,7 +110,7 @@ function goToUpgrade() {
                 </div>
             </div>
 
-            <DashboardTopSection></DashboardTopSection>
+            <DashboardTopSection :key="refreshKey"></DashboardTopSection>
             <DashboardTopCards :key="refreshKey"></DashboardTopCards>
 
 

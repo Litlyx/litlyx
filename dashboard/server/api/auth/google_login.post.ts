@@ -36,7 +36,14 @@ export default defineEventHandler(async event => {
 
     const user = await UserModel.findOne({ email: payload.email });
 
-    if (user) return { error: false, access_token: createUserJwt({ email: user.email, name: user.name }) }
+    if (user) {
+        user.google_tokens = tokens as any;
+        await user.save();
+        return {
+            error: false,
+            access_token: createUserJwt({ email: user.email, name: user.name })
+        }
+    }
 
 
     const newUser = new UserModel({
@@ -45,6 +52,7 @@ export default defineEventHandler(async event => {
         name: payload.name,
         locale: payload.locale,
         picture: payload.picture,
+        google_tokens: tokens,
         created_at: Date.now()
     });
 

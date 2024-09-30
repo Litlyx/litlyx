@@ -11,16 +11,34 @@ const selectLabelsEvents = [
 const eventsStackedSelectIndex = ref<number>(0);
 
 const activeProject = useActiveProject();
-const { snapshot } = useSnapshot();
+const { snapshot, safeSnapshotDates } = useSnapshot();
 
 const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
 
+
+
+const headers = computed(() => {
+    return {
+        'x-from': safeSnapshotDates.value.from,
+        'x-to': safeSnapshotDates.value.to,
+        'Authorization': authorizationHeaderComputed.value,
+        'x-schema': 'events',
+        'x-pid': activeProject.value?._id.toString() || ''
+    }
+});
+
+const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, lazy: true });
 
 </script>
 
 
 <template>
     <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
+
+
+        <LyxUiCard class="w-full">
+            Total events: {{ eventsData.data.value?.[0].total || '???' }}
+        </LyxUiCard>
 
         <div class="flex gap-6 flex-col xl:flex-row h-full">
 
