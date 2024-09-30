@@ -47,24 +47,18 @@ onMounted(async () => {
 
 const creatingCsv = ref<boolean>(false);
 
-async function downloadCSV(isGoogle: boolean) {
+async function downloadCSV() {
     creatingCsv.value = true;
-    const result = await $fetch(`/api/project/generate_csv?mode=visits&slice=${options.indexOf(selectedTimeFrom.value)}`,
-        signHeaders({ 'x-google-export': isGoogle ? 'true' : 'false' })
-    );
-    if (!isGoogle) {
-        const blob = new Blob([result as any], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'ReportVisits.csv';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-    } else {
-        alert(result);
-    }
+    const result = await $fetch(`/api/project/generate_csv?mode=visits&slice=${options.indexOf(selectedTimeFrom.value)}`, signHeaders());
+    const blob = new Blob([result as any], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ReportVisits.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
     creatingCsv.value = false;
 }
 
@@ -107,21 +101,16 @@ function goToUpgrade() {
                 <USelectMenu v-model="selectedTimeFrom" :options="options"></USelectMenu>
             </div>
 
-            <div v-if="isPremium" @click="downloadCSV(false)"
+            <div v-if="isPremium" @click="downloadCSV()"
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 Download CSV
             </div>
-
-            <div v-if="isPremium" @click="downloadCSV(true)"
-                class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
-                Export CSV to Google Sheets
-            </div>
-
-            <!-- <div v-if="!isPremium" @click="goToUpgrade()"
+            
+            <div v-if="!isPremium" @click="goToUpgrade()"
                 class="bg-[#57c78f46] hover:bg-[#57c78f42] flex gap-4 items-center cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 <i class="far fa-lock"></i>
                 Upgrade plan for CSV
-            </div> -->
+            </div> 
 
         </div>
 

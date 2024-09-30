@@ -43,11 +43,11 @@ const creatingCsv = ref<boolean>(false);
 async function downloadCSV() {
     creatingCsv.value = true;
     const result = await $fetch(`/api/project/generate_csv?mode=events&slice=${options.indexOf(selectedTimeFrom.value)}`, signHeaders());
-    const blob = new Blob([result], { type: 'text/csv' });
+    const blob = new Blob([result as any], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'ReportVisits.csv';
+    a.download = 'ReportEvents.csv';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
