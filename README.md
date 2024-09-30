@@ -4,13 +4,13 @@
 </p>
 
 <h4 align="center">
-🌐 <a href="https://litlyx.com">Website</a> 📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Join Discord</a> 🔥 <a href="https://dashboard.litlyx.com">Start for free!</a> 
+🌐 <a href="https://litlyx.com">Website</a> 📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Join Discord</a> 🔥 <a href="https://dashboard.litlyx.com">Try Litlyx Cloud. It's Free.</a> 
 </h4>
 
 #
 <p align="center">
-  The easiest, developer-centric analytics tool.<br>
-  Litlyxis an open-source, self-hostable analytics solution for modern framework. Setup takes less than 30 seconds!
+  The freshest, developer-friendly analytics tool.<br>
+  Litlyx is an open-source, self-hostable analytics solution for modern frameworks. Setup takes less than 30 seconds!
 </p>
 
 #
@@ -23,21 +23,21 @@
 
 #
 
-## Pre-Requisites on Cloud Version
+## Get Started on our Cloud Version
 
 Sign-up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then simply use your project_id to connect Litlyx to your website OR Self-Host Litlyx with Docker.
 
 ## Universal Installation
 
 ```html
-<script defer data-project="project_id_here" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
+<script defer data-project="your_project_id" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
 ```
 
-Importing Litlyx with a direct script instantly starts tracking 10 KPIs, including `Page visits`, `Browsers`, `Devices`, `Operating Systems`, `Real-Time Online Users`, `Unique Sessions`, `Countries`, and `Average Session Time`.
+Importing Litlyx with a direct script instantly starts tracking `Page visits`, `Browsers`, `Devices`, `Operating Systems`, `Bouncing Rate`, `Real-Time Online Users`, `Unique Sessions`, `Countries`, and `Average Session Time`.
 
 # All Javascript Runtimes
 
-You can install Litlyx using `npm`, `yarn`, or `pnpm`:
+You can install Litlyx using `npm`, `pnpm`, `yarn` or any modern package managers:
 
 ```sh
 npm i litlyx-js
@@ -65,7 +65,7 @@ Lit.init('your_project_id');
 
 After initialization, Litlyx will automatically track analytics such as `Page visits`, `Browsers`, `Devices`, `Operating Systems`, `Real-Time Online Users`, `Unique Sessions`, `Countries`, and `Average Session Time`.
 
-# Custom Events
+# Track Custom Events
 
 You aren't just limited to the built-in KPIs. With Litlyx, you can create your own events to track in your project.
 
@@ -80,6 +80,7 @@ Lit.event('click_on_buy_item', {
   metadata: {
     'product-name': 'Coca-Cola',
     'price': 1.50,
+    'currency': 'EUR'
   }
 });
 ```
@@ -118,6 +119,19 @@ docker-compose up
 ```
 
 at localhost:3000 you will see your own instance of the Litlyx Dashboard.
+
+## Forward data to your local instance with script tag
+
+To forward your data on your self-hosted instance, you need to set up the following variables: add your `data-host`, add your `data-port`, and add your `data-secure`, setting it to true if it is HTTPS, and false if it is HTTP.
+
+```html
+<script defer data-project="your_project_id" 
+        data-host="your-host-name" 
+        data-port="your-port" 
+        data-secure="true/false"
+        src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js">
+</script>
+```
 
 # Official Docs
 
