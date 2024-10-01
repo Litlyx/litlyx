@@ -2,7 +2,7 @@ import { VisitModel } from "@schema/metrics/VisitSchema";
 import { AdvancedTimelineAggregationOptions, executeAdvancedTimelineAggregation, executeTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
 import { Types } from "mongoose";
 import { AIPlugin, AIPlugin_TTool } from "../Plugin";
-
+import dayjs from 'dayjs';
 
 const getVisitsCountsTool: AIPlugin_TTool<'getVisitsCount'> = {
     type: 'function',
@@ -63,10 +63,13 @@ export class AiVisits extends AIPlugin<['getVisitsCount', 'getVisitsTimeline']> 
             },
             'getVisitsTimeline': {
                 handler: async (data: { project_id: string, from: string, to: string, website?: string, page?: string }) => {
+
                     const query: AdvancedTimelineAggregationOptions & { customMatch: Record<string, any> } = {
                         projectId: new Types.ObjectId(data.project_id) as any,
                         model: VisitModel,
-                        from: data.from, to: data.to, slice: 'day',
+                        from: dayjs(data.from).startOf('day').toISOString(),
+                        to: dayjs(data.to).startOf('day').toISOString(),
+                        slice: 'day',
                         customMatch: {}
                     }
 

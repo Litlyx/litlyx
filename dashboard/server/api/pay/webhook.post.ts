@@ -140,10 +140,10 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
         setTimeout(() => {
             if (PLAN.ID == 0) return;
-            EmailService.sendPurchaseEmail(user.email, project.name);
+                EmailService.sendPurchaseEmail(user.email, project.name);
         }, 1);
 
-        
+
         return { ok: true };
 
 

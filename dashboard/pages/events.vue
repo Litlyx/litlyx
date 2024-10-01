@@ -36,8 +36,20 @@ const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, 
     <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
 
 
-        <LyxUiCard class="w-full">
-            Total events: {{ eventsData.data.value?.[0].total || '???' }}
+        <LyxUiCard class="w-full flex justify-between items-center">
+            <div class="flex flex-col gap-1">
+                <div>
+                    Total events: {{ eventsData.data.value?.[0]?.total || '0' }}
+                </div>
+                <div v-if="(eventsData.data.value?.[0]?.total || 0) === 0">
+                    Waiting for your first event...
+                </div>
+            </div>
+            <div>
+                <LyxUiButton type="secondary" to="https://docs.litlyx.com/custom-events">
+                    Go to docs
+                </LyxUiButton>
+            </div>
         </LyxUiCard>
 
         <div class="flex gap-6 flex-col xl:flex-row h-full">

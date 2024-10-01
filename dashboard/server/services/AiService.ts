@@ -77,7 +77,7 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
     } else {
         const roleMessage: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
             role: 'system',
-            content: + "Today is " + new Date().toISOString()
+            content: "Today ISO date: " + new Date().toISOString()
         }
         messages.push(roleMessage);
         await addMessageToChat(roleMessage, chat_id);

@@ -2,7 +2,7 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { AdvancedTimelineAggregationOptions, executeAdvancedTimelineAggregation, executeTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
 import { Types } from "mongoose";
 import { AIPlugin, AIPlugin_TTool } from "../Plugin";
-
+import dayjs from 'dayjs';
 
 const getEventsCountTool: AIPlugin_TTool<'getEventsCount'> = {
     type: 'function',
@@ -66,7 +66,9 @@ export class AiEvents extends AIPlugin<['getEventsCount', 'getEventsTimeline']> 
                     const query: AdvancedTimelineAggregationOptions & { customMatch: Record<string, any> } = {
                         projectId: new Types.ObjectId(data.project_id) as any,
                         model: EventModel,
-                        from: data.from, to: data.to, slice: 'day',
+                        from: dayjs(data.from).startOf('day').toISOString(),
+                        to: dayjs(data.to).startOf('day').toISOString(),
+                        slice: 'day',
                         customMatch: {}
                     }
                     if (data.metadata) query.customMatch.metadata = data.metadata;

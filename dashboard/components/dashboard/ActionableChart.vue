@@ -123,8 +123,14 @@ function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'li
         return;
     }
     const { left: positionX, top: positionY } = chart.canvas.getBoundingClientRect();
+
+
+    const xSwap = tooltip.caretX > (window.innerWidth * 0.5) ? -450 : -100;
+
     tooltipEl.style.opacity = '1';
-    tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+
+    tooltipEl.style.left = positionX + (tooltip.caretX + xSwap) + 'px';
+
     tooltipEl.style.top = positionY + tooltip.caretY + 'px';
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
 
