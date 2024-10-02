@@ -49,11 +49,7 @@ const selectLabels = [
     // { label: 'Month', value: 'month' },
 ];
 
-
-
 const { snapshot } = useSnapshot();
-
-const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
 
 const isPremium = computed(() => {
     return activeProject.value?.premium;
@@ -72,7 +68,12 @@ function goToUpgrade() {
 
     <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
 
-        <div :key="'home-' + isLiveDemo()"
+        <div>
+            <DashboardTopSection :key="refreshKey"></DashboardTopSection>
+            <DashboardTopCards :key="refreshKey"></DashboardTopCards>
+        </div>
+
+        <!-- <div :key="'home-' + isLiveDemo()"
             v-if="projects && activeProject && (firstInteraction.data.value === true) && !justLogged">
 
             <div class="w-full px-4 py-2 gap-2 flex flex-col">
@@ -118,36 +119,7 @@ function goToUpgrade() {
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
                 <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
             </div>
-            <!-- 
-            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row">
-
-                <CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Visits trends"
-                    sub="Shows trends in page visits.">
-                    <template #header>
-                        <SelectButton @changeIndex="mainChartSelectIndex = $event" :currentIndex="mainChartSelectIndex"
-                            :options="selectLabels">
-                        </SelectButton>
-                    </template>
-<div>
-    <DashboardVisitsLineChart :slice="(selectLabels[mainChartSelectIndex].value as any)">
-    </DashboardVisitsLineChart>
-</div>
-</CardTitled>
-
-<CardTitled :key="refreshKey" class="p-4 flex-1 w-full" title="Sessions" sub="Shows trends in sessions.">
-    <template #header>
-                        <SelectButton @changeIndex="sessionsChartSelectIndex = $event"
-                            :currentIndex="sessionsChartSelectIndex" :options="selectLabels">
-                        </SelectButton>
-                    </template>
-    <div>
-        <DashboardSessionsLineChart :slice="(selectLabels[sessionsChartSelectIndex].value as any)">
-        </DashboardSessionsLineChart>
-    </div>
-</CardTitled>
-
-</div> -->
-
+          
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -202,7 +174,7 @@ function goToUpgrade() {
 
         <div v-if="justLogged" class="text-[2rem]">
             The page will refresh soon
-        </div>
+        </div> -->
 
     </div>
 

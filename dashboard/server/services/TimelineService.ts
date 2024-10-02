@@ -5,7 +5,7 @@ import type mongoose from "mongoose";
 
 
 export type TimelineAggregationOptions = {
-    projectId: mongoose.Schema.Types.ObjectId,
+    projectId: mongoose.Schema.Types.ObjectId | mongoose.Types.ObjectId,
     model: mongoose.Model<any>,
     from: string | number,
     to: string | number,

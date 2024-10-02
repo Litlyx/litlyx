@@ -2,7 +2,6 @@ import type { AuthContext } from "~/server/middleware/01-authorization";
 
 async function executeUserLogin(token: string): Promise<[true, AuthContext] | [false, null]> {
     const user = await $fetch<AuthContext>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token } });
-    console.log('USER RESPSONSE', user);
     if (!user) return [false, null];
     if (user.logged == false) return [false, null];
     return [true, user];
@@ -26,6 +25,7 @@ async function handleUserLogin(authContext?: AuthContext) {
         return;
     }
 
+    const { setLoggedUser } = useLoggedUser();
     setLoggedUser(newContext);
 
 }
@@ -34,10 +34,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     if (!to.name) return;
 
-    const loggedUser = useLoggedUser();
-    await handleUserLogin(loggedUser.value);
+    const { user } = useLoggedUser();
+    
+    await handleUserLogin(user.value);
 
-    if (loggedUser.value?.logged) {
+    if (user.value?.logged) {
         if (to.path == '/login') return '/';
     } else {
         if (to.path != '/login' && to.path != '/live_demo') return '/login';

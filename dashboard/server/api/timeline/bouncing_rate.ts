@@ -7,21 +7,14 @@ import mongoose from "mongoose";
 
 export default defineEventHandler(async event => {
 
-    const project_id = getHeader(event, 'x-pid');
-    if (!project_id) return;
 
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user);
-    if (!project) return;
+    const data = await getRequestData(event, { requireSchema: false, requireSlice: true });
+    if (!data) return;
 
-    const from = getRequestHeader(event, 'x-from');
-    const to = getRequestHeader(event, 'x-to');
+    const { pid, from, to, slice, project_id } = data;
 
-    if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to are required');
 
-    const slice = getRequestHeader(event, 'x-slice');
-
-    const cacheKey = `bouncing_rate:${project_id}:${from}:${to}`;
+    const cacheKey = `timeline:bouncing_rate:${pid}:${from}:${to}`;
     const cacheExp = 60 * 60; //1 hour
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async (noStore, updateExp) => {
@@ -37,14 +30,14 @@ export default defineEventHandler(async event => {
 
         const allDates = DateService.createBetweenDates(from, to, slice as any);
 
-        const result: { date: string, value: number }[] = [];
+        const result: { _id: string, count: number }[] = [];
 
         for (const date of allDates.dates) {
 
             const visits = await VisitModel.aggregate([
                 {
                     $match: {
-                        project_id: project._id,
+                        project_id: project_id,
                         created_at: {
                             $gte: date.startOf(slice as any).toDate(),
                             $lte: date.endOf(slice as any).toDate()
@@ -57,22 +50,30 @@ export default defineEventHandler(async event => {
             const sessions = await SessionModel.aggregate([
                 {
                     $match: {
-                        project_id: project._id,
+                        project_id: project_id,
                         created_at: {
                             $gte: date.startOf(slice as any).toDate(),
                             $lte: date.endOf(slice as any).toDate()
                         }
                     },
                 },
-                { $group: { _id: "$session", count: { $sum: 1, }, duration: { $sum: '$duration' } } },
+                {
+                    $group: {
+                        _id: "$session", count: { $sum: 1, },
+                        duration: { $sum: '$duration' }
+                    }
+                },
             ]);
 
             const total = visits.length;
             const bounced = sessions.filter(e => (e.duration / e.count) < 1).length;
             const bouncing_rate = 100 / total * bounced;
-            result.push({ date: date.toISOString(), value: bouncing_rate });
+            result.push({ 
+                _id: date.toISOString(), 
+                count: bouncing_rate
+             });
         }
-        
+
         return result;
 
     });

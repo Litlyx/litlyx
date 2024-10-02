@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 
-const activeProject = useActiveProject();
+
+const { project } = useProject();
+
 const { onlineUsers, stopWatching, startWatching } = useOnlineUsers();
 onMounted(() => startWatching());
 onUnmounted(() => stopWatching());
@@ -9,8 +11,9 @@ onUnmounted(() => stopWatching());
 const { createAlert } = useAlert();
 
 function copyProjectId() {
-    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-    navigator.clipboard.writeText((activeProject.value?._id || 0).toString());
+    if (!navigator.clipboard) return alert('You can\'t copy in HTTP');
+    if (!project.value) return alert('Project not loaded');
+    navigator.clipboard.writeText((project.value._id).toString());
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
@@ -42,7 +45,7 @@ function showAnomalyInfoAlert() {
 
         <div class="flex md:gap-2 items-center md:justify-start flex-col md:flex-row">
             <div class="poppins font-medium text-lyx-text-darker text-[1.2rem]">Project:</div>
-            <div class="text-lyx-text poppins font-medium text-[1.2rem]"> {{ activeProject?.name || 'Loading...' }}
+            <div class="text-lyx-text poppins font-medium text-[1.2rem]"> {{ project?.name || 'Loading...' }}
             </div>
         </div>
 
@@ -50,7 +53,7 @@ function showAnomalyInfoAlert() {
             <div class="poppins font-medium text-lyx-text-darker text-[1.2rem]">Project id:</div>
             <div class="flex gap-2">
                 <div class="text-lyx-text poppins font-medium text-[1.2rem]">
-                    {{ activeProject?._id || 'Loading...' }}
+                    {{ project?._id || 'Loading...' }}
                 </div>
                 <div class="flex items-center ml-3">
                     <i @click="copyProjectId()"

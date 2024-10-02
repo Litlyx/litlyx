@@ -27,8 +27,7 @@ type Props = {
 const route = useRoute();
 const props = defineProps<Props>();
 
-const { isAdmin } = useUserRoles();
-const loggedUser = useLoggedUser()
+const { user, userRoles, setLoggedUser } = useLoggedUser()
 
 const debugMode = process.dev;
 
@@ -102,15 +101,7 @@ function onLogout() {
 }
 
 const { projects } = useProjectsList();
-const { data: guestProjects } = useGuestProjectsList()
 const activeProject = useActiveProject();
-
-const selectorProjects = computed(() => {
-    const result: TProject[] = [];
-    if (projects.value) result.push(...projects.value);
-    if (guestProjects.value) result.push(...guestProjects.value);
-    return result;
-});
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", {
     headers: computed(() => {
@@ -120,20 +111,9 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
     })
 });
 
-const selected = ref<TProject>(activeProject.value as TProject);
-watch(selected, () => {
-    setActiveProject(selected.value._id.toString())
-})
-
 const isPremium = computed(() => {
     return activeProject.value?.premium;
 })
-
-function isProjectMine(owner?: string) {
-    if (!owner) return false;
-    if (!loggedUser.value?.logged) return;
-    return loggedUser.value.id == owner;
-}
 
 const pricingDrawer = usePricingDrawer();
 
@@ -158,36 +138,7 @@ const pricingDrawer = usePricingDrawer();
 
                 <div class="flex items-center gap-2 w-full">
 
-                    <USelectMenu :uiMenu="{
-                        select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                        base: '!bg-lyx-widget',
-                        option: {
-                            base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                            active: '!bg-lyx-widget-lighter'
-                        }
-                    }" class="w-full" v-if="selectorProjects" v-model="selected" :options="selectorProjects">
-
-                        <template #option="{ option, active, selected }">
-                            <div class="flex items-center gap-2">
-                                <div>
-                                    <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
-                                </div>
-                                <div> {{ option.name }} {{ !isProjectMine(option.owner) ? '(Guest)' : '' }}</div>
-                            </div>
-                        </template>
-
-                        <template #label>
-                            <div class="flex items-center gap-2">
-                                <div>
-                                    <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
-                                </div>
-                                <div>
-                                    {{ activeProject?.name || '-' }}
-                                    {{ !isProjectMine(activeProject?.owner?.toString()) ? '(Guest)' : '' }}
-                                </div>
-                            </div>
-                        </template>
-                    </USelectMenu>
+                    <ProjectSelector></ProjectSelector>
 
                     <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
                         <i @click="close()" class="fas fa-close"></i>
@@ -289,7 +240,7 @@ const pricingDrawer = usePricingDrawer();
 
                     <div v-for="entry of section.entries" :class="{ 'grow flex items-end': entry.grow }">
 
-                        <div v-if="(!entry.adminOnly || (isAdmin && !isAdminHidden))"
+                        <div v-if="(!entry.adminOnly || (userRoles.isAdmin && !isAdminHidden))"
                             class="bg-lyx-background cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
                             :class="{
                                 '!text-lyx-text-darker pointer-events-none': entry.disabled,
@@ -337,7 +288,7 @@ const pricingDrawer = usePricingDrawer();
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-dev"></i>
                         </NuxtLink>
-                        <NuxtLink to="/admin" v-if="isAdmin"
+                        <NuxtLink to="/admin" v-if="userRoles.isAdmin"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fas fa-cat"></i>
                         </NuxtLink>
