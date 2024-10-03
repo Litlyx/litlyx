@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import type { IconProvider } from './BarsCard.vue';
+import type { IconProvider } from '../BarCard/Base.vue';
 
 function iconProvider(id: string): ReturnType<IconProvider> {
     if (id === 'self') return ['icon', 'fas fa-link'];
@@ -12,23 +12,12 @@ function iconProvider(id: string): ReturnType<IconProvider> {
 
 const customIconStyle = `width: 2rem; padding: 1px;`
 
-const activeProject = useActiveProject();
-
-const { safeSnapshotDates } = useSnapshot()
-
 const isShowMore = ref<boolean>(false);
 
-const headers = computed(() => {
-    return {
-        'x-from': safeSnapshotDates.value.from,
-        'x-to': safeSnapshotDates.value.to,
-        Authorization: authorizationHeaderComputed.value,
-        limit: isShowMore.value === true ? '200' : '10'
-    }
-});
-
-const geolocationData = useFetch(`/api/metrics/${activeProject.value?._id}/data/countries`, {
-    method: 'POST', headers, lazy: true, immediate: false
+const geolocationData = useFetch('/api/data/countries', {
+    headers: useComputedHeaders({
+        limit: computed(() => isShowMore.value ? '200' : '10'),
+    }), lazy: true
 });
 
 
@@ -46,18 +35,14 @@ function showMore() {
 
 }
 
-onMounted(async () => {
-    geolocationData.execute();
-});
-
 </script>
 
 
 <template>
     <div class="flex flex-col gap-2">
-        <DashboardBarsCard @showMore="showMore()" @dataReload="geolocationData.refresh()" :data="geolocationData.data.value || []" :dataIcons="false"
+        <BarCardBase @showMore="showMore()" @dataReload="geolocationData.refresh()" :data="geolocationData.data.value || []" :dataIcons="false"
             :loading="geolocationData.pending.value" label="Top Countries" sub-label="Countries" :iconProvider="iconProvider"
             :customIconStyle="customIconStyle" desc=" Lists the countries where users access your website.">
-        </DashboardBarsCard>
+        </BarCardBase>
     </div>
 </template>

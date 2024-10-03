@@ -60,7 +60,7 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
     if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to are required');
 
 
-    let model: (Model<any> | undefined) = undefined;
+    let model: Model<any> = undefined as any;
 
     const schemaName = getRequestHeader(event, 'x-schema');
     if (requireSchema) {

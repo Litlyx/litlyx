@@ -127,7 +127,7 @@ function openExternalLink(link: string) {
                         formatNumberK(element.count) }} </div>
                 </div>
                 <div v-if="props.data.length == 0" class="flex justify-center text-text-sub font-bold text-[1.1rem]">
-                    No visits yet
+                    No data yet
                 </div>
             </div>
             <div v-if="!hideShowMore" class="flex justify-center mt-4 text-text-sub/90 ">
