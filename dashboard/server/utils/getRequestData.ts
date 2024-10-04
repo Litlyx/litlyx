@@ -23,12 +23,12 @@ export function getRequestAddress(event: H3Event<EventHandlerRequest>) {
 }
 
 
-
 export type GetRequestDataOptions = {
-    allowGuests?: boolean,
-    requireSchema?: boolean,
-    allowLitlyx?: boolean,
-    requireSlice?: boolean
+    /** @default true */ allowGuests?: boolean,
+    /** @default false */ requireSchema?: boolean,
+    /** @default true */ allowLitlyx?: boolean,
+    /** @default false */ requireSlice?: boolean,
+    /** @default true */ requireRange?: boolean,
 }
 
 async function hasAccessToProject(user_id: string, project: TProject) {
@@ -48,6 +48,7 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
     const allowGuests = options?.allowGuests || true;
     const allowLitlyx = options?.allowLitlyx || true;
     const requireSlice = options?.requireSlice || false;
+    const requireRange = options?.requireRange || false;
 
     const pid = getHeader(event, 'x-pid');
     if (!pid) return setResponseStatus(event, 400, 'x-pid is required');
@@ -57,7 +58,9 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
 
     const from = getRequestHeader(event, 'x-from');
     const to = getRequestHeader(event, 'x-to');
-    if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to are required');
+    if (requireRange) {
+        if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to are required');
+    }
 
 
     let model: Model<any> = undefined as any;

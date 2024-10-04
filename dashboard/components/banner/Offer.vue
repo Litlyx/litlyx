@@ -1,0 +1,37 @@
+<script lang="ts" setup>
+
+
+const pricingDrawer = usePricingDrawer();
+
+function goToUpgrade() {
+    pricingDrawer.visible.value = true;
+}
+
+const { project } = useProject()
+
+const isPremium = computed(() => {
+    return project.value?.premium ?? false;
+});
+
+</script>
+
+
+<template>
+    <div v-if="!isPremium" class="w-full bg-[#5680f822] p-4 rounded-lg text-[.9rem] flex items-center">
+        <div class="flex flex-col grow">
+            <div class="poppins font-semibold text-lyx-primary">
+                Launch offer: 25% off
+            </div>
+            <div class="poppins text-lyx-primary">
+                We're offering an exclusive 25% discount forever on all plans starting from the Acceleration
+                Plan for our first 100 users who believe in our project.
+                <br>
+                Redeem Code: <span class="text-white font-bold text-[1rem]">LIT25</span> at checkout to
+                claim your discount.
+            </div>
+        </div>
+        <div>
+            <LyxUiButton type="outline" @click="goToUpgrade()"> Upgrade </LyxUiButton>
+        </div>
+    </div>
+</template>

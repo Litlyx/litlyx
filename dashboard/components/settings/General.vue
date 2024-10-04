@@ -2,6 +2,7 @@
 import type { TApiSettings } from '@schema/ApiSettingsSchema';
 import type { SettingsTemplateEntry } from './Template.vue';
 
+const { project } = useProject();
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'pname', title: 'Name', text: 'Project name' },
@@ -11,8 +12,7 @@ const entries: SettingsTemplateEntry[] = [
     { id: 'pdelete', title: 'Delete', text: 'Delete current project' },
 ]
 
-const activeProject = useActiveProject();
-const projectNameInputVal = ref<string>(activeProject.value?.name || '');
+const projectNameInputVal = ref<string>(project.value?.name || '');
 
 const apiKeys = ref<TApiSettings[]>([]);
 
@@ -20,14 +20,17 @@ const newApiKeyName = ref<string>('');
 
 async function updateApiKeys() {
     newApiKeyName.value = '';
-    apiKeys.value = await $fetch<TApiSettings[]>('/api/keys/get_all', signHeaders());
+    apiKeys.value = await $fetch<TApiSettings[]>('/api/keys/get_all', signHeaders({
+         'x-pid': project.value?._id.toString() ?? ''
+    }));
 }
 
 async function createApiKey() {
     try {
         const res = await $fetch<TApiSettings>('/api/keys/create', {
             method: 'POST', ...signHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-pid': project.value?._id.toString() ?? ''
             }),
             body: JSON.stringify({ name: newApiKeyName.value })
         });
@@ -42,7 +45,8 @@ async function deleteApiKey(api_id: string) {
     try {
         const res = await $fetch<TApiSettings>('/api/keys/delete', {
             method: 'DELETE', ...signHeaders({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'x-pid': project.value?._id.toString() ?? ''
             }),
             body: JSON.stringify({ api_id })
         });
@@ -56,15 +60,15 @@ async function deleteApiKey(api_id: string) {
 
 onMounted(() => {
     updateApiKeys();
-})
+});
 
-watch(activeProject, () => {
-    projectNameInputVal.value = activeProject.value?.name || "";
+watch(project, () => {
+    projectNameInputVal.value = project.value?.name || "";
     updateApiKeys();
-})
+});
 
 const canChange = computed(() => {
-    if (activeProject.value?.name == projectNameInputVal.value) return false;
+    if (project.value?.name == projectNameInputVal.value) return false;
     if (projectNameInputVal.value.length === 0) return false;
     return true;
 });
@@ -80,8 +84,8 @@ async function changeProjectName() {
 }
 
 async function deleteProject() {
-    if (!activeProject.value) return;
-    const sure = confirm(`Are you sure to delete the project ${activeProject.value.name} ?`);
+    if (!project.value) return;
+    const sure = confirm(`Are you sure to delete the project ${project.value.name} ?`);
     if (!sure) return;
 
     try {
@@ -89,7 +93,7 @@ async function deleteProject() {
         await $fetch('/api/project/delete', {
             method: 'DELETE',
             ...signHeaders({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify({ project_id: activeProject.value._id.toString() })
+            body: JSON.stringify({ project_id: project.value._id.toString() })
         });
 
         const projectsList = useProjectsList()
@@ -142,7 +146,7 @@ function copyProjectId() {
 
 
 <template>
-    <SettingsTemplate :entries="entries" :key="activeProject?.name || 'NONE'">
+    <SettingsTemplate :entries="entries" :key="project?.name || 'NONE'">
         <template #pname>
             <div class="flex items-center gap-4">
                 <LyxUiInput class="w-full px-4 py-2" v-model="projectNameInputVal"></LyxUiInput>
@@ -174,7 +178,7 @@ function copyProjectId() {
         </template>
         <template #pid>
             <LyxUiCard class="w-full flex items-center">
-                <div class="grow">{{ activeProject?._id.toString() }}</div>
+                <div class="grow">{{ project?._id.toString() }}</div>
                 <div><i class="far fa-copy" @click="copyProjectId()"></i></div>
             </LyxUiCard>
         </template>
@@ -182,7 +186,7 @@ function copyProjectId() {
             <LyxUiCard class="w-full flex items-center">
                 <div class="grow">
                     {{ `
-                    <script defer data-project="${activeProject?._id}"
+                    <script defer data-project="${project?._id}"
                         src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>` }}
                 </div>
                 <div><i class="far fa-copy" @click="copyScript()"></i></div>

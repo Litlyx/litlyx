@@ -19,21 +19,11 @@ export default defineEventHandler(async event => {
     if (body.name.length < 3) return setResponseStatus(event, 400, 'name too short');
     if (body.name.length > 32) return setResponseStatus(event, 400, 'name too long');
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
+    const data = await getRequestData(event, { allowGuests: false, allowLitlyx: false, });
+    if (!data) return;
 
-    const currentActiveProject = await UserSettingsModel.findOne({ user_id: userData.id });
-    if (!currentActiveProject) return setResponseStatus(event, 400, 'You need to select a project');
-
-    const project_id = currentActiveProject.active_project_id;
-
-    const project = await ProjectModel.findById(project_id);
-    if (!project) return setResponseStatus(event, 400, 'Project not found');
+    const { project_id } = data;
     
-    if (project.owner.toString() != userData.id) {
-        return setResponseStatus(event, 400, 'You are not the owner');
-    }
-
     const key = generateApiKey();
 
     const keyNumbers = await ApiSettingsModel.countDocuments({ project_id });

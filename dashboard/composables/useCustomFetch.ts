@@ -15,7 +15,6 @@ const { projectId } = useProject();
 const { safeSnapshotDates } = useSnapshot()
 
 function getValueFromRefOrPrimitive<T>(data?: T | Ref<T> | ComputedRef<T>) {
-    console.log('Getting value of', data);
     if (!data) return;
     if (isRef(data)) return data.value;
     return data;
@@ -30,7 +29,6 @@ export function useComputedHeaders(customOptions?: CustomOptions) {
         const parsedCustom: Record<string, string> = {}
         const customKeys = Object.keys(customOptions?.custom || {});
         for (const key of customKeys) {
-            console.log('key', key);
             parsedCustom[key] = getValueFromRefOrPrimitive((customOptions?.custom || {})[key]) ?? ''
         }
 
