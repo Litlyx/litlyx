@@ -4,13 +4,11 @@ import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {
 
-    const project_id = getRequestProjectId(event);
-    if (!project_id) return setResponseStatus(event, 400, 'Cannot get project_id');
+    const data = await getRequestData(event, { requireSchema: false, allowLitlyx: false });
+    if (!data) return;
 
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user, false);
-    if (!project) return setResponseStatus(event, 400, 'Cannot get user from project_id');
-
+    const { project } = data;
+    
     if (!project.customer_id) return setResponseStatus(event, 400, 'Project has no customer_id');
 
     const body = await readBody(event);

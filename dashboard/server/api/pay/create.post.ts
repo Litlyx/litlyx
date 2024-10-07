@@ -1,20 +1,13 @@
 import { getPlanFromId } from "@data/PREMIUM";
-import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import StripeService from '~/server/services/StripeService';
 
 
 export default defineEventHandler(async event => {
 
-    const project_id = getRequestProjectId(event);
-    if (!project_id) return;
+    const data = await getRequestData(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
+    if (!data) return;
 
-    const user = getRequestUser(event);
-    if (!user?.logged) return setResponseStatus(event, 400, 'User need to be logged'); 
-
-    const project = await getUserProjectFromId(project_id, user);
-    if (!project) return;
-
-    if (project.owner.toString() != user.id) return setResponseStatus(event, 400, 'You cannot upgrade a project as guest'); 
+    const { project, pid } = data;
 
     const body = await readBody(event);
 
@@ -30,7 +23,7 @@ export default defineEventHandler(async event => {
     const checkout = await StripeService.createPayment(
         StripeService.testMode ? PLAN.PRICE_TEST : PLAN.PRICE,
         'https://dashboard.litlyx.com/payment_ok',
-        project_id,
+        pid,
         project.customer_id
     );
 

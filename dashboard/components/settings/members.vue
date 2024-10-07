@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { SettingsTemplateEntry } from './Template.vue';
 
-const activeProject = useActiveProject();
+const { projectId } = useProject();
 
 definePageMeta({ layout: 'dashboard' });
-
 
 const columns = [
     { key: 'me', label: '' },
@@ -15,7 +14,9 @@ const columns = [
     // { key: 'pending', label: 'Pending' },
 ]
 
-const { data: members, refresh: refreshMembers, pending: pendingMembers } = useFetch('/api/project/members/list', signHeaders());
+const { data: members, refresh: refreshMembers } = useFetch('/api/project/members/list', {
+    headers: useComputedHeaders({ useSnapshotDates: false })
+});
 
 const showAddMember = ref<boolean>(false);
 
@@ -30,7 +31,10 @@ async function kickMember(email: string) {
 
         await $fetch('/api/project/members/kick', {
             method: 'POST',
-            ...signHeaders({ 'Content-Type': 'application/json' }),
+            ...signHeaders({
+                'Content-Type': 'application/json',
+                'x-pid': projectId.value ?? ''
+            }),
             body: JSON.stringify({ email }),
             onResponseError({ request, response, options }) {
                 alert(response.statusText);
@@ -55,7 +59,10 @@ async function addMember() {
 
         await $fetch('/api/project/members/add', {
             method: 'POST',
-            ...signHeaders({ 'Content-Type': 'application/json' }),
+            ...signHeaders({
+                'Content-Type': 'application/json',
+                'x-pid': projectId.value ?? ''
+            }),
             body: JSON.stringify({ email: addMemberEmail.value }),
             onResponseError({ request, response, options }) {
                 alert(response.statusText);
@@ -70,10 +77,6 @@ async function addMember() {
 
 
 }
-
-watch(activeProject, () => {
-    refreshMembers();
-})
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'add', title: 'Add member', text: 'Add new member to project' },

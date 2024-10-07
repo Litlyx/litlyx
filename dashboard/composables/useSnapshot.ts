@@ -1,31 +1,37 @@
 import type { TProjectSnapshot } from "@schema/ProjectSnapshot";
 
+
+
+const { projectId, project } = useProject();
+
+const headers = computed(() => {
+    return {
+        'Authorization': signHeaders().headers.Authorization,
+        'x-pid': projectId.value ?? ''
+    }
+});
 const remoteSnapshots = useFetch<TProjectSnapshot[]>('/api/project/snapshots', {
-    ...signHeaders(),
-    immediate: false
+    headers
 });
 
-const activeProject = useActiveProject();
-watch(activeProject, async () => {
+watch(project, async () => {
     await remoteSnapshots.refresh();
     snapshot.value = isLiveDemo() ? snapshots.value[0] : snapshots.value[1];
 });
 
 const snapshots = computed(() => {
 
-    const activeProject = useActiveProject();
-
     const getDefaultSnapshots: () => TProjectSnapshot[] = () => [
         {
-            project_id: activeProject.value?._id as any,
+            project_id: project.value?._id as any,
             _id: 'default0' as any,
             name: 'All',
-            from: new Date(activeProject.value?.created_at || 0),
+            from: new Date(project.value?.created_at || 0),
             to: new Date(Date.now()),
             color: '#CCCCCC'
         },
         {
-            project_id: activeProject.value?._id as any,
+            project_id: project.value?._id as any,
             _id: 'default1' as any,
             name: 'Last month',
             from: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
@@ -33,7 +39,7 @@ const snapshots = computed(() => {
             color: '#00CC00'
         },
         {
-            project_id: activeProject.value?._id as any,
+            project_id: project.value?._id as any,
             _id: 'default2' as any,
             name: 'Last week',
             from: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7),
@@ -41,7 +47,7 @@ const snapshots = computed(() => {
             color: '#0F02D2'
         },
         {
-            project_id: activeProject.value?._id as any,
+            project_id: project.value?._id as any,
             _id: 'default3' as any,
             name: 'Last day',
             from: new Date(Date.now() - 1000 * 60 * 60 * 24),
@@ -75,8 +81,5 @@ const snapshotDuration = computed(() => {
 });
 
 export function useSnapshot() {
-    if (remoteSnapshots.status.value === 'idle') {
-        remoteSnapshots.execute();
-    }
     return { snapshot, snapshots, safeSnapshotDates, updateSnapshots, snapshotDuration }
 }

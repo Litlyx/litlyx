@@ -8,19 +8,12 @@ import { AiChatModel } from "@schema/ai/AiChatSchema";
 
 export default defineEventHandler(async event => {
 
-    const body = await readBody(event);
+    const data = await getRequestData(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
+    if (!data) return;
 
-    const project_id = body.project_id;
+    const { project, user, project_id } = data;
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
-
-    const project = await ProjectModel.findById(project_id);
-    if (!project) return setResponseStatus(event, 400, 'Project not exist');
-
-    if (userData.id != project.owner.toString()) return setResponseStatus(event, 400, 'You cannot delete a project as guest');
-
-    const projects = await ProjectModel.countDocuments({ owner: userData.id });
+    const projects = await ProjectModel.countDocuments({ owner: user.id });
     if (projects == 1) return setResponseStatus(event, 400, 'Cannot delete last project');
 
     if (project.premium === true) return setResponseStatus(event, 400, 'Cannot delete premium project');
@@ -29,26 +22,22 @@ export default defineEventHandler(async event => {
         await StripeService.deleteCustomer(project.customer_id);
     }
 
-    const projectDeletation = await ProjectModel.deleteOne({ _id: project_id });
-    const countDeletation = await ProjectCountModel.deleteMany({ project_id });
-    const limitdeletation = await ProjectLimitModel.deleteMany({ project_id });
-    const sessionsDeletation = await SessionModel.deleteMany({ project_id });
-    const notifiesDeletation = await LimitNotifyModel.deleteMany({ project_id });
-    const aiChatsDeletation = await AiChatModel.deleteMany({ project_id });
+    const projectDeletation = ProjectModel.deleteOne({ _id: project_id });
+    const countDeletation = ProjectCountModel.deleteMany({ project_id });
+    const limitdeletation = ProjectLimitModel.deleteMany({ project_id });
+    const sessionsDeletation = SessionModel.deleteMany({ project_id });
+    const notifiesDeletation = LimitNotifyModel.deleteMany({ project_id });
+    const aiChatsDeletation = AiChatModel.deleteMany({ project_id });
 
-    const ok = countDeletation.acknowledged && limitdeletation.acknowledged &&
-        projectDeletation.acknowledged && sessionsDeletation.acknowledged && notifiesDeletation.acknowledged && aiChatsDeletation.acknowledged
+    const results = await Promise.all([
+        projectDeletation,
+        countDeletation,
+        limitdeletation,
+        sessionsDeletation,
+        notifiesDeletation,
+        aiChatsDeletation
+    ])
 
-    return {
-        ok,
-        data: [
-            countDeletation.acknowledged,
-            limitdeletation.acknowledged,
-            projectDeletation.acknowledged,
-            sessionsDeletation.acknowledged,
-            notifiesDeletation.acknowledged,
-            aiChatsDeletation.acknowledged
-        ]
-    };
+    return { data: results };
 
 });

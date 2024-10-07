@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { ChartData, ChartOptions } from 'chart.js';
 import { defineChartComponent } from 'vue-chart-3';
-registerChartComponents();
 
 const FunnelChart = defineChartComponent('funnel', 'funnel');
 
@@ -90,17 +89,13 @@ onMounted(async () => {
 
 });
 
-const activeProjectId = useActiveProjectId();
-const { safeSnapshotDates } = useSnapshot();
-
 const eventsCount = await useFetch<{ _id: string, count: number }[]>(`/api/data/query`, {
-    ...signHeaders({
-        'x-pid': activeProjectId.data.value || '',
-        'x-schema': 'events',
-        'x-from': safeSnapshotDates.value.from,
-        'x-to': safeSnapshotDates.value.to,
-        'x-query-limit': '1000'
-    }), lazy: true
+    lazy: true, headers: useComputedHeaders({
+        limit: 1000,
+        custom: {
+            'schema': 'events'
+        }
+    })
 });
 
 

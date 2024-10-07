@@ -4,16 +4,8 @@ import type { PricingCardProp } from './PricingCardGeneric.vue';
 
 
 const { data: planData, refresh: refreshPlanData } = useFetch('/api/project/plan', {
-    ...signHeaders(),
-    lazy: true
+    lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
 });
-
-const activeProject = useActiveProject();
-
-watch(activeProject, () => {
-    refreshPlanData();
-});
-
 
 function getPricingsData() {
 
@@ -190,15 +182,18 @@ function getPricingsData() {
     return { freePricing, customPricing, slidePricings }
 }
 
-
+const { projectId } = useProject();
 
 const emits = defineEmits<{
     (evt: 'onCloseClick'): void
 }>();
 
 async function onLifetimeUpgradeClick() {
-    const res = await $fetch<string>(`/api/pay/${activeProject.value?._id.toString()}/create-onetime`, {
-        ...signHeaders({ 'content-type': 'application/json' }),
+    const res = await $fetch<string>(`/api/pay/create-onetime`, {
+        ...signHeaders({
+            'content-type': 'application/json',
+            'x-pid': projectId.value ?? ''
+        }),
         method: 'POST',
         body: JSON.stringify({ planId: 2001 })
     })
@@ -218,7 +213,8 @@ async function onLifetimeUpgradeClick() {
 
         <div class="flex gap-8 mt-10 h-max xl:flex-row flex-col">
             <PricingCardGeneric class="flex-1" :datas="getPricingsData().freePricing"></PricingCardGeneric>
-            <PricingCardGeneric class="flex-1" :datas="getPricingsData().slidePricings" :default-index="2"></PricingCardGeneric>
+            <PricingCardGeneric class="flex-1" :datas="getPricingsData().slidePricings" :default-index="2">
+            </PricingCardGeneric>
             <PricingCardGeneric class="flex-1" :datas="getPricingsData().customPricing"></PricingCardGeneric>
         </div>
 

@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
     const { pid, from, to, slice, project_id } = data;
 
-    const cacheKey = `timeline:sessions:${pid}:${from}:${to}`;
+    const cacheKey = `timeline:sessions:${pid}:${slice}:${from}:${to}`;
     const cacheExp = 60;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {

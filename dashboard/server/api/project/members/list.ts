@@ -6,16 +6,10 @@ import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
+    const data = await getRequestData(event, { requireSchema: false });
+    if (!data) return;
 
-    const currentActiveProject = await UserSettingsModel.findOne({ user_id: userData.id });
-    if (!currentActiveProject) return setResponseStatus(event, 400, 'You need to select a project');
-
-    const project_id = currentActiveProject.active_project_id;
-
-    const project = await ProjectModel.findById(project_id);
-    if (!project) return setResponseStatus(event, 400, 'Project not found');
+    const { project_id, project, user } = data;
 
     const owner = await UserModel.findById(project.owner);
     if (!owner) return setResponseStatus(event, 400, 'No owner');
@@ -29,7 +23,7 @@ export default defineEventHandler(async event => {
         name: owner.name,
         role: 'OWNER',
         pending: false,
-        me: userData.id === owner.id
+        me: user.id === owner.id
     })
 
     for (const member of members) {
@@ -40,7 +34,7 @@ export default defineEventHandler(async event => {
             name: userMember.name,
             role: member.role,
             pending: member.pending,
-            me: userData.id === userMember.id
+            me: user.id === userMember.id
         })
     }
 

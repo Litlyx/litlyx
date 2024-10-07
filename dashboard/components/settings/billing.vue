@@ -3,16 +3,16 @@ import dayjs from 'dayjs';
 import type { SettingsTemplateEntry } from './Template.vue';
 import { getPlanFromId, PREMIUM_PLAN, type PREMIUM_TAG } from '@data/PREMIUM';
 
-const activeProject = useActiveProject();
+const { projectId, isGuest } = useProject();
 
 definePageMeta({ layout: 'dashboard' });
 
-const { data: planData, refresh: planRefresh, pending: planPending } = useFetch('/api/project/plan', {
-    ...signHeaders(), lazy: true
+const { data: planData, pending: planPending } = useFetch('/api/project/plan', {
+    lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
 });
 
-const { data: customerAddress, refresh: refreshCustomerAddress } = useFetch(`/api/pay/${activeProject.value?._id.toString()}/customer_info`, {
-    ...signHeaders(), lazy: true
+const { data: customerAddress } = useFetch(`/api/pay/customer_info`, {
+    lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
 });
 
 const percent = computed(() => {
@@ -45,8 +45,8 @@ const prettyExpireDate = computed(() => {
 });
 
 
-const { data: invoices, refresh: invoicesRefresh, pending: invoicesPending } = useFetch(`/api/pay/${activeProject.value?._id.toString()}/invoices`, {
-    ...signHeaders(), lazy: true
+const { data: invoices, pending: invoicesPending } = useFetch(`/api/pay/invoices`, {
+    lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
 })
 
 function openInvoice(link: string) {
@@ -75,7 +75,7 @@ const entries: SettingsTemplateEntry[] = [
 ]
 
 watch(customerAddress, () => {
-    console.log('UPDATE',customerAddress.value)
+    console.log('UPDATE', customerAddress.value)
     if (!customerAddress.value) return;
     currentBillingInfo.value = customerAddress.value;
 });
@@ -92,21 +92,22 @@ const currentBillingInfo = ref<any>({
 const { createAlert } = useAlert()
 
 async function saveBillingInfo() {
-    
+
     try {
-    const res = await $fetch(`/api/pay/${activeProject.value?._id.toString()}/update_customer`, {
-        method: 'POST',
-        ...signHeaders({
-            'Content-Type': 'application/json'
-        }),
-        body: JSON.stringify(currentBillingInfo.value)
-    });
+        const res = await $fetch(`/api/pay/update_customer`, {
+            method: 'POST',
+            ...signHeaders({
+                'Content-Type': 'application/json',
+                'x-pid': projectId.value ?? ''
+            }),
+            body: JSON.stringify(currentBillingInfo.value)
+        });
 
-    createAlert('Customer updated','Customer updated successfully', 'far fa-check', 5000);
+        createAlert('Customer updated', 'Customer updated successfully', 'far fa-check', 5000);
 
-} catch(ex) {
-    createAlert('Error updating customer','An error occurred while updating the customer', 'far fa-error', 8000);
-}
+    } catch (ex) {
+        createAlert('Error updating customer', 'An error occurred while updating the customer', 'far fa-error', 8000);
+    }
 
 }
 

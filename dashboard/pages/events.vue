@@ -10,11 +10,8 @@ const selectLabelsEvents = [
 ];
 const eventsStackedSelectIndex = ref<number>(0);
 
-const activeProject = useActiveProject();
+const { projectId } = useProject();
 const { snapshot, safeSnapshotDates } = useSnapshot();
-
-const refreshKey = computed(() => `${snapshot.value._id.toString() + activeProject.value?._id.toString()}`);
-
 
 
 const headers = computed(() => {
@@ -23,7 +20,7 @@ const headers = computed(() => {
         'x-to': safeSnapshotDates.value.to,
         'Authorization': authorizationHeaderComputed.value,
         'x-schema': 'events',
-        'x-pid': activeProject.value?._id.toString() || ''
+        'x-pid': projectId.value ?? ''
     }
 });
 

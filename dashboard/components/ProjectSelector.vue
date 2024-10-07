@@ -4,13 +4,12 @@ import type { TProject } from '@schema/ProjectSchema';
 
 const { user } = useLoggedUser()
 
-const { projectList, actions, project } = useProject();
-const { data: guestProjects } = useGuestProjectsList()
+const { projectList, guestProjectList, actions, project } = useProject();
 
 const selectorProjects = computed(() => {
     const result: TProject[] = [];
     if (projectList.value) result.push(...projectList.value);
-    if (guestProjects.value) result.push(...guestProjects.value);
+    if (guestProjectList.value) result.push(...guestProjectList.value);
     return result;
 });
 

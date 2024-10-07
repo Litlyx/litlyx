@@ -4,17 +4,16 @@ import VueMarkdown from 'vue-markdown-render';
 
 definePageMeta({ layout: 'dashboard' });
 
-const activeProject = useActiveProject();
+const { project, isGuest } = useProject();
 
-const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/${activeProject.value?._id}/chats_list`, {
+const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/${project.value?._id}/chats_list`, {
     ...signHeaders()
 });
 
 
-
 const viewChatsList = computed(() => (chatsList.value || []).toReversed());
 
-const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/ai/${activeProject.value?._id}/chats_remaining`, signHeaders());
+const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/ai/${project.value?._id}/chats_remaining`, signHeaders());
 
 const currentText = ref<string>("");
 const loading = ref<boolean>(false);
@@ -27,7 +26,7 @@ const scroller = ref<HTMLDivElement | null>(null);
 async function sendMessage() {
 
     if (loading.value) return;
-    if (!activeProject.value) return;
+    if (!project.value) return;
 
     loading.value = true;
 
@@ -42,7 +41,7 @@ async function sendMessage() {
 
     try {
 
-        const res = await $fetch(`/api/ai/${activeProject.value._id.toString()}/send_message`, {
+        const res = await $fetch(`/api/ai/${project.value._id.toString()}/send_message`, {
             method: 'POST',
             body: JSON.stringify(body),
             ...signHeaders({ 'Content-Type': 'application/json' })
@@ -74,7 +73,7 @@ async function sendMessage() {
 
 async function openChat(chat_id?: string) {
     menuOpen.value = false;
-    if (!activeProject.value) return;
+    if (!project.value) return;
 
     currentChatMessages.value = [];
 
@@ -83,7 +82,7 @@ async function openChat(chat_id?: string) {
         return;
     }
     currentChatId.value = chat_id;
-    const messages = await $fetch(`/api/ai/${activeProject.value._id}/${chat_id}/get_messages`, signHeaders());
+    const messages = await $fetch(`/api/ai/${project.value._id}/${chat_id}/get_messages`, signHeaders());
     if (!messages) return;
 
     currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
@@ -117,14 +116,14 @@ const defaultPrompts = [
 ]
 
 async function deleteChat(chat_id: string) {
-    if (!activeProject.value) return;
+    if (!project.value) return;
     const sure = confirm("Are you sure to delete the chat ?");
     if (!sure) return;
     if (currentChatId.value === chat_id) {
         currentChatId.value = "";
         currentChatMessages.value = [];
     }
-    await $fetch(`/api/ai/${activeProject.value._id}/${chat_id}/delete`, signHeaders());
+    await $fetch(`/api/ai/${project.value._id}/${chat_id}/delete`, signHeaders());
     await reloadChatsList();
 }
 
@@ -299,7 +298,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         color: white;
     }
 
-  
+
     p {
         line-height: 1.8;
         margin-bottom: 1em;

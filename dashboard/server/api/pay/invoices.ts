@@ -12,17 +12,14 @@ export type InvoiceData = {
 }
 
 export default defineEventHandler(async event => {
+    const data = await getRequestData(event, { requireSchema: false, allowLitlyx: false });
+    if (!data) return;
 
-    const project_id = getRequestProjectId(event);
-    if (!project_id) return;
-
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user, false);
-    if (!project) return;
+    const { project, pid } = data;
 
     if (!project.customer_id) return [];
 
-    return await Redis.useCache({ key: `invoices:${project_id}`, exp: 10 }, async () => {
+    return await Redis.useCache({ key: `invoices:${pid}`, exp: 10 }, async () => {
 
         const invoices = await StripeService.getInvoices(project.customer_id);
         if (!invoices) return [];

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 
-import type { TProject } from '@schema/ProjectSchema';
 import CreateSnapshot from './dialog/CreateSnapshot.vue';
 
 export type Entry = {
@@ -27,7 +26,8 @@ type Props = {
 const route = useRoute();
 const props = defineProps<Props>();
 
-const { user, userRoles, setLoggedUser } = useLoggedUser()
+const { userRoles, setLoggedUser } = useLoggedUser();
+const { projectList } = useProject();
 
 const debugMode = process.dev;
 
@@ -100,9 +100,6 @@ function onLogout() {
     router.push('/login');
 }
 
-const { projects } = useProjectsList();
-const activeProject = useActiveProject();
-
 const { data: maxProjects } = useFetch("/api/user/max_projects", {
     headers: computed(() => {
         return {
@@ -111,9 +108,6 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
     })
 });
 
-const isPremium = computed(() => {
-    return activeProject.value?.premium;
-})
 
 const pricingDrawer = usePricingDrawer();
 
@@ -147,7 +141,7 @@ const pricingDrawer = usePricingDrawer();
                 </div>
 
 
-                <NuxtLink to="/project_creation" v-if="projects && (projects.length < (maxProjects || 1))"
+                <NuxtLink to="/project_creation" v-if="projectList && (projectList.length < (maxProjects || 1))"
                     class="flex items-center text-[.8rem] gap-1 justify-end pt-2 pr-2 text-lyx-text-dark hover:text-lyx-text cursor-pointer">
                     <div><i class="fas fa-plus"></i></div>
                     <div> Create new project </div>
@@ -256,7 +250,7 @@ const pricingDrawer = usePricingDrawer();
                                 <div class="manrope grow">
                                     {{ entry.label }}
                                 </div>
-                                <div v-if="entry.premiumOnly && !isPremium" class="flex items-center">
+                                <div v-if="entry.premiumOnly && !userRoles.isPremium" class="flex items-center">
                                     <i class="fal fa-lock"></i>
                                 </div>
                             </NuxtLink>

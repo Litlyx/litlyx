@@ -1,21 +1,12 @@
-import { ProjectModel } from "@schema/ProjectSchema";
 import { ProjectLimitModel } from "@schema/ProjectsLimits";
-import { UserSettingsModel } from "@schema/UserSettings";
 import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
+    const data = await getRequestData(event, { requireSchema: false, allowLitlyx: false });
+    if (!data) return;
 
-    const currentActiveProject = await UserSettingsModel.findOne({ user_id: userData.id });
-    if (!currentActiveProject) return setResponseStatus(event, 400, 'You need to select a project');
-
-    const project_id = currentActiveProject.active_project_id;
-
-    const project = await ProjectModel.findById(project_id);
-    if (!project) return setResponseStatus(event, 400, 'Project not found');
-
+    const { project, project_id } = data;
 
     if (project.subscription_id === 'onetime') {
 

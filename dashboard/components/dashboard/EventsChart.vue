@@ -77,7 +77,7 @@ const chartData = ref<ChartData<'doughnut'>>({
 
 const { doughnutChartProps, doughnutChartRef } = useDoughnutChart({ chartData: chartData, options: chartOptions });
 
-const activeProjectId = useActiveProjectId();
+const { projectId } = useProject();
 
 const { safeSnapshotDates } = useSnapshot();
 
@@ -105,7 +105,7 @@ const headers = computed(() => {
         'Authorization': authorizationHeaderComputed.value,
         'x-schema': 'events',
         'x-limit': "6",
-        'x-pid': activeProjectId.data.value || ''
+        'x-pid': projectId.value || ''
     }
 });
 

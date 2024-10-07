@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-const activeProject = useActiveProject();
+const { project } = useProject();
 const { createAlert } = useAlert();
 
 import 'highlight.js/styles/stackoverflow-dark.css';
@@ -18,7 +18,7 @@ onMounted(() => {
 
 function copyProjectId() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-    navigator.clipboard.writeText(activeProject.value?._id?.toString() || '');
+    navigator.clipboard.writeText(project.value?._id?.toString() || '');
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
@@ -30,7 +30,7 @@ function copyScript() {
     const createScriptText = () => {
         return [
             '<script defer ',
-            `data-project="${activeProject.value?._id}" `,
+            `data-project="${project.value?._id}" `,
             'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
             'script>'
         ].join('')
@@ -43,7 +43,7 @@ function copyScript() {
 
 const scriptText = computed(() => {
     return [
-        `<script defer data-project="${activeProject.value?._id.toString()}"`,
+        `<script defer data-project="${project.value?._id.toString()}"`,
         `\nsrc="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js">\n<`,
         `/script>`
     ].join('');
@@ -57,7 +57,7 @@ function reloadPage() {
 
 <template>
 
-    <div v-if="!firstInteraction && activeProject" class="mt-[5vh] flex flex-col">
+    <div v-if="!firstInteraction && project" class="mt-[5vh] flex flex-col">
 
         <div class="flex gap-4 items-center justify-center">
             <div class="animate-pulse w-[1.5rem] h-[1.5rem] bg-accent rounded-full"> </div>
@@ -109,7 +109,7 @@ function reloadPage() {
                             <CardTitled class="h-full w-full" title="Project id"
                                 sub="This is the identifier for this project, used to forward data">
                                 <div class="flex flex-col items-end">
-                                    <div class="w-full text-[.9rem] text-[#acacac]"> {{ activeProject?._id }} </div>
+                                    <div class="w-full text-[.9rem] text-[#acacac]"> {{ project?._id }} </div>
                                     <LyxUiButton type="secondary" @click="copyProjectId()"> Copy </LyxUiButton>
                                 </div>
                             </CardTitled>

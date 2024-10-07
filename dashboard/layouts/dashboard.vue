@@ -4,10 +4,8 @@ import type { Section } from '~/components/CVerticalNavigation.vue';
 
 import { Lit } from 'litlyx-js';
 
-const activeProject = useActiveProject();
-const isPremium = computed(() => {
-    return activeProject.value?.premium;
-});
+const { userRoles, isLogged } = useLoggedUser();
+const { project } = useProject();
 
 const pricingDrawer = usePricingDrawer();
 
@@ -19,9 +17,9 @@ const sections: Section[] = [
             { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'AI Analyst', to: '/analyst', icon: 'fal fa-sparkles' },
             { label: 'Security', to: '/security', icon: 'fal fa-shield' },
-            { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
-            { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
-            { label: 'Integrations (soon)', to: '/integrations', icon: 'fal fa-cube', disabled: true },
+            // { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
+            // { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
+            // { label: 'Integrations (soon)', to: '/integrations', icon: 'fal fa-cube', disabled: true },
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,
@@ -33,8 +31,8 @@ const sections: Section[] = [
                 to: '#',
                 premiumOnly: true,
                 action() {
-                    if (isGuest.value === true) return;
-                    if (isPremium.value === true) {
+                    if (isLogged.value === true) return;
+                    if (userRoles.isPremium.value === true) {
                         window.open('https://join.slack.com/t/litlyx/shared_invite/zt-2q3oawn29-hZlu_fBUBlc4052Ooe3FZg', '_blank');
                     } else {
                         pricingDrawer.visible.value = true;

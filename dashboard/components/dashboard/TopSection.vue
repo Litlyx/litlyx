@@ -38,7 +38,7 @@ function showAnomalyInfoAlert() {
 
         <div class="flex gap-2 items-center text-text/90 justify-center md:justify-start">
             <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
-            <div class="poppins font-medium text-[1.2rem]"> {{ onlineUsers }} Online users</div>
+            <div class="poppins font-medium text-[1.2rem]"> {{ onlineUsers.data }} Online users</div>
         </div>
 
         <div class="grow"></div>

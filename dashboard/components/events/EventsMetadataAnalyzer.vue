@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 
-const activeProject = useActiveProject();
 
-const eventNames = ref<string[]>([]);
+const eventNames = await useFetch<string[]>(`/api/data/events_data/names`, {
+    headers: useComputedHeaders()
+});
+
 const selectedEventName = ref<string>();
 const metadataFields = ref<string[]>([]);
 const selectedMetadataField = ref<string>();
 const metadataFieldGrouped = ref<any[]>([]);
 
-onMounted(async () => {
-    eventNames.value = await $fetch<string[]>(`/api/metrics/${activeProject.value?._id.toString()}/events/names`, signHeaders());
-});
 
 watch(selectedEventName, () => {
     getMetadataFields();
@@ -21,7 +20,9 @@ watch(selectedMetadataField, () => {
 });
 
 async function getMetadataFields() {
-    metadataFields.value = await $fetch<string[]>(`/api/metrics/${activeProject.value?._id.toString()}/events/metadata_fields?name=${selectedEventName.value}`, signHeaders());
+    metadataFields.value = await $fetch<string[]>(`/api/metrics/events_data/metadata_fields?name=${selectedEventName.value}`, {
+        headers: useComputedHeaders().value
+    });
     selectedMetadataField.value = undefined;
     currentSearchText.value = "";
 }
@@ -38,10 +39,12 @@ async function getMetadataFieldGrouped() {
         name: selectedEventName.value,
         field: selectedMetadataField.value
     }
-    
+
     const queryParamsString = Object.keys(queryParams).map((key) => `${key}=${queryParams[key]}`).join('&');
 
-    metadataFieldGrouped.value = await $fetch<string[]>(`/api/metrics/${activeProject.value?._id.toString()}/events/metadata_field_group?${queryParamsString}`, signHeaders());
+    metadataFieldGrouped.value = await $fetch<string[]>(`/api/metrics/events_data/metadata_field_group?${queryParamsString}`, {
+        headers: useComputedHeaders().value
+    });
 }
 
 
@@ -75,7 +78,7 @@ const canSearch = computed(() => {
 
             <div class="flex flex-col gap-2">
                 <USelectMenu searchable searchable-placeholder="Search an event..." class="w-full"
-                    placeholder="Select an event" :options="eventNames" v-model="selectedEventName">
+                    placeholder="Select an event" :options="eventNames.data.value || []" v-model="selectedEventName">
                 </USelectMenu>
 
                 <USelectMenu v-if="metadataFields.length > 0" searchable searchable-placeholder="Search a field..."

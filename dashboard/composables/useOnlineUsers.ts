@@ -1,20 +1,15 @@
 
 
-const onlineUsers = ref<number>(-1);
-
-async function getOnlineUsers() {
-    const activeProject = useActiveProject();
-    if (!activeProject.value) return onlineUsers.value = -1;
-    const online = await $fetch<number>(`/api/metrics/${activeProject.value._id}/live_users`, signHeaders());
-    onlineUsers.value = online;
-}
+const onlineUsers = await useFetch<number>(`/api/data/live_users`, {
+    headers: useComputedHeaders({ useSnapshotDates: false }), immediate: false
+});
 
 let watching: any;
 
 function startWatching(instant: boolean = true) {
-    if (instant) getOnlineUsers();
+    if (instant) onlineUsers.execute();
     watching = setInterval(async () => {
-        await getOnlineUsers();
+        onlineUsers.refresh();
     }, 20000);
 }
 
@@ -26,7 +21,6 @@ export function useOnlineUsers() {
 
     return {
         onlineUsers,
-        getOnlineUsers,
         startWatching,
         stopWatching
     }

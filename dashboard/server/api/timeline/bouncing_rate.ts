@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
     const { pid, from, to, slice, project_id } = data;
 
 
-    const cacheKey = `timeline:bouncing_rate:${pid}:${from}:${to}`;
+    const cacheKey = `timeline:bouncing_rate:${pid}:${slice}:${from}:${to}`;
     const cacheExp = 60 * 60; //1 hour
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async (noStore, updateExp) => {

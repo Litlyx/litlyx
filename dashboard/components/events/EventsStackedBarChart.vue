@@ -6,7 +6,6 @@ import DateService, { type Slice } from '@services/DateService';
 const props = defineProps<{ slice: Slice }>();
 const slice = computed(() => props.slice);
 
-const activeProject = useActiveProject();
 const { safeSnapshotDates } = useSnapshot()
 
 const body = computed(() => {
@@ -90,8 +89,10 @@ function onResponse(e: any) {
     if (e.response.status != 500) errorData.value = { errored: false, text: '' }
 }
 
-const eventsStackedData = useFetch(`/api/metrics/${activeProject.value?._id}/timeline/events_stacked`, {
-    method: 'POST', body, lazy: true, immediate: false, transform: transformResponse, ...signHeaders(),
+const eventsStackedData = useFetch(`/api/timeline/events_stacked`, {
+    method: 'POST', body, lazy: true, immediate: false,
+    transform: transformResponse,
+    headers: useComputedHeaders(),
     onResponseError,
     onResponse
 });

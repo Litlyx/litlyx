@@ -96,6 +96,10 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
         if (!allowLitlyx) return setResponseStatus(event, 400, 'no access to project');
     }
 
-    return { from, to, pid, project_id, project, user, limit, slice, schemaName, model }
+    return {
+        from: from as string,
+        to: to as string,
+        pid, project_id, project, user, limit, slice, schemaName, model
+    }
 
 }

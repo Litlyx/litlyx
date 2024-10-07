@@ -4,4 +4,4 @@
 - Show more on Dashboard cards
 - Fix devices Dashboard card, replace empty with "unkwnwn"
 - Component first interaction must make the request inside
-- Reactivity on project delete
+- Reactivity on project delete (update dropdown)

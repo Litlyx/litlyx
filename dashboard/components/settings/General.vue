@@ -2,7 +2,7 @@
 import type { TApiSettings } from '@schema/ApiSettingsSchema';
 import type { SettingsTemplateEntry } from './Template.vue';
 
-const { project } = useProject();
+const { project, actions, projectList } = useProject();
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'pname', title: 'Name', text: 'Project name' },
@@ -21,7 +21,7 @@ const newApiKeyName = ref<string>('');
 async function updateApiKeys() {
     newApiKeyName.value = '';
     apiKeys.value = await $fetch<TApiSettings[]>('/api/keys/get_all', signHeaders({
-         'x-pid': project.value?._id.toString() ?? ''
+        'x-pid': project.value?._id.toString() ?? ''
     }));
 }
 
@@ -77,7 +77,10 @@ const canChange = computed(() => {
 async function changeProjectName() {
     await $fetch("/api/project/change_name", {
         method: 'POST',
-        ...signHeaders({ 'Content-Type': 'application/json' }),
+        ...signHeaders({
+            'Content-Type': 'application/json',
+            'x-pid': project.value?._id.toString() ?? ''
+        }),
         body: JSON.stringify({ name: projectNameInputVal.value })
     });
     location.reload();
@@ -92,14 +95,17 @@ async function deleteProject() {
 
         await $fetch('/api/project/delete', {
             method: 'DELETE',
-            ...signHeaders({ 'Content-Type': 'application/json' }),
+            ...signHeaders({
+                'Content-Type': 'application/json',
+                'x-pid': project.value?._id.toString() ?? ''
+            }),
             body: JSON.stringify({ project_id: project.value._id.toString() })
         });
 
-        const projectsList = useProjectsList()
-        await projectsList.refresh();
 
-        const firstProjectId = projectsList.data.value?.[0]?._id.toString();
+        await actions.refreshProjectsList()
+
+        const firstProjectId = projectList.value?.[0]?._id.toString();
         if (firstProjectId) {
             await setActiveProject(firstProjectId);
         }

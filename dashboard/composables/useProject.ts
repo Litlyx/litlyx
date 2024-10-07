@@ -13,7 +13,26 @@ const projectsRequest = useFetch<TProject[]>('/api/project/list', {
     })
 });
 
-const projectList = computed(() => projectsRequest.data.value);
+const guestProjectsRequest = useFetch<TProject[]>('/api/project/list_guest', {
+    headers: computed(() => {
+        return {
+            'Authorization': `Bearer ${token.value}`
+        }
+    })
+});
+
+const projectList = computed(() => {
+    return projectsRequest.data.value;
+});
+
+const allProjectList = computed(() => {
+    return [...(projectsRequest.data.value || []), ...(guestProjectsRequest.data.value || [])]
+})
+
+const guestProjectList = computed(() => {
+    return guestProjectsRequest.data.value;
+})
+
 const refreshProjectsList = () => projectsRequest.refresh();
 
 const activeProjectId = ref<string | undefined>();
@@ -42,6 +61,11 @@ const project = computed(() => {
     return projectList.value[0];
 })
 
+
+const isGuest = computed(() => {
+    return (projectList.value || []).find(e => e._id.toString() === activeProjectId.value);
+})
+
 export function useProject() {
 
     const actions = {
@@ -49,5 +73,5 @@ export function useProject() {
         setActiveProject
     }
 
-    return { project, projectList, actions, projectId: activeProjectId }
+    return { project, allProjectList, guestProjectList, projectList, actions, projectId: activeProjectId, isGuest }
 }
