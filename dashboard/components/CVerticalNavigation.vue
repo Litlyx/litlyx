@@ -244,7 +244,7 @@ const pricingDrawer = usePricingDrawer();
                     <div v-for="entry of section.entries" :class="{ 'grow flex items-end': entry.grow }">
 
                         <div v-if="(!entry.adminOnly || (userRoles.isAdmin && !isAdminHidden))"
-                            class="bg-lyx-background cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
+                            class="bg-lyx-background w-full cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
                             :class="{
                                 '!text-lyx-text-darker pointer-events-none': entry.disabled,
                                 'bg-lyx-background-lighter !text-lyx-text/90': route.path == (entry.to || '#'),
