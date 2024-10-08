@@ -136,7 +136,7 @@ const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Month', value: 'month' },
 ];
 
-const selectedSlice = computed(()=>selectLabels[selectedLabelIndex.value].value);
+const selectedSlice = computed(() => selectLabels[selectedLabelIndex.value].value);
 
 const selectedLabelIndex = ref<number>(1);
 const allDatesFull = ref<string[]>([]);
@@ -233,7 +233,13 @@ function onLegendChange(dataset: any, index: number, checked: any) {
     dataset.hidden = !checked;
 }
 
-const legendColors = ['#5655d7', '#4abde8', '#fbbf24']
+const legendColors = ref<string[]>(['#5655d7', '#4abde8', '#fbbf24'])
+const legendClasses = ref<string[]>([
+    'actionable-visits-color-checkbox',
+    'actionable-sessions-color-checkbox',
+    'actionable-events-color-checkbox'
+])
+
 
 const inLiveDemo = isLiveDemo();
 
@@ -256,9 +262,11 @@ const inLiveDemo = isLiveDemo();
             </LyxUiButton>
             <div class="flex gap-6">
                 <div v-for="(dataset, index) of chartData.datasets" class="flex gap-2 items-center text-[.9rem]">
+
                     <UCheckbox :ui="{
-                        color: `text-[${legendColors[index]}]`
+                        color: legendClasses[index]
                     }" :model-value="true" @change="onLegendChange(dataset, index, $event)"></UCheckbox>
+
                     <label class="mt-[2px]"> {{ dataset.label }} </label>
                 </div>
             </div>

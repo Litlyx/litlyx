@@ -48,9 +48,9 @@ function goToView() {
     <div class="flex flex-col gap-2 h-full">
         <BarCardBase :hideShowMore="true" @showGeneral="showGeneral()" @showRawData="goToView()"
             @dataReload="currentData.refresh()" @showDetails="showDetails" :data="currentData.data.value || []"
-            :loading="currentData.pending.value" :label="isPagesView ? 'Top pages' : 'Top Websites'"
-            :sub-label="isPagesView ? 'Page' : 'Website'"
-            :desc="isPagesView ? 'Most visited pages' : 'Most visited website in this project'"
+            :loading="currentData.pending.value" :label="isPagesView ? 'Top pages' : 'Top Domains'"
+            :sub-label="isPagesView ? 'Page' : 'Domains'"
+            :desc="isPagesView ? 'Most visited pages' : 'Most visited domains in this project'"
             :interactive="!isPagesView" :rawButton="!isLiveDemo()" :isDetailView="isPagesView">
         </BarCardBase>
     </div>

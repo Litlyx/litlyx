@@ -30,18 +30,20 @@ const uTooltipText = computed(() => {
     <LyxUiCard class="flex !p-0 flex-col overflow-hidden relative max-h-[12rem] aspect-[2/1] w-full">
         <div v-if="ready" class="flex p-4 items-start">
             <div class="flex items-center mt-2 mr-4">
-                <i :style="`color: ${props.color}`" :class="icon" class="text-[1.6rem] 2xl:text-[2rem]"></i>
+                <i :style="`color: ${props.color}`" :class="icon" class="text-[1.3rem] 2xl:text-[1.5rem]"></i>
             </div>
             <div class="flex flex-col grow">
-                <div class="flex items-end gap-2">
-                    <div class="brockmann text-text-dirty text-[1.6rem] 2xl:text-[1.9rem]"> {{ value }} </div>
-                    <div class="poppins text-text-sub text-[.7rem] 2xl:text-[.85rem] mb-2"> {{ avg }} </div>
+                <div class="flex items-center gap-2">
+                    <div class="brockmann text-text-dirty text-[1.2rem] 2xl:text-[1.4rem]"> 
+                        {{ value }}
+                     </div>
+                    <div class="poppins text-text-sub text-[.65rem] 2xl:text-[.8rem]"> {{ avg }} </div>
                 </div>
-                <div class="poppins text-text-sub text-[.9rem] 2xl:text-base"> {{ text }} </div>
+                <div class="poppins text-text-sub text-[.9rem] 2xl:text-[1rem]"> {{ text }} </div>
             </div>
             <div v-if="trend" class="flex flex-col items-center gap-1">
                 <UTooltip :text="uTooltipText">
-                    <div class="flex items-center gap-3 rounded-xl px-2 py-1"
+                    <div class="flex items-center gap-3 rounded-md px-2 py-1"
                         :style="`background-color: ${props.color}33`">
                         <i :class="trend > 0 ? 'fa-arrow-trend-up' : 'fa-arrow-trend-down'"
                             class="far text-[.9rem] 2xl:text-[1rem]" :style="`color: ${props.color}`"></i>

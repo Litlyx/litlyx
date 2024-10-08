@@ -114,6 +114,8 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
         const subscription_id = event.data.object.subscription as string;
 
+        const isNewSubscription = project.subscription_id != subscription_id;
+
         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
         if (!allSubscriptions) return;
 
@@ -140,7 +142,7 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
         setTimeout(() => {
             if (PLAN.ID == 0) return;
-                EmailService.sendPurchaseEmail(user.email, project.name);
+            if (isNewSubscription) EmailService.sendPurchaseEmail(user.email, project.name);
         }, 1);
 
 

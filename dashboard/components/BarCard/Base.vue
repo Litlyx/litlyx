@@ -68,11 +68,14 @@ function openExternalLink(link: string) {
                 </div>
             </div>
             <div v-if="rawButton" class="hidden lg:flex">
-                <div @click="$emit('showRawData')"
-                    class="cursor-pointer flex gap-1 items-center justify-center font-semibold poppins rounded-lg text-[#5680f8] hover:text-[#5681f8ce]">
-                    <div> Raw data </div>
-                    <div class="flex items-center"> <i class="fas fa-arrow-up-right"></i> </div>
-                </div>
+
+                <LyxUiButton @click="$emit('showRawData')" type="primary" class="h-fit">
+                    <div class="flex gap-1 items-center justify-center ">
+                        <div> Show raw data </div>
+                        <div class="flex items-center"> <i class="fas fa-arrow-up-right"></i> </div>
+                    </div>
+                </LyxUiButton>
+
 
             </div>
         </div>

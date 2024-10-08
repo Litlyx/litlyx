@@ -35,6 +35,11 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
             </div>
         </LyxUiCard>
 
+
+        <div>
+            <BarCardEvents :key="refreshKey"></BarCardEvents>
+        </div>
+
         <div class="flex gap-6 flex-col xl:flex-row h-full">
 
             <CardTitled :key="refreshKey" class="p-4 flex-[4] w-full h-full" title="Events"
@@ -48,7 +53,7 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
                     <EventsStackedBarChart :slice="(selectLabelsEvents[eventsStackedSelectIndex].value as any)">
                     </EventsStackedBarChart>
                 </div>
-            </CardTitled> 
+            </CardTitled>
 
             <CardTitled :key="refreshKey" class="p-4 flex-[2] w-full h-full" title="Top events"
                 sub="Displays key events.">

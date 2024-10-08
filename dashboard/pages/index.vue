@@ -42,39 +42,29 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
                         <BarCardWebsites :key="refreshKey"></BarCardWebsites>
                     </div>
                     <div class="flex-1">
-                        <BarCardEvents :key="refreshKey"></BarCardEvents>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
-                    <div class="flex-1">
                         <BarCardReferrers :key="refreshKey"></BarCardReferrers>
                     </div>
-                    <div class="flex-1">
-                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>
-                    </div>
                 </div>
             </div>
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
+                    <div class="flex-1">
+                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>              
+                    </div>
                     <div class="flex-1">
                         <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
                     </div>
-                    <div class="flex-1">
-                        <BarCardGeolocations :key="refreshKey"></BarCardGeolocations>
-                    </div>
                 </div>
             </div>
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <BarCardDevices :key="refreshKey"></BarCardDevices>
+                        <BarCardGeolocations :key="refreshKey"></BarCardGeolocations>
                     </div>
                     <div class="flex-1">
+                        <BarCardDevices :key="refreshKey"></BarCardDevices>
                     </div>
                 </div>
             </div>

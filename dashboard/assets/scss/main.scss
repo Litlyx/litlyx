@@ -19,6 +19,18 @@
   src: url("../fonts/GeistVF.ttf");
 }
 
+
+.actionable-visits-color-checkbox {
+  color: #5655d7;
+}
+
+.actionable-sessions-color-checkbox {
+  color: #4abde8;
+}
+.actionable-events-color-checkbox {
+  color: #fbbf24;
+}
+
 .geist {
   font-family: "Geist";
 }
@@ -72,10 +84,14 @@
 
 
 .hide-scrollbars {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+
+  /* Firefox */
   &::-webkit-scrollbar {
-    display: none; /* Chrome, Safari and Opera */
+    display: none;
+    /* Chrome, Safari and Opera */
   }
 }
 

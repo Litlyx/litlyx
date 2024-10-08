@@ -1,8 +1,6 @@
 
 
-- Reactivity on project delete (update dropdown) + test guest
-
-- Event funnel / metadata analyzer / user flow
 - Refactor UI Data analyst
-- Remove Top Events from web analytics and move to custom events (with raw data access)
-- Fix email on plan upgrade and resub
+
+- Reactivity on project delete (update dropdown) + test guest
+- Event funnel / metadata analyzer / user flow
