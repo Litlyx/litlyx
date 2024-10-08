@@ -5,7 +5,7 @@ import { getRequestData } from "~/server/utils/getRequestData";
 export default defineEventHandler(async event => {
 
 
-    const data = await getRequestData(event);
+    const data = await getRequestData(event, { requireSchema: true });
     if (!data) return;
 
     const { schemaName, pid, from, to, model, project_id } = data;

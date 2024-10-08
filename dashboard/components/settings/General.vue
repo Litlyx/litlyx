@@ -2,7 +2,7 @@
 import type { TApiSettings } from '@schema/ApiSettingsSchema';
 import type { SettingsTemplateEntry } from './Template.vue';
 
-const { project, actions, projectList } = useProject();
+const { project, actions, projectList, isGuest, projectId } = useProject();
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'pname', title: 'Name', text: 'Project name' },
@@ -107,7 +107,7 @@ async function deleteProject() {
 
         const firstProjectId = projectList.value?.[0]?._id.toString();
         if (firstProjectId) {
-            await setActiveProject(firstProjectId);
+            await actions.setActiveProject(firstProjectId);
         }
 
 
@@ -120,8 +120,6 @@ async function deleteProject() {
 
 const { createAlert } = useAlert()
 
-const activeProjectId = useActiveProjectId()
-
 function copyScript() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
 
@@ -129,7 +127,7 @@ function copyScript() {
     const createScriptText = () => {
         return [
             '<script defer ',
-            `data-project="${activeProjectId.data.value}" `,
+            `data-project="${projectId.value}" `,
             'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
             'script>'
         ].join('')
@@ -142,7 +140,7 @@ function copyScript() {
 
 function copyProjectId() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-    navigator.clipboard.writeText(activeProjectId.data.value || '');
+    navigator.clipboard.writeText(projectId.value || '');
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 

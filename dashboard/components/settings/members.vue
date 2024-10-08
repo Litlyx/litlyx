@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { SettingsTemplateEntry } from './Template.vue';
 
-const { projectId } = useProject();
+const { projectId, isGuest } = useProject();
 
 definePageMeta({ layout: 'dashboard' });
 

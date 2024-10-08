@@ -40,7 +40,7 @@ module.exports = {
                     darker: '#6A6A6A'
                 },
                 "lyx-widget": {
-                    DEFAULT: '#151515',
+                    DEFAULT: '#0E0E0E',
                     light: '#1E1E1E',
                     lighter: '#262626'
                 },

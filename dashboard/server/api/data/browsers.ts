@@ -10,7 +10,7 @@ export default defineEventHandler(async event => {
 
     const { pid, from, to, project_id, limit } = data;
 
-    const cacheKey = `browsers:${pid}:${from}:${to}`;
+    const cacheKey = `browsers:${pid}:${limit}:${from}:${to}`;
     const cacheExp = 60;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {

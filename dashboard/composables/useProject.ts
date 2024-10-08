@@ -63,7 +63,7 @@ const project = computed(() => {
 
 
 const isGuest = computed(() => {
-    return (projectList.value || []).find(e => e._id.toString() === activeProjectId.value);
+    return (projectList.value || []).find(e => e._id.toString() === activeProjectId.value) == undefined;
 })
 
 export function useProject() {

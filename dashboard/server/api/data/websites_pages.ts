@@ -12,7 +12,7 @@ export default defineEventHandler(async event => {
 
     const websiteName = getHeader(event, 'x-website-name');
 
-    const cacheKey = `websites_pages:${websiteName}:${pid}:${from}:${to}`;
+    const cacheKey = `websites_pages:${websiteName}:${pid}:${limit}:${from}:${to}`;
     const cacheExp = 60;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {

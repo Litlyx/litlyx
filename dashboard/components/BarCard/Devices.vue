@@ -1,21 +1,25 @@
 <script lang="ts" setup>
 
-const isShowMore = ref<boolean>(false);
 
 const devicesData = useFetch('/api/data/devices', {
-    headers: useComputedHeaders({
-        limit: computed(() => isShowMore.value ? '200' : '10'),
-    }), lazy: true
+    headers: useComputedHeaders({ limit: 10, }), lazy: true
 });
-
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
-
-function showMore() {
-    isShowMore.value = true;
+async function showMore() {
+    dialogBarData.value=[];
     showDialog.value = true;
-    dialogBarData.value = devicesData.data.value || [];
+    isDataLoading.value = true;
+
+    const res = await $fetch('/api/data/devices', {
+        headers: useComputedHeaders({ limit: 1000 }).value
+    });
+
+    dialogBarData.value = res || [];
+
+    isDataLoading.value = false;
+
 
 }
 

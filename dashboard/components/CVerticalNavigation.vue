@@ -114,7 +114,7 @@ const pricingDrawer = usePricingDrawer();
 </script>
 
 <template>
-    <div class="CVerticalNavigation h-full w-[20rem] bg-lyx-background flex shadow-[1px_0_10px_#000000] rounded-r-lg"
+    <div class="CVerticalNavigation border-solid border-[#202020] border-r-[1px] h-full w-[20rem] bg-lyx-background flex shadow-[1px_0_10px_#000000] rounded-r-lg"
         :class="{
             'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
             'hidden lg:flex': !isOpen
@@ -141,11 +141,13 @@ const pricingDrawer = usePricingDrawer();
                 </div>
 
 
-                <NuxtLink to="/project_creation" v-if="projectList && (projectList.length < (maxProjects || 1))"
-                    class="flex items-center text-[.8rem] gap-1 justify-end pt-2 pr-2 text-lyx-text-dark hover:text-lyx-text cursor-pointer">
-                    <div><i class="fas fa-plus"></i></div>
-                    <div> Create new project </div>
-                </NuxtLink>
+                <LyxUiButton to="/project_creation" v-if="projectList && (projectList.length < (maxProjects || 1))"
+                    type="outlined" class="w-full py-1 mt-2 text-[.8rem]">
+                    <div class="flex items-center gap-2 justify-center">
+                        <div><i class="fas fa-plus"></i></div>
+                        <div> Create new project </div>
+                    </div>
+                </LyxUiButton>
 
             </div>
 
@@ -156,52 +158,59 @@ const pricingDrawer = usePricingDrawer();
                     <div class="poppins text-[.8rem]">
                         Snapshots
                     </div>
-                    <div @click="openSnapshotDialog()"
-                        class="poppins text-[.8rem] px-2 rounded-lg outline outline-[2px] outline-lyx-widget-lighter cursor-pointer hover:bg-lyx-widget-lighter">
-                        <i class="far fa-plus"></i>
-                        Add
+
+                    <div class="flex gap-2">
+                        <UTooltip text="Download report">
+                            <LyxUiButton @click="generatePDF()" type="outlined" class="!px-3 !py-1">
+                                <div><i class="far fa-download text-[.8rem]"></i></div>
+                            </LyxUiButton>
+                        </UTooltip>
+                        <UTooltip text="Create new snapshot">
+                            <LyxUiButton @click="openSnapshotDialog()" type="outlined" class="!px-3 !py-1">
+                                <div><i class="fas fa-plus text-[.9rem]"></i></div>
+                            </LyxUiButton>
+                        </UTooltip>
                     </div>
+
                 </div>
 
-                <USelectMenu :uiMenu="{
-                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                    base: '!bg-lyx-widget',
-                    option: {
-                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                        active: '!bg-lyx-widget-lighter'
-                    }
-                }" class="w-full" v-model="snapshot" :options="snapshotsItems">
-                    <template #label>
-                        <div class="flex items-center gap-2">
-                            <div :style="'background-color:' + snapshot?.color" class="w-2 h-2 rounded-full">
+                <div class="flex items-center gap-2">
+                    <USelectMenu :uiMenu="{
+                        select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
+                        base: '!bg-lyx-widget',
+                        option: {
+                            base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
+                            active: '!bg-lyx-widget-lighter'
+                        }
+                    }" class="w-full" v-model="snapshot" :options="snapshotsItems">
+                        <template #label>
+                            <div class="flex items-center gap-2">
+                                <div :style="'background-color:' + snapshot?.color" class="w-2 h-2 rounded-full">
+                                </div>
+                                <div class="poppins"> {{ snapshot?.name }} </div>
                             </div>
-                            <div class="poppins"> {{ snapshot?.name }} </div>
-                        </div>
-                    </template>
-                    <template #option="{ option }">
-                        <div class="flex items-center gap-2">
-                            <div :style="'background-color:' + option.color" class="w-2 h-2 rounded-full">
+                        </template>
+                        <template #option="{ option }">
+                            <div class="flex items-center gap-2">
+                                <div :style="'background-color:' + option.color" class="w-2 h-2 rounded-full">
+                                </div>
+                                <div class="poppins"> {{ option.name }} </div>
                             </div>
-                            <div class="poppins"> {{ option.name }} </div>
-                        </div>
-                    </template>
-                </USelectMenu>
+                        </template>
+                    </USelectMenu>
+                </div>
 
-                <div v-if="snapshot" class="flex flex-col text-[.8rem] mt-2">
-                    <div class="flex">
-                        <div class="grow poppins"> From:</div>
-                        <div class="poppins"> {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim() }}
+                <div v-if="snapshot" class="flex flex-col text-[.7rem] mt-2">
+                    <div class="flex gap-1 items-center justify-center text-lyx-text-dark">
+                        <div class="poppins">
+                            {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim().replace(/\//g, '-')
+                            }}
+                        </div>
+                        <div class="poppins"> to </div>
+                        <div class="poppins">
+                            {{ new Date(snapshot.to).toLocaleString('it-IT').split(',')[0].trim().replace(/\//g, '-') }}
                         </div>
                     </div>
-                    <div class="flex">
-                        <div class="grow poppins"> To:</div>
-                        <div class="poppins"> {{ new Date(snapshot.to).toLocaleString('it-IT').split(',')[0].trim() }}
-                        </div>
-                    </div>
-
-                    <LyxUiButton @click="generatePDF()" type="secondary" class="w-full text-center mt-4">
-                        Download report
-                    </LyxUiButton>
 
                     <div class="mt-2" v-if="snapshot._id.toString().startsWith('default') === false">
                         <UPopover placement="bottom">
@@ -226,7 +235,7 @@ const pricingDrawer = usePricingDrawer();
                 </div>
             </div>
 
-            <div class="bg-lyx-widget-lighter h-[2px] w-full"></div>
+            <div class="bg-[#202020] h-[1px] w-full"></div>
 
             <div class="flex flex-col h-full">
 
@@ -262,26 +271,28 @@ const pricingDrawer = usePricingDrawer();
                 </div>
 
                 <div class="grow"></div>
-                <div class="bg-lyx-widget-lighter h-[2px] px-4 w-full mb-3"></div>
+
+                <div class="bg-[#202020] h-[1px] w-full px-4  mb-3"></div>
+
                 <div class="flex justify-end px-2">
 
                     <div class="grow flex gap-3">
-                        <NuxtLink to="https://github.com/litlyx/litlyx" target="_blank"
+                        <!-- <NuxtLink to="https://github.com/litlyx/litlyx" target="_blank"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-github"></i>
-                        </NuxtLink>
-                        <NuxtLink to="https://discord.gg/9cQykjsmWX" target="_blank"
+                        </NuxtLink> -->
+                        <!-- <NuxtLink to="https://discord.gg/9cQykjsmWX" target="_blank"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-discord"></i>
-                        </NuxtLink>
+                        </NuxtLink> -->
                         <NuxtLink to="https://x.com/litlyx" target="_blank"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-x-twitter"></i>
                         </NuxtLink>
-                        <NuxtLink to="https://dev.to/litlyx-org" target="_blank"
+                        <!-- <NuxtLink to="https://dev.to/litlyx-org" target="_blank"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-dev"></i>
-                        </NuxtLink>
+                        </NuxtLink> -->
                         <NuxtLink to="/admin" v-if="userRoles.isAdmin"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fas fa-cat"></i>

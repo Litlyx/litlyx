@@ -8,15 +8,6 @@ const slice = computed(() => props.slice);
 
 const { safeSnapshotDates } = useSnapshot()
 
-const body = computed(() => {
-    return {
-        from: safeSnapshotDates.value.from,
-        to: safeSnapshotDates.value.to,
-        slice: slice.value,
-    }
-});
-
-
 function transformResponse(input: { _id: string, name: string, count: number }[]) {
 
     const fixed = fixMetrics({
@@ -90,9 +81,9 @@ function onResponse(e: any) {
 }
 
 const eventsStackedData = useFetch(`/api/timeline/events_stacked`, {
-    method: 'POST', body, lazy: true, immediate: false,
+    lazy: true, immediate: false,
     transform: transformResponse,
-    headers: useComputedHeaders(),
+    headers: useComputedHeaders({slice}),
     onResponseError,
     onResponse
 });

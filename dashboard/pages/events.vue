@@ -10,21 +10,7 @@ const selectLabelsEvents = [
 ];
 const eventsStackedSelectIndex = ref<number>(0);
 
-const { projectId } = useProject();
-const { snapshot, safeSnapshotDates } = useSnapshot();
-
-
-const headers = computed(() => {
-    return {
-        'x-from': safeSnapshotDates.value.from,
-        'x-to': safeSnapshotDates.value.to,
-        'Authorization': authorizationHeaderComputed.value,
-        'x-schema': 'events',
-        'x-pid': projectId.value ?? ''
-    }
-});
-
-const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, lazy: true });
+const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeaders({ custom: { 'x-schema': 'events' } }), lazy: true });
 
 </script>
 
@@ -36,9 +22,9 @@ const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, 
         <LyxUiCard class="w-full flex justify-between items-center">
             <div class="flex flex-col gap-1">
                 <div>
-                    Total events: {{ eventsData.data.value?.[0]?.total || '0' }}
+                    Total events: {{ eventsData.data.value?.[0]?.count || '0' }}
                 </div>
-                <div v-if="(eventsData.data.value?.[0]?.total || 0) === 0">
+                <div v-if="(eventsData.data.value?.[0]?.count || 0) === 0">
                     Waiting for your first event...
                 </div>
             </div>
@@ -62,7 +48,7 @@ const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, 
                     <EventsStackedBarChart :slice="(selectLabelsEvents[eventsStackedSelectIndex].value as any)">
                     </EventsStackedBarChart>
                 </div>
-            </CardTitled>
+            </CardTitled> 
 
             <CardTitled :key="refreshKey" class="p-4 flex-[2] w-full h-full" title="Top events"
                 sub="Displays key events.">
@@ -71,7 +57,7 @@ const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, 
 
         </div>
 
-        <div class="flex">
+        <!-- <div class="flex">
             <EventsFunnelChart :key="refreshKey" class="w-full"></EventsFunnelChart>
         </div>
 
@@ -81,7 +67,7 @@ const eventsData = await useFetch(`/api/data/count`, { method: 'POST', headers, 
 
         <div class="flex">
             <EventsMetadataAnalyzer :key="refreshKey"></EventsMetadataAnalyzer>
-        </div>
+        </div> -->
 
 
 

@@ -1,18 +1,16 @@
 <script lang="ts" setup>
 
-const isShowMore = ref<boolean>(false);
-
 const currentWebsite = ref<string>("");
 
 const websitesData = useFetch('/api/data/websites', {
     headers: useComputedHeaders({
-        limit: computed(() => isShowMore.value ? '200' : '10'),
+        limit: 10,
     }), lazy: true
 });
 
 const pagesData = useFetch('/api/data/websites_pages', {
     headers: useComputedHeaders({
-        limit: computed(() => isShowMore.value ? '200' : '10'),
+        limit: 10,
         custom: {
             'x-website-name': currentWebsite
         }

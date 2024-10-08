@@ -3,8 +3,6 @@
 definePageMeta({ layout: 'dashboard' });
 
 
-const activeProject = useActiveProject();
-
 const items = [
     { label: 'General', slot: 'general' },
     { label: 'Members', slot: 'members' },
@@ -20,16 +18,16 @@ const items = [
 
         <CustomTab :items="items" class="mt-8">
             <template #general>
-                <SettingsGeneral :key="activeProject?._id.toString()"></SettingsGeneral>
+                <SettingsGeneral :key="refreshKey"></SettingsGeneral>
             </template>
             <template #members>
-                <SettingsMembers :key="activeProject?._id.toString()"></SettingsMembers>
+                <SettingsMembers :key="refreshKey"></SettingsMembers>
             </template>
             <template #billing>
-                <SettingsBilling :key="activeProject?._id.toString()"></SettingsBilling>
+                <SettingsBilling :key="refreshKey"></SettingsBilling>
             </template>
             <template #account>
-                <SettingsAccount :key="activeProject?._id.toString()"></SettingsAccount>
+                <SettingsAccount :key="refreshKey"></SettingsAccount>
             </template>
         </CustomTab>
 

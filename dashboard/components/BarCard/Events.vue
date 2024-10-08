@@ -6,20 +6,27 @@ function goToView() {
     router.push('/dashboard/events');
 }
 
-const isShowMore = ref<boolean>(false);
-
 const eventsData = useFetch('/api/data/events', {
     headers: useComputedHeaders({
-        limit: computed(() => isShowMore.value ? '200' : '10'),
+        limit: 10,
     }), lazy: true
 });
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
-function showMore() {
-    isShowMore.value = true;
+async function showMore() {
+    dialogBarData.value=[];
     showDialog.value = true;
-    dialogBarData.value = eventsData.data.value || [];
+    isDataLoading.value = true;
+
+    const res = await $fetch('/api/data/events', {
+        headers: useComputedHeaders({ limit: 1000 }).value
+    });
+
+    dialogBarData.value = res || [];
+
+    isDataLoading.value = false;
+
 }
 
 </script>

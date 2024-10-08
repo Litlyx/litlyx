@@ -4,9 +4,9 @@ import type { MetricsCounts } from '~/server/api/metrics/[project_id]/counts';
 
 definePageMeta({ layout: 'dashboard' });
 
-const activeProject = useActiveProject();
+const {project} = useProject();
 
-const isPremium = computed(() => (activeProject.value?.premium_type || 0) > 0);
+const isPremium = computed(() => (project.value?.premium_type || 0) > 0);
 
 const metricsInfo = ref<number>(0);
 
@@ -35,12 +35,12 @@ const totalItems = computed(() => metricsInfo.value);
 
 
 const { data: tableData, pending: loadingData } = await useLazyFetch<any[]>(() =>
-    `/api/metrics/${activeProject.value?._id}/query?type=0&orderBy=${sort.value.column}&order=${sort.value.direction}&page=${page.value}&limit=${itemsPerPage}`, {
+    `/api/metrics/${project.value?._id}/query?type=0&orderBy=${sort.value.column}&order=${sort.value.direction}&page=${page.value}&limit=${itemsPerPage}`, {
     ...signHeaders(),
 })
 
 onMounted(async () => {
-    const counts = await $fetch<MetricsCounts>(`/api/metrics/${activeProject.value?._id}/counts`, signHeaders());
+    const counts = await $fetch<MetricsCounts>(`/api/metrics/${project.value?._id}/counts`, signHeaders());
     metricsInfo.value = counts.visitsCount;
 });
 

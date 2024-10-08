@@ -136,6 +136,8 @@ const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Month', value: 'month' },
 ];
 
+const selectedSlice = computed(()=>selectLabels[selectedLabelIndex.value].value);
+
 const selectedLabelIndex = ref<number>(1);
 const allDatesFull = ref<string[]>([]);
 
@@ -157,17 +159,17 @@ function onResponse(e: any) {
 
 
 const visitsData = useFetch('/api/timeline/visits', {
-    headers: useComputedHeaders({ slice: selectLabels[selectedLabelIndex.value].value }), lazy: true,
+    headers: useComputedHeaders({ slice: selectedSlice }), lazy: true,
     transform: transformResponse, onResponseError, onResponse
 });
 
 const sessionsData = useFetch('/api/timeline/sessions', {
-    headers: useComputedHeaders({ slice: selectLabels[selectedLabelIndex.value].value }), lazy: true,
+    headers: useComputedHeaders({ slice: selectedSlice }), lazy: true,
     transform: transformResponse, onResponseError, onResponse
 });
 
 const eventsData = useFetch('/api/timeline/events', {
-    headers: useComputedHeaders({ slice: selectLabels[selectedLabelIndex.value].value }), lazy: true,
+    headers: useComputedHeaders({ slice: selectedSlice }), lazy: true,
     transform: transformResponse, onResponseError, onResponse
 });
 

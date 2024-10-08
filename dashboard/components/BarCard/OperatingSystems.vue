@@ -1,23 +1,29 @@
 <script lang="ts" setup>
 
-const isShowMore = ref<boolean>(false);
 
 const ossData = useFetch('/api/data/oss', {
     headers: useComputedHeaders({
-        limit: computed(() => isShowMore.value ? '200' : '10'),
+        limit: 10,
     }), lazy: true
 });
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
 
-function showMore() {
-    isShowMore.value = true;
+async function showMore() {
+    dialogBarData.value=[];
     showDialog.value = true;
-    dialogBarData.value = ossData.data.value || [];
+    isDataLoading.value = true;
+
+    const res = await $fetch('/api/data/oss', {
+        headers: useComputedHeaders({ limit: 1000 }).value
+    });
+
+    dialogBarData.value = res || [];
+
+    isDataLoading.value = false;
+
 }
-
-
 </script>
 
 

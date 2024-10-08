@@ -12,22 +12,31 @@ function elementTextTransformer(element: string) {
     return element;
 }
 
-const isShowMore = ref<boolean>(false);
-
 const referrersData = useFetch('/api/data/referrers', {
     headers: useComputedHeaders({
-        limit: computed(() => isShowMore.value ? '200' : '10'),
+        limit: 10,
     }), lazy: true
 });
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
-function showMore() {
-    isShowMore.value = true;
+async function showMore() {
+
+    dialogBarData.value=[];
+    
     showDialog.value = true;
-    dialogBarData.value = referrersData.data.value?.map(e => {
+    isDataLoading.value = true;
+
+    const res = await $fetch('/api/data/referrers', {
+        headers: useComputedHeaders({limit: 1000}).value
+    });
+
+
+    dialogBarData.value = res?.map(e => {
         return { ...e, icon: iconProvider(e._id) }
     }) || [];
+
+    isDataLoading.value = false;
 }
 
 </script>

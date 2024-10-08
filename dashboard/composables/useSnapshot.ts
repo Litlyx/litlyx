@@ -1,7 +1,6 @@
 import type { TProjectSnapshot } from "@schema/ProjectSnapshot";
 
 
-
 const { projectId, project } = useProject();
 
 const headers = computed(() => {

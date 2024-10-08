@@ -13,8 +13,8 @@ const sections: Section[] = [
     {
         title: '',
         entries: [
-            { label: 'Dashboard', to: '/', icon: 'fal fa-table-layout' },
-            { label: 'Events', to: '/events', icon: 'fal fa-square-bolt' },
+            { label: 'Web Analytics', to: '/', icon: 'fal fa-table-layout' },
+            { label: 'Custom Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'AI Analyst', to: '/analyst', icon: 'fal fa-sparkles' },
             { label: 'Security', to: '/security', icon: 'fal fa-shield' },
             // { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
@@ -23,22 +23,27 @@ const sections: Section[] = [
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,
-                label: 'Documentation', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
+                label: 'Docs', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
                 action() { Lit.event('docs_clicked') },
             },
             {
-                label: 'Slack support', icon: 'fab fa-slack',
-                to: '#',
-                premiumOnly: true,
-                action() {
-                    if (isLogged.value === true) return;
-                    if (userRoles.isPremium.value === true) {
-                        window.open('https://join.slack.com/t/litlyx/shared_invite/zt-2q3oawn29-hZlu_fBUBlc4052Ooe3FZg', '_blank');
-                    } else {
-                        pricingDrawer.visible.value = true;
-                    }
-                },
+                label: 'Discord support', icon: 'fab fa-discord',
+                to: 'https://discord.gg/9cQykjsmWX',
+                external: true,
             },
+            // {
+            //     label: 'Slack support', icon: 'fab fa-slack',
+            //     to: '#',
+            //     premiumOnly: true,
+            //     action() {
+            //         if (isLogged.value === true) return;
+            //         if (userRoles.isPremium.value === true) {
+            //             window.open('https://join.slack.com/t/litlyx/shared_invite/zt-2q3oawn29-hZlu_fBUBlc4052Ooe3FZg', '_blank');
+            //         } else {
+            //             pricingDrawer.visible.value = true;
+            //         }
+            //     },
+            // },
         ]
     }
 ];
@@ -76,7 +81,7 @@ const { isOpen, close, open } = useMenu();
             </CVerticalNavigation>
 
 
-            <div class="overflow-hidden w-full bg-lyx-background-light relative h-full">
+            <div class="overflow-hidden w-full bg-lyx-background relative h-full">
 
                 <div v-if="showDialog" class="barrier w-full h-full z-[34] absolute bg-black/50 backdrop-blur-[2px]">
                     <i
