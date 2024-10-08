@@ -1,8 +1,6 @@
 
-import { ProjectModel } from "@schema/ProjectSchema";
+
 import { UserModel } from "@schema/UserSchema";
-import { UserSettingsModel } from "@schema/UserSettings";
-import { EventModel } from '@schema/metrics/EventSchema';
 import { VisitModel } from "@schema/metrics/VisitSchema";
 
 import { google } from 'googleapis';
@@ -60,16 +58,10 @@ async function exportToGoogle(data: string, user_id: string) {
 
 export default defineEventHandler(async event => {
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
+    const data = await getRequestData(event, { requireSchema: false });
+    if (!data) return;
 
-    const currentActiveProject = await UserSettingsModel.findOne({ user_id: userData.id });
-    if (!currentActiveProject) return setResponseStatus(event, 400, 'You need to select a project');
-
-    const project_id = currentActiveProject.active_project_id;
-
-    const project = await ProjectModel.findById(project_id);
-    if (!project) return setResponseStatus(event, 400, 'Project not found');
+    const { project, project_id, user } = data;
 
     const PREMIUM_TYPE = project.premium_type;
 
@@ -127,7 +119,7 @@ export default defineEventHandler(async event => {
         const isGoogle = getHeader(event, 'x-google-export');
 
         if (isGoogle === 'true') {
-            const data = await exportToGoogle(result, userData.id);
+            const data = await exportToGoogle(result, user.id);
             return data;
         }
 

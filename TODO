@@ -1,10 +1,8 @@
 
 
-- Fix devices Dashboard card, replace empty with "unkwnwn"
-- Component first interaction must make the request inside
-- Reactivity on project delete (update dropdown)
-- Fix CSV Endpoint
-- Devices remove empty
+- Reactivity on project delete (update dropdown) + test guest
+
+- Devices remove empty (Fix devices Dashboard card, replace empty with "unkwnwn")
 - docs vertical navigation not wfull
 - project creation
 - Event funnel / metadata analyzer / user flow

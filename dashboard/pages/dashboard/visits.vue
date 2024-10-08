@@ -4,7 +4,7 @@ import type { MetricsCounts } from '~/server/api/metrics/[project_id]/counts';
 
 definePageMeta({ layout: 'dashboard' });
 
-const {project} = useProject();
+const { project } = useProject();
 
 const isPremium = computed(() => (project.value?.premium_type || 0) > 0);
 
@@ -34,9 +34,9 @@ const itemsPerPage = 50;
 const totalItems = computed(() => metricsInfo.value);
 
 
-const { data: tableData, pending: loadingData } = await useLazyFetch<any[]>(() =>
+const { data: tableData, pending: loadingData } = await useFetch<any[]>(() =>
     `/api/metrics/${project.value?._id}/query?type=0&orderBy=${sort.value.column}&order=${sort.value.direction}&page=${page.value}&limit=${itemsPerPage}`, {
-    ...signHeaders(),
+    ...signHeaders(), lazy: true
 })
 
 onMounted(async () => {
@@ -49,7 +49,9 @@ const creatingCsv = ref<boolean>(false);
 
 async function downloadCSV() {
     creatingCsv.value = true;
-    const result = await $fetch(`/api/project/generate_csv?mode=visits&slice=${options.indexOf(selectedTimeFrom.value)}`, signHeaders());
+    const result = await $fetch(`/api/project/generate_csv?mode=visits&slice=${options.indexOf(selectedTimeFrom.value)}`, {
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
+    });
     const blob = new Blob([result as any], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -105,12 +107,12 @@ function goToUpgrade() {
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 Download CSV
             </div>
-            
+
             <div v-if="!isPremium" @click="goToUpgrade()"
                 class="bg-[#57c78f46] hover:bg-[#57c78f42] flex gap-4 items-center cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 <i class="far fa-lock"></i>
                 Upgrade plan for CSV
-            </div> 
+            </div>
 
         </div>
 

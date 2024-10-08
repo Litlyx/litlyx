@@ -85,7 +85,8 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
         <FirstInteraction v-if="!justLogged" :refresh-interaction="firstInteraction.refresh"
             :first-interaction="(firstInteraction.data.value || false)"></FirstInteraction>
 
-        <div class="text-text/85 mt-8 ml-8 poppis text-[1.2rem]" v-if="projectList && projectList.length == 0 && !justLogged">
+        <div class="text-text/85 mt-8 ml-8 poppis text-[1.2rem]"
+            v-if="projectList && projectList.length == 0 && !justLogged">
             Create your first project...
         </div>
 
