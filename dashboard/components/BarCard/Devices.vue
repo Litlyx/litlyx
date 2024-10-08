@@ -1,22 +1,29 @@
 <script lang="ts" setup>
 
 
+function transform(data: { _id: string, count: number }[]) {
+    console.log(data);
+    return data.map(e => ({ ...e, _id: e._id == null ? 'unknown' : e._id }))
+}
+
 const devicesData = useFetch('/api/data/devices', {
-    headers: useComputedHeaders({ limit: 10, }), lazy: true
+    headers: useComputedHeaders({ limit: 10, }), lazy: true,
+    transform
 });
 
 const { showDialog, dialogBarData, isDataLoading } = useBarCardDialog();
 
 async function showMore() {
-    dialogBarData.value=[];
+    dialogBarData.value = [];
     showDialog.value = true;
     isDataLoading.value = true;
 
     const res = await $fetch('/api/data/devices', {
-        headers: useComputedHeaders({ limit: 1000 }).value
+        headers: useComputedHeaders({ limit: 1000 }).value,
     });
 
-    dialogBarData.value = res || [];
+
+    dialogBarData.value = transform(res || []);
 
     isDataLoading.value = false;
 

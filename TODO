@@ -2,11 +2,9 @@
 
 - Reactivity on project delete (update dropdown) + test guest
 
-- Devices remove empty (Fix devices Dashboard card, replace empty with "unkwnwn")
 - docs vertical navigation not wfull
 - project creation
 - Event funnel / metadata analyzer / user flow
-- Test guest actions
 - Refactor UI Data analyst
 - Remove Top Events from web analytics and move to custom events (with raw data access)
 - Fix email on plan upgrade and resub
