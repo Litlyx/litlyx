@@ -132,23 +132,24 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 </script>
 
 <template>
-    <div class="w-full h-full">
+    <div class="w-full h-full overflow-y-hidden">
 
-        <div class="flex flex-row h-full">
+        <div class="flex flex-row h-full overflow-y-hidden">
 
-            <div class="flex-[5] py-8 flex flex-col items-center relative bg-lyx-background-light">
+            <div class="flex-[5] py-8 flex h-full flex-col items-center relative overflow-y-hidden">
 
-                <div class="flex flex-col items-center mt-[20vh] px-28" v-if="currentChatMessages.length == 0">
-                    <div class="w-[10rem]">
+                <div class="flex flex-col items-center lg:mt-[20vh] px-8 lg:px-28"
+                    v-if="currentChatMessages.length == 0">
+                    <div class="w-[7rem] lg:w-[10rem]">
                         <img :src="'analyst.png'" class="w-full h-full">
                     </div>
-                    <div v-if="!isGuest" class="poppins text-[1.2rem]">
-                        How can i help you today?
+                    <div v-if="!isGuest" class="poppins text-[1.2rem] text-center">
+                        Ask me anything about your data
                     </div>
-                    <div v-if="isGuest" class="poppins text-[1.2rem]">
+                    <div v-if="isGuest" class="poppins text-[1.2rem] text-center">
                         Im not allowed to help guests :c
                     </div>
-                    <div class="grid grid-cols-2 gap-4 mt-6" v-if="!isGuest">
+                    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-4 mt-6" v-if="!isGuest">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
                             class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center whitespace-pre-wrap flex items-center justify-center text-[.9rem]">
                             {{ prompt }}
@@ -200,17 +201,16 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
                 </div>
 
-
-
-                <div v-if="!isGuest" class="flex gap-2 items-center absolute bottom-8 left-0 w-full px-10 xl:px-28">
+                <div v-if="!isGuest"
+                    class="flex gap-2 items-center md:absolute fixed bottom-8 left-0 w-full px-10 xl:px-28">
                     <input @keydown="onKeyDown" v-model="currentText"
                         class="bg-lyx-widget-light w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
                     <div @click="sendMessage()"
-                        class="bg-lyx-widget-light hhover:bg-lyx-widget-lighter cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-lyx-widget-light hhover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-arrow-up"></i>
                     </div>
                     <div @click="menuOpen = !menuOpen"
-                        class="bg-lyx-widget-light lg:hidden hhover:bg-lyx-widget-lighter cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-lyx-widget-light lg:hidden hhover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-message"></i>
                     </div>
                 </div>
@@ -221,37 +221,31 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
             <div :class="{
                 'absolute': menuOpen,
                 'hidden lg:flex': !menuOpen
-            }" class="flex-[2] bg-lyx-widget-light p-6 flex flex-col gap-4 h-full overflow-hidden">
+            }" class="flex-[2] bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
 
                 <div class="gap-2 flex flex-col">
                     <div class="lg:hidden absolute right-4 top-4 text-[1.5rem]">
                         <i @click="menuOpen = false" class="fas fa-close cursor-pointer"></i>
                     </div>
-                    <div class="poppins font-semibold text-[1.5rem]">
-                        What Lit can do for you?
-                    </div>
-                    <div class="poppins text-text/75">
-                        Ask anything from your data history, visualize and overlap charts, explore events or metadata,
-                        and enjoy a highly personalized data analysis experience.
-                    </div>
                 </div>
 
-                <div class="flex gap-2 items-center pt-3">
-                    <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
+                <div class="flex justify-between items-center pt-3">
+                    <div class="flex items-center gap-2">
+                        <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
+                        </div>
+                        <div class="manrope font-semibold text-text-dirty"> {{ chatsRemaining }} remaining requests
+                        </div>
                     </div>
-                    <div class="manrope font-semibold"> {{ chatsRemaining }} remaining AI requests </div>
+                    <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="pricingDrawerVisible = true">
+                        Upgrade
+                    </LyxUiButton>
                 </div>
-
-                <LyxUiButton type="primary" class="text-[.9rem] text-center w-full"
-                    @click="pricingDrawerVisible = true">
-                    Upgrade plan for more requests
-                </LyxUiButton>
 
                 <div class="poppins font-semibold text-[1.1rem]"> History </div>
 
                 <div class="px-2">
                     <div @click="openChat()"
-                        class="bg-lyx-widget-lighter cursor-pointer hover:bg-lyx-widget rounded-lg px-4 py-3 poppins flex gap-4 items-center">
+                        class="bg-lyx-widget-light cursor-pointer hover:bg-lyx-widget rounded-lg px-4 py-3 poppins flex gap-4 items-center">
                         <div> <i class="fas fa-plus"></i> </div>
                         <div> New chat </div>
                     </div>
@@ -261,7 +255,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                 <div class="overflow-y-auto">
                     <div class="flex flex-col gap-2 px-2">
                         <div :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }"
-                            class="flex rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-lighter hover:bg-lyx-widget"
+                            class="flex text-lyx-text-dark text-[.9rem] font-light rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-light hover:bg-lyx-widget"
                             v-for="chat of viewChatsList">
                             <i @click="deleteChat(chat._id.toString())"
                                 class="far fa-trash hover:text-gray-300 cursor-pointer"></i>
