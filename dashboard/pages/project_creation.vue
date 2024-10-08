@@ -7,9 +7,9 @@ const creating = ref<boolean>(false);
 
 const router = useRouter();
 
-const { projects, refresh } = useProjectsList();
+const { projectList, actions } = useProject();
 
-const isFirstProject = computed(() => { return projects.value?.length == 0; })
+const isFirstProject = computed(() => { return projectList.value?.length == 0; })
 
 import { Lit } from 'litlyx-js';
 
@@ -35,11 +35,11 @@ async function createProject() {
             body: JSON.stringify({ name: projectName.value })
         });
 
-        await refresh();
+        await actions.refreshProjectsList();
 
-        const newActiveProjectId = projects.value?.[projects.value?.length - 1]._id.toString();
+        const newActiveProjectId = projectList.value?.[projectList.value?.length - 1]._id.toString();
         if (newActiveProjectId) {
-            await setActiveProject(newActiveProjectId);
+            await actions.setActiveProject(newActiveProjectId);
         }
 
         router.push('/');
