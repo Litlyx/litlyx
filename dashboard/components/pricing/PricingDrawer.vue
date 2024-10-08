@@ -62,7 +62,7 @@ function getPricingsData() {
             price: '€4,99 / mo',
             subs: [
                 'Up to 50.000 visits/events per month',
-                'CPM 0,10€ per visit/event'
+                '0,00010€ per visit/event'
             ],
             features: [
                 'Slack support',
@@ -82,7 +82,7 @@ function getPricingsData() {
             price: '€9,99 / mo',
             subs: [
                 'Up to 150.000 visits/events per month',
-                'CPM 0,06€ per visit/event'
+                '0,00006€ per visit/event'
             ],
             features: [
                 'Slack support',
@@ -102,7 +102,7 @@ function getPricingsData() {
             price: '€29,99 / mo',
             subs: [
                 'Up to 500.000 visits/events per month',
-                'CPM 0,059€ per visit/event'
+                '0,000059€ per visit/event'
             ],
             features: [
                 'Slack support',
@@ -122,7 +122,7 @@ function getPricingsData() {
             price: '€59,99 / mo',
             subs: [
                 'Up to 1.000.000 visits/events per month',
-                'CPM 0,059€ per visit/event'
+                '0,000059€ per visit/event'
             ],
             features: [
                 'Slack support',
@@ -130,7 +130,7 @@ function getPricingsData() {
                 'Unlimited reports',
                 'AI Tokens: 5.000',
                 'Server type: SHARED',
-                'Data retention: 1 Year'
+                'Data retention: 3 Year'
             ],
             cta: 'Go to Cloud Dashboard',
             active: (planData.value?.premium_type || 0) == 104,
@@ -142,7 +142,7 @@ function getPricingsData() {
             price: '€99,99 / mo',
             subs: [
                 'Up to 2.500.000 visits/events per month',
-                'CPM 0,039€ per visit/event'
+                '0,000039€ per visit/event'
             ],
             features: [
                 'Slack support',
@@ -150,7 +150,7 @@ function getPricingsData() {
                 'Unlimited reports',
                 'AI Tokens: 10.000',
                 'Server type: DEDICATED',
-                'Data retention: 2 Years'
+                'Data retention: 7 Years'
             ],
             cta: 'Go to Cloud Dashboard',
             active: (planData.value?.premium_type || 0) == 105,
@@ -162,7 +162,7 @@ function getPricingsData() {
             price: '€149,99 / mo',
             subs: [
                 'Up to 5.000.000 visits/events per month',
-                'CPM 0,029€ per visit/event'
+                '0,000029€ per visit/event'
             ],
             features: [
                 'Slack support',
@@ -170,7 +170,7 @@ function getPricingsData() {
                 'Unlimited reports',
                 'AI Tokens: 20.000',
                 'Server type: DEDICATED',
-                'Data retention: 3 Years'
+                'Data retention: 8 Years'
             ],
             cta: 'Go to Cloud Dashboard',
             active: (planData.value?.premium_type || 0) == 106,
