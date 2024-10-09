@@ -4,14 +4,8 @@ import type { TProject } from '@schema/ProjectSchema';
 
 const { user } = useLoggedUser()
 
-const { projectList, guestProjectList, actions, project } = useProject();
+const { projectList, guestProjectList,allProjectList, actions, project } = useProject();
 
-const selectorProjects = computed(() => {
-    const result: TProject[] = [];
-    if (projectList.value) result.push(...projectList.value);
-    if (guestProjectList.value) result.push(...guestProjectList.value);
-    return result;
-});
 
 function isProjectMine(owner?: string) {
     if (!owner) return false;
@@ -34,7 +28,7 @@ function onChange(e: TProject) {
             base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
             active: '!bg-lyx-widget-lighter'
         }
-    }" class="w-full" v-if="selectorProjects" @change="onChange" :value="project" :options="selectorProjects">
+    }" class="w-full" v-if="allProjectList" @change="onChange" :value="project" :options="allProjectList">
 
         <template #option="{ option, active, selected }">
             <div class="flex items-center gap-2">

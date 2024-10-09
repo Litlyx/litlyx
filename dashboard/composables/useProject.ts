@@ -43,23 +43,30 @@ const setActiveProject = (project_id: string) => {
 }
 
 const project = computed(() => {
-    if (!projectList.value) return;
-    if (projectList.value.length == 0) return;
+
+    if (isLiveDemo.value) return useLiveDemo().data.value;
+
+    if (!allProjectList.value) return;
+    if (allProjectList.value.length == 0) return;
+
     if (activeProjectId.value) {
-        const target = projectList.value.find(e => e._id.toString() == activeProjectId.value);
+        const target = allProjectList.value.find(e => e._id.toString() == activeProjectId.value);
         if (target) return target;
     }
+
     const savedActive = localStorage.getItem('active_pid');
     if (savedActive) {
-        const target = projectList.value.find(e => e._id.toString() == savedActive);
+        const target = allProjectList.value.find(e => e._id.toString() == savedActive);
         if (target) {
             activeProjectId.value = savedActive;
             return target;
         }
     }
-    activeProjectId.value = projectList.value[0]._id.toString();
-    return projectList.value[0];
+    activeProjectId.value = allProjectList.value[0]._id.toString();
+    return allProjectList.value[0];
 })
+
+const projectId = computed(() => project.value?._id.toString())
 
 
 const isGuest = computed(() => {
@@ -73,5 +80,5 @@ export function useProject() {
         setActiveProject
     }
 
-    return { project, allProjectList, guestProjectList, projectList, actions, projectId: activeProjectId, isGuest }
+    return { project, allProjectList, guestProjectList, projectList, actions, projectId, isGuest }
 }

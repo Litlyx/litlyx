@@ -15,12 +15,10 @@ export type SecutityReport = (TSecurityDomainEntry | TSecurityVisitEntry | TSecu
 
 export default defineEventHandler(async event => {
 
-    const project_id = getHeader(event, 'x-pid');
-    if (!project_id) return;
+    const data = await getRequestData(event, { requireSchema: false });
+    if (!data) return;
 
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user);
-    if (!project) return;
+    const { project_id } = data;
 
     const visits = await AnomalyVisitModel.find({ project_id }, { _id: 0, project_id: 0 });
     const events = await AnomalyEventsModel.find({ project_id }, { _id: 0, project_id: 0 });

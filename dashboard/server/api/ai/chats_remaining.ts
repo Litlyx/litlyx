@@ -1,5 +1,4 @@
 import { ProjectLimitModel } from "@schema/ProjectsLimits";
-import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 
 export async function getAiChatRemainings(project_id: string) {
     const limits = await ProjectLimitModel.findOne({ project_id })
@@ -11,13 +10,11 @@ export async function getAiChatRemainings(project_id: string) {
 }
 
 export default defineEventHandler(async event => {
-    const project_id = getRequestProjectId(event);
-    if (!project_id) return;
+    const data = await getRequestData(event);
+    if (!data) return;
 
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user);
-    if (!project) return;
+    const { pid } = data;
 
-    const chatsRemaining = await getAiChatRemainings(project_id);
+    const chatsRemaining = await getAiChatRemainings(pid);
     return chatsRemaining;
 });

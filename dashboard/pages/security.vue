@@ -1,16 +1,8 @@
 <script setup lang="ts">
 
 definePageMeta({ layout: 'dashboard' });
-const activeProjectId = useActiveProjectId();
 
-const headers = computed(() => {
-    return {
-        'Authorization': authorizationHeaderComputed.value,
-        'x-pid': activeProjectId.data.value || ''
-    }
-});
-
-const reportList = useFetch(`/api/security/list`, { headers });
+const reportList = useFetch(`/api/security/list`, { headers: useComputedHeaders({ useSnapshotDates: false }) });
 
 const { createAlert } = useAlert();
 

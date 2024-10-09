@@ -126,7 +126,7 @@ const { visible } = usePricingDrawer();
 
         <SettingsTemplate v-if="!invoicesPending && !planPending" :entries="entries">
             <template #info>
-                <div>
+                <div v-if="!isGuest">
                     <div class="flex flex-col gap-2">
                         <LyxUiInput class="px-2 py-1" placeholder="Address line 1" v-model="currentBillingInfo.line1">
                         </LyxUiInput>

@@ -56,14 +56,35 @@ const chartData = ref<ChartData<'funnel'>>({
     datasets: [
         {
             data: [],
-            backgroundColor: ['#5680F8' + '77'],
+            backgroundColor: [
+                '#5680F877',
+                "#6bbbe377",
+                "#a6d5cb77",
+                "#fae0b977",
+                "#f28e8e77",
+                "#e3a7e477",
+                "#c4a8e177",
+                "#8cc1d877",
+                "#f9c2cd77",
+                "#b4e3b277",
+                "#ffdfba77",
+                "#e9c3b577",
+                "#d5b8d677",
+                "#add7f677",
+                "#ffd1dc77",
+                "#ffe7a177",
+                "#a8e6cf77",
+                "#d4a5a577",
+                "#f3d6e477",
+                "#c3aed677"
+            ],
             // borderColor: '#0000CC',
             // borderWidth: 4,
             fill: true,
             tension: 0.45,
             pointRadius: 0,
             pointHoverRadius: 10,
-            hoverBackgroundColor: '#5680F8',
+            hoverBackgroundColor: '#26262677',
             // hoverBorderColor: 'white',
             // hoverBorderWidth: 2,
         },
@@ -89,15 +110,9 @@ onMounted(async () => {
 
 });
 
-const eventsCount = await useFetch<{ _id: string, count: number }[]>(`/api/data/query`, {
-    lazy: true, headers: useComputedHeaders({
-        limit: 1000,
-        custom: {
-            'schema': 'events'
-        }
-    })
+const eventsData = useFetch(`/api/data/events`, {
+    headers: useComputedHeaders(), lazy: true, immediate: false
 });
-
 
 const enabledEvents = ref<string[]>([]);
 
@@ -114,7 +129,7 @@ async function onEventCheck(eventName: string) {
     chartData.value.datasets[0].data = [];
 
     for (const enabledEvent of enabledEvents.value) {
-        const target = (eventsCount.data.value ?? []).find(e => e._id == enabledEvent);
+        const target = (eventsData.data.value ?? []).find(e => e._id == enabledEvent);
         chartData.value.datasets[0].data.push(target?.count || 0);
     }
 }
@@ -123,16 +138,19 @@ async function onEventCheck(eventName: string) {
 
 
 <template>
-    <CardTitled title="Funnel" sub="Funnel events">
+    <CardTitled title="Funnel"
+        sub="Monitor and analyze the actions your users are performing on your platform to gain insights into their behavior and optimize the user experience">
         <div class="flex gap-2 justify-between">
-            <div>
-                <div class="min-w-[20rem]">
+            <div class="flex flex-col gap-1">
+                <div class="min-w-[20rem] text-lyx-text-darker">
                     Select two or more events
                 </div>
-                <div v-for="event of eventsCount.data.value">
-                    <UCheckbox @change="onEventCheck(event._id)" :value="enabledEvents.includes(event._id)"
-                        :label="event._id">
-                    </UCheckbox>
+                <div class="flex flex-col gap-1">
+                    <div v-for="event of eventsData.data.value">
+                        <UCheckbox color="secondary" @change="onEventCheck(event._id)"
+                            :value="enabledEvents.includes(event._id)" :label="event._id">
+                        </UCheckbox>
+                    </div>
                 </div>
             </div>
             <div class="grow">

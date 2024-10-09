@@ -4,16 +4,18 @@ import VueMarkdown from 'vue-markdown-render';
 
 definePageMeta({ layout: 'dashboard' });
 
-const { project, isGuest } = useProject();
+const { project } = useProject();
 
-const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/${project.value?._id}/chats_list`, {
-    ...signHeaders()
+const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/chats_list`, {
+    headers: useComputedHeaders({ useSnapshotDates: false })
 });
 
 
 const viewChatsList = computed(() => (chatsList.value || []).toReversed());
 
-const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/ai/${project.value?._id}/chats_remaining`, signHeaders());
+const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/ai/chats_remaining`, {
+    headers: useComputedHeaders({ useSnapshotDates: false })
+});
 
 const currentText = ref<string>("");
 const loading = ref<boolean>(false);
@@ -41,11 +43,15 @@ async function sendMessage() {
 
     try {
 
-        const res = await $fetch(`/api/ai/${project.value._id.toString()}/send_message`, {
+        const res = await $fetch(`/api/ai/send_message`, {
             method: 'POST',
             body: JSON.stringify(body),
-            ...signHeaders({ 'Content-Type': 'application/json' })
+            headers: useComputedHeaders({
+                useSnapshotDates: false,
+                custom: { 'Content-Type': 'application/json' }
+            }).value
         });
+
         currentChatMessages.value.push({ role: 'assistant', content: res.content || 'nocontent', charts: res.charts.map(e => JSON.parse(e)) });
 
         await reloadChatsRemaining();
@@ -82,7 +88,9 @@ async function openChat(chat_id?: string) {
         return;
     }
     currentChatId.value = chat_id;
-    const messages = await $fetch(`/api/ai/${project.value._id}/${chat_id}/get_messages`, signHeaders());
+    const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
+        headers: useComputedHeaders({useSnapshotDates:false}).value
+    });
     if (!messages) return;
 
     currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
@@ -123,7 +131,9 @@ async function deleteChat(chat_id: string) {
         currentChatId.value = "";
         currentChatMessages.value = [];
     }
-    await $fetch(`/api/ai/${project.value._id}/${chat_id}/delete`, signHeaders());
+    await $fetch(`/api/ai/${chat_id}/delete`, {
+        headers: useComputedHeaders({useSnapshotDates:false}).value
+    });
     await reloadChatsList();
 }
 
@@ -143,13 +153,10 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                     <div class="w-[7rem] lg:w-[10rem]">
                         <img :src="'analyst.png'" class="w-full h-full">
                     </div>
-                    <div v-if="!isGuest" class="poppins text-[1.2rem] text-center">
+                    <div class="poppins text-[1.2rem] text-center">
                         Ask me anything about your data
                     </div>
-                    <div v-if="isGuest" class="poppins text-[1.2rem] text-center">
-                        Im not allowed to help guests :c
-                    </div>
-                    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-4 mt-6" v-if="!isGuest">
+                    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-4 mt-6">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
                             class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center whitespace-pre-wrap flex items-center justify-center text-[.9rem]">
                             {{ prompt }}
@@ -201,8 +208,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
                 </div>
 
-                <div v-if="!isGuest"
-                    class="flex gap-2 items-center md:absolute fixed bottom-8 left-0 w-full px-10 xl:px-28">
+                <div class="flex gap-2 items-center md:absolute fixed bottom-8 left-0 w-full px-10 xl:px-28">
                     <input @keydown="onKeyDown" v-model="currentText"
                         class="bg-lyx-widget-light w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
                     <div @click="sendMessage()"

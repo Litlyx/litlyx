@@ -99,7 +99,7 @@ function transformResponse(input: CustomEventsAggregated[]) {
 }
 
 const eventsData = useFetch(`/api/data/events`, {
-    method: 'POST', headers: useComputedHeaders({ limit: 6 }), lazy: true, immediate: false, transform: transformResponse
+     headers: useComputedHeaders({ limit: 6 }), lazy: true, immediate: false, transform: transformResponse
 });
 
 onMounted(() => {

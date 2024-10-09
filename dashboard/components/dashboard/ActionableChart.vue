@@ -241,8 +241,6 @@ const legendClasses = ref<string[]>([
 ])
 
 
-const inLiveDemo = isLiveDemo();
-
 </script>
 
 <template>
@@ -254,7 +252,7 @@ const inLiveDemo = isLiveDemo();
         </template>
 
         <div class="flex gap-6 w-full justify-between">
-            <LyxUiButton type="secondary" :to="inLiveDemo ? '#' : '/analyst'" :disabled="inLiveDemo">
+            <LyxUiButton type="secondary" :to="isLiveDemo ? '#' : '/analyst'" :disabled="isLiveDemo">
                 <div class="flex items-center gap-2 px-10">
                     <i class="far fa-sparkles text-yellow-400"></i>
                     <div class="poppins text-lyx-text"> Ask AI </div>

@@ -15,7 +15,7 @@ const remoteSnapshots = useFetch<TProjectSnapshot[]>('/api/project/snapshots', {
 
 watch(project, async () => {
     await remoteSnapshots.refresh();
-    snapshot.value = isLiveDemo() ? snapshots.value[0] : snapshots.value[1];
+    snapshot.value = isLiveDemo.value ? snapshots.value[0] : snapshots.value[1];
 });
 
 const snapshots = computed(() => {
@@ -61,7 +61,7 @@ const snapshots = computed(() => {
     ];
 })
 
-const snapshot = ref<TProjectSnapshot>(isLiveDemo() ? snapshots.value[0] : snapshots.value[1]);
+const snapshot = ref<TProjectSnapshot>(isLiveDemo.value ? snapshots.value[0] : snapshots.value[1]);
 
 const safeSnapshotDates = computed(() => {
     const from = new Date(snapshot.value?.from || 0).toISOString();

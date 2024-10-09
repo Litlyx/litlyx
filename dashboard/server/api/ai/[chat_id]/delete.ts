@@ -3,13 +3,11 @@ import { AiChatModel } from "@schema/ai/AiChatSchema";
 
 export default defineEventHandler(async event => {
 
-    const project_id = getRequestProjectId(event);
-    if (!project_id) return;
+    const data = await getRequestData(event);
+    if (!data) return;
 
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user);
-    if (!project) return;
-
+    const { project_id } = data;
+    
     if (!event.context.params) return;
     const chat_id = event.context.params['chat_id'];
 

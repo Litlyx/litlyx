@@ -78,7 +78,7 @@ const selectLabelsEvents = [
                     <div class="flex gap-2 md:pt-0 pt-4">
                         <LyxUiButton link="/" type="primary"
                             class="poppins font-semibold text-[.9rem] lg:text-[1.2rem] flex items-center !px-14 py-4">
-                            Get started for free
+                            Go to dashboard
                         </LyxUiButton>
                     </div>
                 </div>
@@ -86,12 +86,13 @@ const selectLabelsEvents = [
 
 
             <div>
-                <DashboardTopCards></DashboardTopCards>
+                <DashboardTopCards :key="refreshKey"></DashboardTopCards>
             </div>
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
-                <DashboardActionableChart></DashboardActionableChart>
+                <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
             </div>
+
 
             <div class="flex gap-6 flex-col xl:flex-row p-6">
 
@@ -115,47 +116,35 @@ const selectLabelsEvents = [
             </div>
 
 
-            <div class="flex w-full justify-center px-6">
-                <div class="flex w-full gap-6 flex-col lg:flex-row">
-                    <div class="flex-1">
-                        <DashboardWebsitesBarCard></DashboardWebsitesBarCard>
-                    </div>
-                    <div class="flex-1">
-                        <DashboardEventsBarCard></DashboardEventsBarCard>
-                    </div>
-                </div>
-            </div>
-
             <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col lg:flex-row">
+                <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardReferrersBarCard></DashboardReferrersBarCard>
+                       <BarCardWebsites :key="refreshKey"></BarCardWebsites>
                     </div>
                     <div class="flex-1">
-                        <DashboardBrowsersBarCard></DashboardBrowsersBarCard>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col lg:flex-row">
-                    <div class="flex-1">
-                        <DashboardOssBarCard></DashboardOssBarCard>
-                    </div>
-                    <div class="flex-1">
-                        <DashboardGeolocationBarCard></DashboardGeolocationBarCard>
+                        <BarCardReferrers :key="refreshKey"></BarCardReferrers>
                     </div>
                 </div>
             </div>
-
 
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <DashboardDevicesBarCard></DashboardDevicesBarCard>
+                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>
                     </div>
                     <div class="flex-1">
-                        <!-- <DashboardGeolocationBarCard></DashboardGeolocationBarCard> -->
+                        <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex w-full justify-center mt-6 px-6">
+                <div class="flex w-full gap-6 flex-col xl:flex-row">
+                    <div class="flex-1">
+                        <BarCardGeolocations :key="refreshKey"></BarCardGeolocations>
+                    </div>
+                    <div class="flex-1">
+                        <BarCardDevices :key="refreshKey"></BarCardDevices>
                     </div>
                 </div>
             </div>
@@ -169,22 +158,18 @@ const selectLabelsEvents = [
 
                     <div class="text-[1.9rem] lg:text-[2.2rem] text-center lg:text-left px-2 lg:px-0">
                         <div class="poppins font-semibold text-accent">
-                            Do you want this KPIs for your website ?
+                            Do you want this analytics for your website ?
                         </div>
                         <div class="poppins font-semibold text-text-sub">
-                            Start now! It's free.
+                            Start now and discover more.
                         </div>
                     </div>
 
                     <div class="flex gap-2 flex-col md:flex-row">
                         <LyxUiButton link="/" type="primary"
-                            class="poppins font-semibold text-[1.1rem] lg:text-[1.6rem] flex items-center !px-14">
-                            Get started
+                            class="poppins font-semibold text-[.9rem] lg:text-[1.2rem] flex items-center !px-14 py-4">
+                            Get started for free
                         </LyxUiButton>
-                        <NuxtLink target="_blank" to="https://cal.com/litlyx/30min"
-                            class="bg-white hover:bg-white/90 text-black px-14 py-4 poppins font-semibold text-[1.1rem] lg:text-[1.6rem] rounded-lg">
-                            Book a demo
-                        </NuxtLink>
                     </div>
 
                 </div>

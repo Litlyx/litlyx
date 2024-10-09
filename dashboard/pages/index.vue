@@ -4,9 +4,17 @@ definePageMeta({ layout: 'dashboard' });
 
 
 const route = useRoute();
-const { project, projectList } = useProject();
+const { project, projectList, projectId } = useProject();
 
 const justLogged = computed(() => route.query.just_logged);
+
+onMounted(() => {
+    if (justLogged.value) {
+        setTimeout(() => {
+            location.href = '/'
+        }, 500)
+    }
+})
 
 const firstInteraction = useFetch<boolean>('/api/project/first_interaction', {
     lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
@@ -50,7 +58,7 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>              
+                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>
                     </div>
                     <div class="flex-1">
                         <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>

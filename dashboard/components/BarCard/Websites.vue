@@ -51,7 +51,7 @@ function goToView() {
             :loading="currentData.pending.value" :label="isPagesView ? 'Top pages' : 'Top Domains'"
             :sub-label="isPagesView ? 'Page' : 'Domains'"
             :desc="isPagesView ? 'Most visited pages' : 'Most visited domains in this project'"
-            :interactive="!isPagesView" :rawButton="!isLiveDemo()" :isDetailView="isPagesView">
+            :interactive="!isPagesView" :rawButton="!isLiveDemo" :isDetailView="isPagesView">
         </BarCardBase>
     </div>
 </template>

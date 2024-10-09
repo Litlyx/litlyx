@@ -62,17 +62,22 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
 
         </div>
 
-        <!-- <div class="flex">
+
+
+        <div class="flex">
             <EventsFunnelChart :key="refreshKey" class="w-full"></EventsFunnelChart>
         </div>
+
+
 
         <div class="flex">
             <EventsUserFlow :key="refreshKey"></EventsUserFlow>
         </div>
 
+
         <div class="flex">
             <EventsMetadataAnalyzer :key="refreshKey"></EventsMetadataAnalyzer>
-        </div> -->
+        </div>
 
 
 

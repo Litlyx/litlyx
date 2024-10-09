@@ -4,13 +4,10 @@ import type OpenAI from "openai";
 import { getChartsInMessage } from "~/server/services/AiService";
 
 export default defineEventHandler(async event => {
+    const data = await getRequestData(event);
+    if (!data) return;
 
-    const project_id = getRequestProjectId(event);
-    if (!project_id) return;
-
-    const user = getRequestUser(event);
-    const project = await getUserProjectFromId(project_id, user);
-    if (!project) return;
+    const { project_id } = data;
 
     if (!event.context.params) return;
     const chat_id = event.context.params['chat_id'];

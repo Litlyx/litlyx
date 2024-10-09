@@ -37,6 +37,6 @@ async function showMore() {
         <BarCardBase @showMore="showMore()" @showRawData="goToView()"
             desc="Most frequent user events triggered in this project" @dataReload="eventsData.refresh()"
             :data="eventsData.data.value || []" :loading="eventsData.pending.value" label="Top Events"
-            sub-label="Events" :rawButton="!isLiveDemo()"></BarCardBase>
+            sub-label="Events" :rawButton="!isLiveDemo"></BarCardBase>
     </div>
 </template>

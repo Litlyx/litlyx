@@ -86,6 +86,9 @@ async function changeProjectName() {
     location.reload();
 }
 
+
+const router = useRouter();
+
 async function deleteProject() {
     if (!project.value) return;
     const sure = confirm(`Are you sure to delete the project ${project.value.name} ?`);
@@ -108,6 +111,7 @@ async function deleteProject() {
         const firstProjectId = projectList.value?.[0]?._id.toString();
         if (firstProjectId) {
             await actions.setActiveProject(firstProjectId);
+            router.push('/')
         }
 
 
@@ -153,14 +157,15 @@ function copyProjectId() {
     <SettingsTemplate :entries="entries" :key="project?.name || 'NONE'">
         <template #pname>
             <div class="flex items-center gap-4">
-                <LyxUiInput class="w-full px-4 py-2" v-model="projectNameInputVal"></LyxUiInput>
+                <LyxUiInput class="w-full px-4 py-2" :disabled="isGuest" v-model="projectNameInputVal"></LyxUiInput>
                 <LyxUiButton v-if="!isGuest" @click="changeProjectName()" :disabled="!canChange" type="primary"> Change
                 </LyxUiButton>
             </div>
         </template>
         <template #api>
             <div class="flex items-center gap-4" v-if="apiKeys && apiKeys.length < 5">
-                <LyxUiInput class="grow px-4 py-2" placeholder="ApiKeyName" v-model="newApiKeyName"></LyxUiInput>
+                <LyxUiInput class="grow px-4 py-2" :disabled="isGuest" placeholder="ApiKeyName" v-model="newApiKeyName">
+                </LyxUiInput>
                 <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length < 3"
                     type="primary">
                     <i class="far fa-plus"></i>
@@ -172,7 +177,7 @@ function copyProjectId() {
                     <div class="flex gap-8 items-center">
                         <div class="grow">Name: {{ apiKey.apiName }}</div>
                         <div>{{ apiKey.apiKey }}</div>
-                        <div class="flex justify-end">
+                        <div class="flex justify-end" v-if="!isGuest">
                             <i class="far fa-trash cursor-pointer" @click="deleteApiKey(apiKey._id.toString())"></i>
                         </div>
                     </div>
