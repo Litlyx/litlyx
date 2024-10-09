@@ -127,23 +127,23 @@ const { visible } = usePricingDrawer();
         <SettingsTemplate v-if="!invoicesPending && !planPending" :entries="entries">
             <template #info>
                 <div v-if="!isGuest">
-                    <div class="flex flex-col gap-2">
-                        <LyxUiInput class="px-2 py-1" placeholder="Address line 1" v-model="currentBillingInfo.line1">
+                    <div class="flex flex-col gap-4">
+                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 1" v-model="currentBillingInfo.line1">
                         </LyxUiInput>
-                        <LyxUiInput class="px-2 py-1" placeholder="Address line 2" v-model="currentBillingInfo.line2">
+                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 2" v-model="currentBillingInfo.line2">
                         </LyxUiInput>
-                        <div class="flex gap-2 w-full">
-                            <LyxUiInput class="px-2 py-1 w-full" placeholder="Country"
+                        <div class="flex gap-4 w-full">
+                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="Country"
                                 v-model="currentBillingInfo.country">
                             </LyxUiInput>
-                            <LyxUiInput class="px-2 py-1 w-full" placeholder="Postal code"
+                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="Postal code"
                                 v-model="currentBillingInfo.postal_code">
                             </LyxUiInput>
                         </div>
-                        <div class="flex gap-2 w-full">
-                            <LyxUiInput class="px-2 py-1 w-full" placeholder="City" v-model="currentBillingInfo.city">
+                        <div class="flex gap-4 w-full">
+                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="City" v-model="currentBillingInfo.city">
                             </LyxUiInput>
-                            <LyxUiInput class="px-2 py-1 w-full" placeholder="State" v-model="currentBillingInfo.state">
+                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="State" v-model="currentBillingInfo.state">
                             </LyxUiInput>
                         </div>
                     </div>
@@ -157,28 +157,22 @@ const { visible } = usePricingDrawer();
             <template #plan>
                 <LyxUiCard v-if="planData" class="flex flex-col w-full">
                     <div class="flex flex-col gap-6 px-8 grow">
-                        <div class="flex justify-between flex-col sm:flex-row">
+                        <div class="flex justify-between items-center flex-col sm:flex-row">
                             <div class="flex flex-col">
                                 <div class="flex gap-3 items-center">
                                     <div class="poppins font-semibold text-[1.1rem]">
                                         {{ planData.premium ? 'Premium plan' : 'Basic plan' }}
                                     </div>
                                     <div
-                                        class="flex lato text-[.7rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-lg">
+                                        class="flex lato text-[.7rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-sm">
                                         {{ planData.premium ? getPremiumName(planData.premium_type) : 'FREE' }}
                                     </div>
-                                </div>
-                                <div class="poppins text-text-sub text-[.9rem]">
-                                    Our free plan for testing the product.
                                 </div>
                             </div>
                             <div class="flex items-center gap-1">
                                 <div class="poppins font-semibold text-[2rem]"> €
                                     {{ getPremiumPrice(planData.premium_type) }} </div>
                                 <div class="poppins text-text-sub mt-2"> per month </div>
-                                <div class="flex items-center ml-2">
-                                    <i class="far fa-info-circle text-[.8rem]"></i>
-                                </div>
                             </div>
                         </div>
                         <div class="flex flex-col">
@@ -201,11 +195,9 @@ const { visible } = usePricingDrawer();
                             <div class="poppins"> Expire date:</div>
                             <div> {{ prettyExpireDate }}</div>
                         </div>
-                        <div v-if="!isGuest" @click="visible = true"
-                            class="cursor-pointer flex items-center gap-2 text-[.9rem] text-white font-semibold bg-accent px-4 py-1 rounded-lg drop-shadow-[0_0_8px_#000000]">
-                            <div class="poppins"> Upgrade plan </div>
-                            <i class="fas fa-arrow-up-right"></i>
-                        </div>
+                        <LyxUiButton v-if="!isGuest" @click="visible = true" type="primary">
+                            Upgrade plan
+                        </LyxUiButton>
                     </div>
                 </LyxUiCard>
             </template>

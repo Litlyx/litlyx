@@ -15,7 +15,7 @@ export type PricingCardProp = {
 
 const props = defineProps<{ datas: PricingCardProp[], defaultIndex?: number }>();
 
-const activeProject = useActiveProject();
+const { project } = useProject();
 
 const currentIndex = ref<number>(props.defaultIndex || 0);
 
@@ -24,8 +24,13 @@ const data = computed(() => {
 })
 
 async function onUpgradeClick() {
-    const res = await $fetch<string>(`/api/pay/${activeProject.value?._id.toString()}/create`, {
-        ...signHeaders({ 'content-type': 'application/json' }),
+    const res = await $fetch<string>(`/api/pay/create`, {
+        headers: useComputedHeaders({
+            useSnapshotDates: false,
+            custom: {
+                'content-type': 'application/json'
+            }
+        }).value,
         method: 'POST',
         body: JSON.stringify({ planId: data.value.planId })
     })
@@ -67,7 +72,10 @@ async function onUpgradeClick() {
                 }" :min="0" :max="datas.length - 1" v-model="currentIndex">
                 </URange>
             </div>
-            <div class="poppins" v-for="sub of data.subs"> {{ sub }} </div>
+            <div :class="{ '!text-[.8rem] !text-lyx-text-darker': sub.includes('€') }" class="poppins text-[.9rem]"
+                v-for="sub of data.subs">
+                {{ sub }}
+            </div>
         </div>
 
         <div class="sep bg-[#262626] h-[1px] my-8"></div>
@@ -82,20 +90,27 @@ async function onUpgradeClick() {
         </div>
 
         <div class="mt-10 flex">
-            <div class="w-full" v-if="data.planId > -1">
-                <div @click="onUpgradeClick()" v-if="!data.active && !data.isDowngrade"
-                    class="cursor-pointer text-[1rem] font-semibold bg-[#3a3af5] rounded-md py-2 text-center">
+
+            <div class="w-full flex" v-if="data.planId > -1">
+
+
+                <LyxUiButton class="rounded-md py-2 w-full text-center" type="primary" @click="onUpgradeClick()"
+                    v-if="!data.active && !data.isDowngrade">
                     Upgrade
-                </div>
-                <div @click="onUpgradeClick()" v-if="!data.active && data.isDowngrade"
-                    class="w-full cursor-pointer text-[1rem] font-semibold bg-[#1f1f22] text-red-400 rounded-md py-2 text-center">
+                </LyxUiButton>
+
+                <LyxUiButton class="rounded-md py-2 w-full text-center" type="danger" @click="onUpgradeClick()"
+                    v-if="!data.active && data.isDowngrade">
                     Downgrade
-                </div>
+                </LyxUiButton>
+
             </div>
-            <NuxtLink v-if="data.planId === -1" :to="data.link || 'https://dashboard.litlyx.com'"
-                class="bg-[#222A42] cursor-pointer outline outline-[1px] outline-[#5680F8] w-full !rounded-md text-center text-[.9rem] !py-2 ">
+
+            <LyxUiButton v-if="data.planId === -1" :to="data.link || 'https://dashboard.litlyx.com'"
+                class="rounded-md py-2 w-full text-center" type="primary">
                 {{ data.cta }}
-            </NuxtLink>
+            </LyxUiButton>
+
         </div>
 
     </div>

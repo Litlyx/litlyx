@@ -15,7 +15,7 @@ function getPricingsData() {
             price: '€0 / mo',
             subs: [
                 'Up to 5000 visits/events per month',
-                'CPM 0€ per visit/event'
+
             ],
             features: [
                 'Email support',
@@ -274,7 +274,7 @@ async function onLifetimeUpgradeClick() {
                 </div>
             </div>
             <div class="mt-2">
-                <div class="rounded-lg px-10 py-3 bg-[#303030]">
+                <div class="rounded-lg px-10 py-3 bg-[#151515]">
                     <a href="mailto:help@litlyx.com" class="poppins text-[1.3rem]">
                         help@litlyx.com
                     </a>

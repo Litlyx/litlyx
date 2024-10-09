@@ -95,11 +95,18 @@ function goToUpgrade() {
                 <div> It can take a few minutes </div>
             </div>
             <div class="w-[15rem] flex flex-col gap-0">
-                <USelectMenu v-model="selectedTimeFrom" :options="options"></USelectMenu>
+                <USelectMenu :uiMenu="{
+                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
+                    base: '!bg-lyx-widget',
+                    option: {
+                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
+                        active: '!bg-lyx-widget-lighter'
+                    }
+                }" v-model="selectedTimeFrom" :options="options"></USelectMenu>
             </div>
 
             <div v-if="isPremium" @click="downloadCSV()"
-                class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
+                class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-1 rounded-lg">
                 Download CSV
             </div>
 
