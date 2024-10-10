@@ -43,7 +43,7 @@ You can install Litlyx using `npm`, `pnpm`, `yarn` or any modern package manager
 npm i litlyx-js
 ```
 
-Litlyx natively works with all JavaScript / TypeScript frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a plug-in. Litlyx also works in serverless enviroments with Cloud (or Edge) Functions.
+Litlyx natively works with all JavaScript / TypeScript frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a plug-in. Litlyx also works in serverless environments with Cloud (or Edge) Functions.
 
 <p align="center">
   <img src="assets/tech.png" />
