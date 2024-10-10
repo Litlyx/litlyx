@@ -1,6 +1,6 @@
 
 
-const onlineUsers = await useFetch<number>(`/api/data/live_users`, {
+const onlineUsers = useFetch<number>(`/api/data/live_users`, {
     headers: useComputedHeaders({ useSnapshotDates: false }), immediate: false
 });
 
