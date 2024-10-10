@@ -6,7 +6,7 @@ import { LIMIT_MAX_EMAIL } from './email_templates/LimitMaxEmail';
 import { PURCHASE_EMAIL } from './email_templates/PurchaseEmail';
 import { ANOMALY_VISITS_EVENTS_EMAIL } from './email_templates/AnomalyUsageEmail';
 import { ANOMALY_DOMAIN_EMAIL } from './email_templates/AnomalyDomainEmail';
-
+import { CONFIRM_EMAIL } from './email_templates/ConfirmEmail';
 
 class EmailService {
 
@@ -141,6 +141,24 @@ class EmailService {
                 .replace(/\[DNS_ENTRIES\]/,
                     domains.map(e => (`<li> ${e} </li>`)).join('<br>')
                 )
+                .toString();
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+
+    async sendConfirmEmail(target: string, link: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "Confirm your email";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = CONFIRM_EMAIL
+                .replace(/\[CONFIRM_LINK\]/, link)
                 .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;

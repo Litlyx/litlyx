@@ -35,13 +35,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     if (!to.name) return;
 
     const { user } = useLoggedUser();
-    
+
     await handleUserLogin(user.value);
 
     if (user.value?.logged) {
-        if (to.path == '/login') return '/';
+        if (to.path == '/login' || to.path == '/register') return '/';
     } else {
-        if (to.path != '/login' && to.path != '/live_demo') return '/login';
+        if (
+            to.path != '/login' &&
+            to.path != '/register' &&
+            to.path != '/live_demo' &&
+            to.path != '/jwt_login'
+        ) {
+            console.log('REDIRECT TO LOGIN', to.path);
+            return '/login';
+        }
     }
 
 })

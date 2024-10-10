@@ -20,9 +20,9 @@ async function loginWithoutAuth() {
 
         const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
         const loggedUser = useLoggedUser();
-        loggedUser.value = user;
+        loggedUser.user = user;
 
-        console.log('LOGIN DONE - USER', loggedUser.value);
+        console.log('LOGIN DONE - USER', loggedUser.user);
 
         const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
 
@@ -58,9 +58,9 @@ async function handleOnSuccess(response: any) {
 
         const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
         const loggedUser = useLoggedUser();
-        loggedUser.value = user;
+        loggedUser.user = user;
 
-        console.log('LOGIN DONE - USER', loggedUser.value);
+        console.log('LOGIN DONE - USER', loggedUser.user);
 
         const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
 
@@ -107,6 +107,48 @@ onMounted(() => {
     }
 })
 
+const isEmailLogin = ref<boolean>(false);
+const email = ref<string>("");
+const password = ref<string>("");
+
+function goBackToEmailLogin() {
+    isEmailLogin.value = false;
+    email.value = '';
+    password.value = '';
+}
+
+async function signInWithCredentials() {
+
+    try {
+        const result = await $fetch<{error:true, message:string} | {error: false, access_token:string}>('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email.value, password: password.value })
+        })
+
+        if (result.error) return alert(result.message);
+
+        setToken(result.access_token);
+
+        const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
+        const loggedUser = useLoggedUser();
+        loggedUser.user = user;
+
+        console.log('LOGIN DONE - USER', loggedUser.user);
+
+        const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
+
+        if (isFirstTime === true) {
+            router.push('/project_creation?just_logged=true');
+        } else {
+            router.push('/?just_logged=true');
+        }
+
+
+    } catch (ex) {
+        alert('Something went wrong.');
+    }
+}
 
 </script>
 
@@ -126,7 +168,7 @@ onMounted(() => {
                 </div>
 
                 <div class="text-text text-[2.2rem] font-bold poppins">
-                    Sign in with
+                    Sign in
                 </div>
 
                 <div class="text-text/80 text-[1.2rem] text-center w-[70%] poppins mt-2">
@@ -141,23 +183,52 @@ onMounted(() => {
 
                 <div class="mt-12">
 
+                    <div v-if="!isNoAuth && isEmailLogin" class="flex flex-col gap-2">
 
-                    <div v-if="!isNoAuth" class="flex flex-col gap-2">
+
+                        <div class="flex flex-col gap-4 z-[100] w-[20vw] min-w-[20rem]">
+                            <LyxUiInput class="px-3 py-2" placeholder="Email" v-model="email"></LyxUiInput>
+                            <LyxUiInput class="px-3 py-2" placeholder="Password" v-model="password" type="password">
+                            </LyxUiInput>
+                        </div>
+
+                        <div class="flex justify-center mt-4 z-[100]">
+                            <LyxUiButton @click="signInWithCredentials()" class="text-center" type="primary">
+                                Sign in
+                            </LyxUiButton>
+                        </div>
+
+                        <div @click="goBackToEmailLogin()"
+                            class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[100]">
+                            Go back
+                        </div>
+
+
+                    </div>
+
+                    <div v-if="!isNoAuth && !isEmailLogin" class="flex flex-col gap-2">
+
                         <div @click="login"
-                            class="hover:bg-accent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                            class="hover:bg-lyx-primary cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
                             <div class="flex items-center">
                                 <i class="fab fa-google"></i>
                             </div>
                             Continue with Google
                         </div>
 
-                        <div
-                            class=" opacity-35 cursor-not-allowed flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                        <div @click="isEmailLogin = true"
+                            class="hover:bg-[#262626] cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
                             <div class="flex items-center">
-                                <i class="fab fa-github"></i>
+                                <i class="far fa-envelope"></i>
                             </div>
-                            Continue with GitHub
+                            Continue with Email
                         </div>
+
+
+                        <RouterLink tag="div" to="/register" class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[100]">
+                            You don't have an account ? Sign up
+                        </RouterLink>
+
                     </div>
 
                     <div v-if="isNoAuth" @click="loginWithoutAuth"
@@ -170,7 +241,7 @@ onMounted(() => {
 
                 </div>
 
-                <div class="text-[.9rem] poppins mt-12 text-text-sub text-center relative z-[2]">
+                <div class="text-[.9rem] poppins mt-20 text-text-sub text-center relative z-[2]">
                     By continuing you are accepting
                     <br>
                     our

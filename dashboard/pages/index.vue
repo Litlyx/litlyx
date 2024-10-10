@@ -7,13 +7,22 @@ const route = useRoute();
 const { project, projectList, projectId } = useProject();
 
 const justLogged = computed(() => route.query.just_logged);
+const jwtLogin = computed(() => route.query.jwt_login as string);
 
-onMounted(() => {
-    if (justLogged.value) {
-        setTimeout(() => {
-            location.href = '/'
-        }, 500)
+const { token, setToken } = useAccessToken();
+
+onMounted(async () => {
+
+    if (jwtLogin.value) {
+        setToken(jwtLogin.value);
+        const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
+        const loggedUser = useLoggedUser();
+        loggedUser.user = user;
+        // setTimeout(() => {            location.reload();        }, 100);
     }
+
+    if (justLogged.value) { setTimeout(() => { location.href = '/' }, 500) }
+
 })
 
 const firstInteraction = useFetch<boolean>('/api/project/first_interaction', {
