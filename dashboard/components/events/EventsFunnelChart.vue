@@ -111,7 +111,7 @@ onMounted(async () => {
 });
 
 const eventsData = useFetch(`/api/data/events`, {
-    headers: useComputedHeaders(), lazy: true, immediate: false
+    headers: useComputedHeaders(), lazy: true
 });
 
 const enabledEvents = ref<string[]>([]);

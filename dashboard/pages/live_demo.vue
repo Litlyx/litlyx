@@ -89,7 +89,7 @@ const selectLabelsEvents = [
                 <DashboardTopCards :key="refreshKey"></DashboardTopCards>
             </div>
 
-            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
+            <div class="mt-6 px-6 hidden lg:flex gap-6 flex-col 2xl:flex-row w-full">
                 <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
             </div>
 
