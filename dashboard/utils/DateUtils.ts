@@ -62,7 +62,7 @@ export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: 
 
     const allKeys = !options.advanced ? [] : Array.from(new Set(result.data.map((e: any) => e[options.advancedGroupKey])).values());
 
-console.log({allKeys})
+    console.log({ allKeys, allDates })
 
     const fixed: any[] = allDates.map(matchDate => {
 
@@ -102,9 +102,9 @@ console.log({allKeys})
                 if (slice == 'hour') {
                     return `${e._id.getHours().toString().padStart(2, '0')}:00`
                 } else if (slice == 'day') {
-                    return `${e._id.getDate().toString().padStart(2, '0')}/${e._id.getMonth().toString().padStart(2, '0')}`
+                    return `${e._id.getDate().toString().padStart(2, '0')}/${(e._id.getMonth() + 1).toString().padStart(2, '0')}`
                 } else if (slice == 'month') {
-                    return `${e._id.getMonth().toString().padStart(2, '0')}/${e._id.getFullYear().toString()}`
+                    return `${(e._id.getMonth() + 1).toString().padStart(2, '0')}/${e._id.getFullYear().toString()}`
                 } else if (slice == 'year') {
                     return `${e._id.getFullYear().toString()}`
                 } else {

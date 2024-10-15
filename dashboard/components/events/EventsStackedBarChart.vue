@@ -14,10 +14,9 @@ function transformResponse(input: { _id: string, name: string, count: number }[]
         data: input,
         from: input[0]._id,
         to: safeSnapshotDates.value.to
-    }, slice.value, {
-        advanced: true,
-        advancedGroupKey: 'name'
-    });
+    },
+        slice.value,
+        { advanced: true, advancedGroupKey: 'name' });
 
     const parsedDatasets: any[] = [];
 
@@ -62,6 +61,7 @@ function transformResponse(input: { _id: string, name: string, count: number }[]
         datasets: parsedDatasets,
         labels: fixed.labels
     }
+
 }
 
 const errorData = ref<{ errored: boolean, text: string }>({
@@ -83,7 +83,7 @@ function onResponse(e: any) {
 const eventsStackedData = useFetch(`/api/timeline/events_stacked`, {
     lazy: true, immediate: false,
     transform: transformResponse,
-    headers: useComputedHeaders({slice}),
+    headers: useComputedHeaders({ slice }),
     onResponseError,
     onResponse
 });

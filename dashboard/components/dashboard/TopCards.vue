@@ -21,14 +21,24 @@ const chartSlice = computed(() => {
 
 
 function transformResponse(input: { _id: string, count: number }[]) {
+
     const data = input.map(e => e.count || 0);
+
     const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, chartSlice.value));
+
     const pool = [...input.map(e => e.count || 0)];
-    pool.pop();
+
     const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
-    const diffPercent: number = (100 / avg * (input.at(-1)?.count || 0)) - 100;
+
+    const targets = input.slice(Math.floor(input.length / 4 * 3));
+    const targetAvg = targets.reduce((a, e) => a + e.count, 0) / targets.length;
+
+    const diffPercent: number = (100 / avg * (targetAvg)) - 100;
+
     const trend = Math.max(Math.min(diffPercent, 99), -99);
+
     return { data, labels, trend }
+
 }
 
 const visitsData = useFetch('/api/timeline/visits', {

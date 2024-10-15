@@ -29,7 +29,7 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
                 </div>
             </div>
             <div>
-                <LyxUiButton type="secondary" to="https://docs.litlyx.com/custom-events">
+                <LyxUiButton type="secondary" target="_blank" to="https://docs.litlyx.com/custom-events">
                     Trigger your first event
                 </LyxUiButton>
             </div>
