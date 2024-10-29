@@ -148,15 +148,15 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
             <div class="flex-[5] py-8 flex h-full flex-col items-center relative overflow-y-hidden">
 
-                <div class="flex flex-col items-center lg:mt-[20vh] px-8 lg:px-28"
+                <div class="flex flex-col items-center xl:mt-[20vh] px-8 xl:px-28"
                     v-if="currentChatMessages.length == 0">
-                    <div class="w-[7rem] lg:w-[10rem]">
+                    <div class="w-[7rem] xl:w-[10rem]">
                         <img :src="'analyst.png'" class="w-full h-full">
                     </div>
                     <div class="poppins text-[1.2rem] text-center">
                         Ask me anything about your data
                     </div>
-                    <div class="flex flex-col lg:grid lg:grid-cols-2 gap-4 mt-6">
+                    <div class="flex flex-col xl:grid xl:grid-cols-2 gap-4 mt-6">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
                             class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center whitespace-pre-wrap flex items-center justify-center text-[.9rem]">
                             {{ prompt }}
@@ -216,7 +216,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                         <i class="far fa-arrow-up"></i>
                     </div>
                     <div @click="menuOpen = !menuOpen"
-                        class="bg-lyx-widget-light lg:hidden hhover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-lyx-widget-light xl:hidden hhover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-message"></i>
                     </div>
                 </div>
@@ -225,12 +225,12 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
 
             <div :class="{
-                'absolute': menuOpen,
-                'hidden lg:flex': !menuOpen
+                'absolute top-0 left-0 w-full': menuOpen,
+                'hidden xl:flex': !menuOpen
             }" class="flex-[2] bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
 
                 <div class="gap-2 flex flex-col">
-                    <div class="lg:hidden absolute right-4 top-4 text-[1.5rem]">
+                    <div class="xl:hidden absolute right-6 top-2 text-[1.5rem]">
                         <i @click="menuOpen = false" class="fas fa-close cursor-pointer"></i>
                     </div>
                 </div>

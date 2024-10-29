@@ -2,8 +2,6 @@
 
 definePageMeta({ layout: 'none' });
 
-const activeProject = useActiveProject();
-
 </script>
 
 

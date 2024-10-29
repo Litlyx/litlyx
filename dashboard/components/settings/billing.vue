@@ -164,7 +164,7 @@ const { visible } = usePricingDrawer();
                                         {{ planData.premium ? 'Premium plan' : 'Basic plan' }}
                                     </div>
                                     <div
-                                        class="flex lato text-[.7rem] bg-accent/25 border-accent/40 border-[1px] px-[.6rem] rounded-sm">
+                                        class="flex lato text-[.7rem] bg-transparent border-[#262626] border-[1px] px-[.6rem] rounded-sm">
                                         {{ planData.premium ? getPremiumName(planData.premium_type) : 'FREE' }}
                                     </div>
                                 </div>
@@ -190,7 +190,7 @@ const { visible } = usePricingDrawer();
                     </div>
                     <div class="my-4 w-full bg-gray-400/30 h-[1px]">
                     </div>
-                    <div class="flex justify-between px-8 flex-col sm:flex-row">
+                    <div class="flex justify-between px-8 flex-col lg:flex-row gap-2 lg:gap-0 items-center">
                         <div class="flex gap-2 text-text-sub text-[.9rem]">
                             <div class="poppins"> Expire date:</div>
                             <div> {{ prettyExpireDate }}</div>

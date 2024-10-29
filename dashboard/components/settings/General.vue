@@ -198,11 +198,16 @@ function copyProjectId() {
                     <script defer data-project="${project?._id}"
                         src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>` }}
                 </div>
-                <div><i class="far fa-copy" @click="copyScript()"></i></div>
+                <div class="hidden lg:flex"><i class="far fa-copy" @click="copyScript()"></i></div>
             </LyxUiCard>
+            <div class="flex justify-end w-full">
+            <LyxUiButton type="outline" class="flex lg:hidden mt-4">
+                Copy script
+            </LyxUiButton>
+        </div>
         </template>
         <template #pdelete>
-            <div class="flex justify-end" v-if="!isGuest">
+            <div class="flex lg:justify-end" v-if="!isGuest">
                 <LyxUiButton type="danger" @click="deleteProject()">
                     Delete project
                 </LyxUiButton>

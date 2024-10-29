@@ -47,7 +47,7 @@ async function onUpgradeClick() {
 
         <div class="flex flex-col gap-3 text-center pt-3">
             <div v-if="data.active"
-                class="absolute right-6 top-3 poppins text-[.75rem] bg-[#222A42] outline outline-[1px] outline-[#5680F8] px-3 py-[.1rem] rounded-sm">
+                class="absolute right-6 top-3 poppins text-[.75rem] bg-transparent border-[#262626] border-solid border-[1px] px-3 py-[.1rem] rounded-sm">
                 Active
             </div>
             <div v-if="!data.active && data.title === 'Growth'"

@@ -251,7 +251,7 @@ const legendClasses = ref<string[]>([
             </SelectButton>
         </template>
 
-        <div class="flex gap-6 w-full justify-between">
+        <div class="flex gap-6 w-full justify-between lg:flex-row flex-col">
             <LyxUiButton type="secondary" :to="isLiveDemo ? '#' : '/analyst'" :disabled="isLiveDemo">
                 <div class="flex items-center gap-2 px-10">
                     <i class="far fa-sparkles text-yellow-400"></i>
