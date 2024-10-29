@@ -35,7 +35,7 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
 
 <template>
 
-    <div class="dashboard w-full h-full overflow-y-auto pb-20 md:pt-4 lg:pt-0">
+    <div class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
 
         <div v-if="showDashboard">
 

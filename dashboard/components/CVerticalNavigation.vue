@@ -149,6 +149,15 @@ const pricingDrawer = usePricingDrawer();
                     </div>
                 </LyxUiButton>
 
+                <LyxUiButton v-if="projectList && (projectList.length >= (maxProjects || 1))"
+                    type="outlined" class="w-full py-1 mt-2 text-[.7rem]">
+                    <div class="flex items-center gap-2 justify-center">
+                        <div><i class="text-lyx-text-darker far fa-lock"></i></div>
+                        <div class="text-lyx-text-darker"> Projects limit reached </div>
+                    </div>
+                </LyxUiButton>
+
+
             </div>
 
 
@@ -293,7 +302,7 @@ const pricingDrawer = usePricingDrawer();
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-dev"></i>
                         </NuxtLink> -->
-                        
+
                         <NuxtLink to="/admin" v-if="userRoles.isAdmin.value"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fas fa-cat"></i>

@@ -225,7 +225,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
 
             <div :class="{
-                'absolute': menuOpen,
+                'absolute top-0 left-0 w-full': menuOpen,
                 'hidden xl:flex': !menuOpen
             }" class="flex-[2] bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
 

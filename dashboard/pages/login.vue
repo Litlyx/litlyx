@@ -159,7 +159,7 @@ async function signInWithCredentials() {
 
         <div class="flex h-full">
 
-            <div class="flex-1 flex flex-col items-center pt-20 lg:pt-[22vh]">
+            <div class="flex-1 flex flex-col items-center pt-20 xl:pt-[22vh]">
 
                 <div class="rotating-thing absolute top-0"></div>
 
@@ -171,9 +171,8 @@ async function signInWithCredentials() {
                     Sign in
                 </div>
 
-                <div class="text-text/80 text-[1.2rem] text-center w-[70%] poppins mt-2">
+                <div class="text-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
                     Track web analytics and custom events
-                    <br>
                     with extreme simplicity in under 30 sec.
                     <br>
                     <!-- <div class="font-bold poppins mt-4">
@@ -221,7 +220,7 @@ async function signInWithCredentials() {
                             <div class="flex items-center">
                                 <i class="far fa-envelope"></i>
                             </div>
-                            Continue with Email
+                            Sign in with Email
                         </div>
 
 
