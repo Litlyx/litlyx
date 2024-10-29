@@ -104,7 +104,7 @@ const canSearch = computed(() => {
                         </USelectMenu>
                     </div>
 
-                    <div class="text-lyx-text-darker poppins mt-4 flex items-center gap-4">
+                    <div class="text-lyx-text-darker poppins mt-4 flex items-center gap-4 lg:flex-row flex-col">
                         <div class="w-[10rem]">
                             Search results: {{ metadataFieldGroupedFiltered.length }}
                         </div>
@@ -119,13 +119,13 @@ const canSearch = computed(() => {
                         </div>
                     </div>
 
-                    <div class="flex flex-wrap gap-2 mt-4">
+                    <div class="flex flex-wrap gap-2 lg:mt-4 mt-10">
 
                         <div class="bg-lyx-widget-light text-lyx-text-dark px-3 py-2 rounded-md w-fit"
                             v-for="item of metadataFieldGroupedFiltered">
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 items-center">
                                 <div> {{ item._id || 'OLD_EVENTS' }} </div>
-                                <div> {{ item.count }} </div>
+                                <div class="px-1"> {{ item.count }} </div>
                             </div>
                         </div>
 

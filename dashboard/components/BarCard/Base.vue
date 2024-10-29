@@ -125,11 +125,10 @@ function openExternalLink(link: string) {
                             </div>
                         </div>
                     </div>
-
                     <div class="text-text font-semibold text-[.9rem] md:text-[1rem] manrope"> {{
                         formatNumberK(element.count) }} </div>
                 </div>
-                <div v-if="props.data.length == 0" class="flex justify-center text-text-sub font-bold text-[1.1rem]">
+                <div v-if="props.data.length == 0" class="flex justify-center text-text-sub font-light text-[1.1rem]">
                     No data yet
                 </div>
             </div>

@@ -16,10 +16,10 @@ const props = defineProps<SettingsTemplateProp>();
 
 
 <template>
-    <div class="mt-10 px-4">
+    <div class="mt-10 px-4 xl:pb-0 pb-[10rem]">
         <div v-for="(entry, index) of props.entries" class="flex flex-col">
-            <div class="flex">
-                <div class="flex-[2]">
+            <div class="flex xl:flex-row flex-col gap-4 xl:gap-0">
+                <div class="xl:flex-[2]">
                     <div class="poppins font-medium text-lyx-text">
                         {{ entry.title }}
                     </div>
@@ -27,7 +27,7 @@ const props = defineProps<SettingsTemplateProp>();
                         {{ entry.text }}
                     </div>
                 </div>
-                <div class="flex-[3]">
+                <div class="xl:flex-[3]">
                     <slot :name="entry.id"></slot>
                 </div>
             </div>

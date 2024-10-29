@@ -19,7 +19,7 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
     <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
 
 
-        <LyxUiCard class="w-full flex justify-between items-center">
+        <LyxUiCard class="w-full flex justify-between items-center lg:flex-row flex-col gap-6 lg:gap-0">
             <div class="flex flex-col gap-1">
                 <div>
                     Total events: {{ eventsData.data.value?.[0]?.count || '0' }}
@@ -40,9 +40,9 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
             <BarCardEvents :key="refreshKey"></BarCardEvents>
         </div>
 
-        <div class="flex gap-6 flex-col xl:flex-row h-full">
+        <div class="flex gap-6 flex-col xl:flex-row xl:h-full">
 
-            <CardTitled :key="refreshKey" class="p-4 flex-[4] w-full h-full" title="Events"
+            <CardTitled :key="refreshKey" class="p-4 xl:flex-[4] w-full h-full" title="Events"
                 sub="Events stacked bar chart.">
                 <template #header>
                     <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
@@ -55,7 +55,7 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
                 </div>
             </CardTitled>
 
-            <CardTitled :key="refreshKey" class="p-4 flex-[2] w-full h-full" title="Top events"
+            <CardTitled :key="refreshKey" class="p-4 xl:flex-[2] w-full h-full" title="Top events"
                 sub="Displays key events.">
                 <DashboardEventsChart class="w-full"> </DashboardEventsChart>
             </CardTitled>

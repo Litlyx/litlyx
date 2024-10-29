@@ -140,7 +140,7 @@ async function onEventCheck(eventName: string) {
 <template>
     <CardTitled title="Funnel"
         sub="Monitor and analyze the actions your users are performing on your platform to gain insights into their behavior and optimize the user experience">
-        <div class="flex gap-2 justify-between">
+        <div class="flex gap-2 justify-between lg:flex-row flex-col">
             <div class="flex flex-col gap-1">
                 <div class="min-w-[20rem] text-lyx-text-darker">
                     Select two or more events

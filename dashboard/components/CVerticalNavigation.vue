@@ -203,12 +203,12 @@ const pricingDrawer = usePricingDrawer();
                 <div v-if="snapshot" class="flex flex-col text-[.7rem] mt-2">
                     <div class="flex gap-1 items-center justify-center text-lyx-text-dark">
                         <div class="poppins">
-                            {{ new Date(snapshot.from).toLocaleString('it-IT').split(',')[0].trim().replace(/\//g, '-')
+                            {{ new Date(snapshot.from).toLocaleString().split(',')[0].trim()
                             }}
                         </div>
                         <div class="poppins"> to </div>
                         <div class="poppins">
-                            {{ new Date(snapshot.to).toLocaleString('it-IT').split(',')[0].trim().replace(/\//g, '-') }}
+                            {{ new Date(snapshot.to).toLocaleString().split(',')[0].trim() }}
                         </div>
                     </div>
 
@@ -243,7 +243,7 @@ const pricingDrawer = usePricingDrawer();
 
                     <div v-for="entry of section.entries" :class="{ 'grow flex items-end': entry.grow }">
 
-                        <div v-if="(!entry.adminOnly || (userRoles.isAdmin && !isAdminHidden))"
+                        <div v-if="(!entry.adminOnly || (userRoles.isAdmin.value && !isAdminHidden))"
                             class="bg-lyx-background w-full cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
                             :class="{
                                 '!text-lyx-text-darker pointer-events-none': entry.disabled,
@@ -259,7 +259,7 @@ const pricingDrawer = usePricingDrawer();
                                 <div class="manrope grow">
                                     {{ entry.label }}
                                 </div>
-                                <div v-if="entry.premiumOnly && !userRoles.isPremium" class="flex items-center">
+                                <div v-if="entry.premiumOnly && !userRoles.isPremium.value" class="flex items-center">
                                     <i class="fal fa-lock"></i>
                                 </div>
                             </NuxtLink>
@@ -293,7 +293,8 @@ const pricingDrawer = usePricingDrawer();
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fab fa-dev"></i>
                         </NuxtLink> -->
-                        <NuxtLink to="/admin" v-if="userRoles.isAdmin"
+                        
+                        <NuxtLink to="/admin" v-if="userRoles.isAdmin.value"
                             class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
                             <i class="fas fa-cat"></i>
                         </NuxtLink>

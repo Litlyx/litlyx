@@ -62,7 +62,13 @@ async function analyzeEvent() {
                 </div>
             </div>
 
-            <div v-if="analyzing"> Analyzing... </div>
+            <div v-if="analyzing">
+                <div
+                    class="backdrop-blur-[1px] z-[20] w-full h-full flex items-center justify-center font-bold rockmann">
+                    <i
+                        class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+                </div>
+            </div>
 
             <div class="flex flex-col gap-2" v-if="userFlowData">
                 <div class="flex gap-4 items-center bg-bg py-2 px-2 bg-lyx-widget-light rounded-lg"
