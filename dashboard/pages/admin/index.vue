@@ -138,7 +138,7 @@ async function resetCount(project_id: string) {
         <div @click="onHideClicked()" v-if="!isAdminHidden"
             class="bg-menu hover:bg-menu/70 cursor-pointer flex gap-2 rounded-lg w-fit px-6 py-4 text-text-sub">
             <div class="text-text-sub/90"> <i class="far fa-eye"></i> </div>
-            <div> Hide </div>
+            <div> Hide from the bar </div>
         </div>
 
 
