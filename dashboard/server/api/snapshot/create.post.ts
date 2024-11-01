@@ -1,9 +1,11 @@
 import { ProjectModel } from "@schema/ProjectSchema";
 import { ProjectSnapshotModel } from "@schema/ProjectSnapshot";
-import { UserSettingsModel } from "@schema/UserSettings";
 
 
 export default defineEventHandler(async event => {
+
+    const data = await getRequestData(event, { requireSchema: false, allowGuests: true, requireRange: false });
+    if (!data) return;
 
     const body = await readBody(event);
 
@@ -19,13 +21,8 @@ export default defineEventHandler(async event => {
     const userData = getRequestUser(event);
     if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
 
-    const userSettings = await UserSettingsModel.findOne({ user_id: userData.id }, { active_project_id: 1 });
 
-    if (!userSettings) return setResponseStatus(event, 500, 'Unkwnown error');
-
-    const currentProjectId = userSettings.active_project_id;
-
-    const project = await ProjectModel.findById(currentProjectId);
+    const project = await ProjectModel.findById(data.project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
 
@@ -34,7 +31,7 @@ export default defineEventHandler(async event => {
         from: new Date(from),
         to: new Date(to),
         color: snapshotColor,
-        project_id: currentProjectId
+        project_id: data.project_id
     });
 
     return newSnapshot.id;

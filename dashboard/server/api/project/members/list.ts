@@ -1,8 +1,7 @@
 import { ProjectModel } from "@schema/ProjectSchema";
 import { TeamMemberModel } from "@schema/TeamMemberSchema";
 import { UserModel } from "@schema/UserSchema";
-import { UserSettingsModel } from "@schema/UserSettings";
-import StripeService from '~/server/services/StripeService';
+
 
 export default defineEventHandler(async event => {
 

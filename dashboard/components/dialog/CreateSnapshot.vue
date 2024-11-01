@@ -42,7 +42,7 @@ const { createAlert } = useAlert()
 async function confirmSnapshot() {
     await $fetch("/api/snapshot/create", {
         method: 'POST',
-        ...signHeaders({ 'Content-Type': 'application/json' }),
+        headers: useComputedHeaders({ useSnapshotDates: false }).value,
         body: JSON.stringify({
             name: snapshotName.value,
             color: currentColor.value,

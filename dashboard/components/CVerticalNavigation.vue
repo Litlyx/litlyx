@@ -56,7 +56,7 @@ const { createAlert } = useAlert()
 async function deleteSnapshot(close: () => any) {
     await $fetch("/api/snapshot/delete", {
         method: 'DELETE',
-        ...signHeaders({ 'Content-Type': 'application/json' }),
+        headers: useComputedHeaders({ useSnapshotDates: false }).value,
         body: JSON.stringify({
             id: snapshot.value._id.toString(),
         })
@@ -71,11 +71,7 @@ async function generatePDF() {
 
     try {
         const res = await $fetch<Blob>('/api/project/generate_pdf', {
-            ...signHeaders({
-                'x-snapshot-name': snapshot.value.name,
-                'x-from': snapshot.value.from.toISOString(),
-                'x-to': snapshot.value.to.toISOString(),
-            }),
+            headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'x-snapshot-name': snapshot.value.name } }).value,
             responseType: 'blob'
         });
 
@@ -149,8 +145,8 @@ const pricingDrawer = usePricingDrawer();
                     </div>
                 </LyxUiButton>
 
-                <LyxUiButton v-if="projectList && (projectList.length >= (maxProjects || 1))"
-                    type="outlined" class="w-full py-1 mt-2 text-[.7rem]">
+                <LyxUiButton v-if="projectList && (projectList.length >= (maxProjects || 1))" type="outlined"
+                    class="w-full py-1 mt-2 text-[.7rem]">
                     <div class="flex items-center gap-2 justify-center">
                         <div><i class="text-lyx-text-darker far fa-lock"></i></div>
                         <div class="text-lyx-text-darker"> Projects limit reached </div>

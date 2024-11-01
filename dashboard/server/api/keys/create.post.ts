@@ -1,7 +1,6 @@
 
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { ApiSettingsModel, TApiSettings } from "@schema/ApiSettingsSchema";
-import { UserSettingsModel } from "@schema/UserSettings";
 import { ProjectModel } from "@schema/ProjectSchema";
 
 import crypto from 'crypto';

@@ -4,7 +4,6 @@ import pdfkit from 'pdfkit';
 import { PassThrough } from 'node:stream';
 
 import { ProjectModel } from "@schema/ProjectSchema";
-import { UserSettingsModel } from "@schema/UserSettings";
 import { VisitModel } from '@schema/metrics/VisitSchema';
 import { EventModel } from '@schema/metrics/EventSchema';
 
@@ -82,15 +81,13 @@ function createPdf(data: PDFGenerationData) {
 
 export default defineEventHandler(async event => {
 
+    const data = await getRequestData(event, { requireSchema: false, allowGuests: true, requireRange: false });
+    if (!data) return;
+
     const userData = getRequestUser(event);
     if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
 
-    const currentActiveProject = await UserSettingsModel.findOne({ user_id: userData.id });
-    if (!currentActiveProject) return setResponseStatus(event, 400, 'You need to select a project');
-
-    const project_id = currentActiveProject.active_project_id;
-
-    const project = await ProjectModel.findById(project_id);
+    const project = await ProjectModel.findById(data.project_id);
     if (!project) return setResponseStatus(event, 400, 'Project not found');
 
     const snapshotHeader = getHeader(event, 'x-snapshot-name');
