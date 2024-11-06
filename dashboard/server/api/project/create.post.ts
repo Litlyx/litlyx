@@ -16,9 +16,7 @@ export default defineEventHandler(async event => {
     const userData = getRequestUser(event);
     if (!userData?.logged) return setResponseStatus(event, 400, 'NotLogged');
 
-    const userSettings = await UserSettingsModel.findOne({ user_id: userData.id }, { max_projects: true });
-
-    const maxProjects = userSettings?.max_projects || 3;
+    const maxProjects = 20;
 
     const existingUserProjects = await ProjectModel.countDocuments({ owner: userData.id });
     if (existingUserProjects >= maxProjects) return setResponseStatus(event, 400, 'Already have max number of projects');
