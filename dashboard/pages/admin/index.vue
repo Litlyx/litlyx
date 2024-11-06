@@ -4,108 +4,64 @@ import type { AdminProjectsList } from '~/server/api/admin/projects';
 
 definePageMeta({ layout: 'dashboard' });
 
-const { data: projects } = await useFetch<AdminProjectsList[]>('/api/admin/projects', signHeaders());
+const { data: projectsAggregatedResponseData } = await useFetch<AdminProjectsList[]>('/api/admin/projects', signHeaders());
 const { data: counts } = await useFetch('/api/admin/counts', signHeaders());
-
-
-type TProjectsGrouped = {
-    user: {
-        name: string,
-        email: string,
-        given_name: string,
-        picture: string,
-        created_at: Date
-    },
-    projects: {
-        _id: string,
-        premium: boolean,
-        premium_type: number,
-        created_at: Date,
-        project_name: string,
-        total_visits: number,
-        total_events: number,
-        total_sessions: number
-    }[]
-}
-
-const projectsGrouped = computed(() => {
-
-    if (!projects.value) return [];
-
-    const result: TProjectsGrouped[] = [];
-
-    for (const project of projects.value) {
-
-        if (!project.user) continue;
-
-
-        const target = result.find(e => e.user.email == project.user.email);
-
-        if (target) {
-
-            target.projects.push({
-                _id: project._id,
-                created_at: project.created_at,
-                premium_type: project.premium_type,
-                premium: project.premium,
-                project_name: project.project_name,
-                total_events: project.total_events,
-                total_visits: project.total_visits,
-                total_sessions: project.total_sessions
-            });
-
-        } else {
-
-            const item: TProjectsGrouped = {
-                user: project.user,
-                projects: [{
-                    _id: project._id,
-                    created_at: project.created_at,
-                    premium: project.premium,
-                    premium_type: project.premium_type,
-                    project_name: project.project_name,
-                    total_events: project.total_events,
-                    total_visits: project.total_visits,
-                    total_sessions: project.total_sessions
-                }]
-            }
-
-            result.push(item);
-
-        }
-
-    }
-
-    result.sort((sa, sb) => {
-        const ca = sa.projects.reduce((a, e) => a + (e.total_visits + e.total_events), 0);
-        const cb = sb.projects.reduce((a, e) => a + (e.total_visits + e.total_events), 0);
-        return cb - ca;
-    })
-
-    return result;
-
-});
 
 function onHideClicked() {
     isAdminHidden.value = true;
 }
 
+
+const projectsAggregated = computed(() => {
+    return projectsAggregatedResponseData.value?.sort((a, b) => {
+        const sumVisitsA = a.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0) + (pe.counts?.events || 0), 0);
+        const sumVisitsB = b.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0) + (pe.counts?.events || 0), 0);
+        return sumVisitsB - sumVisitsA;
+    });
+})
+
 const premiumCount = computed(() => {
     let premiums = 0;
-    projects.value?.forEach(e => {
-        if (e.premium) premiums++;
+    projectsAggregated.value?.forEach(e => {
+        e.projects.forEach(p => {
+            if (p.premium) premiums++;
+        });
+
     })
     return premiums;
 })
 
 
+const activeProjects = computed(() => {
+    let actives = 0;
+
+    projectsAggregated.value?.forEach(e => {
+        e.projects.forEach(p => {
+            if (!p.counts) return;
+            if (!p.counts.updated_at) return;
+            const updated_at = new Date(p.counts.updated_at).getTime();
+            if (updated_at < Date.now() - 1000 * 60 * 60 * 24) return;
+            actives++;
+        });
+    })
+    return actives;
+});
+
+
 
 const totalVisits = computed(() => {
-    return projects.value?.reduce((a, e) => a + e.total_visits, 0) || 0;
+    return projectsAggregated.value?.reduce((a, e) => {
+        return a + e.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0), 0);
+    }, 0) || 0;
 });
+
 const totalEvents = computed(() => {
-    return projects.value?.reduce((a, e) => a + e.total_events, 0) || 0;
+    return projectsAggregated.value?.reduce((a, e) => {
+        return a + e.projects.reduce((pa, pe) => pa + (pe.counts?.events || 0), 0);
+    }, 0) || 0;
 });
+
+
 
 const details = ref<any>();
 const showDetails = ref<boolean>(false);
@@ -116,6 +72,28 @@ async function getProjectDetails(project_id: string) {
 
 async function resetCount(project_id: string) {
     await $fetch(`/api/admin/reset_count?project_id=${project_id}`, signHeaders());
+}
+
+
+function dateDiffDays(a: string) {
+    return (Date.now() - new Date(a).getTime()) / (1000 * 60 * 60 * 24)
+}
+
+function getLogBg(last_logged_at?: string) {
+
+    const day = 1000 * 60 * 60 * 24;
+    const week = 1000 * 60 * 60 * 24 * 7;
+
+    const lastLoggedAtDate = new Date(last_logged_at || 0);
+
+    if (lastLoggedAtDate.getTime() > Date.now() - day) {
+        return 'bg-green-500'
+    } else if (lastLoggedAtDate.getTime() > Date.now() - week) {
+        return 'bg-yellow-500'
+    } else {
+        return 'bg-red-500'
+    }
+
 }
 
 </script>
@@ -144,7 +122,7 @@ async function resetCount(project_id: string) {
 
         <Card class="p-4">
 
-            <div class="grid grid-cols-2">
+            <div class="grid grid-cols-2 gap-1">
                 <div>
                     Users: {{ counts?.users }}
                 </div>
@@ -155,6 +133,10 @@ async function resetCount(project_id: string) {
                     Total visits: {{ formatNumberK(totalVisits) }}
                 </div>
                 <div>
+                    Active: {{ activeProjects }} | 
+                    Dead: {{ (counts?.projects || 0) - activeProjects }}
+                </div>
+                <div>
                     Total events: {{ formatNumberK(totalEvents) }}
                 </div>
             </div>
@@ -162,17 +144,29 @@ async function resetCount(project_id: string) {
         </Card>
 
 
-        <div v-for="item of projectsGrouped" class="bg-menu p-4 rounded-xl flex flex-col gap-2 w-full relative">
+        <Card>
+            <!-- <USelectMenu></USelectMenu> -->
+        </Card>
+
+        <div v-for="item of projectsAggregated || []"
+            class="bg-menu p-4 rounded-xl flex flex-col gap-2 w-full relative">
             <div class="flex flex-col gap-6">
 
                 <div class="flex flex-col gap-1">
-                    <div> {{ item.user.email }} </div>
-                    <div> {{ item.user.name }} </div>
+                    <div> {{ item.email }} </div>
+                    <div> {{ item.name }} </div>
                 </div>
 
-                <div class="flex justify-evenly flex-col lg:flex-row gap-2 lg:gap-0">
+                <div class="flex justify-evenly flex-col lg:grid lg:grid-cols-3 gap-2 lg:gap-4">
+
                     <div v-for="project of item.projects"
-                        class="lg:w-[30%] flex flex-col items-center bg-bg p-6 rounded-xl">
+                        class="flex relative flex-col items-center bg-bg p-6 rounded-xl">
+
+                        <div class="absolute left-2 top-2 flex items-center gap-2">
+                            <div :class="getLogBg(project?.counts?.updated_at)" class="h-3 w-3 rounded-full"> </div>
+                            <div> {{ dateDiffDays(project?.counts?.updated_at || '0').toFixed(0) }} days </div>
+                        </div>
+
                         <div class="flex gap-4">
                             <div class="font-bold"> {{ project.premium ? 'PREMIUM' : 'FREE' }} </div>
                             <div class="text-text-sub/90">
@@ -181,14 +175,14 @@ async function resetCount(project_id: string) {
                         </div>
 
 
-                        <div class="text-ellipsis line-clamp-1"> {{ project.project_name }} </div>
+                        <div class="text-ellipsis line-clamp-1"> {{ project.name }} </div>
                         <div class="flex gap-2">
                             <div> Visits: </div>
-                            <div> {{ project.total_visits }} </div>
+                            <div> {{ formatNumberK(project.counts?.visits || 0) }} </div>
                             <div> Events: </div>
-                            <div> {{ project.total_events }} </div>
+                            <div> {{ formatNumberK(project.counts?.events || 0) }} </div>
                             <div> Sessions: </div>
-                            <div> {{ project.total_sessions }} </div>
+                            <div> {{ formatNumberK(project.counts?.sessions || 0) }} </div>
                         </div>
 
                         <div class="flex gap-4 items-center mt-4">

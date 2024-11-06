@@ -1,21 +1,24 @@
-import { ProjectModel } from "@schema/ProjectSchema";
+import { UserModel } from "@schema/UserSchema";
 
 export type AdminProjectsList = {
-    premium: boolean,
-    created_at: Date,
-    project_name: string,
-    premium_type: number,
     _id: string,
-    user: {
+    name: string,
+    given_name: string,
+    created_at: string,
+    email: string,
+    projects: {
+        _id: string,
+        owner: string,
         name: string,
-        email: string,
-        given_name: string,
-        picture: string,
-        created_at: Date
-    },
-    total_visits: number,
-    total_events: number,
-    total_sessions: number
+        premium: boolean,
+        premium_type: number,
+        customer_id: string,
+        subscription_id: string,
+        premium_expire_at: string,
+        created_at: string,
+        __v: number,
+        counts: { _id: string, project_id: string, events: number, visits: number, sessions: number, updated_at?: string }
+    }[],
 }
 
 export default defineEventHandler(async event => {
@@ -24,40 +27,53 @@ export default defineEventHandler(async event => {
     if (!userData?.logged) return;
     if (!userData.user.roles.includes('ADMIN')) return;
 
-    const data: AdminProjectsList[] = await ProjectModel.aggregate([
+    const data: AdminProjectsList[] = await UserModel.aggregate([
         {
             $lookup: {
-                from: "users",
-                localField: "owner",
-                foreignField: "_id",
-                as: "user"
+                from: "projects",
+                localField: "_id",
+                foreignField: "owner",
+                as: "projects"
+            }
+        },
+        {
+            $unwind: {
+                path: "$projects",
+                preserveNullAndEmptyArrays: true
             }
         },
         {
             $lookup: {
                 from: "project_counts",
-                localField: "_id",
+                localField: "projects._id",
                 foreignField: "project_id",
-                as: "counts"
+                as: "projects.counts"
             }
         },
         {
-            $project: {
-                project_name: "$name",
-                premium: 1,
-                premium_type: 1,
-                created_at: 1,
-                user: {
-                    $first: "$user"
+            $addFields: {
+                "projects.counts": {
+                    $arrayElemAt: ["$projects.counts", 0]
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$_id",
+                name: {
+                    $first: "$name"
                 },
-                total_visits: {
-                    $arrayElemAt: ["$counts.visits", 0]
+                given_name: {
+                    $first: "$given_name"
                 },
-                total_events: {
-                    $arrayElemAt: ["$counts.events", 0]
+                created_at: {
+                    $first: "$created_at"
                 },
-                total_sessions: {
-                    $arrayElemAt: ["$counts.sessions", 0]
+                email: {
+                    $first: "$email"
+                },
+                projects: {
+                    $push: "$projects"
                 }
             }
         }
