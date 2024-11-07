@@ -168,6 +168,23 @@ class StripeService {
         return false;
     }
 
+    async createSubscription(customer_id: string, planId: number) {
+        if (this.disabledMode) return;
+        if (!this.stripe) throw Error('Stripe not initialized');
+
+        const PLAN = getPlanFromId(planId);
+        if (!PLAN) throw Error('Plan not found');
+
+        const subscription = await this.stripe.subscriptions.create({
+            customer: customer_id,
+            items: [
+                { price: this.testMode ? PLAN.PRICE_TEST : PLAN.PRICE, quantity: 1 }
+            ],
+        });
+
+        return subscription;
+    }
+
     async createOneTimeSubscriptionDummy(customer_id: string, planId: number) {
         if (this.disabledMode) return;
         if (!this.stripe) throw Error('Stripe not initialized');

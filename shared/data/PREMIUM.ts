@@ -14,7 +14,10 @@ export const PREMIUM_TAGS = [
     'SCALING',
     'UNICORN',
     'LIFETIME_GROWTH_ONETIME',
-    'GROWTH_DUMMY'
+    'GROWTH_DUMMY',
+    'APPSUMO_INCUBATION',
+    'APPSUMO_ACCELERATION',
+    'APPSUMO_GROWTH',
 ] as const;
 
 
@@ -123,7 +126,31 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         PRICE: 'price_1PvgoRB2lPUiVs9VC51YBT7J',
         PRICE_TEST: 'price_1PvgRTB2lPUiVs9V3kFSNC3G',
         COST: 0
-    }
+    },
+    APPSUMO_INCUBATION: {
+        ID: 6001,
+        COUNT_LIMIT: 50_000,
+        AI_MESSAGE_LIMIT: 30,
+        PRICE: '',
+        PRICE_TEST: '',
+        COST: 0
+    },
+    APPSUMO_ACCELERATION: {
+        ID: 6002,
+        COUNT_LIMIT: 150_000,
+        AI_MESSAGE_LIMIT: 100,
+        PRICE: '',
+        PRICE_TEST: '',
+        COST: 0
+    },
+    APPSUMO_GROWTH: {
+        ID: 6003,
+        COUNT_LIMIT: 500_000,
+        AI_MESSAGE_LIMIT: 3_000,
+        PRICE: '',
+        PRICE_TEST: '',
+        COST: 0
+    },
 }
 
 try {
