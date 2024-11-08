@@ -7,6 +7,7 @@ const items = [
     { label: 'General', slot: 'general' },
     { label: 'Members', slot: 'members' },
     { label: 'Billing', slot: 'billing' },
+    { label: 'Codes', slot: 'codes' },
     { label: 'Account', slot: 'account' }
 ]
 
@@ -26,6 +27,9 @@ const items = [
             </template>
             <template #billing>
                 <SettingsBilling :key="refreshKey"></SettingsBilling>
+            </template>
+            <template #codes>
+                <SettingsCodes :key="refreshKey"></SettingsCodes>
             </template>
             <template #account>
                 <SettingsAccount :key="refreshKey"></SettingsAccount>

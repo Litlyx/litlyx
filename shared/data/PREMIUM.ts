@@ -131,7 +131,7 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         ID: 6001,
         COUNT_LIMIT: 50_000,
         AI_MESSAGE_LIMIT: 30,
-        PRICE: '',
+        PRICE: 'price_1QIXwbB2lPUiVs9VKSsoksaU',
         PRICE_TEST: '',
         COST: 0
     },
@@ -139,7 +139,7 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         ID: 6002,
         COUNT_LIMIT: 150_000,
         AI_MESSAGE_LIMIT: 100,
-        PRICE: '',
+        PRICE: 'price_1QIXxRB2lPUiVs9VrjaVRoOl',
         PRICE_TEST: '',
         COST: 0
     },
@@ -147,7 +147,7 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         ID: 6003,
         COUNT_LIMIT: 500_000,
         AI_MESSAGE_LIMIT: 3_000,
-        PRICE: '',
+        PRICE: 'price_1QIXy8B2lPUiVs9VQBOUPAoE',
         PRICE_TEST: '',
         COST: 0
     },

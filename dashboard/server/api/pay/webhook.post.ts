@@ -133,7 +133,7 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
         if (!price) return { error: 'Price not found' }
 
         const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
-        if (!PLAN) return { error: 'Plan not found' }
+        if (!PLAN) return { error: `Plan not found. Price: ${price}. TestMode: ${StripeService.testMode}` }
 
         await addSubscriptionToProject(project._id.toString(), PLAN, subscription_id, currentSubscription.current_period_start, currentSubscription.current_period_end)
 
