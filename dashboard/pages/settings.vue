@@ -5,6 +5,7 @@ definePageMeta({ layout: 'dashboard' });
 
 const items = [
     { label: 'General', slot: 'general' },
+    { label: 'Data', slot: 'data' },
     { label: 'Members', slot: 'members' },
     { label: 'Billing', slot: 'billing' },
     { label: 'Codes', slot: 'codes' },
@@ -21,6 +22,9 @@ const items = [
         <CustomTab :items="items" class="mt-8">
             <template #general>
                 <SettingsGeneral :key="refreshKey"></SettingsGeneral>
+            </template>
+            <template #data>
+                <SettingsData :key="refreshKey"></SettingsData>
             </template>
             <template #members>
                 <SettingsMembers :key="refreshKey"></SettingsMembers>

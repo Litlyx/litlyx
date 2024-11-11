@@ -13,7 +13,7 @@ const EventSchema = new Schema<TEvent>({
     project_id: { type: Types.ObjectId, index: 1 },
     name: { type: String, required: true, index: 1 },
     metadata: Schema.Types.Mixed,
-    session: { type: String },
+    session: { type: String, index: 1 },
     flowHash: { type: String },
     created_at: { type: Date, default: () => Date.now(), index: true },
 })

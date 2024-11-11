@@ -12,7 +12,7 @@ export type TSession = {
 
 const SessionSchema = new Schema<TSession>({
     project_id: { type: Types.ObjectId, index: 1 },
-    session: { type: String, required: true },
+    session: { type: String, required: true, index: 1 },
     flowHash: { type: String },
     duration: { type: Number, required: true, default: 0 },
     updated_at: { type: Date, default: () => Date.now() },

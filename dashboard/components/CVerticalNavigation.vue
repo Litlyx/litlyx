@@ -140,8 +140,8 @@ const pricingDrawer = usePricingDrawer();
                 <LyxUiButton to="/project_creation" v-if="projectList && (projectList.length < (maxProjects || 1))"
                     type="outlined" class="w-full py-1 mt-2 text-[.8rem]">
                     <div class="flex items-center gap-2 justify-center">
-                        <div><i class="fas fa-plus"></i></div>
-                        <div> Create new project </div>
+                        <div><i class="fas fa-plus text-[.7rem]"></i></div>
+                        <div class="poppins"> New Project </div>
                     </div>
                 </LyxUiButton>
 

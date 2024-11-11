@@ -67,6 +67,9 @@ const { visible } = usePricingDrawer();
       </div>
     </div>
 
+
+    <UModals />
+
     <NuxtLayout>
       <NuxtPage></NuxtPage>
     </NuxtLayout>

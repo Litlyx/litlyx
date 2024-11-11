@@ -16,7 +16,7 @@ export type CustomDialogOptions = {
     params?: any,
     width?: string,
     height?: string,
-    closable?: boolean
+    closable?: boolean,
 }
 
 function openDialogEx(component: Component, options?: CustomDialogOptions) {
