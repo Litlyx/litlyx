@@ -104,7 +104,7 @@ const avgSessionDuration = computed(() => {
 <template>
     <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-cards-wrap:grid-cols-4">
 
-        <DashboardCountCard :ready="!visitsData.pending.value" icon="far fa-earth" text="Total page visits"
+        <DashboardCountCard :ready="!visitsData.pending.value" icon="far fa-earth" text="Total visits"
             :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
             :avg="formatNumberK(avgVisitDay) + '/day'" :trend="visitsData.data.value?.trend"
             :data="visitsData.data.value?.data" :labels="visitsData.data.value?.labels" color="#5655d7">
@@ -116,7 +116,7 @@ const avgSessionDuration = computed(() => {
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsData.pending.value" icon="far fa-user" text="Unique visits sessions"
+        <DashboardCountCard :ready="!sessionsData.pending.value" icon="far fa-user" text="Unique visitors"
             :value="formatNumberK(sessionsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
             :avg="formatNumberK(avgSessionsDay) + '/day'" :trend="sessionsData.data.value?.trend"
             :data="sessionsData.data.value?.data" :labels="sessionsData.data.value?.labels" color="#4abde8">
@@ -124,7 +124,7 @@ const avgSessionDuration = computed(() => {
 
 
         <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer"
-            text="Total avg session time" :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
+            text="Visit duration" :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
             :data="sessionsDurationData.data.value?.data" :labels="sessionsDurationData.data.value?.labels"
             color="#f56523">
         </DashboardCountCard>

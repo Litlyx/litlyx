@@ -2,6 +2,7 @@
 
 definePageMeta({ layout: 'none' });
 
+import { Lit } from 'litlyx-js';
 
 const emailSended = ref<boolean>(false);
 
@@ -29,6 +30,9 @@ async function registerAccount() {
             body: JSON.stringify({ email: email.value, password: password.value })
         });
         if (res.error === true) return alert(res.message);
+
+        Lit.event('email_signup');
+
         emailSended.value = true;
     } catch (ex) {
         alert('Something went wrong');
@@ -113,7 +117,8 @@ async function registerAccount() {
                     </RouterLink>
                 </div>
 
-                <div v-if="!emailSended" class="text-[.9rem] poppins mt-5 xl:mt-20 text-text-sub text-center relative z-[2]">
+                <div v-if="!emailSended"
+                    class="text-[.9rem] poppins mt-5 xl:mt-20 text-text-sub text-center relative z-[2]">
                     By continuing you are accepting
                     <br>
                     our

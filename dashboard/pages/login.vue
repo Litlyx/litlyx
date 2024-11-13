@@ -2,6 +2,8 @@
 
 definePageMeta({ layout: 'none' });
 
+import { Lit } from 'litlyx-js';
+
 const config = useRuntimeConfig()
 const isNoAuth = ref<boolean>(config.public.AUTH_MODE == 'NO_AUTH');
 
@@ -51,6 +53,8 @@ async function handleOnSuccess(response: any) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ code: response.code })
         })
+
+        Lit.event('google_login_signup');
 
         if (result.error) return alert('Error during login, please try again');
 
@@ -120,7 +124,7 @@ function goBackToEmailLogin() {
 async function signInWithCredentials() {
 
     try {
-        const result = await $fetch<{error:true, message:string} | {error: false, access_token:string}>('/api/auth/login', {
+        const result = await $fetch<{ error: true, message: string } | { error: false, access_token: string }>('/api/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email.value, password: password.value })
@@ -224,7 +228,8 @@ async function signInWithCredentials() {
                         </div>
 
 
-                        <RouterLink tag="div" to="/register" class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[100]">
+                        <RouterLink tag="div" to="/register"
+                            class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[100]">
                             You don't have an account ? Sign up
                         </RouterLink>
 

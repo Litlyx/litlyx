@@ -9,12 +9,16 @@ const props = defineProps<{
 }>();
 
 const isDone = ref<boolean>(false);
+const canDelete = ref<boolean>(false);
 
 async function deleteData() {
 
     try {
         if (props.deleteData.isAll) {
-
+            await $fetch('/api/settings/delete_all', {
+                method: 'DELETE',
+                headers: useComputedHeaders({ useSnapshotDates: false }).value,
+            })
         } else {
             await $fetch('/api/settings/delete_domain', {
                 method: 'DELETE',
@@ -60,9 +64,14 @@ async function deleteData() {
             </div>
 
             <div class="grow"></div>
+
+            <div v-if="!isDone">
+                <UCheckbox v-model="canDelete" label="Confirm data delete"></UCheckbox>
+            </div>
+
             <div v-if="!isDone" class="flex justify-end gap-2">
                 <LyxUiButton type="secondary" @click="emit('cancel')"> Cancel </LyxUiButton>
-                <LyxUiButton @click="deleteData()" :type="buttonType"> Confirm </LyxUiButton>
+                <LyxUiButton :disabled="!canDelete" @click="canDelete ? deleteData() : () => { }" :type="buttonType"> Confirm </LyxUiButton>
             </div>
 
             <div v-if="isDone" class="flex justify-end w-full">

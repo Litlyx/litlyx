@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 
-export type IconProvider = (id: string) => ['img' | 'icon', string] | undefined;
+export type IconProvider = (e: { _id: string, count: string } & any) => ['img' | 'icon', string] | undefined;
 
 
 type Props = {
@@ -80,7 +80,7 @@ function openExternalLink(link: string) {
             </div>
         </div>
 
-        <div>
+        <div class="h-full flex flex-col">
             <div class="flex justify-between font-bold text-text-sub/80 text-[1.1rem] mb-4">
                 <div class="flex items-center gap-2">
                     <div v-if="isDetailView" class="flex items-center justify-center">
@@ -111,13 +111,13 @@ function openExternalLink(link: string) {
                                 :style="'width:' + 100 / maxData * element.count + '%;'"></div>
 
                             <div class="flex px-2 py-1 relative items-center gap-4">
-                                <div v-if="iconProvider && iconProvider(element._id) != undefined"
+                                <div v-if="iconProvider && iconProvider(element) != undefined"
                                     class="flex items-center h-[1.3rem]">
 
-                                    <img v-if="iconProvider(element._id)?.[0] == 'img'" class="h-full"
-                                        :style="customIconStyle" :src="iconProvider(element._id)?.[1]">
+                                    <img v-if="iconProvider(element)?.[0] == 'img'" class="h-full"
+                                        :style="customIconStyle" :src="iconProvider(element)?.[1]">
 
-                                    <i v-else :class="iconProvider(element._id)?.[1]"></i>
+                                    <i v-else :class="iconProvider(element)?.[1]"></i>
                                 </div>
                                 <span class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">
                                     {{ elementTextTransformer?.(element._id) || element._id }}
@@ -132,7 +132,7 @@ function openExternalLink(link: string) {
                     No data yet
                 </div>
             </div>
-            <div v-if="!hideShowMore" class="flex justify-center mt-4 text-text-sub/90 ">
+            <div v-if="!hideShowMore" class="flex justify-center mt-4 text-text-sub/90 items-end grow">
                 <div @click="$emit('showMore')"
                     class="poppins hover:bg-black cursor-pointer w-fit px-6 py-1 rounded-lg border-[1px] border-text-sub text-[.9rem]">
                     Show more

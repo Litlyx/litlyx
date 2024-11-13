@@ -4,8 +4,26 @@ import type { AdminProjectsList } from '~/server/api/admin/projects';
 
 definePageMeta({ layout: 'dashboard' });
 
+
+
+const timeRange = ref<number>(9);
+
+function setTimeRange(n: number) {
+    timeRange.value = n;
+}
+
+const timeRangeTimestamp = computed(()=>{
+    if (timeRange.value == 1) return Date.now() - 1000 * 60 * 60 * 24;
+    if (timeRange.value == 2) return Date.now() - 1000 * 60 * 60 * 24 * 7;
+    if (timeRange.value == 3) return Date.now() - 1000 * 60 * 60 * 24 * 30;
+    return 0;
+})
+
+
 const { data: projectsAggregatedResponseData } = await useFetch<AdminProjectsList[]>('/api/admin/projects', signHeaders());
-const { data: counts } = await useFetch('/api/admin/counts', signHeaders());
+const { data: counts } = await useFetch(()=> `/api/admin/counts?from=${timeRangeTimestamp.value}`, signHeaders());
+
+
 
 function onHideClicked() {
     isAdminHidden.value = true;
@@ -17,6 +35,8 @@ const projectsAggregated = computed(() => {
         const sumVisitsA = a.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0) + (pe.counts?.events || 0), 0);
         const sumVisitsB = b.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0) + (pe.counts?.events || 0), 0);
         return sumVisitsB - sumVisitsA;
+    }).filter(e=>{
+        return new Date(e.created_at).getTime() >= timeRangeTimestamp.value
     });
 })
 
@@ -96,6 +116,8 @@ function getLogBg(last_logged_at?: string) {
 
 }
 
+
+
 </script>
 
 
@@ -120,6 +142,14 @@ function getLogBg(last_logged_at?: string) {
         </div>
 
 
+
+        <Card class="p-2 flex gap-10 items-center justify-center">
+            <div :class="{ 'text-red-200': timeRange == 1 }" @click="setTimeRange(1)"> Last day </div>
+            <div :class="{ 'text-red-200': timeRange == 2 }" @click="setTimeRange(2)"> Last week </div>
+            <div :class="{ 'text-red-200': timeRange == 3 }" @click="setTimeRange(3)"> Last month </div>
+            <div :class="{ 'text-red-200': timeRange == 9 }" @click="setTimeRange(9)"> All </div>
+        </Card>
+
         <Card class="p-4">
 
             <div class="grid grid-cols-2 gap-1">
@@ -133,7 +163,7 @@ function getLogBg(last_logged_at?: string) {
                     Total visits: {{ formatNumberK(totalVisits) }}
                 </div>
                 <div>
-                    Active: {{ activeProjects }} | 
+                    Active: {{ activeProjects }} |
                     Dead: {{ (counts?.projects || 0) - activeProjects }}
                 </div>
                 <div>
@@ -143,10 +173,6 @@ function getLogBg(last_logged_at?: string) {
 
         </Card>
 
-
-        <Card>
-            <!-- <USelectMenu></USelectMenu> -->
-        </Card>
 
         <div v-for="item of projectsAggregated || []"
             class="bg-menu p-4 rounded-xl flex flex-col gap-2 w-full relative">

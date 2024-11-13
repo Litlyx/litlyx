@@ -7,6 +7,8 @@ import 'highlight.js/styles/stackoverflow-dark.css';
 import hljs from 'highlight.js';
 import CardTitled from './CardTitled.vue';
 
+import { Lit } from 'litlyx-js';
+
 const props = defineProps<{
     firstInteraction: boolean,
     refreshInteraction: () => any
@@ -19,6 +21,7 @@ onMounted(() => {
 function copyProjectId() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
     navigator.clipboard.writeText(project.value?._id?.toString() || '');
+    Lit.event('no_visit_copy_id');
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
@@ -36,6 +39,7 @@ function copyScript() {
         ].join('')
     }
 
+    Lit.event('no_visit_copy_script');
     navigator.clipboard.writeText(createScriptText());
     createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
 }
@@ -53,6 +57,7 @@ const scriptText = computed(() => {
 function reloadPage() {
     location.reload();
 }
+
 </script>
 
 <template>
@@ -256,7 +261,9 @@ function reloadPage() {
                                         </defs>
                                     </svg>
                                 </div>
-                                <LyxUiButton type="secondary" to="https://docs.litlyx.com"> Visit documentation
+                                <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
+                                    to="https://docs.litlyx.com">
+                                    Visit documentation
                                 </LyxUiButton>
                             </div>
                         </CardTitled>

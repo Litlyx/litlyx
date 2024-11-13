@@ -85,10 +85,10 @@ async function taskDeleteDomain(project_id: Types.ObjectId, domain: string, dele
     }
 
     if (deleteEvents === true) {
-        const sessions = data.flatMap(e => e.sessions).map(e => e._id.toString());
+        const events = data.flatMap(e => e.events).map(e => e._id.toString());
         const batchSize = 1000;
-        for (let i = 0; i < sessions.length; i += batchSize) {
-            const batch = sessions.slice(i, i + batchSize);
+        for (let i = 0; i < events.length; i += batchSize) {
+            const batch = events.slice(i, i + batchSize);
             await EventModel.deleteMany({ _id: { $in: batch } });
         }
     }

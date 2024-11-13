@@ -1,5 +1,6 @@
 steps
 PROCESS_EVENT
+**/node_modules/
 docker
 dev
 docker-compose.admin.yml

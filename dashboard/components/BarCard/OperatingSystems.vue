@@ -31,6 +31,6 @@ async function showMore() {
     <div class="flex flex-col gap-2 h-full">
         <BarCardBase @showMore="showMore()" @dataReload="ossData.refresh()" :data="ossData.data.value || []"
             desc="The operating systems most commonly used by your website's visitors." :dataIcons="false"
-            :loading="ossData.pending.value" label="Top OS" sub-label="OSs"></BarCardBase>
+            :loading="ossData.pending.value" label="OS" sub-label="OSs"></BarCardBase>
     </div>
 </template>

@@ -56,21 +56,10 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <BarCardWebsites :key="refreshKey"></BarCardWebsites>
-                    </div>
-                    <div class="flex-1">
                         <BarCardReferrers :key="refreshKey"></BarCardReferrers>
                     </div>
-                </div>
-            </div>
-
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
-                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>
-                    </div>
-                    <div class="flex-1">
-                        <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
+                        <BarCardWebsites :key="refreshKey"></BarCardWebsites>
                     </div>
                 </div>
             </div>
@@ -82,6 +71,17 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
                     </div>
                     <div class="flex-1">
                         <BarCardDevices :key="refreshKey"></BarCardDevices>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex w-full justify-center mt-6 px-6">
+                <div class="flex w-full gap-6 flex-col xl:flex-row">
+                    <div class="flex-1">
+                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>
+                    </div>
+                    <div class="flex-1">
+                        <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
                     </div>
                 </div>
             </div>
