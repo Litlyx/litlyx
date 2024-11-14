@@ -1,5 +1,6 @@
 import type { TProjectSnapshot } from "@schema/ProjectSnapshot";
 
+import fns from 'date-fns';
 
 const { projectId, project } = useProject();
 
@@ -31,9 +32,10 @@ const snapshots = computed(() => {
         },
         {
             project_id: project.value?._id as any,
-            _id: 'default1' as any,
-            name: 'Last month',
-            from: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
+            _id: 'current_month' as any,
+            name: 'Current month',
+            from: fns.startOfMonth()
+            new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
             to: new Date(Date.now()),
             color: '#00CC00'
         },

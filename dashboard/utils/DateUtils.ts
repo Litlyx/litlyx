@@ -1,5 +1,57 @@
 import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline/generic";
 
+
+
+// Calcola date snapshot
+// 1- Frontend
+// 2- Backend
+// 3- Data singola
+
+// 4- Aggregazione
+
+// ISO
+// UTC UTENTE
+
+// Utility - per date snapshot
+
+// getStartDay: data => 00.00 della data
+// getEndDay: data => 23.59 della data
+
+// getStartWeek: data => 00.00 del primo giorno
+// getEndWeek: data => 23.59 dell ultimo giorno
+
+// getStartMonth: data => 00.00 del primo giorno del mese
+// getEndMonth: data => 23.59 dell ulrimo giorno del mese
+
+
+
+
+// Snapshot -> Current Week -> 11/11-00:00 - 17/11-23:59
+// Converti UTC UTENTE -> ISO
+
+// Backend -> Prendi dati da ISO_A a ISO_B
+
+// Funzioni da creare
+
+// UTC TO ISO
+// Converte utc -> Iso
+// UTC TO ISO Day
+
+// UTC TO ISO Month
+
+// UTC_IS_NEXT_DAY
+// True se il giorno passa a quello successivo
+// UTC_IS_PREV_DAY
+// True se il giorno passa a quello precedente
+
+
+
+
+
+
+
+
+
 export const slicesData = {
     hour: {
         fromOffset: 1000 * 60 * 60 * 24
