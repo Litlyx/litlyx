@@ -85,13 +85,13 @@ function reloadPage() {
                 <div class="flex gap-6 xl:flex-row flex-col">
 
                     <div class="h-full w-full">
-                        <CardTitled class="h-full w-full xl:min-w-[500px]" title="Tutorial"
-                            sub="Coming soon. For now enjoy our launch video.">
+                        <CardTitled class="h-full w-full xl:min-w-[500px]" title="Quick setup tutorial"
+                            sub="Quickly Set Up Litlyx in 30 Seconds!">
 
                             <div class="flex items-center justify-center h-full w-full">
 
                                 <iframe class="w-full h-full min-h-[400px]"
-                                    src="https://www.youtube.com/embed/GntyWMR7jsY?si=YGGkQwrk6-Iqmn8w" title="Litlyx"
+                                    src="https://www.youtube.com/embed/LInFoNLJ-CI?si=a97HVXpXFDgFg2Yp" title="Litlyx"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
