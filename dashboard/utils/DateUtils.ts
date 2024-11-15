@@ -24,23 +24,23 @@ import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline
 // getEndMonth: data => 23.59 dell ulrimo giorno del mese
 
 
-
-
 // Snapshot -> Current Week -> 11/11-00:00 - 17/11-23:59
 // Converti UTC UTENTE -> ISO
 
 // Backend -> Prendi dati da ISO_A a ISO_B
 
+
+
 // Funzioni da creare
 
-// UTC TO ISO
 // Converte utc -> Iso
+// UTC TO ISO
 // UTC TO ISO Day
-
 // UTC TO ISO Month
 
 // UTC_IS_NEXT_DAY
 // True se il giorno passa a quello successivo
+
 // UTC_IS_PREV_DAY
 // True se il giorno passa a quello precedente
 

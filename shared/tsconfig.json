@@ -1,10 +1,11 @@
 {
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
         "module": "NodeNext",
-        "target": "ESNext"
+        "target": "ESNext",
+        "composite": true
     },
-    "include": ["**/*.ts"],
-    "exclude": [
-        "node_modules"
-    ]
+    "include": [
+        "**/*.ts"
+    ],
 }

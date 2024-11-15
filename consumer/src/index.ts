@@ -2,7 +2,7 @@
 import { requireEnv } from '@utils/requireEnv';
 import { connectDatabase } from '@services/DatabaseService';
 import { RedisStreamService } from '@services/RedisStreamService';
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { EventModel } from "@schema/metrics/EventSchema";
@@ -10,8 +10,9 @@ import { lookup } from './lookup';
 import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
 
-import { ProjectLimitModel } from '@schema/ProjectsLimits';
-import { ProjectCountModel } from '@schema/ProjectsCounts';
+import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
+import { ProjectCountModel } from '@schema/project/ProjectsCounts';
+
 
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();

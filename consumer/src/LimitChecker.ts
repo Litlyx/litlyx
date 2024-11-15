@@ -1,6 +1,6 @@
 
 
-import { ProjectLimitModel } from '@schema/ProjectsLimits';
+import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 import { MAX_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
 import { checkLimitsForEmail } from './EmailController';
 

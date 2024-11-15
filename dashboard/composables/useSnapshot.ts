@@ -34,8 +34,7 @@ const snapshots = computed(() => {
             project_id: project.value?._id as any,
             _id: 'current_month' as any,
             name: 'Current month',
-            from: fns.startOfMonth()
-            new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
+            from: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30),
             to: new Date(Date.now()),
             color: '#00CC00'
         },
