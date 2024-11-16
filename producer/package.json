@@ -17,7 +17,7 @@
 		"dev": "node scripts/start_dev.js",
 		"compile": "tsc",
 		"build_project": "node ../scripts/build.js",
-		"build": "npm run compile && npm run build",
+		"build": "npm run compile && npm run build_project",
 		"docker-build": "docker build -t litlyx-producer -f Dockerfile ../",
 		"docker-inspect": "docker run -it litlyx-producer sh"
 	},
