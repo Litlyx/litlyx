@@ -1,6 +1,6 @@
 
 
-import { AppsumoCodeModel } from '@schema/AppsumoCodeSchema';
+import { AppsumoCodeModel } from '@schema/appsumo/AppsumoCodeSchema';
 import { AppsumoCodeTryModel } from '@schema/appsumo/AppsumoCodeTrySchema';
 
 
