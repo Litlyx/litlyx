@@ -15,21 +15,26 @@ export default defineNuxtConfig({
       autoprefixer: {},
     }
   },
+
   colorMode: {
     preference: 'dark',
   },
+
   devtools: {
     enabled: false
   },
+
   pages: true,
   ssr: false,
   css: ['~/assets/scss/main.scss'],
+
   alias: {
     '@schema': fileURLToPath(new URL('../shared/schema', import.meta.url)),
     '@services': fileURLToPath(new URL('../shared/services', import.meta.url)),
     '@data': fileURLToPath(new URL('../shared/data', import.meta.url)),
     '@functions': fileURLToPath(new URL('../shared/functions', import.meta.url)),
   },
+
   runtimeConfig: {
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     REDIS_URL: process.env.REDIS_URL,
@@ -57,17 +62,23 @@ export default defineNuxtConfig({
     }
 
   },
+
   nitro: {
     plugins: ['~/server/init.ts']
   },
+
   plugins: [
     { src: '~/plugins/chartjs.ts', mode: 'client' }
   ],
+
   ...gooleSignInConfig,
   modules: ['@nuxt/ui', 'nuxt-vue3-google-signin'],
+
   devServer: {
     host: '0.0.0.0',
   },
+
   components: true,
-  extends: ['../lyx-ui']
+  extends: ['../lyx-ui'],
+  compatibilityDate: '2024-11-16'
 })

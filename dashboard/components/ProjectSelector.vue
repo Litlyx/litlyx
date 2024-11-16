@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import type { TProject } from '@schema/ProjectSchema';
+import type { TProject } from '@schema/project/ProjectSchema';
 
 const { user } = useLoggedUser()
 

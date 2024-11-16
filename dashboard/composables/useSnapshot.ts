@@ -1,4 +1,4 @@
-import type { TProjectSnapshot } from "@schema/ProjectSnapshot";
+import type { TProjectSnapshot } from "@schema/project/ProjectSnapshot";
 
 import fns from 'date-fns';
 

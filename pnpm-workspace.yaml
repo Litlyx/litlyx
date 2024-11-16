@@ -1,5 +1,5 @@
 packages:
-  # - "dashboard"
+  - "dashboard"
   - "producer"
   - "consumer"
   - "security"

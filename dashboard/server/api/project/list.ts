@@ -1,4 +1,4 @@
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 
 export default defineEventHandler(async event => {
 

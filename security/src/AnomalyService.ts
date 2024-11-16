@@ -6,7 +6,7 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { VisitModel } from '@schema/metrics/VisitSchema'
 
 import * as url from 'url';
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { getAggregation } from "./Aggregations";
 
 type TAvgInput = { _id: string, count: number }

@@ -2,7 +2,7 @@ import type { AuthContext } from "../middleware/01-authorization";
 import type { EventHandlerRequest, H3Event } from 'h3'
 import { allowedModels, TModelName } from "../services/DataService";
 import { LITLYX_PROJECT_ID } from "@data/LITLYX";
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { Model, Types } from "mongoose";
 import { TeamMemberModel } from "@schema/TeamMemberSchema";
 import { Slice } from "@services/DateService";

@@ -1,9 +1,5 @@
 {
-  "dependencies": {
-    "@getbrevo/brevo": "^2.2.0",
-    "dayjs": "^1.11.13",
-    "mongoose": "^8.3.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.12.13",
     "ts-node": "^10.9.2",
@@ -15,11 +11,11 @@
   "scripts": {
     "dev": "node scripts/start_dev.js",
     "compile": "tsc",
-    "build": "node ../scripts/build.js",
-    "build_all": "npm run compile && npm run build"
+    "build_project": "node ../scripts/build.js",
+    "build": "npm run compile && npm run build"
   },
   "keywords": [],
   "author": "Emily",
   "license": "MIT",
-  "description": "."
+  "description": ""
 }

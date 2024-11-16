@@ -1,7 +1,7 @@
 
-import { ProjectModel } from "@schema/ProjectSchema";
-import { ProjectCountModel } from "@schema/ProjectsCounts";
-import { ProjectLimitModel } from "@schema/ProjectsLimits";
+import { ProjectModel } from "@schema/project/ProjectSchema";
+import { ProjectCountModel } from "@schema/project/ProjectsCounts";
+import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 import { UserSettingsModel } from "@schema/UserSettings";
 import { AiChatModel } from "@schema/ai/AiChatSchema";
 import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";

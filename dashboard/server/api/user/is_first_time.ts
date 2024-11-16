@@ -1,4 +1,4 @@
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { AuthContext } from "~/server/middleware/01-authorization";
 
 export default defineEventHandler(async event => {

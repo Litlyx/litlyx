@@ -1,6 +1,6 @@
 
 import { EventModel } from "@schema/metrics/EventSchema";
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
 
 export type EventsPie = {

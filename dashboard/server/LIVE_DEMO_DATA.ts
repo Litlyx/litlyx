@@ -1,5 +1,5 @@
 import { AuthContext } from "./middleware/01-authorization";
-import { ProjectModel } from "~/../shared/schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { LITLYX_PROJECT_ID } from '@data/LITLYX'
 import { hasAccessToProject } from "./utils/hasAccessToProject";
 

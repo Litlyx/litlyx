@@ -1,7 +1,7 @@
 
 
-import type { TProject } from "@schema/ProjectSchema";
-import { ProjectSnapshotModel } from "@schema/ProjectSnapshot";
+import type { TProject } from "@schema/project/ProjectSchema";
+import { ProjectSnapshotModel } from "@schema/project/ProjectSnapshot";
 
 const { token } = useAccessToken();
 

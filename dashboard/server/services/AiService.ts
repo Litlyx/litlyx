@@ -2,8 +2,8 @@
 
 import OpenAI from "openai";
 import { AiChatModel } from '@schema/ai/AiChatSchema';
-import { ProjectCountModel } from '@schema/ProjectsCounts';
-import { ProjectLimitModel } from '@schema/ProjectsLimits';
+import { ProjectCountModel } from '@schema/project/ProjectsCounts';
+import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 
 import { AiEventsInstance } from '../ai/functions/AI_Events';
 import { AiVisitsInstance } from '../ai/functions/AI_Visits';

@@ -22,7 +22,6 @@
     "googleapis": "^144.0.0",
     "highlight.js": "^11.10.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.3.2",
     "nuxt": "^3.11.2",
     "nuxt-vue3-google-signin": "^0.0.11",
     "openai": "^4.61.0",

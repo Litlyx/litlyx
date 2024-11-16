@@ -4,7 +4,7 @@ import { requireEnv } from '@utils/requireEnv'
 
 import EmailService from "@services/EmailService";
 
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { UserModel } from "@schema/UserSchema";
 
 EmailService.init(requireEnv('BREVO_API_KEY'));

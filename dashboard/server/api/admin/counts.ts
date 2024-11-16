@@ -1,4 +1,4 @@
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { UserModel } from "@schema/UserSchema";
 
 

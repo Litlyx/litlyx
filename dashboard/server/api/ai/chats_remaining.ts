@@ -1,4 +1,4 @@
-import { ProjectLimitModel } from "@schema/ProjectsLimits";
+import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 
 export async function getAiChatRemainings(project_id: string) {
     const limits = await ProjectLimitModel.findOne({ project_id })
