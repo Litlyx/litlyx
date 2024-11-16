@@ -11,6 +11,9 @@ importers:
       '@getbrevo/brevo':
         specifier: ^2.2.0
         version: 2.2.0
+      dayjs:
+        specifier: ^1.11.13
+        version: 1.11.13
       mongoose:
         specifier: ^8.3.2
         version: 8.8.1
@@ -24,9 +27,6 @@ importers:
 
   consumer:
     dependencies:
-      glob:
-        specifier: ^10.4.1
-        version: 10.4.5
       ua-parser-js:
         specifier: ^1.0.37
         version: 1.0.39
@@ -70,9 +70,6 @@ importers:
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
-      mongoose:
-        specifier: ^8.3.2
-        version: 8.8.1
       nuxt:
         specifier: ^3.11.2
         version: 3.14.159(@parcel/watcher@2.5.0)(@types/node@20.17.6)(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.27.2)(sass@1.81.0)(terser@5.36.0)(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(sass@1.81.0)(terser@5.36.0))
@@ -89,7 +86,7 @@ importers:
         specifier: ^3.52.0
         version: 3.53.0(vue@3.5.13(typescript@5.6.3))
       sass:
-        specifier: ^1.75.0
+        specifier: ^1.81.0
         version: 1.81.0
       stripe:
         specifier: ^17.3.1
@@ -347,15 +344,6 @@ importers:
       express:
         specifier: ^4.19.2
         version: 4.21.1
-      ioredis:
-        specifier: ^5.4.1
-        version: 5.4.1
-      redis:
-        specifier: ^4.6.14
-        version: 4.7.0
-      remove:
-        specifier: ^0.1.5
-        version: 0.1.5
     devDependencies:
       '@types/cors':
         specifier: ^2.8.17
@@ -366,9 +354,6 @@ importers:
       '@types/node':
         specifier: ^20.14.2
         version: 20.17.6
-      glob:
-        specifier: ^10.4.1
-        version: 10.4.5
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@types/node@20.17.6)(typescript@5.6.3)
@@ -383,16 +368,6 @@ importers:
         version: 11.0.0
 
   security:
-    dependencies:
-      '@getbrevo/brevo':
-        specifier: ^2.2.0
-        version: 2.2.0
-      dayjs:
-        specifier: ^1.11.13
-        version: 1.11.13
-      mongoose:
-        specifier: ^8.3.2
-        version: 8.8.1
     devDependencies:
       '@types/node':
         specifier: ^20.12.13
