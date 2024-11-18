@@ -79,6 +79,5 @@ export default defineNuxtConfig({
   },
 
   components: true,
-  extends: ['../lyx-ui'],
   compatibilityDate: '2024-11-16'
 })
