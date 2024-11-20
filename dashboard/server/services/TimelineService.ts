@@ -2,7 +2,7 @@
 import { Slice } from "@services/DateService";
 import DateService from "@services/DateService";
 import type mongoose from "mongoose";
-
+import * as fns from 'date-fns'
 
 export type TimelineAggregationOptions = {
     projectId: mongoose.Schema.Types.ObjectId | mongoose.Types.ObjectId,
@@ -27,17 +27,20 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
     options.customProjection = options.customProjection || {};
     options.customIdGroup = options.customIdGroup || {};
 
-    const { group, sort, fromParts } = DateService.getQueryDateRange(options.slice);
+    const { group, sort } = DateService.getQueryDateRange(options.slice);
 
     if (!sort) throw Error('Slice is probably not correct');
 
-    const dateDistDays = (new Date(options.to).getTime() - new Date(options.from).getTime()) / (1000 * 60 * 60 * 24)
-    // 15 Days
-    if (options.slice === 'hour' && (dateDistDays > 15)) throw Error('Date gap too big for this slice');
-    // 1 Year
-    if (options.slice === 'day' && (dateDistDays > 365)) throw Error('Date gap too big for this slice');
+    const daysDiff = fns.differenceInDays(new Date(options.to), new Date(options.from));
+
+    // 3 Days
+    if (options.slice === 'hour' && (daysDiff > 3)) throw Error('Date gap too big for this slice');
+    // 3 Weeks
+    if (options.slice === 'day' && (daysDiff > 7 * 3)) throw Error('Date gap too big for this slice');
+    // 3 Months
+    if (options.slice === 'week' && (daysDiff > 30 * 3)) throw Error('Date gap too big for this slice');
     // 3 Years
-    if (options.slice === 'month' && (dateDistDays > 365 * 3)) throw Error('Date gap too big for this slice');
+    if (options.slice === 'month' && (daysDiff > 365 * 3)) throw Error('Date gap too big for this slice');
 
 
     const aggregation = [
@@ -48,9 +51,22 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                 ...options.customMatch
             }
         },
-        { $group: { _id: { ...group, ...options.customIdGroup }, count: { $sum: 1 }, ...options.customGroup } },
+        {
+            $group: {
+                _id: { ...group, ...options.customIdGroup },
+                count: { $sum: 1 },
+                firstDate: { $first: '$created_at' },
+                ...options.customGroup
+            }
+        },
         { $sort: sort },
-        { $project: { _id: { $dateFromParts: fromParts }, count: "$count", ...options.customProjection } }
+        {
+            $project: {
+                _id: "$firstDate",
+                count: "$count",
+                ...options.customProjection
+            }
+        }
     ]
 
     if (options.debug === true) {
@@ -75,7 +91,53 @@ export function fillAndMergeTimelineAggregation(timeline: { _id: string, count: 
 }
 
 export function fillAndMergeTimelineAggregationV2(timeline: { _id: string, count: number }[], slice: Slice, from: string, to: string) {
-    const filledDates = DateService.createBetweenDates(from, to, slice);
-    const merged = DateService.mergeFilledDates(filledDates.dates, timeline, '_id', slice, { count: 0 });
+    const allDates = generateDateSlices(slice, new Date(from), new Date(to));
+    const merged = mergeDates(timeline, allDates, slice);
     return merged;
+}
+
+function generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {
+    const slices: Date[] = [];
+    let currentDate = fromDate;
+    const addFunctions: { [key in Slice]: any } = { hour: fns.addHours, day: fns.addDays, week: fns.addWeeks, month: fns.addMonths, year: fns.addYears };
+    const addFunction = addFunctions[slice];
+    if (!addFunction) { throw new Error(`Invalid slice: ${slice}`); }
+    while (fns.isBefore(currentDate, toDate) || currentDate.getTime() === toDate.getTime()) {
+        slices.push(currentDate);
+        currentDate = addFunction(currentDate, 1);
+    }
+    return slices;
+}
+
+function mergeDates(timeline: { _id: string, count: number }[], dates: Date[], slice: Slice) {
+
+    const result: { _id: string, count: number }[] = [];
+
+    const isSames: { [key in Slice]: any } = { hour: fns.isSameHour, day: fns.isSameDay, week: fns.isSameWeek, month: fns.isSameMonth, year: fns.isSameYear, }
+
+    const isSame = isSames[slice];
+
+    if (!isSame) {
+        throw new Error(`Invalid slice: ${slice}`);
+    }
+
+    for (const element of timeline) {
+        const elementDate = new Date(element._id);
+        for (const date of dates) {
+            if (isSame(elementDate, date)) {
+                const existingEntry = result.find(item => isSame(new Date(item._id), date));
+
+                if (existingEntry) {
+                    existingEntry.count += element.count;
+                } else {
+                    result.push({
+                        _id: date.toISOString(),
+                        count: element.count,
+                    });
+                }
+            }
+        }
+    }
+
+    return result;
 }

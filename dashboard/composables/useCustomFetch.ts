@@ -25,7 +25,7 @@ export function useComputedHeaders(customOptions?: CustomOptions) {
     const useActivePid = customOptions?.useActivePid || true;
 
     const headers = computed<Record<string, string>>(() => {
-
+        console.trace('Computed recalculated');
         const parsedCustom: Record<string, string> = {}
         const customKeys = Object.keys(customOptions?.custom || {});
         for (const key of customKeys) {
@@ -42,6 +42,8 @@ export function useComputedHeaders(customOptions?: CustomOptions) {
             ...parsedCustom
         }
     })
+
+
 
     return headers;
 }

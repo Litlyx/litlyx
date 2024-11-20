@@ -4,18 +4,11 @@ import dayjs from 'dayjs';
 export type Slice = keyof typeof slicesData;
 
 const slicesData = {
-    hour: {
-        fromOffset: 1000 * 60 * 60 * 24
-    },
-    day: {
-        fromOffset: 1000 * 60 * 60 * 24 * 7
-    },
-    month: {
-        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12
-    },
-    year: {
-        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12 * 10
-    }
+    hour: {},
+    day: {},
+    week: {},
+    month: {},
+    year: {}
 }
 
 
@@ -32,32 +25,23 @@ class DateService {
         return date.format();
     }
 
-    getDefaultRange(slice: Slice) {
-        return {
-            from: new Date(Date.now() - slicesData[slice].fromOffset).toISOString(),
-            to: new Date().toISOString()
-        }
-    }
 
     getQueryDateRange(slice: Slice) {
 
         const group: Record<string, any> = {}
         const sort: Record<string, any> = {}
-        const fromParts: Record<string, any> = {}
 
         switch (slice) {
             case 'hour':
                 group.hour = { $hour: '$created_at' }
-                fromParts.hour = "$_id.hour";
             case 'day':
                 group.day = { $dayOfMonth: '$created_at' }
-                fromParts.day = "$_id.day";
+            case 'week':
+                group.week = { $isoWeek: '$created_at' }
             case 'month':
                 group.month = { $month: '$created_at' }
-                fromParts.month = "$_id.month";
             case 'year':
                 group.year = { $year: '$created_at' }
-                fromParts.year = "$_id.year";
         }
 
         switch (slice) {
@@ -68,6 +52,7 @@ class DateService {
                 sort['_id.year'] = 1;
                 sort['_id.month'] = 1;
                 break;
+            case 'week':
             case 'day':
                 sort['_id.year'] = 1;
                 sort['_id.month'] = 1;
@@ -81,7 +66,7 @@ class DateService {
                 break;
         }
 
-        return { group, sort, fromParts }
+        return { group, sort }
     }
 
     prepareDateRange(from: string, to: string, slice: Slice) {
@@ -114,7 +99,6 @@ class DateService {
         }
         return { dates: filledDates, from, to };
     }
-
 
     fillDates(dates: string[], slice: Slice) {
         const allDates: dayjs.Dayjs[] = [];

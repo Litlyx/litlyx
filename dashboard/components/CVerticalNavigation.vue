@@ -208,8 +208,7 @@ const pricingDrawer = usePricingDrawer();
                 <div v-if="snapshot" class="flex flex-col text-[.7rem] mt-2">
                     <div class="flex gap-1 items-center justify-center text-lyx-text-dark">
                         <div class="poppins">
-                            {{ new Date(snapshot.from).toLocaleString().split(',')[0].trim()
-                            }}
+                            {{ new Date(snapshot.from).toLocaleString().split(',')[0].trim() }}
                         </div>
                         <div class="poppins"> to </div>
                         <div class="poppins">
@@ -217,7 +216,7 @@ const pricingDrawer = usePricingDrawer();
                         </div>
                     </div>
 
-                    <div class="mt-2" v-if="snapshot._id.toString().startsWith('default') === false">
+                    <div class="mt-2" v-if="('default' in snapshot == false)">
                         <UPopover placement="bottom">
                             <LyxUiButton type="danger" class="w-full text-center">
                                 Delete current snapshot

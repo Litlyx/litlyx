@@ -16,7 +16,7 @@ export default defineEventHandler(async event => {
         const timelineData = await executeTimelineAggregation({
             projectId: project_id,
             model: VisitModel,
-            from, to, slice,
+            from, to, slice
         });
         const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
         return timelineFilledMerged;

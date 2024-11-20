@@ -3,19 +3,13 @@
 import DateService from '@services/DateService';
 import type { Slice } from '@services/DateService';
 
-const { snapshot, safeSnapshotDates } = useSnapshot()
+const { snapshot, safeSnapshotDates, snapshotDuration } = useSnapshot()
 
-const snapshotDays = computed(() => {
-    const to = new Date(safeSnapshotDates.value.to).getTime();
-    const from = new Date(safeSnapshotDates.value.from).getTime();
-    return (to - from) / 1000 / 60 / 60 / 24;
-});
 
 const chartSlice = computed(() => {
-    const snapshotSizeMs = new Date(snapshot.value.to).getTime() - new Date(snapshot.value.from).getTime();
-    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 6) return 'hour' as Slice;
-    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 30) return 'day' as Slice;
-    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 90) return 'day' as Slice;
+    if (snapshotDuration.value <= 3) return 'hour' as Slice;
+    if (snapshotDuration.value <= 3 * 7) return 'day' as Slice;
+    if (snapshotDuration.value <= 3 * 30) return 'week' as Slice;
     return 'month' as Slice;
 });
 
@@ -42,29 +36,30 @@ function transformResponse(input: { _id: string, count: number }[]) {
 }
 
 const visitsData = useFetch('/api/timeline/visits', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
+
 const sessionsData = useFetch('/api/timeline/sessions', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
 const sessionsDurationData = useFetch('/api/timeline/sessions_duration', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
 const bouncingRateData = useFetch('/api/timeline/bouncing_rate', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
 
 const avgVisitDay = computed(() => {
     if (!visitsData.data.value) return '0.00';
     const counts = visitsData.data.value.data.reduce((a, e) => e + a, 0);
-    const avg = counts / Math.max(snapshotDays.value, 1);
+    const avg = counts / Math.max(snapshotDuration.value, 1);
     return avg.toFixed(2);
 });
 
 const avgSessionsDay = computed(() => {
     if (!sessionsData.data.value) return '0.00';
     const counts = sessionsData.data.value.data.reduce((a, e) => e + a, 0);
-    const avg = counts / Math.max(snapshotDays.value, 1);
+    const avg = counts / Math.max(snapshotDuration.value, 1);
     return avg.toFixed(2);
 });
 
@@ -123,8 +118,8 @@ const avgSessionDuration = computed(() => {
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer"
-            text="Visit duration" :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
+        <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer" text="Visit duration"
+            :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
             :data="sessionsDurationData.data.value?.data" :labels="sessionsDurationData.data.value?.labels"
             color="#f56523">
         </DashboardCountCard>
