@@ -1,5 +1,6 @@
 
 import dayjs from 'dayjs';
+import * as fns from 'date-fns';
 
 export type Slice = keyof typeof slicesData;
 
@@ -11,18 +12,62 @@ const slicesData = {
     year: {}
 }
 
+const startOfFunctions: { [key in Slice]: (date: Date) => Date } = {
+    hour: fns.startOfHour,
+    day: fns.startOfDay,
+    week: fns.startOfWeek,
+    month: fns.startOfMonth,
+    year: fns.startOfYear
+};
+
+const endOfFunctions: { [key in Slice]: (date: Date) => Date } = {
+    hour: fns.endOfHour,
+    day: fns.endOfDay,
+    week: fns.endOfWeek,
+    month: fns.endOfMonth,
+    year: fns.endOfYear
+};
 
 class DateService {
 
     public slicesData = slicesData;
 
     getChartLabelFromISO(iso: string, locale: string, slice: Slice) {
-        const date = dayjs(iso).locale(locale);
-        if (slice === 'hour') return date.format('HH:mm');
-        if (slice === 'day') return date.format('DD/MM');
-        if (slice === 'month') return date.format('MM MMMM');
-        if (slice === 'year') return date.format('YYYY');
-        return date.format();
+        if (slice === 'hour') return fns.format(iso, 'HH:mm');
+        if (slice === 'day') return fns.format(iso, 'dd/MM');
+        if (slice === 'week') return fns.format(iso, 'dd/MM');
+        if (slice === 'month') return fns.format(iso, 'MM MMMM');
+        if (slice === 'year') return fns.format(iso, 'YYYY');
+        return iso;
+    }
+
+    canUseSlice(from: string | number | Date, to: string | number | Date, slice: Slice) {
+        const daysDiff = fns.differenceInDays(new Date(to), new Date(from));
+        return this.canUseSliceFromDays(daysDiff, slice);
+    }
+
+    canUseSliceFromDays(days: number, slice: Slice): [false, string] | [true, number] {
+        // 3 Days
+        if (slice === 'hour' && (days > 3)) return [false, 'Date gap too big for this slice'];
+        // 3 Weeks
+        if (slice === 'day' && (days > 7 * 3)) return [false, 'Date gap too big for this slice'];
+        // 3 Months
+        if (slice === 'week' && (days > 30 * 3)) return [false, 'Date gap too big for this slice'];
+        // 3 Years
+        if (slice === 'month' && (days > 365 * 3)) return [false, 'Date gap too big for this slice'];
+        return [true, days]
+    }
+
+    startOfSlice(date: Date, slice: Slice) {
+        const fn = startOfFunctions[slice];
+        if (!fn) throw Error(`startOfFunction of slice ${slice} not found`);
+        return fn(date);
+    }
+
+    endOfSlice(date: Date, slice: Slice) {
+        const fn = endOfFunctions[slice];
+        if (!fn) throw Error(`endOfFunction of slice ${slice} not found`);
+        return fn(date);
     }
 
 

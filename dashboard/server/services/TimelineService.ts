@@ -31,17 +31,10 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
 
     if (!sort) throw Error('Slice is probably not correct');
 
-    const daysDiff = fns.differenceInDays(new Date(options.to), new Date(options.from));
 
-    // 3 Days
-    if (options.slice === 'hour' && (daysDiff > 3)) throw Error('Date gap too big for this slice');
-    // 3 Weeks
-    if (options.slice === 'day' && (daysDiff > 7 * 3)) throw Error('Date gap too big for this slice');
-    // 3 Months
-    if (options.slice === 'week' && (daysDiff > 30 * 3)) throw Error('Date gap too big for this slice');
-    // 3 Years
-    if (options.slice === 'month' && (daysDiff > 365 * 3)) throw Error('Date gap too big for this slice');
+    const [sliceValid, errorOrDays] = checkSliceValidity(options.from, options.to, options.slice);
 
+    if (!sliceValid) throw Error(errorOrDays);
 
     const aggregation = [
         {
@@ -96,7 +89,11 @@ export function fillAndMergeTimelineAggregationV2(timeline: { _id: string, count
     return merged;
 }
 
-function generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {
+export function checkSliceValidity(from: string | number | Date, to: string | number | Date, slice: Slice): [false, string] | [true, number] {
+    return DateService.canUseSlice(from, to, slice);
+}
+
+export function generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {
     const slices: Date[] = [];
     let currentDate = fromDate;
     const addFunctions: { [key in Slice]: any } = { hour: fns.addHours, day: fns.addDays, week: fns.addWeeks, month: fns.addMonths, year: fns.addYears };

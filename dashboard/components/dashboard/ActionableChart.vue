@@ -81,7 +81,7 @@ const chartData = ref<ChartData<'line' | 'bar' | 'bubble'>>({
             hoverBackgroundColor: '#4abde8',
             hoverBorderColor: '#4abde8',
             hoverBorderWidth: 2,
-            type: 'bar'
+            type: 'bar',
         },
         {
             label: 'Events',
@@ -130,13 +130,25 @@ function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'li
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
 
 }
+
+const { snapshotDuration } = useSnapshot();
+
 const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Hour', value: 'hour' },
     { label: 'Day', value: 'day' },
+    { label: 'Week', value: 'week' },
     { label: 'Month', value: 'month' },
 ];
 
-const selectedSlice = computed(() => selectLabels[selectedLabelIndex.value].value);
+const selectLablesAvailable = computed<{ label: string, value: Slice, disabled: boolean }[]>(() => {
+    return selectLabels.map(e => {
+        return { ...e, disabled: !DateService.canUseSliceFromDays(snapshotDuration.value, e.value)[0] }
+    });
+})
+
+const selectedSlice = computed<Slice>(() => {
+    return selectLablesAvailable.value[selectedLabelIndex.value].value
+});
 
 const selectedLabelIndex = ref<number>(1);
 const allDatesFull = ref<string[]>([]);
@@ -144,13 +156,15 @@ const allDatesFull = ref<string[]>([]);
 
 function transformResponse(input: { _id: string, count: number }[]) {
     const data = input.map(e => e.count);
-    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, selectLabels[selectedLabelIndex.value].value));
-    allDatesFull.value = input.map(e => e._id.toString());
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, selectedSlice.value));
+    if (input.length > 0) allDatesFull.value = input.map(e => e._id.toString());
     return { data, labels }
 }
 
 function onResponseError(e: any) {
-    errorData.value = { errored: true, text: e.response._data.message ?? 'Generic error' }
+    let message = e.response._data.message ?? 'Generic error';
+    if (message == 'internal server error') message = 'Please change slice';
+    errorData.value = { errored: true, text: message }
 }
 
 function onResponse(e: any) {
@@ -247,7 +261,7 @@ const legendClasses = ref<string[]>([
     <CardTitled title="Trend chart" sub="Easily match Visits, Unique sessions and Events trends." class="w-full">
         <template #header>
             <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event" :currentIndex="selectedLabelIndex"
-                :options="selectLabels">
+                :options="selectLablesAvailable">
             </SelectButton>
         </template>
 

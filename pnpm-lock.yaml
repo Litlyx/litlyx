@@ -11,6 +11,9 @@ importers:
       '@getbrevo/brevo':
         specifier: ^2.2.0
         version: 2.2.0
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -75,7 +78,7 @@ importers:
         version: 3.14.159(@parcel/watcher@2.5.0)(@types/node@20.17.6)(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.27.2)(sass@1.81.0)(terser@5.36.0)(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(sass@1.81.0)(terser@5.36.0))
       nuxt-vue3-google-signin:
         specifier: ^0.0.11
-        version: 0.0.11(@types/node@20.17.6)(magicast@0.3.5)(rollup@4.27.2)(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(sass@1.81.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))
+        version: 0.0.11(magicast@0.3.5)(rollup@4.27.2)(vue@3.5.13(typescript@5.6.3))
       openai:
         specifier: ^4.61.0
         version: 4.72.0
@@ -2344,6 +2347,9 @@ packages:
 
   date-fns@3.6.0:
     resolution: {integrity: sha512-fRHTG8g/Gif+kSh50gaGEdToemgfj74aRX3swtiouboip5JDLAyDE9F11nHMIcvOaXeOC6D7SpNhi7uFyB7Uww==}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -5411,6 +5417,11 @@ packages:
     peerDependencies:
       vue: ^3
 
+  vue3-google-signin@2.0.1:
+    resolution: {integrity: sha512-vZTlVrG56JERtqQ+6YI8e92wqfhAMDyNONCsLgKKXxzCNCWEfSkZcAvz7COm9V4bvzmGsebZ8KC3ljol2qsIcg==}
+    peerDependencies:
+      vue: ^3
+
   vue@3.5.13:
     resolution: {integrity: sha512-wmeiSMxkZCSc+PM2w2VRsOYAZC8GdipNFRTsLSfodVqI9mbejKeXEGr8SckuLnrQPGe3oJN5c3K0vpoU9q/wCQ==}
     peerDependencies:
@@ -7846,6 +7857,8 @@ snapshots:
 
   date-fns@3.6.0: {}
 
+  date-fns@4.1.0: {}
+
   dayjs@1.11.13: {}
 
   db0@0.2.1: {}
@@ -9637,6 +9650,17 @@ snapshots:
       - vite
       - vue
 
+  nuxt-vue3-google-signin@0.0.11(magicast@0.3.5)(rollup@4.27.2)(vue@3.5.13(typescript@5.6.3)):
+    dependencies:
+      '@nuxt/kit': 3.14.159(magicast@0.3.5)(rollup@4.27.2)
+      unimport: 3.13.2(rollup@4.27.2)
+      vue3-google-signin: 2.0.1(vue@3.5.13(typescript@5.6.3))
+    transitivePeerDependencies:
+      - magicast
+      - rollup
+      - supports-color
+      - vue
+
   nuxt@3.14.159(@parcel/watcher@2.5.0)(@types/node@20.17.6)(eslint@8.57.1)(ioredis@5.4.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.27.2)(sass@1.81.0)(terser@5.36.0)(typescript@5.6.3)(vite@5.4.11(@types/node@20.17.6)(sass@1.81.0)(terser@5.36.0)):
     dependencies:
       '@nuxt/devalue': 2.0.2
@@ -11388,6 +11412,10 @@ snapshots:
       - supports-color
       - typescript
       - vite
+
+  vue3-google-signin@2.0.1(vue@3.5.13(typescript@5.6.3)):
+    dependencies:
+      vue: 3.5.13(typescript@5.6.3)
 
   vue@3.5.13(typescript@5.6.3):
     dependencies:
