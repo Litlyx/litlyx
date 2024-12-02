@@ -52,7 +52,7 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                 ...options.customGroup
             }
         },
-        { $sort: sort },
+        { $sort: { firstDate: 1 } },
         {
             $project: {
                 _id: "$firstDate",
@@ -60,9 +60,12 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                 ...options.customProjection
             }
         }
-    ]
+    ] as any;
 
     if (options.debug === true) {
+        console.log('---------- SORT ----------')
+        console.log(JSON.stringify(sort, null, 2));
+        console.log('---------- AGGREAGATION ----------')
         console.log(JSON.stringify(aggregation, null, 2));
     }
 
