@@ -79,7 +79,9 @@ export async function executeTimelineAggregation(options: TimelineAggregationOpt
     return executeAdvancedTimelineAggregation(options);
 }
 
-
+/**
+ * @deprecated use fillAndMergeTimelineAggregationV2
+ */
 export function fillAndMergeTimelineAggregation(timeline: { _id: string, count: number }[], slice: Slice) {
     const filledDates = DateService.fillDates(timeline.map(e => e._id), slice);
     const merged = DateService.mergeFilledDates(filledDates, timeline, '_id', slice, { count: 0 });

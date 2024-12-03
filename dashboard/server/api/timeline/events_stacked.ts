@@ -19,9 +19,6 @@ export default defineEventHandler(async event => {
             customIdGroup: { name: '$name' },
         })
 
-        // const filledDates = DateService.createBetweenDates(from, to, slice);
-        // const merged = DateService.mergeFilledDates(filledDates.dates, timelineStackedEvents, '_id', slice, { count: 0, name: '' });
-
         return timelineStackedEvents;
     });
 
