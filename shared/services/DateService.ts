@@ -50,7 +50,7 @@ class DateService {
         // 3 Days
         if (slice === 'hour' && (days > 3)) return [false, 'Date gap too big for this slice'];
         // 3 Weeks
-        if (slice === 'day' && (days > 7 * 3)) return [false, 'Date gap too big for this slice'];
+        if (slice === 'day' && (days > 31)) return [false, 'Date gap too big for this slice'];
         // 3 Months
         if (slice === 'week' && (days > 30 * 3)) return [false, 'Date gap too big for this slice'];
         // 3 Years
@@ -114,6 +114,9 @@ class DateService {
         return { group, sort }
     }
 
+    /**
+    * @deprecated interal to generateDateSlices
+    */
     prepareDateRange(from: string, to: string, slice: Slice) {
 
         let fromDate = dayjs(from).minute(0).second(0).millisecond(0);
@@ -134,6 +137,9 @@ class DateService {
         }
     }
 
+    /**
+    * @deprecated interal to generateDateSlices
+    */
     createBetweenDates(from: string, to: string, slice: Slice) {
         let start = dayjs(from);
         const end = dayjs(to);
@@ -145,6 +151,9 @@ class DateService {
         return { dates: filledDates, from, to };
     }
 
+    /**
+     * @deprecated use generateDateSlices
+     */
     fillDates(dates: string[], slice: Slice) {
         const allDates: dayjs.Dayjs[] = [];
         const firstDate = dayjs(dates.at(0));
@@ -161,12 +170,61 @@ class DateService {
         return allDates;
     }
 
+    /**
+     * @deprecated use mergeDates
+     */
     mergeFilledDates<T extends Record<string, any>, K extends keyof T>(dates: dayjs.Dayjs[], items: T[], dateField: K, slice: Slice, fillData: Omit<T, K>) {
         const result = new Array<T>();
         for (const date of dates) {
             const item = items.find(e => dayjs(e[dateField]).isSame(date, slice));
             result.push(item ?? { ...fillData, [dateField]: date.format() } as T);
         }
+        return result;
+    }
+
+    generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {
+        const slices: Date[] = [];
+        let currentDate = fromDate;
+        const addFunctions: { [key in Slice]: any } = { hour: fns.addHours, day: fns.addDays, week: fns.addWeeks, month: fns.addMonths, year: fns.addYears };
+        const addFunction = addFunctions[slice];
+        if (!addFunction) { throw new Error(`Invalid slice: ${slice}`); }
+        while (fns.isBefore(currentDate, toDate) || currentDate.getTime() === toDate.getTime()) {
+            slices.push(currentDate);
+            currentDate = addFunction(currentDate, 1);
+        }
+        return slices;
+    }
+
+    mergeDates(timeline: { _id: string, count: number }[], dates: Date[], slice: Slice) {
+
+        const result: { _id: string, count: number }[] = [];
+
+        const isSames: { [key in Slice]: any } = { hour: fns.isSameHour, day: fns.isSameDay, week: fns.isSameWeek, month: fns.isSameMonth, year: fns.isSameYear, }
+
+        const isSame = isSames[slice];
+
+        if (!isSame) {
+            throw new Error(`Invalid slice: ${slice}`);
+        }
+
+        for (const element of timeline) {
+            const elementDate = new Date(element._id);
+            for (const date of dates) {
+                if (isSame(elementDate, date)) {
+                    const existingEntry = result.find(item => isSame(new Date(item._id), date));
+
+                    if (existingEntry) {
+                        existingEntry.count += element.count;
+                    } else {
+                        result.push({
+                            _id: date.toISOString(),
+                            count: element.count,
+                        });
+                    }
+                }
+            }
+        }
+
         return result;
     }
 

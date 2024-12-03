@@ -65,7 +65,7 @@ async function processStreamEntry(data: Record<string, string>) {
 
 async function process_visit(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, ip, website, page, referrer, userAgent, flowHash } = data;
+    const { pid, ip, website, page, referrer, userAgent, flowHash, timestamp } = data;
 
     let referrerParsed;
     try {
@@ -90,6 +90,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
             flowHash,
             continent: geoLocation[0],
             country: geoLocation[1],
+            created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } }, { upsert: true }),
         ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } })
@@ -99,7 +100,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 
 async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, instant, flowHash } = data;
+    const { pid, instant, flowHash, timestamp } = data;
 
     const existingSession = await SessionModel.findOne({ project_id: pid, session: sessionHash }, { _id: 1 });
     if (!existingSession) {
@@ -124,7 +125,7 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
 async function process_event(data: Record<string, string>, sessionHash: string) {
 
-    const { name, metadata, pid, flowHash } = data;
+    const { name, metadata, pid, flowHash, timestamp } = data;
 
     let metadataObject;
     try {
@@ -134,7 +135,10 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
     }
 
     await Promise.all([
-        EventModel.create({ project_id: pid, name, flowHash, metadata: metadataObject, session: sessionHash }),
+        EventModel.create({
+            project_id: pid, name, flowHash, metadata: metadataObject, session: sessionHash,
+            created_at: new Date(parseInt(timestamp))
+        }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true }),
         ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } })
     ]);

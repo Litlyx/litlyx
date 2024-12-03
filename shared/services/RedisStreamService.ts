@@ -93,7 +93,7 @@ export class RedisStreamService {
     }
 
     static async addToStream(streamName: string, data: Record<string, string>) {
-        const result = await this.client.xAdd(streamName, "*", data);
+        const result = await this.client.xAdd(streamName, "*", { ...data, timestamp: Date.now().toString() });
         return result;
     }
 

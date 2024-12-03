@@ -21,7 +21,9 @@ app.post('/event', express.json(jsonOptions), async (req, res) => {
         const ip = getIPFromRequest(req);
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
         const flowHash = createFlowSessionHash(req.body.pid, ip, req.body.userAgent);
-        await RedisStreamService.addToStream(streamName, { ...req.body, _type: 'event', sessionHash, ip, flowHash });
+        await RedisStreamService.addToStream(streamName, { 
+            ...req.body, _type: 'event', sessionHash, ip, flowHash
+         });
         return res.sendStatus(200);
     } catch (ex: any) {
         return res.status(500).json({ error: ex.message });
