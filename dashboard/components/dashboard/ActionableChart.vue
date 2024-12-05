@@ -24,9 +24,12 @@ const chartOptions = ref<ChartOptions<'line'>>({
                 color: '#CCCCCC22',
                 // borderDash: [5, 10]
             },
+            beginAtZero: true,
         },
         x: {
             ticks: { display: true },
+            stacked: false,
+            offset: false,
             grid: {
                 display: true,
                 drawBorder: false,
@@ -136,7 +139,7 @@ const { snapshotDuration } = useSnapshot();
 const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Hour', value: 'hour' },
     { label: 'Day', value: 'day' },
-    { label: 'Week', value: 'week' },
+    // { label: 'Week', value: 'week' },
     { label: 'Month', value: 'month' },
 ];
 
@@ -220,12 +223,16 @@ function onDataReady() {
     const maxChartY = Math.max(...visitsData.data.value.data, ...sessionsData.data.value.data);
     const maxEventSize = Math.max(...eventsData.data.value.data)
 
+
+    const currentDateTime = Date.now();
+
     chartData.value.datasets[0].data = visitsData.data.value.data;
     chartData.value.datasets[1].data = sessionsData.data.value.data;
     chartData.value.datasets[2].data = eventsData.data.value.data.map(e => {
         const rValue = 25 / maxEventSize * e;
         return { x: 0, y: maxChartY + 70, r: isNaN(rValue) ? 0 : rValue, r2: e }
     });
+
 
     chartData.value.datasets[0].backgroundColor = [createGradient('#5655d7')];
     chartData.value.datasets[1].backgroundColor = [createGradient('#4abde8')];

@@ -60,12 +60,21 @@ async function sendMessage() {
 
 
     } catch (ex: any) {
+
         if (ex.message.includes('CHAT_LIMIT_REACHED')) {
             currentChatMessages.value.push({
                 role: 'assistant',
                 content: 'You have reached your current tier chat limit.\n Upgrade to an higher tier. <a style="color: blue; text-decoration: underline;" href="/plans"> Upgrade now. </a>',
             });
         }
+
+        if (ex.message.includes('Unauthorized')) {
+            currentChatMessages.value.push({
+                role: 'assistant',
+                content: 'To use AI you need to provide AI_ORG, AI_PROJECT and AI_KEY in docker compose',
+            });
+        }
+
     }
 
 
@@ -89,7 +98,7 @@ async function openChat(chat_id?: string) {
     }
     currentChatId.value = chat_id;
     const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
-        headers: useComputedHeaders({useSnapshotDates:false}).value
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
     });
     if (!messages) return;
 
@@ -132,7 +141,7 @@ async function deleteChat(chat_id: string) {
         currentChatMessages.value = [];
     }
     await $fetch(`/api/ai/${chat_id}/delete`, {
-        headers: useComputedHeaders({useSnapshotDates:false}).value
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
     });
     await reloadChatsList();
 }
@@ -147,6 +156,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         <div class="flex flex-row h-full overflow-y-hidden">
 
             <div class="flex-[5] py-8 flex h-full flex-col items-center relative overflow-y-hidden">
+
 
                 <div class="flex flex-col items-center xl:mt-[20vh] px-8 xl:px-28"
                     v-if="currentChatMessages.length == 0">
@@ -163,6 +173,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                         </div>
                     </div>
                 </div>
+
 
                 <div ref="scroller" class="flex flex-col w-full gap-6 px-6 xl:px-28 overflow-y-auto pb-20">
 

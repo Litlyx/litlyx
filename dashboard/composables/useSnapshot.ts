@@ -15,11 +15,11 @@ const remoteSnapshots = useFetch<TProjectSnapshot[]>('/api/project/snapshots', {
 
 watch(project, async () => {
     await remoteSnapshots.refresh();
-    snapshot.value = isLiveDemo.value ? snapshots.value[0] : snapshots.value[1];
+    snapshot.value = isLiveDemo.value ? snapshots.value[2] : snapshots.value[2];
 });
 
 const snapshots = computed<GenericSnapshot[]>(() => {
-    const defaultSnapshots: GenericSnapshot[] = project.value?._id ? getDefaultSnapshots(project.value._id as any) : [];
+    const defaultSnapshots: GenericSnapshot[] = project.value?._id ? getDefaultSnapshots(project.value._id as any, project.value.created_at) : [];
     return [...defaultSnapshots, ...(remoteSnapshots.data.value || [])];
 })
 

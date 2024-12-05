@@ -9,6 +9,8 @@ const { project } = useProject();
 
 const pricingDrawer = usePricingDrawer();
 
+const selfhosted = useSelfhosted();
+
 const sections: Section[] = [
     {
         title: '',
@@ -16,10 +18,12 @@ const sections: Section[] = [
             { label: 'Web Analytics', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Custom Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'Ask AI', to: '/analyst', icon: 'fal fa-sparkles' },
-            { label: 'Security', to: '/security', icon: 'fal fa-shield' },
+            { label: 'Security', to: '/security', icon: 'fal fa-shield', disabled: selfhosted },
+
             // { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             // { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             // { label: 'Integrations (soon)', to: '/integrations', icon: 'fal fa-cube', disabled: true },
+
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,

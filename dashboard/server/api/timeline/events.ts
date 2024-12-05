@@ -13,12 +13,15 @@ export default defineEventHandler(async event => {
     const cacheExp = 60;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
+
         const timelineData = await executeTimelineAggregation({
             projectId: project_id,
             model: EventModel,
             from, to, slice,
         });
+
         const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
+
         return timelineFilledMerged;
 
     });

@@ -89,57 +89,11 @@ export function fillAndMergeTimelineAggregation(timeline: { _id: string, count: 
 }
 
 export function fillAndMergeTimelineAggregationV2(timeline: { _id: string, count: number }[], slice: Slice, from: string, to: string) {
-    const allDates = generateDateSlices(slice, new Date(from), new Date(to));
-    const merged = mergeDates(timeline, allDates, slice);
+    const allDates = DateService.generateDateSlices(slice, new Date(from), new Date(to));
+    const merged = DateService.mergeDates(timeline, allDates, slice);
     return merged;
 }
 
 export function checkSliceValidity(from: string | number | Date, to: string | number | Date, slice: Slice): [false, string] | [true, number] {
     return DateService.canUseSlice(from, to, slice);
-}
-
-export function generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {
-    const slices: Date[] = [];
-    let currentDate = fromDate;
-    const addFunctions: { [key in Slice]: any } = { hour: fns.addHours, day: fns.addDays, week: fns.addWeeks, month: fns.addMonths, year: fns.addYears };
-    const addFunction = addFunctions[slice];
-    if (!addFunction) { throw new Error(`Invalid slice: ${slice}`); }
-    while (fns.isBefore(currentDate, toDate) || currentDate.getTime() === toDate.getTime()) {
-        slices.push(currentDate);
-        currentDate = addFunction(currentDate, 1);
-    }
-    return slices;
-}
-
-function mergeDates(timeline: { _id: string, count: number }[], dates: Date[], slice: Slice) {
-
-    const result: { _id: string, count: number }[] = [];
-
-    const isSames: { [key in Slice]: any } = { hour: fns.isSameHour, day: fns.isSameDay, week: fns.isSameWeek, month: fns.isSameMonth, year: fns.isSameYear, }
-
-    const isSame = isSames[slice];
-
-    if (!isSame) {
-        throw new Error(`Invalid slice: ${slice}`);
-    }
-
-    for (const element of timeline) {
-        const elementDate = new Date(element._id);
-        for (const date of dates) {
-            if (isSame(elementDate, date)) {
-                const existingEntry = result.find(item => isSame(new Date(item._id), date));
-
-                if (existingEntry) {
-                    existingEntry.count += element.count;
-                } else {
-                    result.push({
-                        _id: date.toISOString(),
-                        count: element.count,
-                    });
-                }
-            }
-        }
-    }
-
-    return result;
 }

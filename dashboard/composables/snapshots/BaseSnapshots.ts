@@ -6,7 +6,7 @@ import * as fns from 'date-fns';
 export type DefaultSnapshot = TProjectSnapshot & { default: true }
 export type GenericSnapshot = TProjectSnapshot | DefaultSnapshot;
 
-export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id']) {
+export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], project_created_at: Date | string) {
 
     const today: DefaultSnapshot = {
         project_id,
@@ -70,9 +70,19 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id']) 
     }
 
 
+    const allTime: DefaultSnapshot = {
+        project_id,
+        _id: '___allTime' as any,
+        name: 'All Time',
+        from: new Date(project_created_at.toString()),
+        to: new Date(Date.now()),
+        color: '#CC11CC',
+        default: true
+    }
 
 
-    const snapshotList = [lastDay, today, lastMonth, currentMonth, lastWeek, currentWeek]
+
+    const snapshotList = [lastDay, today, lastMonth, currentMonth, lastWeek, currentWeek, allTime]
 
     return snapshotList;
 

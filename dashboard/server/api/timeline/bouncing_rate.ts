@@ -4,7 +4,7 @@ import { VisitModel } from "@schema/metrics/VisitSchema";
 import { Redis } from "~/server/services/CacheService";
 import DateService from "@services/DateService";
 
-import { checkSliceValidity, generateDateSlices } from "~/server/services/TimelineService";
+import { checkSliceValidity } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
 
@@ -23,7 +23,7 @@ export default defineEventHandler(async event => {
         const [sliceValid, errorOrDays] = checkSliceValidity(from, to, slice);
         if (!sliceValid) throw Error(errorOrDays);
 
-        const allDates = generateDateSlices(slice, new Date(from), new Date(to));
+        const allDates = DateService.generateDateSlices(slice, new Date(from), new Date(to));
 
         const result: { _id: string, count: number }[] = [];
 

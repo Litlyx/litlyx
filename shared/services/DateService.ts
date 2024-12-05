@@ -195,11 +195,15 @@ class DateService {
         return slices;
     }
 
-    mergeDates(timeline: { _id: string, count: number }[], dates: Date[], slice: Slice) {
+    isSameDayUTC(a: Date, b: Date) {
+        return a.getUTCFullYear() === b.getUTCFullYear() && a.getUTCMonth() === b.getUTCMonth() && a.getUTCDate() === b.getUTCDate();
+    }
+
+    mergeDates(timeline: { _id: string, count: number }[], allDates: Date[], slice: Slice) {
 
         const result: { _id: string, count: number }[] = [];
 
-        const isSames: { [key in Slice]: any } = { hour: fns.isSameHour, day: fns.isSameDay, week: fns.isSameWeek, month: fns.isSameMonth, year: fns.isSameYear, }
+        const isSames: { [key in Slice]: any } = { hour: fns.isSameHour, day: this.isSameDayUTC, week: fns.isSameWeek, month: fns.isSameMonth, year: fns.isSameYear, }
 
         const isSame = isSames[slice];
 
@@ -207,26 +211,21 @@ class DateService {
             throw new Error(`Invalid slice: ${slice}`);
         }
 
-        for (const element of timeline) {
-            const elementDate = new Date(element._id);
-            for (const date of dates) {
+        for (const date of allDates) {
+            result.push({ _id: date.toISOString(), count: 0 });
+            for (const element of timeline) {
+                const elementDate = new Date(element._id);
                 if (isSame(elementDate, date)) {
-                    const existingEntry = result.find(item => isSame(new Date(item._id), date));
-
-                    if (existingEntry) {
-                        existingEntry.count += element.count;
-                    } else {
-                        result.push({
-                            _id: date.toISOString(),
-                            count: element.count,
-                        });
-                    }
+                    const existingEntry = result.find(item => isSame(date, new Date(item._id)));
+                    if (!existingEntry) throw new Error('THIS CANNOT HAPPEN');
+                    existingEntry.count += element.count;
                 }
             }
         }
 
         return result;
     }
+
 
 }
 
