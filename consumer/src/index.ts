@@ -9,13 +9,31 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { lookup } from './lookup';
 import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
+import express from 'express';
 
 import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 import { ProjectCountModel } from '@schema/project/ProjectsCounts';
 
 
+const app = express();
+
+let durations: number[] = [];
+
+app.get('/status', async (req, res) => {
+    try {
+        return res.json({ status: 'ALIVE', durations })
+    } catch (ex) {
+        console.error(ex);
+        return res.setStatus(500).json({ error: ex.message });
+    }
+})
+
+app.listen(process.env.PORT);
+
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
+
+
 
 async function main() {
 
@@ -31,9 +49,10 @@ async function main() {
 }
 
 async function processStreamEntry(data: Record<string, string>) {
-    try {
 
-        const start = Date.now();
+    const start = Date.now();
+
+    try {
 
         const eventType = data._type;
         if (!eventType) return;
@@ -54,13 +73,19 @@ async function processStreamEntry(data: Record<string, string>) {
             await process_visit(data, sessionHash);
         }
 
-        const duration = Date.now() - start;
-
         // console.log('Entry processed in', duration, 'ms');
 
     } catch (ex: any) {
         console.error('ERROR PROCESSING STREAM EVENT', ex.message);
     }
+
+    const duration = Date.now() - start;
+
+    durations.push(duration);
+    if (durations.length > 1000) {
+        durations = durations.splice(500);
+    }
+
 }
 
 async function process_visit(data: Record<string, string>, sessionHash: string) {

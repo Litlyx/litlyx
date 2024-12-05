@@ -2,6 +2,7 @@ module.exports = {
     apps: [
         {
             name: 'consumer',
+            port: '3031',
             exec_mode: 'cluster',
             instances: '2',
             script: './dist/consumer/src/index.js',

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "express": "^4.19.2",
     "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
