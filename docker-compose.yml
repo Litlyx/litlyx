@@ -94,6 +94,8 @@ services:
       NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
       NUXT_NOAUTH_USER_NAME: "defaultuser"
 
+      NUXT_SELFHOSTED: 'true'
+
       # Optional - Used for tests
       # NUXT_STRIPE_SECRET_TEST: ""
       # NUXT_STRIPE_WH_SECRET_TEST: ""
