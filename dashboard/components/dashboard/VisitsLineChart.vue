@@ -10,7 +10,7 @@ const { safeSnapshotDates } = useSnapshot()
 
 function transformResponse(input: { _id: string, count: number }[]) {
     const data = input.map(e => e.count);
-    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, props.slice));
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id,  new Date().getTimezoneOffset(), props.slice));
     return { data, labels }
 }
 

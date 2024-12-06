@@ -32,12 +32,13 @@ class DateService {
 
     public slicesData = slicesData;
 
-    getChartLabelFromISO(iso: string, locale: string, slice: Slice) {
-        if (slice === 'hour') return fns.format(iso, 'HH:mm');
-        if (slice === 'day') return fns.format(iso, 'dd/MM');
-        if (slice === 'week') return fns.format(iso, 'dd/MM');
-        if (slice === 'month') return fns.format(iso, 'MM MMMM');
-        if (slice === 'year') return fns.format(iso, 'YYYY');
+    getChartLabelFromISO(iso: string, offset: number, slice: Slice) {
+        const date = new Date(new Date(iso).getTime() - offset * 1000 * 60);
+        if (slice === 'hour') return fns.format(date, 'HH:mm');
+        if (slice === 'day') return fns.format(date, 'dd/MM');
+        if (slice === 'week') return fns.format(date, 'dd/MM');
+        if (slice === 'month') return fns.format(date, 'MM MMMM');
+        if (slice === 'year') return fns.format(date, 'YYYY');
         return iso;
     }
 
@@ -71,47 +72,27 @@ class DateService {
     }
 
 
-    getQueryDateRange(slice: Slice) {
+    getGranularityData(slice: Slice, dateField: string) {
 
-        const group: Record<string, any> = {}
-        const sort: Record<string, any> = {}
+        const dateFromParts: Record<string, any> = {};
+        let granularity = '';
 
         switch (slice) {
             case 'hour':
-                group.hour = { $hour: '$created_at' }
+                dateFromParts.hour = { $hour: { date: dateField } }
+                granularity = 'hour';
             case 'day':
-                group.day = { $dayOfMonth: '$created_at' }
-            case 'week':
-                group.week = { $isoWeek: '$created_at' }
+                dateFromParts.day = { $dayOfMonth: { date: dateField } }
+                granularity = 'day';
             case 'month':
-                group.month = { $month: '$created_at' }
+                dateFromParts.month = { $month: { date: dateField } }
+                granularity = 'month';
             case 'year':
-                group.year = { $year: '$created_at' }
+                dateFromParts.year = { $year: { date: dateField } }
+                granularity = 'year';
         }
 
-        switch (slice) {
-            case 'year':
-                sort['_id.year'] = 1;
-                break;
-            case 'month':
-                sort['_id.year'] = 1;
-                sort['_id.month'] = 1;
-                break;
-            case 'week':
-            case 'day':
-                sort['_id.year'] = 1;
-                sort['_id.month'] = 1;
-                sort['_id.day'] = 1;
-                break;
-            case 'hour':
-                sort['_id.year'] = 1;
-                sort['_id.month'] = 1;
-                sort['_id.day'] = 1;
-                sort['_id.hour'] = 1;
-                break;
-        }
-
-        return { group, sort }
+        return { dateFromParts, granularity }
     }
 
     /**

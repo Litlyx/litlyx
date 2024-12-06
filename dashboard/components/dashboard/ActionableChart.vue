@@ -139,7 +139,6 @@ const { snapshotDuration } = useSnapshot();
 const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Hour', value: 'hour' },
     { label: 'Day', value: 'day' },
-    // { label: 'Week', value: 'week' },
     { label: 'Month', value: 'month' },
 ];
 
@@ -159,7 +158,11 @@ const allDatesFull = ref<string[]>([]);
 
 function transformResponse(input: { _id: string, count: number }[]) {
     const data = input.map(e => e.count);
-    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, selectedSlice.value));
+    
+    console.log('RESPONSE', input);
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, new Date().getTimezoneOffset(), selectedSlice.value));
+    console.log('LABELS', input);
+
     if (input.length > 0) allDatesFull.value = input.map(e => e._id.toString());
     return { data, labels }
 }
@@ -222,9 +225,6 @@ function onDataReady() {
 
     const maxChartY = Math.max(...visitsData.data.value.data, ...sessionsData.data.value.data);
     const maxEventSize = Math.max(...eventsData.data.value.data)
-
-
-    const currentDateTime = Date.now();
 
     chartData.value.datasets[0].data = visitsData.data.value.data;
     chartData.value.datasets[1].data = sessionsData.data.value.data;

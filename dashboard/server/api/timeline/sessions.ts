@@ -18,9 +18,7 @@ export default defineEventHandler(async event => {
             model: SessionModel,
             from, to, slice,
         });
-        const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
-        return timelineFilledMerged;
-
+        return timelineData;
     });
 
 

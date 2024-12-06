@@ -10,6 +10,7 @@ export type TimelineAggregationOptions = {
     from: string | number,
     to: string | number,
     slice: Slice,
+    dateOffset?: number,
     debug?: boolean
 }
 
@@ -27,9 +28,9 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
     options.customProjection = options.customProjection || {};
     options.customIdGroup = options.customIdGroup || {};
 
-    const { group, sort } = DateService.getQueryDateRange(options.slice);
+    const { dateFromParts, granularity } = DateService.getGranularityData(options.slice, '$tmpDate');
 
-    if (!sort) throw Error('Slice is probably not correct');
+    if (!dateFromParts) throw Error('Slice is probably not correct');
 
 
     const [sliceValid, errorOrDays] = checkSliceValidity(options.from, options.to, options.slice);
@@ -40,31 +41,60 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
         {
             $match: {
                 project_id: options.projectId,
-                created_at: { $gte: new Date(options.from), $lte: new Date(options.to) },
+                created_at: {
+                    $gte: new Date(options.from),
+                    $lte: new Date(options.to)
+                },
                 ...options.customMatch
             }
         },
         {
+            $addFields: {
+                tmpDate: {
+                    $dateSubtract: {
+                        startDate: "$created_at",
+                        unit: "minute",
+                        amount: options.dateOffset || -60
+                    }
+                }
+            }
+        },
+        {
+            $addFields: { isoDate: { $dateFromParts: dateFromParts } }
+        },
+        {
             $group: {
-                _id: { ...group, ...options.customIdGroup },
+                _id: { isoDate: "$isoDate", ...options.customIdGroup },
                 count: { $sum: 1 },
-                firstDate: { $first: '$created_at' },
                 ...options.customGroup
             }
         },
-        { $sort: { firstDate: 1 } },
+        {
+            $sort: { "_id.isoDate": 1 }
+        },
+        {
+            $densify: {
+                field: "_id.isoDate",
+                range: {
+                    step: 1,
+                    unit: granularity,
+                    bounds: "full"
+                }
+            }
+        },
+        {
+            $addFields: { count: { $ifNull: ["$count", 0] }, }
+        },
         {
             $project: {
-                _id: "$firstDate",
-                count: "$count",
+                _id: '$_id.isoDate',
+                count: '$count',
                 ...options.customProjection
             }
         }
     ] as any;
 
     if (options.debug === true) {
-        console.log('---------- SORT ----------')
-        console.log(JSON.stringify(sort, null, 2));
         console.log('---------- AGGREAGATION ----------')
         console.log(JSON.stringify(aggregation, null, 2));
     }

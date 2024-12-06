@@ -18,7 +18,7 @@ function transformResponse(input: { _id: string, count: number }[]) {
 
     const data = input.map(e => e.count || 0);
 
-    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, chartSlice.value));
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id,  new Date().getTimezoneOffset(), chartSlice.value));
 
     const pool = [...input.map(e => e.count || 0)];
 
