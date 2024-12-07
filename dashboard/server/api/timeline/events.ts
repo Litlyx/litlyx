@@ -16,7 +16,7 @@ export default defineEventHandler(async event => {
         const timelineData = await executeTimelineAggregation({
             projectId: project_id,
             model: EventModel,
-            from, to, slice,
+            from, to, slice
         });
         return timelineData;
     });

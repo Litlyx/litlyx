@@ -70,17 +70,20 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
             }
         },
         {
-            $sort: { "_id.isoDate": 1 }
-        },
-        {
             $densify: {
                 field: "_id.isoDate",
                 range: {
                     step: 1,
                     unit: granularity,
-                    bounds: "full"
+                    bounds: [
+                        new Date(options.from),
+                        new Date(options.to)
+                    ]
                 }
             }
+        },
+        {
+            $sort: { "_id.isoDate": 1 }
         },
         {
             $addFields: { count: { $ifNull: ["$count", 0] }, }

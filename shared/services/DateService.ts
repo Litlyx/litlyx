@@ -75,21 +75,21 @@ class DateService {
     getGranularityData(slice: Slice, dateField: string) {
 
         const dateFromParts: Record<string, any> = {};
-        let granularity = '';
+        let granularity;
 
         switch (slice) {
             case 'hour':
                 dateFromParts.hour = { $hour: { date: dateField } }
-                granularity = 'hour';
+                granularity = granularity || 'hour';
             case 'day':
                 dateFromParts.day = { $dayOfMonth: { date: dateField } }
-                granularity = 'day';
+                granularity = granularity || 'day';
             case 'month':
                 dateFromParts.month = { $month: { date: dateField } }
-                granularity = 'month';
+                granularity = granularity || 'month';
             case 'year':
                 dateFromParts.year = { $year: { date: dateField } }
-                granularity = 'year';
+                granularity = granularity || 'year';
         }
 
         return { dateFromParts, granularity }
