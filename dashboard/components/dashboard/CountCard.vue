@@ -10,7 +10,8 @@ const props = defineProps<{
     data?: number[],
     labels?: string[],
     ready?: boolean,
-    slow?: boolean
+    slow?: boolean,
+    todayIndex: number
 }>();
 
 const { snapshotDuration } = useSnapshot()
@@ -34,9 +35,9 @@ const uTooltipText = computed(() => {
             </div>
             <div class="flex flex-col grow">
                 <div class="flex items-center gap-2">
-                    <div class="brockmann text-text-dirty text-[1.2rem] 2xl:text-[1.4rem]"> 
+                    <div class="brockmann text-text-dirty text-[1.2rem] 2xl:text-[1.4rem]">
                         {{ value }}
-                     </div>
+                    </div>
                     <div class="poppins text-text-sub text-[.65rem] 2xl:text-[.8rem]"> {{ avg }} </div>
                 </div>
                 <div class="poppins text-text-sub text-[.9rem] 2xl:text-[1rem]"> {{ text }} </div>
@@ -58,7 +59,7 @@ const uTooltipText = computed(() => {
         </div>
         <div class="absolute bottom-0 left-0 w-full h-[50%] flex items-end"
             v-if="((props.data?.length || 0) > 0) && ready">
-            <DashboardEmbedChartCard v-if="ready" :data="props.data || []" :labels="props.labels || []"
+            <DashboardEmbedChartCard v-if="ready" :todayIndex="todayIndex" :data="props.data || []" :labels="props.labels || []"
                 :color="props.color">
             </DashboardEmbedChartCard>
         </div>

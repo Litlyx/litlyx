@@ -7,7 +7,9 @@ const props = defineProps<{
     data: any[],
     labels: string[]
     color: string,
+    todayIndex: number
 }>();
+
 
 const chartOptions = ref<ChartOptions<'line'>>({
     responsive: true,
@@ -48,10 +50,22 @@ const chartData = ref<ChartData<'line'>>({
             data: props.data,
             backgroundColor: [props.color + '77'],
             borderColor: props.color,
-            borderWidth: 4,
-            fill: true,
-            tension: 0.45,
-            pointRadius: 0
+            borderWidth: 2,
+            fill: false,
+            tension: 0.35,
+            pointRadius: 0,
+            segment: {
+                borderColor(ctx, options) {
+                    if (!props.todayIndex || props.todayIndex == -1) return props.color;
+                    if (ctx.p1DataIndex >= props.todayIndex) return props.color + '00';
+                    return props.color;
+                },
+                borderDash(ctx, options) {
+                    if (!props.todayIndex || props.todayIndex == -1) return undefined;
+                    if (ctx.p1DataIndex == props.todayIndex -1) return [2, 4];
+                    return undefined;
+                },
+            },
         },
     ],
 });

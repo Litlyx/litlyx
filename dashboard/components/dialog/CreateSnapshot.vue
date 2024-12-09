@@ -2,7 +2,7 @@
 
 const { closeDialog } = useCustomDialog();
 
-import { sub, format, isSameDay, type Duration } from 'date-fns'
+import { sub, format, isSameDay, type Duration, startOfDay, endOfDay } from 'date-fns'
 
 const ranges = [
     { label: 'Last 7 days', duration: { days: 7 } },
@@ -46,14 +46,14 @@ async function confirmSnapshot() {
         body: JSON.stringify({
             name: snapshotName.value,
             color: currentColor.value,
-            from: selected.value.start.toISOString(),
-            to: selected.value.end.toISOString()
+            from: startOfDay(selected.value.start),
+            to: endOfDay(selected.value.end)
         })
     });
 
     await updateSnapshots();
     closeDialog();
-    createAlert('Snapshot created','Snapshot created successfully', 'far fa-circle-check', 5000);
+    createAlert('Snapshot created', 'Snapshot created successfully', 'far fa-circle-check', 5000);
 }
 
 </script>

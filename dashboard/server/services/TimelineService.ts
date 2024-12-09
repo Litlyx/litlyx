@@ -10,7 +10,7 @@ export type TimelineAggregationOptions = {
     from: string | number,
     to: string | number,
     slice: Slice,
-    dateOffset?: number,
+    timeOffset?: number,
     debug?: boolean
 }
 
@@ -29,13 +29,12 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
     options.customIdGroup = options.customIdGroup || {};
 
     const { dateFromParts, granularity } = DateService.getGranularityData(options.slice, '$tmpDate');
-
     if (!dateFromParts) throw Error('Slice is probably not correct');
 
-
     const [sliceValid, errorOrDays] = checkSliceValidity(options.from, options.to, options.slice);
-
     if (!sliceValid) throw Error(errorOrDays);
+
+    const timeOffset = options.timeOffset || 0;
 
     const aggregation = [
         {
@@ -54,7 +53,7 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                     $dateSubtract: {
                         startDate: "$created_at",
                         unit: "minute",
-                        amount: options.dateOffset || -60
+                        amount: timeOffset
                     }
                 }
             }
@@ -76,8 +75,8 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                     step: 1,
                     unit: granularity,
                     bounds: [
-                        new Date(options.from),
-                        new Date(options.to)
+                        new Date(new Date(options.from).getTime() - (timeOffset * 1000 * 60)),
+                        new Date(new Date(options.to).getTime() - (timeOffset * 1000 * 60) + 1),
                     ]
                 }
             }

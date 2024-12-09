@@ -33,7 +33,7 @@ class DateService {
     public slicesData = slicesData;
 
     getChartLabelFromISO(iso: string, offset: number, slice: Slice) {
-        const date = new Date(new Date(iso).getTime() - offset * 1000 * 60);
+        const date = new Date(new Date(iso).getTime() + offset * 1000 * 60);
         if (slice === 'hour') return fns.format(date, 'HH:mm');
         if (slice === 'day') return fns.format(date, 'dd/MM');
         if (slice === 'week') return fns.format(date, 'dd/MM');
@@ -43,19 +43,29 @@ class DateService {
     }
 
     canUseSlice(from: string | number | Date, to: string | number | Date, slice: Slice) {
-        const daysDiff = fns.differenceInDays(new Date(to), new Date(from));
+
+        const daysDiff = fns.differenceInDays(
+            new Date(new Date(to).getTime() + 1000),
+            new Date(from)
+        );
+
         return this.canUseSliceFromDays(daysDiff, slice);
     }
 
     canUseSliceFromDays(days: number, slice: Slice): [false, string] | [true, number] {
+
         // 3 Days
         if (slice === 'hour' && (days > 3)) return [false, 'Date gap too big for this slice'];
         // 3 Weeks
         if (slice === 'day' && (days > 31)) return [false, 'Date gap too big for this slice'];
-        // 3 Months
-        if (slice === 'week' && (days > 30 * 3)) return [false, 'Date gap too big for this slice'];
         // 3 Years
         if (slice === 'month' && (days > 365 * 3)) return [false, 'Date gap too big for this slice'];
+
+        // 2 days
+        if (slice === 'day' && (days < 2)) return [false, 'Date gap too small for this slice'];
+        // 2 month
+        if (slice === 'month' && (days < 31 * 2)) return [false, 'Date gap too small for this slice'];
+
         return [true, days]
     }
 

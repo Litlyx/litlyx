@@ -8,8 +8,7 @@ const { snapshot, safeSnapshotDates, snapshotDuration } = useSnapshot()
 
 const chartSlice = computed(() => {
     if (snapshotDuration.value <= 3) return 'hour' as Slice;
-    if (snapshotDuration.value <= 3 * 7) return 'day' as Slice;
-    if (snapshotDuration.value <= 3 * 30) return 'week' as Slice;
+    if (snapshotDuration.value <= 32) return 'day' as Slice;
     return 'month' as Slice;
 });
 
@@ -31,7 +30,7 @@ function transformResponse(input: { _id: string, count: number }[]) {
 
     const trend = Math.max(Math.min(diffPercent, 99), -99);
 
-    return { data, labels, trend }
+    return { data, labels, trend, input }
 
 }
 
@@ -92,6 +91,11 @@ const avgSessionDuration = computed(() => {
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds.toFixed()}s`
 });
 
+const todayIndex = computed(()=>{
+    if (!visitsData.data.value) return -1;
+    return visitsData.data.value.input.findIndex(e => new Date(e._id).getTime() > (Date.now() - new Date().getTimezoneOffset() * 1000 * 60));
+})
+
 
 </script>
 
@@ -99,26 +103,26 @@ const avgSessionDuration = computed(() => {
 <template>
     <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-cards-wrap:grid-cols-4">
 
-        <DashboardCountCard :ready="!visitsData.pending.value" icon="far fa-earth" text="Total visits"
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!visitsData.pending.value" icon="far fa-earth" text="Total visits"
             :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
             :avg="formatNumberK(avgVisitDay) + '/day'" :trend="visitsData.data.value?.trend"
             :data="visitsData.data.value?.data" :labels="visitsData.data.value?.labels" color="#5655d7">
         </DashboardCountCard>
 
-        <DashboardCountCard :ready="!bouncingRateData.pending.value" icon="far fa-chart-user" text="Bouncing rate"
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!bouncingRateData.pending.value" icon="far fa-chart-user" text="Bouncing rate"
             :value="avgBouncingRate" :trend="bouncingRateData.data.value?.trend" :slow="true"
             :data="bouncingRateData.data.value?.data" :labels="bouncingRateData.data.value?.labels" color="#1e9b86">
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsData.pending.value" icon="far fa-user" text="Unique visitors"
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!sessionsData.pending.value" icon="far fa-user" text="Unique visitors"
             :value="formatNumberK(sessionsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
             :avg="formatNumberK(avgSessionsDay) + '/day'" :trend="sessionsData.data.value?.trend"
             :data="sessionsData.data.value?.data" :labels="sessionsData.data.value?.labels" color="#4abde8">
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer" text="Visit duration"
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!sessionsDurationData.pending.value" icon="far fa-timer" text="Visit duration"
             :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
             :data="sessionsDurationData.data.value?.data" :labels="sessionsDurationData.data.value?.labels"
             color="#f56523">
