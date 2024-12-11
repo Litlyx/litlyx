@@ -22,8 +22,37 @@ const loading = ref<boolean>(false);
 
 const currentChatId = ref<string>("");
 const currentChatMessages = ref<{ role: string, content: string, charts?: any[] }[]>([]);
+const currentChatMessageDelta = ref<string>('');
 
 const scroller = ref<HTMLDivElement | null>(null);
+
+
+
+async function pollSendMessageStatus(chat_id: string, times: number, updateStatus: (status: string) => any) {
+
+    if (times > 20) return;
+
+    const res = await $fetch(`/api/ai/${chat_id}/status`, {
+        headers: useComputedHeaders({
+            useSnapshotDates: false,
+        }).value
+    });
+    if (!res) throw Error('Error during status request');
+
+    updateStatus(res.status);
+
+    if (res.completed === false) {
+        setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), 200);
+    } else {
+        currentChatMessages.value.push({
+            role: 'assistant',
+            content: currentChatMessageDelta.value.replace(/\[data:.*?\]/g,''),
+        });
+        currentChatMessageDelta.value = '';
+
+    }
+
+}
 
 async function sendMessage() {
 
@@ -43,21 +72,21 @@ async function sendMessage() {
 
     try {
 
-        const res = await $fetch(`/api/ai/send_message`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: useComputedHeaders({
-                useSnapshotDates: false,
-                custom: { 'Content-Type': 'application/json' }
-            }).value
-        });
+        const res = await $fetch<{ chat_id: string }>(`/api/ai/send_message`, { method: 'POST', body: JSON.stringify(body), headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'Content-Type': 'application/json' } }).value });
+        currentChatId.value = res.chat_id;
 
-        currentChatMessages.value.push({ role: 'assistant', content: res.content || 'nocontent', charts: res.charts.map(e => JSON.parse(e)) });
+        currentChatMessages.value.push({ role: 'assistant', content: '', charts: [] });
 
         await reloadChatsRemaining();
         await reloadChatsList();
-        currentChatId.value = chatsList.value?.at(-1)?._id.toString() || '';
 
+        await new Promise(e => setTimeout(e, 200));
+
+        await pollSendMessageStatus(res.chat_id, 0, status => {
+            if (!status) return;
+            if (status.length > 0) loading.value = false;
+            currentChatMessageDelta.value = status;
+        });
 
     } catch (ex: any) {
 
@@ -80,10 +109,6 @@ async function sendMessage() {
 
     setTimeout(() => scrollToBottom(), 1);
 
-
-    loading.value = false;
-
-
 }
 
 async function openChat(chat_id?: string) {
@@ -91,6 +116,7 @@ async function openChat(chat_id?: string) {
     if (!project.value) return;
 
     currentChatMessages.value = [];
+    currentChatMessageDelta.value = '';
 
     if (!chat_id) {
         currentChatId.value = '';
@@ -139,6 +165,7 @@ async function deleteChat(chat_id: string) {
     if (currentChatId.value === chat_id) {
         currentChatId.value = "";
         currentChatMessages.value = [];
+        currentChatMessageDelta.value = '';
     }
     await $fetch(`/api/ai/${chat_id}/delete`, {
         headers: useComputedHeaders({ useSnapshotDates: false }).value
@@ -184,6 +211,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                                 {{ message.content }}
                             </div>
                         </div>
+
                         <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
                             v-if="message.role === 'assistant' && message.content">
                             <div class="flex items-center justify-center shrink-0">
@@ -195,8 +223,8 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                                     breaks: true,
                                 }" />
                             </div>
-
                         </div>
+
 
                         <div v-if="message.charts && message.charts.length > 0"
                             class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem] flex-col mt-4">
@@ -208,6 +236,23 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                         </div>
 
                     </div>
+
+
+
+
+                    <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
+                        v-if="currentChatMessageDelta">
+                        <div class="flex items-center justify-center shrink-0">
+                            <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
+                        </div>
+                        <div class="max-w-[70%] text-text/90 ai-message whitespace-pre-wrap">
+                            {{ currentChatMessageDelta.replace(/\[(data:(.*?))\]/g, 'Processing: $2\n') }}
+                        </div>
+                    </div>
+
+
+
+
 
                     <div v-if="loading"
                         class="flex items-center mt-10 gap-3 justify-center w-full poppins text-[1.1rem]">
