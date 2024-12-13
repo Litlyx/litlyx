@@ -24,8 +24,14 @@ const currentChatId = ref<string>("");
 const currentChatMessages = ref<{ role: string, content: string, charts?: any[] }[]>([]);
 const currentChatMessageDelta = ref<string>('');
 
-const scroller = ref<HTMLDivElement | null>(null);
+const currentChatMessageDeltaHtml = computed(() => {
+    const lastData = currentChatMessageDelta.value.match(/\[(data:(.*?))\]/g);
+    const cleanMessage = currentChatMessageDelta.value.replace(/\[(data:(.*?))\]/g, '');
+    if (!lastData || lastData.length == 0) return cleanMessage;
+    return `<div> <span>LOADER HERE: ${lastData.at(-1)}</span>  ${cleanMessage} </div>`;
+});
 
+const scroller = ref<HTMLDivElement | null>(null);
 
 
 async function pollSendMessageStatus(chat_id: string, times: number, updateStatus: (status: string) => any) {
@@ -46,7 +52,7 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
     } else {
         currentChatMessages.value.push({
             role: 'assistant',
-            content: currentChatMessageDelta.value.replace(/\[data:.*?\]/g,''),
+            content: currentChatMessageDelta.value.replace(/\[data:.*?\]/g, ''),
         });
         currentChatMessageDelta.value = '';
 
@@ -74,8 +80,6 @@ async function sendMessage() {
 
         const res = await $fetch<{ chat_id: string }>(`/api/ai/send_message`, { method: 'POST', body: JSON.stringify(body), headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'Content-Type': 'application/json' } }).value });
         currentChatId.value = res.chat_id;
-
-        currentChatMessages.value.push({ role: 'assistant', content: '', charts: [] });
 
         await reloadChatsRemaining();
         await reloadChatsList();
@@ -237,16 +241,16 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
                     </div>
 
-
-
-
                     <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
                         v-if="currentChatMessageDelta">
                         <div class="flex items-center justify-center shrink-0">
                             <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                         </div>
                         <div class="max-w-[70%] text-text/90 ai-message whitespace-pre-wrap">
-                            {{ currentChatMessageDelta.replace(/\[(data:(.*?))\]/g, 'Processing: $2\n') }}
+                            <vue-markdown :source="currentChatMessageDeltaHtml" :options="{
+                                html: true,
+                                breaks: true,
+                            }" />
                         </div>
                     </div>
 

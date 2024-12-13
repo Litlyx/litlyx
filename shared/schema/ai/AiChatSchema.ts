@@ -7,6 +7,7 @@ export type TAiChatSchema = {
     status: string,
     completed: boolean,
     title: string,
+    deleted: boolean,
     created_at: Date,
     updated_at: Date
 }
@@ -17,6 +18,7 @@ const AiChatSchema = new Schema<TAiChatSchema>({
     completed: { type: Boolean },
     messages: [{ _id: false, type: Schema.Types.Mixed }],
     title: { type: String, required: true },
+    deleted: { type: Boolean, default: false },
     created_at: { type: Date, default: () => Date.now() },
     updated_at: { type: Date, default: () => Date.now() },
 });

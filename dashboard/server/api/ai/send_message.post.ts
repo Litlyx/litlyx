@@ -47,8 +47,8 @@ export default defineEventHandler(async event => {
             await updateChatStatus(targetChatId, currentStatus.join(''), false);
         },
         onFinish: async calls => {
-            currentStatus.push('[data:FunctionFinish]');
-            await updateChatStatus(targetChatId, currentStatus.join(''), false);
+            // currentStatus.push('[data:FunctionFinish]');
+            // await updateChatStatus(targetChatId, currentStatus.join(''), false);
         }
     });
 

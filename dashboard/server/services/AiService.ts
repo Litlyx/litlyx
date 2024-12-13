@@ -128,6 +128,15 @@ async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletio
             functionCall.result = functionResult;
             await callbacks?.onFunctionResult?.(functionCall.name, functionResult);
 
+
+            
+            addMessageToChat({
+                tool_call_id: functionCall.tool_call_id,
+                role: 'tool',
+                content: JSON.stringify(functionResult)
+            }, chat_id);
+
+            
             addMessageToChat({
                 role: 'assistant',
                 content: delta.content,
@@ -141,14 +150,7 @@ async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletio
                             arguments: functionCall.argsRaw.join('')
                         }
                     }
-                ],
-                parsed: null
-            }, chat_id);
-
-            addMessageToChat({
-                tool_call_id: functionCall.tool_call_id,
-                role: 'tool',
-                content: JSON.stringify(functionResult)
+                ]
             }, chat_id);
 
 
@@ -181,6 +183,7 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
 
     if (chatMessages && chatMessages.length > 0) {
         messages.push(...chatMessages);
+        await updateChatStatus(chat_id, '', false);
     } else {
         const roleMessage: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
             role: 'system',
@@ -198,8 +201,9 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
 
     try {
         const streamResponse = await elaborateResponse(messages, pid, chat_id, callbacks);
-        await addMessageToChat({ role: 'assistant', refusal: null, content: await streamResponse.finalContent() }, chat_id);
-        return { content: '', charts: [] };
+        const finalContent = await streamResponse.finalContent();
+        await addMessageToChat({ role: 'assistant', refusal: null, content: finalContent }, chat_id);
+        return { content: finalContent, charts: [] };
     } catch (ex: any) {
         console.error(ex);
         return { content: ex.message, charts: [] };
