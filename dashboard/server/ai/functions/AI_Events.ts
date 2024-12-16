@@ -12,8 +12,8 @@ const getEventsCountTool: AIPlugin_TTool<'getEventsCount'> = {
         parameters: {
             type: 'object',
             properties: {
-                from: { type: 'string', description: 'ISO string of start date including hours' },
-                to: { type: 'string', description: 'ISO string of end date including hours' },
+                from: { type: 'string', description: 'ISO string of start date' },
+                to: { type: 'string', description: 'ISO string of end date' },
                 name: { type: 'string', description: 'Name of the events to get' },
                 metadata: { type: 'object', description: 'Metadata of events to get' },
             },
@@ -30,8 +30,8 @@ const getEventsTimelineTool: AIPlugin_TTool<'getEventsTimeline'> = {
         parameters: {
             type: 'object',
             properties: {
-                from: { type: 'string', description: 'ISO string of start date including hours' },
-                to: { type: 'string', description: 'ISO string of end date including hours' },
+                from: { type: 'string', description: 'ISO string of start date' },
+                to: { type: 'string', description: 'ISO string of end date' },
                 name: { type: 'string', description: 'Name of the events to get' },
                 metadata: { type: 'object', description: 'Metadata of events to get' },
             },

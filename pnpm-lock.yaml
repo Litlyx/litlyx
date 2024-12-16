@@ -87,7 +87,7 @@ importers:
         version: 0.0.11(magicast@0.3.5)(rollup@4.27.2)(vue@3.5.13(typescript@5.6.3))
       openai:
         specifier: ^4.61.0
-        version: 4.72.0
+        version: 4.72.0(zod@3.24.1)
       pdfkit:
         specifier: ^0.15.0
         version: 0.15.1
@@ -118,6 +118,9 @@ importers:
       winston:
         specifier: ^3.14.2
         version: 3.17.0
+      zod:
+        specifier: ^3.24.1
+        version: 3.24.1
     devDependencies:
       '@nuxt/ui':
         specifier: ^2.15.2
@@ -4883,6 +4886,9 @@ packages:
     resolution: {integrity: sha512-zK7YHHz4ZXpW89AHXUPbQVGKI7uvkd3hzusTdotCg1UxyaVtg0zFJSTfW/Dq5f7OBBVnq6cZIaC8Ti4hb6dtCA==}
     engines: {node: '>= 14'}
 
+  zod@3.24.1:
+    resolution: {integrity: sha512-muH7gBL9sI1nciMZV67X5fTKKBLtwpZ5VBp1vsOQzj1MhrBZ4wlVCm3gedKZWLp0Oyel8sIGfeiz54Su+OVT+A==}
+
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
@@ -8731,7 +8737,7 @@ snapshots:
       is-docker: 2.2.1
       is-wsl: 2.2.0
 
-  openai@4.72.0:
+  openai@4.72.0(zod@3.24.1):
     dependencies:
       '@types/node': 18.19.64
       '@types/node-fetch': 2.6.12
@@ -8740,6 +8746,8 @@ snapshots:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
+    optionalDependencies:
+      zod: 3.24.1
     transitivePeerDependencies:
       - encoding
 
@@ -10185,3 +10193,5 @@ snapshots:
       archiver-utils: 5.0.2
       compress-commons: 6.0.2
       readable-stream: 4.5.2
+
+  zod@3.24.1: {}

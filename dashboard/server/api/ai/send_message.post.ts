@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
     const { pid } = data;
 
-    const { text, chat_id } = await readBody(event);
+    const { text, chat_id, timeOffset } = await readBody(event);
     if (!text) return setResponseStatus(event, 400, 'text parameter missing');
 
     const chatsRemaining = await getAiChatRemainings(pid);
@@ -21,7 +21,7 @@ export default defineEventHandler(async event => {
 
     let targetChatId = '';
 
-    await sendMessageOnChat(text, pid, chat_id, {
+    await sendMessageOnChat(text, pid, timeOffset, chat_id, {
         onChatId: async chat_id => {
             if (!responseSent) {
                 event.node.res.setHeader('Content-Type', 'application/json');

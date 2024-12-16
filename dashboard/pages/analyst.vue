@@ -4,12 +4,16 @@ import VueMarkdown from 'vue-markdown-render';
 
 definePageMeta({ layout: 'dashboard' });
 
+
+const debugModeAi = ref<boolean>(false);
+
+const { userRoles } = useLoggedUser();
+
 const { project } = useProject();
 
 const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/chats_list`, {
     headers: useComputedHeaders({ useSnapshotDates: false })
 });
-
 
 const viewChatsList = computed(() => (chatsList.value || []).toReversed());
 
@@ -21,14 +25,14 @@ const currentText = ref<string>("");
 const loading = ref<boolean>(false);
 
 const currentChatId = ref<string>("");
-const currentChatMessages = ref<{ role: string, content: string, charts?: any[] }[]>([]);
+const currentChatMessages = ref<{ role: string, content: string, charts?: any[], tool_calls?: any }[]>([]);
 const currentChatMessageDelta = ref<string>('');
 
 const currentChatMessageDeltaHtml = computed(() => {
     const lastData = currentChatMessageDelta.value.match(/\[(data:(.*?))\]/g);
     const cleanMessage = currentChatMessageDelta.value.replace(/\[(data:(.*?))\]/g, '');
     if (!lastData || lastData.length == 0) return cleanMessage;
-    return `<div> <span>LOADER HERE: ${lastData.at(-1)}</span>  ${cleanMessage} </div>`;
+    return `<div class="flex items-center gap-1"> <i class="fas fa-loader animate-spin"></i> <div> ${lastData.at(-1)}</div> </div> <div> ${cleanMessage} </div>`;
 });
 
 const scroller = ref<HTMLDivElement | null>(null);
@@ -36,7 +40,7 @@ const scroller = ref<HTMLDivElement | null>(null);
 
 async function pollSendMessageStatus(chat_id: string, times: number, updateStatus: (status: string) => any) {
 
-    if (times > 20) return;
+    if (times > 100) return;
 
     const res = await $fetch(`/api/ai/${chat_id}/status`, {
         headers: useComputedHeaders({
@@ -48,13 +52,21 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
     updateStatus(res.status);
 
     if (res.completed === false) {
-        setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), 200);
+        setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), (times > 20 ? 1000 : 500));
     } else {
-        currentChatMessages.value.push({
-            role: 'assistant',
-            content: currentChatMessageDelta.value.replace(/\[data:.*?\]/g, ''),
+
+        const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
+            headers: useComputedHeaders({ useSnapshotDates: false }).value
         });
+        if (!messages) return;
+
+        currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
         currentChatMessageDelta.value = '';
+
+        // currentChatMessages.value.push({
+        //     role: 'assistant',
+        //     content: currentChatMessageDelta.value.replace(/\[data:.*?\]/g, ''),
+        // });
 
     }
 
@@ -67,7 +79,7 @@ async function sendMessage() {
 
     loading.value = true;
 
-    const body: any = { text: currentText.value }
+    const body: any = { text: currentText.value, timeOffset: new Date().getTimezoneOffset() }
     if (currentChatId.value) body.chat_id = currentChatId.value
 
     currentChatMessages.value.push({ role: 'user', content: currentText.value });
@@ -91,6 +103,8 @@ async function sendMessage() {
             if (status.length > 0) loading.value = false;
             currentChatMessageDelta.value = status;
         });
+
+
 
     } catch (ex: any) {
 
@@ -179,6 +193,8 @@ async function deleteChat(chat_id: string) {
 
 const { visible: pricingDrawerVisible } = usePricingDrawer()
 
+
+
 </script>
 
 <template>
@@ -208,7 +224,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
 
                 <div ref="scroller" class="flex flex-col w-full gap-6 px-6 xl:px-28 overflow-y-auto pb-20">
 
-                    <div class="flex w-full flex-col" v-for="message of currentChatMessages">
+                    <div class="flex w-full flex-col" v-for="(message, messageIndex) of currentChatMessages">
 
                         <div class="flex justify-end w-full poppins text-[1.1rem]" v-if="message.role === 'user'">
                             <div class="bg-lyx-widget-light px-5 py-3 rounded-lg">
@@ -217,15 +233,32 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                         </div>
 
                         <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
-                            v-if="message.role === 'assistant' && message.content">
+                            v-if="message.role === 'assistant' && (debugModeAi ? true : message.content)">
                             <div class="flex items-center justify-center shrink-0">
                                 <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                             </div>
                             <div class="max-w-[70%] text-text/90 ai-message">
-                                <vue-markdown :source="message.content" :options="{
+
+                                <vue-markdown v-if="message.content" :source="message.content" :options="{
                                     html: true,
                                     breaks: true,
                                 }" />
+
+
+
+                                <div v-if="debugModeAi && !message.content">
+                                    <div class="flex flex-col"
+                                        v-if="message.tool_calls && message.tool_calls.length > 0">
+                                        <div> {{ message.tool_calls[0].function.name }}</div>
+                                        <div> {{ message.tool_calls[0].function.arguments }} </div>
+                                    </div>
+                                </div>
+
+                                <div v-if="debugModeAi && !message.content"
+                                    class="text-[.8rem] flex gap-1 items-center w-fit hover:text-[#CCCCCC] cursor-pointer">
+                                    <i class="fas fa-info text-[.7rem]"></i>
+                                    <div class="mt-1">Debug</div>
+                                </div>
                             </div>
                         </div>
 
@@ -295,6 +328,9 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                     </div>
                 </div>
 
+                <div :class="{ '!text-green-500': debugModeAi }" class="cursor-pointer text-red-500 w-fit"
+                    v-if="userRoles.isAdmin.value" @click="debugModeAi = !debugModeAi"> Debug mode </div>
+
                 <div class="flex justify-between items-center pt-3">
                     <div class="flex items-center gap-2">
                         <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
@@ -358,6 +394,9 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         color: white;
     }
 
+    p:last-of-type {
+        margin-bottom: 0;
+    }
 
     p {
         line-height: 1.8;

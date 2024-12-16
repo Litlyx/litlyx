@@ -7,6 +7,8 @@ export default defineEventHandler(async event => {
     const data = await getRequestData(event);
     if (!data) return;
 
+    const isAdmin = data.user.user.roles.includes('ADMIN');
+
     const { project_id } = data;
 
     if (!event.context.params) return;
@@ -16,13 +18,13 @@ export default defineEventHandler(async event => {
     if (!chat) return;
 
     return (chat.messages as OpenAI.Chat.Completions.ChatCompletionMessageParam[])
-        .filter(e => e.role === 'assistant' || e.role === 'user')
+        .filter(e => isAdmin ? true : (e.role === 'assistant' || e.role === 'user'))
         .map(e => {
             const charts = getChartsInMessage(e);
             const content = e.content;
-            return { role: e.role, content, charts }
+            return { ...e, charts }
         })
-        .filter(e=>{
-            return e.charts.length > 0 || e.content
+        .filter(e => {
+            return isAdmin ? true : (e.charts.length > 0 || e.content);
         })
 });

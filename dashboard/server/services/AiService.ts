@@ -65,7 +65,7 @@ export function getChartsInMessage(message: OpenAI.Chat.Completions.ChatCompleti
     if (message.role != 'assistant') return [];
     if (!message.tool_calls) return [];
     if (message.tool_calls.length == 0) return [];
-    return message.tool_calls.filter(e => e.function.name === 'createComposableChart').map(e => e.function.arguments);
+    return message.tool_calls.filter((e: any) => e.function.name === 'createComposableChart').map((e: any) => e.function.arguments);
 }
 
 
@@ -87,7 +87,7 @@ type ElaborateResponseCallbacks = {
     onChatId?: (chat_id: string) => any
 }
 
-async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[], pid: string, chat_id: string, callbacks?: ElaborateResponseCallbacks) {
+async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[], pid: string, time_offset: number, chat_id: string, callbacks?: ElaborateResponseCallbacks) {
 
     const responseStream = await openai.beta.chat.completions.stream({ model: OPENAI_MODEL, messages, n: 1, tools });
 
@@ -124,35 +124,27 @@ async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletio
             const functionCall: FunctionCall = functionCalls.at(-1) as FunctionCall;
             await callbacks?.onFunctionCall?.(functionCall.name);
             const args = JSON.parse(functionCall.argsRaw.join(''));
-            const functionResult = await functions[functionCall.name]({ project_id: pid, ...args });
+
+
+            const functionResult = await functions[functionCall.name]({ project_id: pid, time_offset, ...args });
             functionCall.result = functionResult;
             await callbacks?.onFunctionResult?.(functionCall.name, functionResult);
 
-
-            
-            addMessageToChat({
-                tool_call_id: functionCall.tool_call_id,
-                role: 'tool',
-                content: JSON.stringify(functionResult)
-            }, chat_id);
-
-            
-            addMessageToChat({
+            await addMessageToChat({
                 role: 'assistant',
                 content: delta.content,
                 refusal: delta.refusal,
                 tool_calls: [
                     {
-                        id: functionCall.tool_call_id,
-                        type: 'function',
+                        id: functionCall.tool_call_id, type: 'function',
                         function: {
-                            name: functionCall.name,
-                            arguments: functionCall.argsRaw.join('')
+                            name: functionCall.name, arguments: functionCall.argsRaw.join('')
                         }
                     }
                 ]
             }, chat_id);
 
+            await addMessageToChat({ tool_call_id: functionCall.tool_call_id, role: 'tool', content: JSON.stringify(functionCall.result) }, chat_id);
 
             functionCall.collecting = false;
             lastFinishReason = finishReason;
@@ -166,13 +158,13 @@ async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletio
         return { tool_call_id: e.tool_call_id, role: "tool", content: JSON.stringify(e.result) }
     });
 
-    if (lastFinishReason == 'tool_calls') return await elaborateResponse([...responseStream.messages, ...toolResponseMesages], pid, chat_id, callbacks);
+    if (lastFinishReason == 'tool_calls') return await elaborateResponse([...responseStream.messages, ...toolResponseMesages], pid, time_offset, chat_id, callbacks);
 
     return responseStream;
 }
 
 
-export async function sendMessageOnChat(text: string, pid: string, initial_chat_id?: string, callbacks?: ElaborateResponseCallbacks) {
+export async function sendMessageOnChat(text: string, pid: string, time_offset: number, initial_chat_id?: string, callbacks?: ElaborateResponseCallbacks) {
 
 
     const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = []
@@ -183,6 +175,7 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
 
     if (chatMessages && chatMessages.length > 0) {
         messages.push(...chatMessages);
+        await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { ai_messages: 1 } })
         await updateChatStatus(chat_id, '', false);
     } else {
         const roleMessage: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
@@ -200,7 +193,7 @@ export async function sendMessageOnChat(text: string, pid: string, initial_chat_
     await addMessageToChat(userMessage, chat_id);
 
     try {
-        const streamResponse = await elaborateResponse(messages, pid, chat_id, callbacks);
+        const streamResponse = await elaborateResponse(messages, pid, time_offset, chat_id, callbacks);
         const finalContent = await streamResponse.finalContent();
         await addMessageToChat({ role: 'assistant', refusal: null, content: finalContent }, chat_id);
         return { content: finalContent, charts: [] };

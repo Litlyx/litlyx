@@ -4,6 +4,11 @@ import { Types } from "mongoose";
 import { AIPlugin, AIPlugin_TTool } from "../Plugin";
 import dayjs from 'dayjs';
 
+import { zodFunction } from "openai/helpers/zod";
+import { z } from 'zod';
+import { Slice } from "@services/DateService";
+
+
 const getVisitsCountsTool: AIPlugin_TTool<'getVisitsCount'> = {
     type: 'function',
     function: {
@@ -12,8 +17,8 @@ const getVisitsCountsTool: AIPlugin_TTool<'getVisitsCount'> = {
         parameters: {
             type: 'object',
             properties: {
-                from: { type: 'string', description: 'ISO string of start date including hours' },
-                to: { type: 'string', description: 'ISO string of end date including hours' },
+                from: { type: 'string', description: 'ISO string of start date' },
+                to: { type: 'string', description: 'ISO string of end date' },
                 website: { type: 'string', description: 'The website of the visits' },
                 page: { type: 'string', description: 'The page of the visit' }
             },
@@ -30,10 +35,15 @@ const getVisitsTimelineTool: AIPlugin_TTool<'getVisitsTimeline'> = {
         parameters: {
             type: 'object',
             properties: {
-                from: { type: 'string', description: 'ISO string of start date including hours' },
-                to: { type: 'string', description: 'ISO string of end date including hours' },
+                from: { type: 'string', description: 'ISO string of start date' },
+                to: { type: 'string', description: 'ISO string of end date' },
                 website: { type: 'string', description: 'The website of the visits' },
-                page: { type: 'string', description: 'The page of the visit' }
+                page: { type: 'string', description: 'The page of the visit' },
+                slice: {
+                    type: 'string',
+                    description: 'The slice for the visit data',
+                    enum: ['hour', 'day', 'month', 'year']
+                }
             },
             required: ['from', 'to']
         }
@@ -47,6 +57,7 @@ export class AiVisits extends AIPlugin<['getVisitsCount', 'getVisitsTimeline']> 
         super({
             'getVisitsCount': {
                 handler: async (data: { project_id: string, from?: string, to?: string, website?: string, page?: string }) => {
+
                     const query: any = {
                         project_id: data.project_id,
                         created_at: {
@@ -54,31 +65,46 @@ export class AiVisits extends AIPlugin<['getVisitsCount', 'getVisitsTimeline']> 
                             $lt: data.to ? new Date(data.to).getTime() : new Date().getTime(),
                         }
                     }
+
                     if (data.website) query.website = data.website;
+
                     if (data.page) query.page = data.page;
+
                     const result = await VisitModel.countDocuments(query);
+
                     return { count: result };
+
                 },
                 tool: getVisitsCountsTool
             },
             'getVisitsTimeline': {
-                handler: async (data: { project_id: string, from: string, to: string, website?: string, page?: string }) => {
+                handler: async (data: { project_id: string, from: string, to: string, time_offset: number, website?: string, page?: string, slice?: string }) => {
 
-                    const query: AdvancedTimelineAggregationOptions & { customMatch: Record<string, any> } = {
-                        projectId: new Types.ObjectId(data.project_id) as any,
+                    const timelineData = await executeTimelineAggregation({
+                        projectId: new Types.ObjectId(data.project_id),
                         model: VisitModel,
-                        from: dayjs(data.from).startOf('day').toISOString(),
-                        to: dayjs(data.to).startOf('day').toISOString(),
-                        slice: 'day',
-                        customMatch: {}
-                    }
+                        from: data.from,
+                        to: data.to,
+                        slice: (data.slice || 'day') as Slice,
+                        timeOffset: data.time_offset
+                    });
+                    return { data: timelineData };
 
-                    if (data.website) query.customMatch.website = data.website;
-                    if (data.page) query.customMatch.page = data.page;
+                    // const query: AdvancedTimelineAggregationOptions & { customMatch: Record<string, any> } = {
+                    //     projectId: new Types.ObjectId(data.project_id) as any,
+                    //     model: VisitModel,
+                    //     from: dayjs(data.from).startOf('day').toISOString(),
+                    //     to: dayjs(data.to).startOf('day').toISOString(),
+                    //     slice: 'day',
+                    //     customMatch: {}
+                    // }
 
-                    const timelineData = await executeAdvancedTimelineAggregation(query);
-                    const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, 'day', data.from, data.to);
-                    return { data: timelineFilledMerged };
+                    // if (data.website) query.customMatch.website = data.website;
+                    // if (data.page) query.customMatch.page = data.page;
+
+                    // const timelineData = await executeAdvancedTimelineAggregation(query);
+                    // const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, 'day', data.from, data.to);
+                    // return { data: timelineFilledMerged };
                 },
                 tool: getVisitsTimelineTool
             }
