@@ -77,6 +77,8 @@ async function sendMessage() {
     if (loading.value) return;
     if (!project.value) return;
 
+    if (currentText.value.length == 0) return;
+
     loading.value = true;
 
     const body: any = { text: currentText.value, timeOffset: new Date().getTimezoneOffset() }
@@ -193,6 +195,15 @@ async function deleteChat(chat_id: string) {
 
 const { visible: pricingDrawerVisible } = usePricingDrawer()
 
+
+async function clearAllChats() {
+    const sure = confirm(`Are you sure to delete all ${(chatsList.value?.length || 0)} chats ?`);
+    if (!sure) return;
+    await $fetch(`/api/ai/delete_all_chats`, {
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
+    });
+    await reloadChatsList();
+}
 
 
 </script>
@@ -343,7 +354,12 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                     </LyxUiButton>
                 </div>
 
-                <div class="poppins font-semibold text-[1.1rem]"> History </div>
+                <div class="flex items-center gap-4">
+                    <div class="poppins font-semibold text-[1.1rem]"> History </div>
+                    <LyxUiButton v-if="chatsList && chatsList.length > 0" @click="clearAllChats()" type="secondary" class="text-center text-[.8rem]"> 
+                        Clear all
+                     </LyxUiButton>
+                </div>
 
                 <div class="px-2">
                     <div @click="openChat()"

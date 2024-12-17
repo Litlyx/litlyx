@@ -89,6 +89,9 @@ type ElaborateResponseCallbacks = {
 
 async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[], pid: string, time_offset: number, chat_id: string, callbacks?: ElaborateResponseCallbacks) {
 
+    console.log('[ELABORATING RESPONSE]');
+    console.dir(messages, { depth: Infinity });
+
     const responseStream = await openai.beta.chat.completions.stream({ model: OPENAI_MODEL, messages, n: 1, tools });
 
     const functionCalls: FunctionCall[] = [];
@@ -103,50 +106,55 @@ async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletio
         if (delta.content) await callbacks?.onDelta?.(delta.content);
 
         if (delta.tool_calls) {
-            const toolCall = delta.tool_calls[0];
-            if (!toolCall.function) throw Error('Cannot get function from tool_calls');
 
-            const functionName = toolCall.function.name;
+            for (const toolCall of delta.tool_calls) {
 
-            const functionCall: FunctionCall = functionName ?
-                { name: functionName, argsRaw: [], collecting: true, result: null, tool_call_id: toolCall.id as string } :
-                functionCalls.at(-1) as FunctionCall;
+                if (!toolCall.function) throw Error('Cannot get function from tool_calls');
 
-            if (functionName) functionCalls.push(functionCall);
+                const functionName = toolCall.function.name;
 
-            if (functionName) await callbacks?.onFunctionName?.(functionName);
+                const functionCall: FunctionCall = functionName ?
+                    { name: functionName, argsRaw: [], collecting: true, result: null, tool_call_id: toolCall.id as string } :
+                    functionCalls.at(-1) as FunctionCall;
 
-            if (toolCall.function.arguments) functionCall.argsRaw.push(toolCall.function.arguments);
+                if (functionName) functionCalls.push(functionCall);
+
+                if (functionName) await callbacks?.onFunctionName?.(functionName);
+
+                if (toolCall.function.arguments) functionCall.argsRaw.push(toolCall.function.arguments);
+            }
+
 
         }
 
         if (finishReason === "tool_calls" && functionCalls.at(-1)?.collecting) {
-            const functionCall: FunctionCall = functionCalls.at(-1) as FunctionCall;
-            await callbacks?.onFunctionCall?.(functionCall.name);
-            const args = JSON.parse(functionCall.argsRaw.join(''));
 
+            for (const functionCall of functionCalls) {
+                await callbacks?.onFunctionCall?.(functionCall.name);
+                const args = JSON.parse(functionCall.argsRaw.join(''));
 
-            const functionResult = await functions[functionCall.name]({ project_id: pid, time_offset, ...args });
-            functionCall.result = functionResult;
-            await callbacks?.onFunctionResult?.(functionCall.name, functionResult);
+                const functionResult = await functions[functionCall.name]({ project_id: pid, time_offset, ...args });
+                functionCall.result = functionResult;
+                await callbacks?.onFunctionResult?.(functionCall.name, functionResult);
 
-            await addMessageToChat({
-                role: 'assistant',
-                content: delta.content,
-                refusal: delta.refusal,
-                tool_calls: [
-                    {
-                        id: functionCall.tool_call_id, type: 'function',
-                        function: {
-                            name: functionCall.name, arguments: functionCall.argsRaw.join('')
+                await addMessageToChat({
+                    role: 'assistant',
+                    content: delta.content,
+                    refusal: delta.refusal,
+                    tool_calls: [
+                        {
+                            id: functionCall.tool_call_id, type: 'function',
+                            function: {
+                                name: functionCall.name, arguments: functionCall.argsRaw.join('')
+                            }
                         }
-                    }
-                ]
-            }, chat_id);
+                    ]
+                }, chat_id);
 
-            await addMessageToChat({ tool_call_id: functionCall.tool_call_id, role: 'tool', content: JSON.stringify(functionCall.result) }, chat_id);
+                await addMessageToChat({ tool_call_id: functionCall.tool_call_id, role: 'tool', content: JSON.stringify(functionCall.result) }, chat_id);
+                functionCall.collecting = false;
+            }
 
-            functionCall.collecting = false;
             lastFinishReason = finishReason;
         }
 

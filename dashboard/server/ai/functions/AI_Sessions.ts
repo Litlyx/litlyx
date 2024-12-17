@@ -1,72 +1,74 @@
-import { EventModel } from "@schema/metrics/EventSchema";
+import { VisitModel } from "@schema/metrics/VisitSchema";
 import { executeTimelineAggregation } from "~/server/services/TimelineService";
 import { Types } from "mongoose";
 import { AIPlugin, AIPlugin_TTool } from "../Plugin";
+import { SessionModel } from "@schema/metrics/SessionSchema";
 
-
-const getEventsCountTool: AIPlugin_TTool<'getEventsCount'> = {
+const getSessionsCountsTool: AIPlugin_TTool<'getSessionsCount'> = {
     type: 'function',
     function: {
-        name: 'getEventsCount',
-        description: 'Gets the number of events received on a date range, can also specify the event name and the metadata associated',
+        name: 'getSessionsCount',
+        description: 'Gets the number of sessions received on a date range',
         parameters: {
             type: 'object',
             properties: {
                 from: { type: 'string', description: 'ISO string of start date' },
                 to: { type: 'string', description: 'ISO string of end date' },
-                name: { type: 'string', description: 'Name of the events to get' },
-                metadata: { type: 'object', description: 'Metadata of events to get' },
+                min_duration: { type: 'number', description: 'Minimum duration of the session' },
+                max_duration: { type: 'number', description: 'Maximum duration of the session' },
             },
             required: ['from', 'to']
         }
     }
 }
 
-const getEventsTimelineTool: AIPlugin_TTool<'getEventsTimeline'> = {
+const getSessionsTimelineTool: AIPlugin_TTool<'getSessionsTimeline'> = {
     type: 'function',
     function: {
-        name: 'getEventsTimeline',
+        name: 'getSessionsTimeline',
         description: 'Gets an array of date and count for events received on a date range. Should be used to create charts.',
         parameters: {
             type: 'object',
             properties: {
                 from: { type: 'string', description: 'ISO string of start date' },
                 to: { type: 'string', description: 'ISO string of end date' },
-                name: { type: 'string', description: 'Name of the events to get' },
-                metadata: { type: 'object', description: 'Metadata of events to get' },
             },
             required: ['from', 'to']
         }
     }
 }
 
-export class AiEvents extends AIPlugin<['getEventsCount', 'getEventsTimeline']> {
+export class AiSessions extends AIPlugin<['getSessionsCount', 'getSessionsTimeline']> {
 
     constructor() {
 
         super({
-            'getEventsCount': {
-                handler: async (data: { project_id: string, from: string, to: string, name?: string, metadata?: string }) => {
+            'getSessionsCount': {
+                handler: async (data: { project_id: string, from: string, to: string, min_duration?: number, max_duration?: number }) => {
+
                     const query: any = {
                         project_id: data.project_id,
                         created_at: {
                             $gt: new Date(data.from),
                             $lt: new Date(data.to),
+                        },
+                        duration: {
+                            $gte: data.min_duration || 0,
+                            $lte: data.max_duration || 999_999_999,
                         }
                     }
-                    if (data.metadata) query.metadata = data.metadata;
-                    if (data.name) query.name = data.name;
-                    const result = await EventModel.countDocuments(query);
+
+                    const result = await VisitModel.countDocuments(query);
                     return { count: result };
                 },
-                tool: getEventsCountTool
+                tool: getSessionsCountsTool
             },
-            'getEventsTimeline': {
-                handler: async (data: { project_id: string, from: string, to: string, time_offset: number, name?: string, metadata?: string }) => {
+            'getSessionsTimeline': {
+                handler: async (data: { project_id: string, from: string, to: string, time_offset: number, website?: string, page?: string }) => {
 
                     const timelineData = await executeTimelineAggregation({
                         projectId: new Types.ObjectId(data.project_id),
-                        model: EventModel,
+                        model: SessionModel,
                         from: data.from,
                         to: data.to,
                         slice: 'day',
@@ -74,12 +76,11 @@ export class AiEvents extends AIPlugin<['getEventsCount', 'getEventsTimeline']> 
                     });
                     return { data: timelineData };
                 },
-                tool: getEventsTimelineTool
+                tool: getSessionsTimelineTool
             }
         })
 
     }
 }
 
-export const AiEventsInstance = new AiEvents();
-
+export const ASessionsInstance = new AiSessions();
