@@ -8,7 +8,7 @@ const getSessionsCountsTool: AIPlugin_TTool<'getSessionsCount'> = {
     type: 'function',
     function: {
         name: 'getSessionsCount',
-        description: 'Gets the number of sessions received on a date range',
+        description: 'Gets the number of sessions (unique visitors) received on a date range',
         parameters: {
             type: 'object',
             properties: {
@@ -83,4 +83,4 @@ export class AiSessions extends AIPlugin<['getSessionsCount', 'getSessionsTimeli
     }
 }
 
-export const ASessionsInstance = new AiSessions();
+export const AiSessionsInstance = new AiSessions();

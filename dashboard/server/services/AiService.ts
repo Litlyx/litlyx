@@ -2,11 +2,11 @@
 
 import OpenAI from "openai";
 import { AiChatModel } from '@schema/ai/AiChatSchema';
-import { ProjectCountModel } from '@schema/project/ProjectsCounts';
 import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 
 import { AiEventsInstance } from '../ai/functions/AI_Events';
 import { AiVisitsInstance } from '../ai/functions/AI_Visits';
+import { AiSessionsInstance } from '../ai/functions/AI_Sessions';
 import { AiComposableChartInstance } from '../ai/functions/AI_ComposableChart';
 
 const { AI_KEY, AI_ORG, AI_PROJECT } = useRuntimeConfig();
@@ -18,13 +18,15 @@ const openai = new OpenAI({ apiKey: AI_KEY, organization: AI_ORG, project: AI_PR
 const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     ...AiVisitsInstance.getTools(),
     ...AiEventsInstance.getTools(),
-    ...AiComposableChartInstance.getTools()
+    ...AiSessionsInstance.getTools(),
+    ...AiComposableChartInstance.getTools(),
 ]
 
 
 const functions: any = {
     ...AiVisitsInstance.getHandlers(),
     ...AiEventsInstance.getHandlers(),
+    ...AiSessionsInstance.getHandlers(),
     ...AiComposableChartInstance.getHandlers()
 }
 
@@ -188,7 +190,7 @@ export async function sendMessageOnChat(text: string, pid: string, time_offset: 
     } else {
         const roleMessage: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
             role: 'system',
-            content: "Today ISO date: " + new Date().toISOString()
+            content: "You are an AI Data Analyst and Growth Hacker specialized in helping users analyze data collected within Litlyx and providing strategies to grow their website, app, or business. Your scope is strictly limited to data creation, visualization, and growth-related advice. If a user asks something outside this domain, politely inform them that you are not designed to answer such questions. Today ISO date is " + new Date().toISOString() + "take this in count when the user ask relative dates"
         }
         messages.push(roleMessage);
         await addMessageToChat(roleMessage, chat_id);

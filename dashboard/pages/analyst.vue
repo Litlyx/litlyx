@@ -26,13 +26,28 @@ const loading = ref<boolean>(false);
 
 const currentChatId = ref<string>("");
 const currentChatMessages = ref<{ role: string, content: string, charts?: any[], tool_calls?: any }[]>([]);
-const currentChatMessageDelta = ref<string>('');
+const currentChatMessageDelta = ref<string>("");
 
-const currentChatMessageDeltaHtml = computed(() => {
-    const lastData = currentChatMessageDelta.value.match(/\[(data:(.*?))\]/g);
+
+const typer = useTextType({ ms: 10, increase: 2 }, () => {
     const cleanMessage = currentChatMessageDelta.value.replace(/\[(data:(.*?))\]/g, '');
-    if (!lastData || lastData.length == 0) return cleanMessage;
-    return `<div class="flex items-center gap-1"> <i class="fas fa-loader animate-spin"></i> <div> ${lastData.at(-1)}</div> </div> <div> ${cleanMessage} </div>`;
+    if (typer.index.value >= cleanMessage.length) typer.pause();
+});
+
+onUnmounted(() => {
+    typer.stop();
+})
+
+const currentChatMessageDeltaTextVisible = computed(() => {
+    const cleanMessage = currentChatMessageDelta.value.replace(/\[(data:(.*?))\]/g, '');
+    const textVisible = cleanMessage.substring(0, typer.index.value);
+    setTimeout(() => scrollToBottom(), 1);
+    return textVisible;
+});
+
+const currentChatMessageDeltaShowLoader = computed(() => {
+    const lastData = currentChatMessageDelta.value.match(/\[(data:(.*?))\]$/);
+    return lastData != null;
 });
 
 const scroller = ref<HTMLDivElement | null>(null);
@@ -51,9 +66,15 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
 
     updateStatus(res.status);
 
+
+    typer.resume();
+
+
     if (res.completed === false) {
-        setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), (times > 20 ? 1000 : 500));
+        setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), (times > 10 ? 2000 : 1000));
     } else {
+
+        typer.stop();
 
         const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
             headers: useComputedHeaders({ useSnapshotDates: false }).value
@@ -62,17 +83,12 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
 
         currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
         currentChatMessageDelta.value = '';
-
-        // currentChatMessages.value.push({
-        //     role: 'assistant',
-        //     content: currentChatMessageDelta.value.replace(/\[data:.*?\]/g, ''),
-        // });
-
     }
 
 }
 
 async function sendMessage() {
+
 
     if (loading.value) return;
     if (!project.value) return;
@@ -100,13 +116,14 @@ async function sendMessage() {
 
         await new Promise(e => setTimeout(e, 200));
 
+
+        typer.start();
+
         await pollSendMessageStatus(res.chat_id, 0, status => {
             if (!status) return;
             if (status.length > 0) loading.value = false;
             currentChatMessageDelta.value = status;
         });
-
-
 
     } catch (ex: any) {
 
@@ -237,14 +254,14 @@ async function clearAllChats() {
 
                     <div class="flex w-full flex-col" v-for="(message, messageIndex) of currentChatMessages">
 
-                        <div class="flex justify-end w-full poppins text-[1.1rem]" v-if="message.role === 'user'">
+                        <div v-if="message.role === 'user'" class="flex justify-end w-full poppins text-[1.1rem]">
                             <div class="bg-lyx-widget-light px-5 py-3 rounded-lg">
                                 {{ message.content }}
                             </div>
                         </div>
 
-                        <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
-                            v-if="message.role === 'assistant' && (debugModeAi ? true : message.content)">
+                        <div v-if="message.role === 'assistant' && (debugModeAi ? true : message.content)"
+                            class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]">
                             <div class="flex items-center justify-center shrink-0">
                                 <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                             </div>
@@ -254,7 +271,6 @@ async function clearAllChats() {
                                     html: true,
                                     breaks: true,
                                 }" />
-
 
 
                                 <div v-if="debugModeAi && !message.content">
@@ -285,17 +301,26 @@ async function clearAllChats() {
 
                     </div>
 
+
+
                     <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
                         v-if="currentChatMessageDelta">
+
                         <div class="flex items-center justify-center shrink-0">
                             <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                         </div>
-                        <div class="max-w-[70%] text-text/90 ai-message whitespace-pre-wrap">
-                            <vue-markdown :source="currentChatMessageDeltaHtml" :options="{
+
+                        <div class="max-w-[70%] text-text/90 ai-message">
+                            <div v-if="currentChatMessageDeltaShowLoader" class="flex items-center gap-1">
+                                <i class="fas fa-loader animate-spin"></i>
+                                <div> Loading </div>
+                            </div>
+                            <vue-markdown :source="currentChatMessageDeltaTextVisible" :options="{
                                 html: true,
                                 breaks: true,
                             }" />
                         </div>
+
                     </div>
 
 
@@ -356,9 +381,10 @@ async function clearAllChats() {
 
                 <div class="flex items-center gap-4">
                     <div class="poppins font-semibold text-[1.1rem]"> History </div>
-                    <LyxUiButton v-if="chatsList && chatsList.length > 0" @click="clearAllChats()" type="secondary" class="text-center text-[.8rem]"> 
+                    <LyxUiButton v-if="chatsList && chatsList.length > 0" @click="clearAllChats()" type="secondary"
+                        class="text-center text-[.8rem]">
                         Clear all
-                     </LyxUiButton>
+                    </LyxUiButton>
                 </div>
 
                 <div class="px-2">
