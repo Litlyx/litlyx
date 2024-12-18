@@ -52,6 +52,6 @@ export default defineEventHandler(async event => {
         }
     });
 
-    await updateChatStatus(targetChatId, currentStatus.join(''), true);
+    await updateChatStatus(targetChatId, '', true);
 
 });
