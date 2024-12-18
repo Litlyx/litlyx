@@ -23,6 +23,7 @@ const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/a
 
 const currentText = ref<string>("");
 const loading = ref<boolean>(false);
+const canSend = ref<boolean>(false);
 
 const currentChatId = ref<string>("");
 const currentChatMessages = ref<{ role: string, content: string, charts?: any[], tool_calls?: any }[]>([]);
@@ -108,6 +109,8 @@ async function sendMessage() {
 
     try {
 
+        canSend.value = false;
+
         const res = await $fetch<{ chat_id: string }>(`/api/ai/send_message`, { method: 'POST', body: JSON.stringify(body), headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'Content-Type': 'application/json' } }).value });
         currentChatId.value = res.chat_id;
 
@@ -125,6 +128,8 @@ async function sendMessage() {
             currentChatMessageDelta.value = status;
         });
 
+        canSend.value = true;
+
     } catch (ex: any) {
 
         if (ex.message.includes('CHAT_LIMIT_REACHED')) {
@@ -141,6 +146,10 @@ async function sendMessage() {
             });
         }
 
+        currentChatMessages.value.push({ role: 'assistant', content: ex.message, });
+
+        canSend.value = true;
+
     }
 
 
@@ -153,7 +162,8 @@ async function openChat(chat_id?: string) {
     if (!project.value) return;
 
     typer.stop();
-    
+
+    canSend.value = true;
     currentChatMessages.value = [];
     currentChatMessageDelta.value = '';
 
