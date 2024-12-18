@@ -152,6 +152,8 @@ async function openChat(chat_id?: string) {
     menuOpen.value = false;
     if (!project.value) return;
 
+    typer.stop();
+    
     currentChatMessages.value = [];
     currentChatMessageDelta.value = '';
 
