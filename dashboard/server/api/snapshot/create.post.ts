@@ -1,7 +1,6 @@
 import { ProjectModel } from "@schema/project/ProjectSchema";
 import { ProjectSnapshotModel } from "@schema/project/ProjectSnapshot";
 
-
 export default defineEventHandler(async event => {
 
     const data = await getRequestData(event, { requireSchema: false, allowGuests: true, requireRange: false });

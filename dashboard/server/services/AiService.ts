@@ -7,6 +7,8 @@ import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 import { AiEventsInstance } from '../ai/functions/AI_Events';
 import { AiVisitsInstance } from '../ai/functions/AI_Visits';
 import { AiSessionsInstance } from '../ai/functions/AI_Sessions';
+import { AiBillingInstance } from '../ai/functions/AI_Billing';
+import { AiSnapshotInstance } from '../ai/functions/AI_Snapshots';
 import { AiComposableChartInstance } from '../ai/functions/AI_ComposableChart';
 
 const { AI_KEY, AI_ORG, AI_PROJECT } = useRuntimeConfig();
@@ -19,6 +21,8 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     ...AiVisitsInstance.getTools(),
     ...AiEventsInstance.getTools(),
     ...AiSessionsInstance.getTools(),
+    ...AiBillingInstance.getTools(),
+    ...AiSnapshotInstance.getTools(),
     ...AiComposableChartInstance.getTools(),
 ]
 
@@ -27,6 +31,8 @@ const functions: any = {
     ...AiVisitsInstance.getHandlers(),
     ...AiEventsInstance.getHandlers(),
     ...AiSessionsInstance.getHandlers(),
+    ...AiBillingInstance.getHandlers(),
+    ...AiSnapshotInstance.getHandlers(),
     ...AiComposableChartInstance.getHandlers()
 }
 
@@ -190,7 +196,7 @@ export async function sendMessageOnChat(text: string, pid: string, time_offset: 
     } else {
         const roleMessage: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
             role: 'system',
-            content: "You are an AI Data Analyst and Growth Hacker specialized in helping users analyze data collected within Litlyx and providing strategies to grow their website, app, or business. Your scope is strictly limited to data creation, visualization, and growth-related advice. If a user asks something outside this domain, politely inform them that you are not designed to answer such questions. Today ISO date is " + new Date().toISOString() + "take this in count when the user ask relative dates"
+            content: "You are an AI Data Analyst and Growth Hacker specialized in helping users analyze data collected within Litlyx and providing strategies to grow their website, app, or business. Your scope is strictly limited to data creation, visualization, and growth-related advice. If a user asks something outside this domain, politely inform them that you are not designed to answer such questions. Today ISO date is " + new Date().toISOString() + " take this in count when the user ask relative dates"
         }
         messages.push(roleMessage);
         await addMessageToChat(roleMessage, chat_id);

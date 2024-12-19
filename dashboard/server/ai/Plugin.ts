@@ -3,12 +3,13 @@ import type OpenAI from 'openai'
 
 
 export type AIPlugin_TTool<T extends string> = (OpenAI.Chat.Completions.ChatCompletionTool & { function: { name: T } });
-export type AIPlugin_TFunction<T extends string> = (...args: any[]) => any;
+
+export type AIPlugin_TFunction = (...args: any[]) => any;
 
 type AIPlugin_Constructor<Items extends string[]> = {
     [Key in Items[number]]: {
         tool: AIPlugin_TTool<Key>,
-        handler: AIPlugin_TFunction<Key>
+        handler: AIPlugin_TFunction
     }
 }
 
