@@ -70,10 +70,10 @@ const showWarning = computed(() => {
 })
 
 
-const pricingDrawer = usePricingDrawer();
+const { showDrawer } = useDrawer();
 
 function goToUpgrade() {
-    pricingDrawer.visible.value = true;
+   showDrawer('PRICING');
 }
 </script>
 

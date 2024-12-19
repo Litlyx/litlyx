@@ -111,8 +111,7 @@ async function saveBillingInfo() {
 
 }
 
-
-const { visible } = usePricingDrawer();
+const { showDrawer } = useDrawer();
 
 </script>
 
@@ -128,9 +127,11 @@ const { visible } = usePricingDrawer();
             <template #info>
                 <div v-if="!isGuest">
                     <div class="flex flex-col gap-4">
-                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 1" v-model="currentBillingInfo.line1">
+                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 1"
+                            v-model="currentBillingInfo.line1">
                         </LyxUiInput>
-                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 2" v-model="currentBillingInfo.line2">
+                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 2"
+                            v-model="currentBillingInfo.line2">
                         </LyxUiInput>
                         <div class="flex gap-4 w-full">
                             <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="Country"
@@ -141,9 +142,11 @@ const { visible } = usePricingDrawer();
                             </LyxUiInput>
                         </div>
                         <div class="flex gap-4 w-full">
-                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="City" v-model="currentBillingInfo.city">
+                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="City"
+                                v-model="currentBillingInfo.city">
                             </LyxUiInput>
-                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="State" v-model="currentBillingInfo.state">
+                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="State"
+                                v-model="currentBillingInfo.state">
                             </LyxUiInput>
                         </div>
                     </div>
@@ -195,7 +198,7 @@ const { visible } = usePricingDrawer();
                             <div class="poppins"> Expire date:</div>
                             <div> {{ prettyExpireDate }}</div>
                         </div>
-                        <LyxUiButton v-if="!isGuest" @click="visible = true" type="primary">
+                        <LyxUiButton v-if="!isGuest" @click="showDrawer('PRICING')" type="primary">
                             Upgrade plan
                         </LyxUiButton>
                     </div>

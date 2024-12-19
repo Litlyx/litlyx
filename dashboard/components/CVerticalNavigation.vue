@@ -105,8 +105,6 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 });
 
 
-const pricingDrawer = usePricingDrawer();
-
 </script>
 
 <template>

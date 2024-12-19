@@ -7,8 +7,6 @@ import { Lit } from 'litlyx-js';
 const { userRoles, isLogged } = useLoggedUser();
 const { project } = useProject();
 
-const pricingDrawer = usePricingDrawer();
-
 const selfhosted = useSelfhosted();
 
 const sections: Section[] = [

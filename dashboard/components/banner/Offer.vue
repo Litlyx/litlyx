@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 
 
-const pricingDrawer = usePricingDrawer();
+const { showDrawer } = useDrawer();
 
 function goToUpgrade() {
-    pricingDrawer.visible.value = true;
+    showDrawer('PRICING');
 }
 
 const { project } = useProject()
@@ -20,7 +20,8 @@ const isPremium = computed(() => {
     <div v-if="!isPremium" class="w-full bg-[#5680f822] p-4 rounded-lg text-[.9rem] flex items-center">
         <div class="flex flex-col grow">
             <div class="poppins font-semibold text-lyx-primary">
-                Launch offer: 25% off forever with code <span class="text-white font-bold text-[1rem]">LIT25</span> at checkout
+                Launch offer: 25% off forever with code <span class="text-white font-bold text-[1rem]">LIT25</span> at
+                checkout
                 from Acceleration Plan and beyond.
             </div>
             <!-- <div class="poppins text-lyx-primary">

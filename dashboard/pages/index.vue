@@ -32,11 +32,17 @@ const firstInteraction = useFetch<boolean>('/api/project/first_interaction', {
 const showDashboard = computed(() => project.value && firstInteraction.data.value);
 
 const selfhosted = useSelfhosted();
+
+const { showDrawer } = useDrawer();
 </script>
 
 <template>
 
     <div class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
+
+        <div @click="showDrawer('DOCS','!w-[30vw] !min-w-[30vw]')">
+            test
+        </div>
 
         <div v-if="showDashboard">
 
@@ -85,7 +91,7 @@ const selfhosted = useSelfhosted();
                         <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
                     </div>
                 </div>
-            </div> 
+            </div>
 
         </div>
 

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
-import type { PricingCardProp } from './PricingCardGeneric.vue';
-
+import type { PricingCardProp } from '../pricing/PricingCardGeneric.vue';
 
 
 const { data: planData, refresh: refreshPlanData } = useFetch('/api/project/plan', {
@@ -182,34 +181,10 @@ function getPricingsData() {
     return { freePricing, customPricing, slidePricings }
 }
 
-const { projectId } = useProject();
-
-const emits = defineEmits<{
-    (evt: 'onCloseClick'): void
-}>();
-
-async function onLifetimeUpgradeClick() {
-    const res = await $fetch<string>(`/api/pay/create-onetime`, {
-        ...signHeaders({
-            'content-type': 'application/json',
-            'x-pid': projectId.value ?? ''
-        }),
-        method: 'POST',
-        body: JSON.stringify({ planId: 2001 })
-    })
-    if (!res) alert('Something went wrong');
-    window.open(res);
-}
-
 </script>
 
 <template>
     <div class="p-8 overflow-y-auto">
-
-        <div @click="$emit('onCloseClick')"
-            class="cursor-pointer fixed top-4 right-4 rounded-full bg-menu drop-shadow-[0_0_2px_#CCCCCCCC] w-9 h-9 flex items-center justify-center">
-            <i class="fas fa-close text-[1.6rem]"></i>
-        </div>
 
         <div class="flex gap-8 mt-10 h-max xl:flex-row flex-col">
             <PricingCardGeneric class="flex-1" :datas="getPricingsData().freePricing"></PricingCardGeneric>
@@ -217,52 +192,6 @@ async function onLifetimeUpgradeClick() {
             </PricingCardGeneric>
             <PricingCardGeneric class="flex-1" :datas="getPricingsData().customPricing"></PricingCardGeneric>
         </div>
-
-        <!-- <LyxUiCard class="w-full mt-6">
-            <div class="flex">
-                <div class="flex flex-col gap-3">
-                    <div>
-                        <span class="text-lyx-primary font-semibold text-[1.4rem]">
-                            LIFETIME DEAL
-                        </span>
-                        <span class="text-lyx-text-dark text-[.8rem]"> (Growth plan) </span>
-                    </div>
-                    <div class="text-[2rem]"> € 2.399,00 </div>
-                    <div> Up to 500.000 visits/events per month </div>
-                    <LyxUiButton type="primary" @click="onLifetimeUpgradeClick()"> Purchase </LyxUiButton>
-                </div>
-                <div class="flex justify-evenly grow">
-                    <div class="flex flex-col justify-evenly">
-                        <div class="flex items-center gap-2">
-                            <img class="h-6" :src="'/check.png'" alt="Check">
-                            <div> Slack support </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <img class="h-6" :src="'/check.png'" alt="Check">
-                            <div> Unlimited domanis </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <img class="h-6" :src="'/check.png'" alt="Check">
-                            <div> Unlimited reports </div>
-                        </div>
-                    </div>
-                    <div class="flex flex-col justify-evenly">
-                        <div class="flex items-center gap-2">
-                            <img class="h-6" :src="'/check.png'" alt="Check">
-                            <div> AI Tokens: 3.000 / month </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <img class="h-6" :src="'/check.png'" alt="Check">
-                            <div> Server type: SHARED </div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <img class="h-6" :src="'/check.png'" alt="Check">
-                            <div> Data retention: 5 Years </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </LyxUiCard> -->
 
         <div class="flex justify-between items-center mt-10 flex-col xl:flex-row">
             <div class="flex flex-col gap-2">
@@ -281,8 +210,6 @@ async function onLifetimeUpgradeClick() {
                 </div>
             </div>
         </div>
-
-
 
     </div>
 </template>

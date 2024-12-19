@@ -5,10 +5,10 @@ const limitsInfo = await useFetch("/api/project/limits_info", {
     lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
 });
 
-const pricingDrawer = usePricingDrawer();
+const { showDrawer } = useDrawer();
 
 function goToUpgrade() {
-    pricingDrawer.visible.value = true;
+    showDrawer('PRICING');
 }
 
 </script>

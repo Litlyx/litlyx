@@ -222,7 +222,7 @@ async function deleteChat(chat_id: string) {
     await reloadChatsList();
 }
 
-const { visible: pricingDrawerVisible } = usePricingDrawer()
+const { showDrawer } = useDrawer();
 
 
 async function clearAllChats() {
@@ -386,7 +386,7 @@ async function clearAllChats() {
                         <div class="manrope font-semibold text-text-dirty"> {{ chatsRemaining }} remaining requests
                         </div>
                     </div>
-                    <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="pricingDrawerVisible = true">
+                    <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">
                         Upgrade
                     </LyxUiButton>
                 </div>

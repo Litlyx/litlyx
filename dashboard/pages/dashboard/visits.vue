@@ -77,10 +77,10 @@ const showWarning = computed(() => {
     return options.indexOf(selectedTimeFrom.value) > 1
 })
 
-const pricingDrawer = usePricingDrawer();
+const { showDrawer } = useDrawer();
 
 function goToUpgrade() {
-    pricingDrawer.visible.value = true;
+    showDrawer('PRICING');
 }
 
 </script>
