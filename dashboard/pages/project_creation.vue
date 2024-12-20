@@ -1,6 +1,5 @@
 <script setup lang="ts">
 
-definePageMeta({ layout: 'dashboard' });
 
 const projectName = ref<string>("");
 const creating = ref<boolean>(false);
@@ -8,8 +7,10 @@ const creating = ref<boolean>(false);
 const router = useRouter();
 
 const { projectList, actions } = useProject();
-
 const isFirstProject = computed(() => { return projectList.value?.length == 0; })
+
+definePageMeta({ layout: 'none' });
+
 
 import { Lit } from 'litlyx-js';
 
@@ -17,6 +18,7 @@ const route = useRoute();
 
 onMounted(() => {
     if (route.query.just_logged) return location.href = '/project_creation';
+    setPageLayout(isFirstProject.value ? 'none' : 'dashboard');
 })
 
 

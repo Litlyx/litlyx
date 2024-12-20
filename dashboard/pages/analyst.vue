@@ -201,10 +201,10 @@ function onKeyDown(e: KeyboardEvent) {
 const menuOpen = ref<boolean>(false);
 
 const defaultPrompts = [
-    "Create a line chart with this data: \n[100, 200, 30, 300, 500, 40]",
-    "Create a chart with Events (bar) and Visits (line) data from last week.",
+    "What can you do and how can you help me ?",
+    "Show me an example line chart with random data",
     "How many visits did I get last week?",
-    "Create a line chart of last week's visits."
+    "Create a line chart of last week's visits"
 ]
 
 async function deleteChat(chat_id: string) {
@@ -232,6 +232,15 @@ async function clearAllChats() {
         headers: useComputedHeaders({ useSnapshotDates: false }).value
     });
     await reloadChatsList();
+
+    menuOpen.value = false;
+    typer.stop();
+    canSend.value = true;
+    currentChatMessages.value = [];
+    currentChatMessageDelta.value = '';
+    currentChatId.value = '';
+
+
 }
 
 

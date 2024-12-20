@@ -33,16 +33,12 @@ const showDashboard = computed(() => project.value && firstInteraction.data.valu
 
 const selfhosted = useSelfhosted();
 
-const { showDrawer } = useDrawer();
 </script>
 
 <template>
 
     <div class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
 
-        <div @click="showDrawer('DOCS','!w-[30vw] !min-w-[30vw]')">
-            test
-        </div>
 
         <div v-if="showDashboard">
 
