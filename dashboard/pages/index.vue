@@ -41,7 +41,6 @@ const selfhosted = useSelfhosted();
 
 
         <div v-if="showDashboard">
-
             <div class="w-full px-4 py-2 gap-2 flex flex-col">
                 <BannerLimitsInfo v-if="!selfhosted" :key="refreshKey"></BannerLimitsInfo>
                 <BannerOffer v-if="!selfhosted" :key="refreshKey"></BannerOffer>

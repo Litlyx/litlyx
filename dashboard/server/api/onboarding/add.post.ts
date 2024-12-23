@@ -8,12 +8,9 @@ export default defineEventHandler(async event => {
     const { job, analytics } = await readBody(event);
 
 
-    const save = await OnboardingModel.create({
+    const save = await OnboardingModel.updateOne({
         user_id: data.user.id,
-        job,
-        analytics
-    });
-
+    }, { job, analytics }, { upsert: true });
     return { ok: true }
 
 });

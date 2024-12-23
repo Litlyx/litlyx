@@ -70,6 +70,8 @@ const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
 
     <UModals />
 
+    <LazyOnboarding> </LazyOnboarding>
+
     <NuxtLayout>
       <NuxtPage></NuxtPage>
     </NuxtLayout>
