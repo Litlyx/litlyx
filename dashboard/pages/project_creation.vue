@@ -44,6 +44,7 @@ async function createProject() {
             await actions.setActiveProject(newActiveProjectId);
         }
 
+        setPageLayout('dashboard');
         router.push('/');
 
     } catch (ex: any) {

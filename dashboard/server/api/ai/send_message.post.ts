@@ -1,5 +1,6 @@
 import { sendMessageOnChat, updateChatStatus } from "~/server/services/AiService";
 import { getAiChatRemainings } from "./chats_remaining";
+import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 
 
 
@@ -14,6 +15,9 @@ export default defineEventHandler(async event => {
 
     const chatsRemaining = await getAiChatRemainings(pid);
     if (chatsRemaining <= 0) return setResponseStatus(event, 400, 'CHAT_LIMIT_REACHED');
+
+
+    await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { ai_messages: 1 } });
 
     const currentStatus: string[] = [];
 

@@ -191,7 +191,7 @@ export async function sendMessageOnChat(text: string, pid: string, time_offset: 
 
     if (chatMessages && chatMessages.length > 0) {
         messages.push(...chatMessages);
-        await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { ai_messages: 1 } })
+
         await updateChatStatus(chat_id, '', false);
     } else {
         const roleMessage: OpenAI.Chat.Completions.ChatCompletionMessageParam = {
