@@ -7,6 +7,7 @@ import { AiChatModel } from "@schema/ai/AiChatSchema";
 import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import StripeService from "~/server/services/StripeService";
+import { UserModel } from "@schema/UserSchema";
 
 export default defineEventHandler(async event => {
 
@@ -28,6 +29,8 @@ export default defineEventHandler(async event => {
         const sessionsDeletation = await SessionModel.deleteMany({ project_id });
         const notifiesDeletation = await LimitNotifyModel.deleteMany({ project_id });
         const aiChatsDeletation = await AiChatModel.deleteMany({ project_id });    
+        
+        const userDeletation = await UserModel.deleteOne({ _id: userData.id });    
 
     }
 
