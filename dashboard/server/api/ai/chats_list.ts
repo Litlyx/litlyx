@@ -9,7 +9,7 @@ export default defineEventHandler(async event => {
 
     const { project_id } = data;
 
-    const chatList = await AiChatModel.find({ project_id }, { _id: 1, title: 1 }, { sort: { updated_at: 1 } });
+    const chatList = await AiChatModel.find({ project_id, deleted: false }, { _id: 1, title: 1 }, { sort: { updated_at: 1 } });
 
     return chatList.map(e => e.toJSON());
 

@@ -1,9 +1,10 @@
-import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
+
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { Redis } from "~/server/services/CacheService";
 import DateService from "@services/DateService";
-import mongoose from "mongoose";
+
+import { checkSliceValidity } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
 
@@ -19,28 +20,22 @@ export default defineEventHandler(async event => {
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async (noStore, updateExp) => {
 
-        const dateDistDays = (new Date(to).getTime() - new Date(from).getTime()) / (1000 * 60 * 60 * 24)
-        // 15 Days
-        if (slice === 'hour' && (dateDistDays > 15)) throw Error('Date gap too big for this slice');
-        // 1 Year
-        if (slice === 'day' && (dateDistDays > 365)) throw Error('Date gap too big for this slice');
-        // 3 Years
-        if (slice === 'month' && (dateDistDays > 365 * 3)) throw Error('Date gap too big for this slice');
+        const [sliceValid, errorOrDays] = checkSliceValidity(from, to, slice);
+        if (!sliceValid) throw Error(errorOrDays);
 
-
-        const allDates = DateService.createBetweenDates(from, to, slice as any);
+        const allDates = DateService.generateDateSlices(slice, new Date(from), new Date(to));
 
         const result: { _id: string, count: number }[] = [];
 
-        for (const date of allDates.dates) {
+        for (const date of allDates) {
 
             const visits = await VisitModel.aggregate([
                 {
                     $match: {
                         project_id: project_id,
                         created_at: {
-                            $gte: date.startOf(slice as any).toDate(),
-                            $lte: date.endOf(slice as any).toDate()
+                            $gte: DateService.startOfSlice(date, slice),
+                            $lte: DateService.endOfSlice(date, slice)
                         }
                     },
                 },
@@ -52,8 +47,8 @@ export default defineEventHandler(async event => {
                     $match: {
                         project_id: project_id,
                         created_at: {
-                            $gte: date.startOf(slice as any).toDate(),
-                            $lte: date.endOf(slice as any).toDate()
+                            $gte: DateService.startOfSlice(date, slice),
+                            $lte: DateService.endOfSlice(date, slice)
                         }
                     },
                 },
@@ -68,10 +63,7 @@ export default defineEventHandler(async event => {
             const total = visits.length;
             const bounced = sessions.filter(e => (e.duration / e.count) < 1).length;
             const bouncing_rate = 100 / total * bounced;
-            result.push({ 
-                _id: date.toISOString(), 
-                count: bouncing_rate
-             });
+            result.push({ _id: date.toISOString(), count: bouncing_rate });
         }
 
         return result;

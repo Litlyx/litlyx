@@ -7,6 +7,7 @@ const { onlineUsers, stopWatching, startWatching } = useOnlineUsers();
 onMounted(() => startWatching());
 onUnmounted(() => stopWatching());
 
+const selfhosted = useSelfhosted();
 
 const { createAlert } = useAlert();
 
@@ -62,7 +63,7 @@ function showAnomalyInfoAlert() {
             </div>
         </div> -->
 
-        <div class="flex gap-2 items-center text-text/90 justify-center md:justify-start">
+        <div v-if="!selfhosted" class="flex gap-2 items-center text-text/90 justify-center md:justify-start">
             <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
             <div class="poppins font-regular text-[.9rem]"> AI Anomaly Detector </div>
             <div class="flex items-center">

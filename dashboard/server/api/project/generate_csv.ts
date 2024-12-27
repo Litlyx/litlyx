@@ -56,6 +56,8 @@ async function exportToGoogle(data: string, user_id: string) {
     }
 }
 
+const { SELFHOSTED } = useRuntimeConfig();
+
 export default defineEventHandler(async event => {
 
     const data = await getRequestData(event, { requireSchema: false });
@@ -63,9 +65,12 @@ export default defineEventHandler(async event => {
 
     const { project, project_id, user } = data;
 
-    const PREMIUM_TYPE = project.premium_type;
 
-    if (PREMIUM_TYPE === 0) return setResponseStatus(event, 400, 'Project not premium');
+    if (SELFHOSTED !== 'TRUE') {
+        const PREMIUM_TYPE = project.premium_type;
+        if (PREMIUM_TYPE === 0) return setResponseStatus(event, 400, 'Project not premium');
+    }
+
 
     const { mode, slice } = getQuery(event);
 

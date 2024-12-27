@@ -39,7 +39,10 @@ services:
   consumer:
     image: litlyx-consumer
     restart: always
+    ports:
+      - "3011:3031"
     environment:
+      PORT: "3031"
       # Optional - Used to send welcome and quota emails
       # EMAIL_SERVICE: "Brevo"      
       # BREVO_API_KEY: ""
@@ -90,6 +93,8 @@ services:
       # Default user created in NO_AUTH mode
       NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
       NUXT_NOAUTH_USER_NAME: "defaultuser"
+
+      NUXT_SELFHOSTED: 'true'
 
       # Optional - Used for tests
       # NUXT_STRIPE_SECRET_TEST: ""

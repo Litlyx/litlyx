@@ -4,12 +4,16 @@ import VueMarkdown from 'vue-markdown-render';
 
 definePageMeta({ layout: 'dashboard' });
 
+
+const debugModeAi = ref<boolean>(false);
+
+const { userRoles } = useLoggedUser();
+
 const { project } = useProject();
 
 const { data: chatsList, refresh: reloadChatsList } = useFetch(`/api/ai/chats_list`, {
     headers: useComputedHeaders({ useSnapshotDates: false })
 });
-
 
 const viewChatsList = computed(() => (chatsList.value || []).toReversed());
 
@@ -19,20 +23,82 @@ const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/a
 
 const currentText = ref<string>("");
 const loading = ref<boolean>(false);
+const canSend = ref<boolean>(false);
 
 const currentChatId = ref<string>("");
-const currentChatMessages = ref<{ role: string, content: string, charts?: any[] }[]>([]);
+const currentChatMessages = ref<{ role: string, content: string, charts?: any[], tool_calls?: any }[]>([]);
+const currentChatMessageDelta = ref<string>("");
+
+
+const typer = useTextType({ ms: 10, increase: 2 }, () => {
+    const cleanMessage = currentChatMessageDelta.value.replace(/\[(data:(.*?))\]/g, '');
+    if (typer.index.value >= cleanMessage.length) typer.pause();
+});
+
+onUnmounted(() => {
+    typer.stop();
+})
+
+const currentChatMessageDeltaTextVisible = computed(() => {
+    const cleanMessage = currentChatMessageDelta.value.replace(/\[(data:(.*?))\]/g, '');
+    const textVisible = cleanMessage.substring(0, typer.index.value);
+    setTimeout(() => scrollToBottom(), 1);
+    return textVisible;
+});
+
+const currentChatMessageDeltaShowLoader = computed(() => {
+    const lastData = currentChatMessageDelta.value.match(/\[(data:(.*?))\]$/);
+    return lastData != null;
+});
 
 const scroller = ref<HTMLDivElement | null>(null);
 
+
+async function pollSendMessageStatus(chat_id: string, times: number, updateStatus: (status: string) => any) {
+
+    if (times > 100) return;
+
+    const res = await $fetch(`/api/ai/${chat_id}/status`, {
+        headers: useComputedHeaders({
+            useSnapshotDates: false,
+        }).value
+    });
+    if (!res) throw Error('Error during status request');
+
+    updateStatus(res.status);
+
+
+    typer.resume();
+
+
+    if (res.completed === false) {
+        setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), (times > 10 ? 2000 : 1000));
+    } else {
+
+        typer.stop();
+
+        const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
+            headers: useComputedHeaders({ useSnapshotDates: false }).value
+        });
+        if (!messages) return;
+
+        currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
+        currentChatMessageDelta.value = '';
+    }
+
+}
+
 async function sendMessage() {
+
 
     if (loading.value) return;
     if (!project.value) return;
 
+    if (currentText.value.length == 0) return;
+
     loading.value = true;
 
-    const body: any = { text: currentText.value }
+    const body: any = { text: currentText.value, timeOffset: new Date().getTimezoneOffset() }
     if (currentChatId.value) body.chat_id = currentChatId.value
 
     currentChatMessages.value.push({ role: 'user', content: currentText.value });
@@ -43,37 +109,51 @@ async function sendMessage() {
 
     try {
 
-        const res = await $fetch(`/api/ai/send_message`, {
-            method: 'POST',
-            body: JSON.stringify(body),
-            headers: useComputedHeaders({
-                useSnapshotDates: false,
-                custom: { 'Content-Type': 'application/json' }
-            }).value
-        });
+        canSend.value = false;
 
-        currentChatMessages.value.push({ role: 'assistant', content: res.content || 'nocontent', charts: res.charts.map(e => JSON.parse(e)) });
+        const res = await $fetch<{ chat_id: string }>(`/api/ai/send_message`, { method: 'POST', body: JSON.stringify(body), headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'Content-Type': 'application/json' } }).value });
+        currentChatId.value = res.chat_id;
 
         await reloadChatsRemaining();
         await reloadChatsList();
-        currentChatId.value = chatsList.value?.at(-1)?._id.toString() || '';
 
+        await new Promise(e => setTimeout(e, 200));
+
+
+        typer.start();
+
+        await pollSendMessageStatus(res.chat_id, 0, status => {
+            if (!status) return;
+            if (status.length > 0) loading.value = false;
+            currentChatMessageDelta.value = status;
+        });
+
+        canSend.value = true;
 
     } catch (ex: any) {
+
         if (ex.message.includes('CHAT_LIMIT_REACHED')) {
             currentChatMessages.value.push({
                 role: 'assistant',
                 content: 'You have reached your current tier chat limit.\n Upgrade to an higher tier. <a style="color: blue; text-decoration: underline;" href="/plans"> Upgrade now. </a>',
             });
         }
+
+        if (ex.message.includes('Unauthorized')) {
+            currentChatMessages.value.push({
+                role: 'assistant',
+                content: 'To use AI you need to provide AI_ORG, AI_PROJECT and AI_KEY in docker compose',
+            });
+        }
+
+        currentChatMessages.value.push({ role: 'assistant', content: ex.message, });
+
+        canSend.value = true;
+
     }
 
 
     setTimeout(() => scrollToBottom(), 1);
-
-
-    loading.value = false;
-
 
 }
 
@@ -81,7 +161,11 @@ async function openChat(chat_id?: string) {
     menuOpen.value = false;
     if (!project.value) return;
 
+    typer.stop();
+
+    canSend.value = true;
     currentChatMessages.value = [];
+    currentChatMessageDelta.value = '';
 
     if (!chat_id) {
         currentChatId.value = '';
@@ -89,7 +173,7 @@ async function openChat(chat_id?: string) {
     }
     currentChatId.value = chat_id;
     const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
-        headers: useComputedHeaders({useSnapshotDates:false}).value
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
     });
     if (!messages) return;
 
@@ -117,10 +201,10 @@ function onKeyDown(e: KeyboardEvent) {
 const menuOpen = ref<boolean>(false);
 
 const defaultPrompts = [
-    "Create a line chart with this data: \n[100, 200, 30, 300, 500, 40]",
-    "Create a chart with Events (bar) and Visits (line) data from last week.",
+    "What can you do and how can you help me ?",
+    "Show me an example line chart with random data",
     "How many visits did I get last week?",
-    "Create a line chart of last week's visits."
+    "Create a line chart of last week's visits"
 ]
 
 async function deleteChat(chat_id: string) {
@@ -130,14 +214,35 @@ async function deleteChat(chat_id: string) {
     if (currentChatId.value === chat_id) {
         currentChatId.value = "";
         currentChatMessages.value = [];
+        currentChatMessageDelta.value = '';
     }
     await $fetch(`/api/ai/${chat_id}/delete`, {
-        headers: useComputedHeaders({useSnapshotDates:false}).value
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
     });
     await reloadChatsList();
 }
 
-const { visible: pricingDrawerVisible } = usePricingDrawer()
+const { showDrawer } = useDrawer();
+
+
+async function clearAllChats() {
+    const sure = confirm(`Are you sure to delete all ${(chatsList.value?.length || 0)} chats ?`);
+    if (!sure) return;
+    await $fetch(`/api/ai/delete_all_chats`, {
+        headers: useComputedHeaders({ useSnapshotDates: false }).value
+    });
+    await reloadChatsList();
+
+    menuOpen.value = false;
+    typer.stop();
+    canSend.value = true;
+    currentChatMessages.value = [];
+    currentChatMessageDelta.value = '';
+    currentChatId.value = '';
+
+
+}
+
 
 </script>
 
@@ -147,6 +252,7 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         <div class="flex flex-row h-full overflow-y-hidden">
 
             <div class="flex-[5] py-8 flex h-full flex-col items-center relative overflow-y-hidden">
+
 
                 <div class="flex flex-col items-center xl:mt-[20vh] px-8 xl:px-28"
                     v-if="currentChatMessages.length == 0">
@@ -164,28 +270,46 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                     </div>
                 </div>
 
+
                 <div ref="scroller" class="flex flex-col w-full gap-6 px-6 xl:px-28 overflow-y-auto pb-20">
 
-                    <div class="flex w-full flex-col" v-for="message of currentChatMessages">
+                    <div class="flex w-full flex-col" v-for="(message, messageIndex) of currentChatMessages">
 
-                        <div class="flex justify-end w-full poppins text-[1.1rem]" v-if="message.role === 'user'">
+                        <div v-if="message.role === 'user'" class="flex justify-end w-full poppins text-[1.1rem]">
                             <div class="bg-lyx-widget-light px-5 py-3 rounded-lg">
                                 {{ message.content }}
                             </div>
                         </div>
-                        <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
-                            v-if="message.role === 'assistant' && message.content">
+
+                        <div v-if="message.role === 'assistant' && (debugModeAi ? true : message.content)"
+                            class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]">
                             <div class="flex items-center justify-center shrink-0">
                                 <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                             </div>
                             <div class="max-w-[70%] text-text/90 ai-message">
-                                <vue-markdown :source="message.content" :options="{
+
+                                <vue-markdown v-if="message.content" :source="message.content" :options="{
                                     html: true,
                                     breaks: true,
                                 }" />
-                            </div>
 
+
+                                <div v-if="debugModeAi && !message.content">
+                                    <div class="flex flex-col"
+                                        v-if="message.tool_calls && message.tool_calls.length > 0">
+                                        <div> {{ message.tool_calls[0].function.name }}</div>
+                                        <div> {{ message.tool_calls[0].function.arguments }} </div>
+                                    </div>
+                                </div>
+
+                                <div v-if="debugModeAi && !message.content"
+                                    class="text-[.8rem] flex gap-1 items-center w-fit hover:text-[#CCCCCC] cursor-pointer">
+                                    <i class="fas fa-info text-[.7rem]"></i>
+                                    <div class="mt-1">Debug</div>
+                                </div>
+                            </div>
                         </div>
+
 
                         <div v-if="message.charts && message.charts.length > 0"
                             class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem] flex-col mt-4">
@@ -197,6 +321,32 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                         </div>
 
                     </div>
+
+
+
+                    <div class="flex items-center gap-3 justify-start w-full poppins text-[1.1rem]"
+                        v-if="currentChatMessageDelta">
+
+                        <div class="flex items-center justify-center shrink-0">
+                            <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
+                        </div>
+
+                        <div class="max-w-[70%] text-text/90 ai-message">
+                            <div v-if="currentChatMessageDeltaShowLoader" class="flex items-center gap-1">
+                                <i class="fas fa-loader animate-spin"></i>
+                                <div> Loading </div>
+                            </div>
+                            <vue-markdown :source="currentChatMessageDeltaTextVisible" :options="{
+                                html: true,
+                                breaks: true,
+                            }" />
+                        </div>
+
+                    </div>
+
+
+
+
 
                     <div v-if="loading"
                         class="flex items-center mt-10 gap-3 justify-center w-full poppins text-[1.1rem]">
@@ -235,6 +385,9 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                     </div>
                 </div>
 
+                <div :class="{ '!text-green-500': debugModeAi }" class="cursor-pointer text-red-500 w-fit"
+                    v-if="userRoles.isAdmin.value" @click="debugModeAi = !debugModeAi"> Debug mode </div>
+
                 <div class="flex justify-between items-center pt-3">
                     <div class="flex items-center gap-2">
                         <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
@@ -242,12 +395,18 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
                         <div class="manrope font-semibold text-text-dirty"> {{ chatsRemaining }} remaining requests
                         </div>
                     </div>
-                    <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="pricingDrawerVisible = true">
+                    <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">
                         Upgrade
                     </LyxUiButton>
                 </div>
 
-                <div class="poppins font-semibold text-[1.1rem]"> History </div>
+                <div class="flex items-center gap-4">
+                    <div class="poppins font-semibold text-[1.1rem]"> History </div>
+                    <LyxUiButton v-if="chatsList && chatsList.length > 0" @click="clearAllChats()" type="secondary"
+                        class="text-center text-[.8rem]">
+                        Clear all
+                    </LyxUiButton>
+                </div>
 
                 <div class="px-2">
                     <div @click="openChat()"
@@ -298,6 +457,9 @@ const { visible: pricingDrawerVisible } = usePricingDrawer()
         color: white;
     }
 
+    p:last-of-type {
+        margin-bottom: 0;
+    }
 
     p {
         line-height: 1.8;

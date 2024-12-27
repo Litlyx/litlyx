@@ -1,8 +1,6 @@
 {
   "dependencies": {
-    "@getbrevo/brevo": "^2.2.0",
-    "mongoose": "^8.3.2",
-    "redis": "^4.6.14",
+    "express": "^4.19.2",
     "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
@@ -11,17 +9,17 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
-  "name": "consumer-database",
+  "name": "consumer",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "dev": "node scripts/start_dev.js",
     "compile": "tsc",
-    "build": "node ../scripts/build.js",
+    "build_project": "node ../scripts/build.js",
+    "build": "npm run compile && npm run build_project && npm run create_db",
     "create_db": "cd scripts && ts-node create_database.ts",
-    "build_all": "npm run compile && npm run build && npm run create_db",
     "docker-build": "docker build -t litlyx-consumer -f Dockerfile ../",
-		"docker-inspect": "docker run -it litlyx-consumer sh"
+    "docker-inspect": "docker run -it litlyx-consumer sh"
   },
   "keywords": [],
   "author": "Emily",

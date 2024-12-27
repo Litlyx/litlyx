@@ -3,7 +3,7 @@ import pdfkit from 'pdfkit';
 
 import { PassThrough } from 'node:stream';
 
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { VisitModel } from '@schema/metrics/VisitSchema';
 import { EventModel } from '@schema/metrics/EventSchema';
 

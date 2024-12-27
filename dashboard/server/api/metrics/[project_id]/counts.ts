@@ -1,5 +1,5 @@
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import { ProjectCountModel } from "@schema/ProjectsCounts";
+import { ProjectCountModel } from "@schema/project/ProjectsCounts";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { COUNTS_EXPIRE_TIME, COUNTS_SESSIONS_EXPIRE_TIME, Redis } from "~/server/services/CacheService";
 import { EventModel } from "@schema/metrics/EventSchema";

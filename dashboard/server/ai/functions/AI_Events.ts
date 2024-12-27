@@ -1,8 +1,8 @@
 import { EventModel } from "@schema/metrics/EventSchema";
-import { AdvancedTimelineAggregationOptions, executeAdvancedTimelineAggregation, executeTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
+import { executeTimelineAggregation } from "~/server/services/TimelineService";
 import { Types } from "mongoose";
 import { AIPlugin, AIPlugin_TTool } from "../Plugin";
-import dayjs from 'dayjs';
+
 
 const getEventsCountTool: AIPlugin_TTool<'getEventsCount'> = {
     type: 'function',
@@ -12,8 +12,8 @@ const getEventsCountTool: AIPlugin_TTool<'getEventsCount'> = {
         parameters: {
             type: 'object',
             properties: {
-                from: { type: 'string', description: 'ISO string of start date including hours' },
-                to: { type: 'string', description: 'ISO string of end date including hours' },
+                from: { type: 'string', description: 'ISO string of start date' },
+                to: { type: 'string', description: 'ISO string of end date' },
                 name: { type: 'string', description: 'Name of the events to get' },
                 metadata: { type: 'object', description: 'Metadata of events to get' },
             },
@@ -30,8 +30,8 @@ const getEventsTimelineTool: AIPlugin_TTool<'getEventsTimeline'> = {
         parameters: {
             type: 'object',
             properties: {
-                from: { type: 'string', description: 'ISO string of start date including hours' },
-                to: { type: 'string', description: 'ISO string of end date including hours' },
+                from: { type: 'string', description: 'ISO string of start date' },
+                to: { type: 'string', description: 'ISO string of end date' },
                 name: { type: 'string', description: 'Name of the events to get' },
                 metadata: { type: 'object', description: 'Metadata of events to get' },
             },
@@ -46,12 +46,12 @@ export class AiEvents extends AIPlugin<['getEventsCount', 'getEventsTimeline']> 
 
         super({
             'getEventsCount': {
-                handler: async (data: { project_id: string, from?: string, to?: string, name?: string, metadata?: string }) => {
+                handler: async (data: { project_id: string, from: string, to: string, name?: string, metadata?: string }) => {
                     const query: any = {
                         project_id: data.project_id,
                         created_at: {
-                            $gt: data.from ? new Date(data.from).getTime() : new Date(2023).getTime(),
-                            $lt: data.to ? new Date(data.to).getTime() : new Date().getTime(),
+                            $gt: new Date(data.from),
+                            $lt: new Date(data.to),
                         }
                     }
                     if (data.metadata) query.metadata = data.metadata;
@@ -62,21 +62,17 @@ export class AiEvents extends AIPlugin<['getEventsCount', 'getEventsTimeline']> 
                 tool: getEventsCountTool
             },
             'getEventsTimeline': {
-                handler: async (data: { project_id: string, from: string, to: string, name?: string, metadata?: string }) => {
-                    const query: AdvancedTimelineAggregationOptions & { customMatch: Record<string, any> } = {
-                        projectId: new Types.ObjectId(data.project_id) as any,
-                        model: EventModel,
-                        from: dayjs(data.from).startOf('day').toISOString(),
-                        to: dayjs(data.to).startOf('day').toISOString(),
-                        slice: 'day',
-                        customMatch: {}
-                    }
-                    if (data.metadata) query.customMatch.metadata = data.metadata;
-                    if (data.name) query.customMatch.name = data.name;
+                handler: async (data: { project_id: string, from: string, to: string, time_offset: number, name?: string, metadata?: string }) => {
 
-                    const timelineData = await executeAdvancedTimelineAggregation(query);
-                    const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, 'day', data.from, data.to);
-                    return { data: timelineFilledMerged };
+                    const timelineData = await executeTimelineAggregation({
+                        projectId: new Types.ObjectId(data.project_id),
+                        model: EventModel,
+                        from: data.from,
+                        to: data.to,
+                        slice: 'day',
+                        timeOffset: data.time_offset
+                    });
+                    return { data: timelineData };
                 },
                 tool: getEventsTimelineTool
             }

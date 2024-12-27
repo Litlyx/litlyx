@@ -3,68 +3,57 @@
 import DateService from '@services/DateService';
 import type { Slice } from '@services/DateService';
 
-const { snapshot, safeSnapshotDates } = useSnapshot()
+const { snapshot, safeSnapshotDates, snapshotDuration } = useSnapshot()
 
-const snapshotDays = computed(() => {
-    const to = new Date(safeSnapshotDates.value.to).getTime();
-    const from = new Date(safeSnapshotDates.value.from).getTime();
-    return (to - from) / 1000 / 60 / 60 / 24;
-});
 
 const chartSlice = computed(() => {
-    const snapshotSizeMs = new Date(snapshot.value.to).getTime() - new Date(snapshot.value.from).getTime();
-    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 6) return 'hour' as Slice;
-    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 30) return 'day' as Slice;
-    if (snapshotSizeMs < 1000 * 60 * 60 * 24 * 90) return 'day' as Slice;
+    if (snapshotDuration.value <= 3) return 'hour' as Slice;
+    if (snapshotDuration.value <= 32) return 'day' as Slice;
     return 'month' as Slice;
 });
 
 
+function findFirstZeroOrNullIndex(arr: (number | null)[]) {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr.slice(i).every(val => val === 0 || val === null)) return i;
+    }
+    return -1;
+}
+
 function transformResponse(input: { _id: string, count: number }[]) {
 
     const data = input.map(e => e.count || 0);
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, new Date().getTimezoneOffset(), chartSlice.value));
 
-    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, chartSlice.value));
-
-    const pool = [...input.map(e => e.count || 0)];
-
-    const avg = pool.reduce((a, e) => a + e, 0) / pool.length;
-
-    const targets = input.slice(Math.floor(input.length / 4 * 3));
-    const targetAvg = targets.reduce((a, e) => a + e.count, 0) / targets.length;
-
-    const diffPercent: number = (100 / avg * (targetAvg)) - 100;
-
-    const trend = Math.max(Math.min(diffPercent, 99), -99);
-
-    return { data, labels, trend }
+    return { data, labels, input }
 
 }
 
 const visitsData = useFetch('/api/timeline/visits', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
+
 const sessionsData = useFetch('/api/timeline/sessions', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
 const sessionsDurationData = useFetch('/api/timeline/sessions_duration', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
 const bouncingRateData = useFetch('/api/timeline/bouncing_rate', {
-    headers: useComputedHeaders({ slice: chartSlice.value }), lazy: true, transform: transformResponse
+    headers: useComputedHeaders({ slice: chartSlice }), lazy: true, transform: transformResponse
 });
 
 const avgVisitDay = computed(() => {
     if (!visitsData.data.value) return '0.00';
     const counts = visitsData.data.value.data.reduce((a, e) => e + a, 0);
-    const avg = counts / Math.max(snapshotDays.value, 1);
+    const avg = counts / Math.max(snapshotDuration.value, 1);
     return avg.toFixed(2);
 });
 
 const avgSessionsDay = computed(() => {
     if (!sessionsData.data.value) return '0.00';
     const counts = sessionsData.data.value.data.reduce((a, e) => e + a, 0);
-    const avg = counts / Math.max(snapshotDays.value, 1);
+    const avg = counts / Math.max(snapshotDuration.value, 1);
     return avg.toFixed(2);
 });
 
@@ -97,6 +86,11 @@ const avgSessionDuration = computed(() => {
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds.toFixed()}s`
 });
 
+const todayIndex = computed(() => {
+    if (!visitsData.data.value) return -1;
+    return visitsData.data.value.input.findIndex(e => new Date(e._id).getTime() > (Date.now() - new Date().getTimezoneOffset() * 1000 * 60));
+})
+
 
 </script>
 
@@ -104,29 +98,33 @@ const avgSessionDuration = computed(() => {
 <template>
     <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-cards-wrap:grid-cols-4">
 
-        <DashboardCountCard :ready="!visitsData.pending.value" icon="far fa-earth" text="Total visits"
-            :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
-            :avg="formatNumberK(avgVisitDay) + '/day'" :trend="visitsData.data.value?.trend"
-            :data="visitsData.data.value?.data" :labels="visitsData.data.value?.labels" color="#5655d7">
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!visitsData.pending.value" icon="far fa-earth"
+            text="Total visits" :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
+            :avg="formatNumberK(avgVisitDay) + '/day'" :data="visitsData.data.value?.data"
+            tooltipText="Sum of all page views on your website."
+            :labels="visitsData.data.value?.labels" color="#5655d7">
         </DashboardCountCard>
 
-        <DashboardCountCard :ready="!bouncingRateData.pending.value" icon="far fa-chart-user" text="Bouncing rate"
-            :value="avgBouncingRate" :trend="bouncingRateData.data.value?.trend" :slow="true"
-            :data="bouncingRateData.data.value?.data" :labels="bouncingRateData.data.value?.labels" color="#1e9b86">
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!bouncingRateData.pending.value" icon="far fa-chart-user"
+            text="Bouncing rate" :value="avgBouncingRate" :slow="true" :data="bouncingRateData.data.value?.data"
+            tooltipText="Percentage of users who leave quickly (lower is better)."
+            :labels="bouncingRateData.data.value?.labels" color="#1e9b86">
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsData.pending.value" icon="far fa-user" text="Unique visitors"
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!sessionsData.pending.value" icon="far fa-user"
+            text="Unique visitors"
             :value="formatNumberK(sessionsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
-            :avg="formatNumberK(avgSessionsDay) + '/day'" :trend="sessionsData.data.value?.trend"
-            :data="sessionsData.data.value?.data" :labels="sessionsData.data.value?.labels" color="#4abde8">
+            tooltipText="Count of distinct users visiting your website."
+            :avg="formatNumberK(avgSessionsDay) + '/day'" :data="sessionsData.data.value?.data"
+            :labels="sessionsData.data.value?.labels" color="#4abde8">
         </DashboardCountCard>
 
 
-        <DashboardCountCard :ready="!sessionsDurationData.pending.value" icon="far fa-timer"
-            text="Visit duration" :value="avgSessionDuration" :trend="sessionsDurationData.data.value?.trend"
-            :data="sessionsDurationData.data.value?.data" :labels="sessionsDurationData.data.value?.labels"
-            color="#f56523">
+        <DashboardCountCard :todayIndex="todayIndex" :ready="!sessionsDurationData.pending.value" icon="far fa-timer"
+            text="Visit duration" :value="avgSessionDuration" :data="sessionsDurationData.data.value?.data"
+            tooltipText="Average time users spend on your website."
+            :labels="sessionsDurationData.data.value?.labels" color="#f56523">
         </DashboardCountCard>
 
     </div>

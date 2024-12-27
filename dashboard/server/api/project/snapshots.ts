@@ -1,5 +1,5 @@
 
-import { ProjectSnapshotModel, TProjectSnapshot } from "@schema/ProjectSnapshot";
+import { ProjectSnapshotModel, TProjectSnapshot } from "@schema/project/ProjectSnapshot";
 
 export default defineEventHandler(async event => {
 

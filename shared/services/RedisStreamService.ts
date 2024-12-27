@@ -18,8 +18,6 @@ type ConsumerGroup = typeof consumerGroups[number];
 
 export class RedisStreamService {
 
-    private static processed = 0;
-
     private static client = createClient({
         url: requireEnv("REDIS_URL"),
         username: requireEnv("REDIS_USERNAME"),
@@ -45,7 +43,6 @@ export class RedisStreamService {
                 await process_function(messageData.message);
                 await this.client.xAck(stream_name, group_name, messageData.id);
                 await this.client.set(`ACK:${group_name}`, messageData.id);
-                RedisStreamService.processed++;
             }
         }
 
@@ -74,13 +71,6 @@ export class RedisStreamService {
 
         if (!consumerGroups.includes(options.group_name)) return console.error('GROUP NAME NOT ALLOWED');
 
-        setInterval(() => {
-            if (RedisStreamService.processed > 0) {
-                console.log('Processed:', (RedisStreamService.processed / 10).toFixed(2), '/s');
-                RedisStreamService.processed = 0;
-            }
-        }, 10_000);
-
         console.log('Start reading loop')
 
         try {
@@ -93,7 +83,7 @@ export class RedisStreamService {
     }
 
     static async addToStream(streamName: string, data: Record<string, string>) {
-        const result = await this.client.xAdd(streamName, "*", data);
+        const result = await this.client.xAdd(streamName, "*", { ...data, timestamp: Date.now().toString() });
         return result;
     }
 

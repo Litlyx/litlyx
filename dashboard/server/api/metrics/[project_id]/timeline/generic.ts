@@ -1,5 +1,5 @@
 import { AggregateOptions, Model, Types } from "mongoose";
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 
 
 export type MetricsTimeline = {

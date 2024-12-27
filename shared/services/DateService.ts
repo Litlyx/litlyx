@@ -1,89 +1,113 @@
 
 import dayjs from 'dayjs';
+import * as fns from 'date-fns';
 
 export type Slice = keyof typeof slicesData;
 
 const slicesData = {
-    hour: {
-        fromOffset: 1000 * 60 * 60 * 24
-    },
-    day: {
-        fromOffset: 1000 * 60 * 60 * 24 * 7
-    },
-    month: {
-        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12
-    },
-    year: {
-        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12 * 10
-    }
+    hour: {},
+    day: {},
+    week: {},
+    month: {},
+    year: {}
 }
 
+const startOfFunctions: { [key in Slice]: (date: Date) => Date } = {
+    hour: fns.startOfHour,
+    day: fns.startOfDay,
+    week: fns.startOfWeek,
+    month: fns.startOfMonth,
+    year: fns.startOfYear
+};
+
+const endOfFunctions: { [key in Slice]: (date: Date) => Date } = {
+    hour: fns.endOfHour,
+    day: fns.endOfDay,
+    week: fns.endOfWeek,
+    month: fns.endOfMonth,
+    year: fns.endOfYear
+};
 
 class DateService {
 
     public slicesData = slicesData;
 
-    getChartLabelFromISO(iso: string, locale: string, slice: Slice) {
-        const date = dayjs(iso).locale(locale);
-        if (slice === 'hour') return date.format('HH:mm');
-        if (slice === 'day') return date.format('DD/MM');
-        if (slice === 'month') return date.format('MM MMMM');
-        if (slice === 'year') return date.format('YYYY');
-        return date.format();
+    getChartLabelFromISO(iso: string, offset: number, slice: Slice) {
+        const date = new Date(new Date(iso).getTime() + offset * 1000 * 60);
+        if (slice === 'hour') return fns.format(date, 'HH:mm');
+        if (slice === 'day') return fns.format(date, 'dd/MM');
+        if (slice === 'week') return fns.format(date, 'dd/MM');
+        if (slice === 'month') return fns.format(date, 'MM MMMM');
+        if (slice === 'year') return fns.format(date, 'YYYY');
+        return iso;
     }
 
-    getDefaultRange(slice: Slice) {
-        return {
-            from: new Date(Date.now() - slicesData[slice].fromOffset).toISOString(),
-            to: new Date().toISOString()
-        }
+    canUseSlice(from: string | number | Date, to: string | number | Date, slice: Slice) {
+
+        const daysDiff = fns.differenceInDays(
+            new Date(new Date(to).getTime() + 1000),
+            new Date(from)
+        );
+
+        return this.canUseSliceFromDays(daysDiff, slice);
     }
 
-    getQueryDateRange(slice: Slice) {
+    canUseSliceFromDays(days: number, slice: Slice): [false, string] | [true, number] {
 
-        const group: Record<string, any> = {}
-        const sort: Record<string, any> = {}
-        const fromParts: Record<string, any> = {}
+        // 3 Days
+        if (slice === 'hour' && (days > 3)) return [false, 'Date gap too big for this slice'];
+        // 3 Weeks
+        if (slice === 'day' && (days > 31)) return [false, 'Date gap too big for this slice'];
+        // 3 Years
+        if (slice === 'month' && (days > 365 * 3)) return [false, 'Date gap too big for this slice'];
+
+        // 2 days
+        if (slice === 'day' && (days < 2)) return [false, 'Date gap too small for this slice'];
+        // 2 month
+        if (slice === 'month' && (days < 31 * 2)) return [false, 'Date gap too small for this slice'];
+
+        return [true, days]
+    }
+
+    startOfSlice(date: Date, slice: Slice) {
+        const fn = startOfFunctions[slice];
+        if (!fn) throw Error(`startOfFunction of slice ${slice} not found`);
+        return fn(date);
+    }
+
+    endOfSlice(date: Date, slice: Slice) {
+        const fn = endOfFunctions[slice];
+        if (!fn) throw Error(`endOfFunction of slice ${slice} not found`);
+        return fn(date);
+    }
+
+
+    getGranularityData(slice: Slice, dateField: string) {
+
+        const dateFromParts: Record<string, any> = {};
+        let granularity;
 
         switch (slice) {
             case 'hour':
-                group.hour = { $hour: '$created_at' }
-                fromParts.hour = "$_id.hour";
+                dateFromParts.hour = { $hour: { date: dateField } }
+                granularity = granularity || 'hour';
             case 'day':
-                group.day = { $dayOfMonth: '$created_at' }
-                fromParts.day = "$_id.day";
+                dateFromParts.day = { $dayOfMonth: { date: dateField } }
+                granularity = granularity || 'day';
             case 'month':
-                group.month = { $month: '$created_at' }
-                fromParts.month = "$_id.month";
+                dateFromParts.month = { $month: { date: dateField } }
+                granularity = granularity || 'month';
             case 'year':
-                group.year = { $year: '$created_at' }
-                fromParts.year = "$_id.year";
+                dateFromParts.year = { $year: { date: dateField } }
+                granularity = granularity || 'year';
         }
 
-        switch (slice) {
-            case 'year':
-                sort['_id.year'] = 1;
-                break;
-            case 'month':
-                sort['_id.year'] = 1;
-                sort['_id.month'] = 1;
-                break;
-            case 'day':
-                sort['_id.year'] = 1;
-                sort['_id.month'] = 1;
-                sort['_id.day'] = 1;
-                break;
-            case 'hour':
-                sort['_id.year'] = 1;
-                sort['_id.month'] = 1;
-                sort['_id.day'] = 1;
-                sort['_id.hour'] = 1;
-                break;
-        }
-
-        return { group, sort, fromParts }
+        return { dateFromParts, granularity }
     }
 
+    /**
+    * @deprecated interal to generateDateSlices
+    */
     prepareDateRange(from: string, to: string, slice: Slice) {
 
         let fromDate = dayjs(from).minute(0).second(0).millisecond(0);
@@ -104,6 +128,9 @@ class DateService {
         }
     }
 
+    /**
+    * @deprecated interal to generateDateSlices
+    */
     createBetweenDates(from: string, to: string, slice: Slice) {
         let start = dayjs(from);
         const end = dayjs(to);
@@ -115,7 +142,9 @@ class DateService {
         return { dates: filledDates, from, to };
     }
 
-
+    /**
+     * @deprecated use generateDateSlices
+     */
     fillDates(dates: string[], slice: Slice) {
         const allDates: dayjs.Dayjs[] = [];
         const firstDate = dayjs(dates.at(0));
@@ -132,6 +161,9 @@ class DateService {
         return allDates;
     }
 
+    /**
+     * @deprecated use mergeDates
+     */
     mergeFilledDates<T extends Record<string, any>, K extends keyof T>(dates: dayjs.Dayjs[], items: T[], dateField: K, slice: Slice, fillData: Omit<T, K>) {
         const result = new Array<T>();
         for (const date of dates) {
@@ -140,6 +172,51 @@ class DateService {
         }
         return result;
     }
+
+    generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {
+        const slices: Date[] = [];
+        let currentDate = fromDate;
+        const addFunctions: { [key in Slice]: any } = { hour: fns.addHours, day: fns.addDays, week: fns.addWeeks, month: fns.addMonths, year: fns.addYears };
+        const addFunction = addFunctions[slice];
+        if (!addFunction) { throw new Error(`Invalid slice: ${slice}`); }
+        while (fns.isBefore(currentDate, toDate) || currentDate.getTime() === toDate.getTime()) {
+            slices.push(currentDate);
+            currentDate = addFunction(currentDate, 1);
+        }
+        return slices;
+    }
+
+    isSameDayUTC(a: Date, b: Date) {
+        return a.getUTCFullYear() === b.getUTCFullYear() && a.getUTCMonth() === b.getUTCMonth() && a.getUTCDate() === b.getUTCDate();
+    }
+
+    mergeDates(timeline: { _id: string, count: number }[], allDates: Date[], slice: Slice) {
+
+        const result: { _id: string, count: number }[] = [];
+
+        const isSames: { [key in Slice]: any } = { hour: fns.isSameHour, day: this.isSameDayUTC, week: fns.isSameWeek, month: fns.isSameMonth, year: fns.isSameYear, }
+
+        const isSame = isSames[slice];
+
+        if (!isSame) {
+            throw new Error(`Invalid slice: ${slice}`);
+        }
+
+        for (const date of allDates) {
+            result.push({ _id: date.toISOString(), count: 0 });
+            for (const element of timeline) {
+                const elementDate = new Date(element._id);
+                if (isSame(elementDate, date)) {
+                    const existingEntry = result.find(item => isSame(date, new Date(item._id)));
+                    if (!existingEntry) throw new Error('THIS CANNOT HAPPEN');
+                    existingEntry.count += element.count;
+                }
+            }
+        }
+
+        return result;
+    }
+
 
 }
 

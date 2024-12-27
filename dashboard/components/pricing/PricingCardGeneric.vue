@@ -15,8 +15,6 @@ export type PricingCardProp = {
 
 const props = defineProps<{ datas: PricingCardProp[], defaultIndex?: number }>();
 
-const { project } = useProject();
-
 const currentIndex = ref<number>(props.defaultIndex || 0);
 
 const data = computed(() => {

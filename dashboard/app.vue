@@ -10,7 +10,7 @@ const { alerts, closeAlert } = useAlert();
 
 const { showDialog, closeDialog, dialogComponent, dialogParams, dialogStyle, dialogClosable } = useCustomDialog();
 
-const { visible } = usePricingDrawer();
+const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
 
 </script>
 
@@ -18,10 +18,10 @@ const { visible } = usePricingDrawer();
 
   <div class="w-dvw h-dvh bg-lyx-background-light relative">
 
-    <Transition name="pdrawer">
-      <LazyPricingDrawer @onCloseClick="visible = false"
-        class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if="visible">
-      </LazyPricingDrawer>
+    <Transition name="drawer">
+      <LazyDrawerGeneric @onCloseClick="hideDrawer()" :class="drawerClasses"
+        class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if="drawerVisible">
+      </LazyDrawerGeneric>
     </Transition>
 
 
@@ -70,6 +70,8 @@ const { visible } = usePricingDrawer();
 
     <UModals />
 
+    <LazyOnboarding> </LazyOnboarding>
+
     <NuxtLayout>
       <NuxtPage></NuxtPage>
     </NuxtLayout>
@@ -78,18 +80,18 @@ const { visible } = usePricingDrawer();
 </template>
 
 <style scoped lang="scss">
-.pdrawer-enter-active,
-.pdrawer-leave-active {
+.drawer-enter-active,
+.drawer-leave-active {
   transition: all .5s ease-in-out;
 }
 
-.pdrawer-enter-from,
-.pdrawer-leave-to {
+.drawer-enter-from,
+.drawer-leave-to {
   transform: translateX(100%)
 }
 
-.pdrawer-enter-to,
-.pdrawer-leave-from {
+.drawer-enter-to,
+.drawer-leave-from {
   transform: translateX(0)
 }
 </style>

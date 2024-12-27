@@ -1,6 +1,5 @@
-import { ProjectModel } from "@schema/ProjectSchema";
-import { ProjectSnapshotModel } from "@schema/ProjectSnapshot";
-
+import { ProjectModel } from "@schema/project/ProjectSchema";
+import { ProjectSnapshotModel } from "@schema/project/ProjectSnapshot";
 
 export default defineEventHandler(async event => {
 

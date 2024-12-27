@@ -31,17 +31,19 @@ const firstInteraction = useFetch<boolean>('/api/project/first_interaction', {
 
 const showDashboard = computed(() => project.value && firstInteraction.data.value);
 
+const selfhosted = useSelfhosted();
+
 </script>
 
 <template>
 
     <div class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
 
-        <div v-if="showDashboard">
 
+        <div v-if="showDashboard">
             <div class="w-full px-4 py-2 gap-2 flex flex-col">
-                <BannerLimitsInfo :key="refreshKey"></BannerLimitsInfo>
-                <BannerOffer :key="refreshKey"></BannerOffer>
+                <BannerLimitsInfo v-if="!selfhosted" :key="refreshKey"></BannerLimitsInfo>
+                <BannerOffer v-if="!selfhosted" :key="refreshKey"></BannerOffer>
             </div>
 
             <div>

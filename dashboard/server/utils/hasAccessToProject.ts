@@ -1,4 +1,4 @@
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { TeamMemberModel } from "@schema/TeamMemberSchema";
 
 export async function hasAccessToProject(user_id: string, project_id: string, project?: TProject) {

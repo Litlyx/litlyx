@@ -2,7 +2,7 @@ import type { AuthContext } from "../middleware/01-authorization";
 import type { EventHandlerRequest, H3Event } from 'h3'
 import { allowedModels, TModelName } from "../services/DataService";
 import { LITLYX_PROJECT_ID } from "@data/LITLYX";
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { Model, Types } from "mongoose";
 import { TeamMemberModel } from "@schema/TeamMemberSchema";
 import { Slice } from "@services/DateService";
@@ -29,6 +29,7 @@ export type GetRequestDataOptions = {
     /** @default true */ allowLitlyx?: boolean,
     /** @default false */ requireSlice?: boolean,
     /** @default true */ requireRange?: boolean,
+    /** @default false */ requireOffset?: boolean,
 }
 
 async function hasAccessToProject(user_id: string, project: TProject) {
@@ -49,6 +50,7 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
     const allowLitlyx = options?.allowLitlyx || true;
     const requireSlice = options?.requireSlice || false;
     const requireRange = options?.requireRange || false;
+    const requireOffset = options?.requireOffset || false;
 
     const pid = getHeader(event, 'x-pid');
     if (!pid) return setResponseStatus(event, 400, 'x-pid is required');
@@ -60,6 +62,12 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
     const to = getRequestHeader(event, 'x-to');
     if (requireRange) {
         if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to are required');
+    }
+
+    const offsetRaw = getRequestHeader(event, 'x-time-offset');
+    const offset = parseInt(offsetRaw?.toString() as string);
+    if (requireOffset) {
+        if (offset === null || offset === undefined || isNaN(offset)) return setResponseStatus(event, 400, 'x-time-offset is required');
     }
 
 
@@ -99,7 +107,7 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, option
     return {
         from: from as string,
         to: to as string,
-        pid, project_id, project, user, limit, slice, schemaName, model
+        pid, project_id, project, user, limit, slice, schemaName, model, timeOffset: offset
     }
 
 }

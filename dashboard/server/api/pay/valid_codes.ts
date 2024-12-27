@@ -1,4 +1,4 @@
-import { AppsumoCodeTryModel } from "@schema/AppsumoCodeTrySchema";
+import { AppsumoCodeTryModel } from "@schema/appsumo/AppsumoCodeTrySchema";
 
 export default defineEventHandler(async event => {
 

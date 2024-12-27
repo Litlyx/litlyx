@@ -15,21 +15,26 @@ export default defineNuxtConfig({
       autoprefixer: {},
     }
   },
+
   colorMode: {
     preference: 'dark',
   },
+
   devtools: {
     enabled: false
   },
+
   pages: true,
   ssr: false,
   css: ['~/assets/scss/main.scss'],
+
   alias: {
     '@schema': fileURLToPath(new URL('../shared/schema', import.meta.url)),
     '@services': fileURLToPath(new URL('../shared/services', import.meta.url)),
     '@data': fileURLToPath(new URL('../shared/data', import.meta.url)),
     '@functions': fileURLToPath(new URL('../shared/functions', import.meta.url)),
   },
+
   runtimeConfig: {
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     REDIS_URL: process.env.REDIS_URL,
@@ -50,24 +55,31 @@ export default defineNuxtConfig({
     STRIPE_SECRET_TEST: process.env.STRIPE_SECRET_TEST,
     STRIPE_WH_SECRET_TEST: process.env.STRIPE_WH_SECRET_TEST,
     NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
-    NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME,
+    NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME || 'FALSE',
+    SELFHOSTED: process.env.SELFHOSTED,
     public: {
       AUTH_MODE: process.env.AUTH_MODE,
-      GITHUB_CLIENT_ID: process.env.GITHUB_AUTH_CLIENT_ID || 'NONE'
+      GITHUB_CLIENT_ID: process.env.GITHUB_AUTH_CLIENT_ID || 'NONE',
+      SELFHOSTED: process.env.SELFHOSTED || 'FALSE',
     }
 
   },
+
   nitro: {
     plugins: ['~/server/init.ts']
   },
+
   plugins: [
     { src: '~/plugins/chartjs.ts', mode: 'client' }
   ],
+
   ...gooleSignInConfig,
   modules: ['@nuxt/ui', 'nuxt-vue3-google-signin'],
+
   devServer: {
     host: '0.0.0.0',
   },
+
   components: true,
-  extends: ['../lyx-ui']
+  compatibilityDate: '2024-11-16'
 })

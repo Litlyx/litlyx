@@ -7,7 +7,7 @@ export default defineEventHandler(async event => {
     const data = await getRequestData(event, { requireSchema: false, requireSlice: true });
     if (!data) return;
 
-    const { pid, from, to, slice, project_id } = data;
+    const { pid, from, to, slice, project_id, timeOffset } = data;
 
     const cacheKey = `timeline:visits:${pid}:${slice}:${from}:${to}`;
     const cacheExp = 60;
@@ -16,11 +16,9 @@ export default defineEventHandler(async event => {
         const timelineData = await executeTimelineAggregation({
             projectId: project_id,
             model: VisitModel,
-            from, to, slice,
+            from, to, slice, timeOffset
         });
-        const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
-        return timelineFilledMerged;
-
+        return timelineData;
     });
 
 

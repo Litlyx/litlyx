@@ -7,6 +7,11 @@ definePageMeta({ layout: 'dashboard' });
 const { project } = useProject();
 
 const isPremium = computed(() => (project.value?.premium_type || 0) > 0);
+const selfhosted = useSelfhosted();
+const canDownload = computed(() => {
+    if (selfhosted) return true;
+    return isPremium.value;
+});
 
 const metricsInfo = ref<number>(0);
 
@@ -72,10 +77,10 @@ const showWarning = computed(() => {
     return options.indexOf(selectedTimeFrom.value) > 1
 })
 
-const pricingDrawer = usePricingDrawer();
+const { showDrawer } = useDrawer();
 
 function goToUpgrade() {
-    pricingDrawer.visible.value = true;
+    showDrawer('PRICING');
 }
 
 </script>
@@ -110,12 +115,12 @@ function goToUpgrade() {
                 }" v-model="selectedTimeFrom" :options="options"></USelectMenu>
             </div>
 
-            <div v-if="isPremium" @click="downloadCSV()"
+            <div v-if="canDownload" @click="downloadCSV()"
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-1 rounded-lg">
                 Download CSV
             </div>
 
-            <div v-if="!isPremium" @click="goToUpgrade()"
+            <div v-if="!canDownload" @click="goToUpgrade()"
                 class="bg-[#57c78f46] hover:bg-[#57c78f42] flex gap-4 items-center cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
                 <i class="far fa-lock"></i>
                 Upgrade plan for CSV

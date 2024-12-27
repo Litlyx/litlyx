@@ -1,7 +1,7 @@
 
 
-import { AppsumoCodeModel } from '@schema/AppsumoCodeSchema';
-import { AppsumoCodeTryModel } from '@schema/AppsumoCodeTrySchema';
+import { AppsumoCodeModel } from '@schema/appsumo/AppsumoCodeSchema';
+import { AppsumoCodeTryModel } from '@schema/appsumo/AppsumoCodeTrySchema';
 
 
 export async function canTryAppsumoCode(project_id: string) {

@@ -18,7 +18,12 @@ export default defineEventHandler(async event => {
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
 
         const result = await VisitModel.aggregate([
-            { $match: { project_id }, },
+            {
+                $match: {
+                    project_id,
+                    created_at: { $gte: new Date(from), $lte: new Date(to) }
+                },
+            },
             { $match: { website: websiteName, }, },
             { $group: { _id: "$page", count: { $sum: 1, } } },
             { $sort: { count: -1 } },

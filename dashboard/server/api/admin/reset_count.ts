@@ -1,5 +1,5 @@
 
-import { ProjectCountModel } from "@schema/ProjectsCounts";
+import { ProjectCountModel } from "@schema/project/ProjectsCounts";
 import { EventModel } from "@schema/metrics/EventSchema";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";

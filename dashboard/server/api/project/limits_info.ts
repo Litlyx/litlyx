@@ -1,5 +1,5 @@
 
-import { ProjectLimitModel } from "@schema/ProjectsLimits";
+import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 import { MAX_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
 
 export default defineEventHandler(async event => {

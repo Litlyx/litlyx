@@ -2,19 +2,38 @@
 import { requireEnv } from '@utils/requireEnv';
 import { connectDatabase } from '@services/DatabaseService';
 import { RedisStreamService } from '@services/RedisStreamService';
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { EventModel } from "@schema/metrics/EventSchema";
 import { lookup } from './lookup';
 import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
+import express from 'express';
 
-import { ProjectLimitModel } from '@schema/ProjectsLimits';
-import { ProjectCountModel } from '@schema/ProjectsCounts';
+import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
+import { ProjectCountModel } from '@schema/project/ProjectsCounts';
+
+
+const app = express();
+
+let durations: number[] = [];
+
+app.get('/status', async (req, res) => {
+    try {
+        return res.json({ status: 'ALIVE', durations })
+    } catch (ex) {
+        console.error(ex);
+        return res.setStatus(500).json({ error: ex.message });
+    }
+})
+
+app.listen(process.env.PORT);
 
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
+
+
 
 async function main() {
 
@@ -30,9 +49,10 @@ async function main() {
 }
 
 async function processStreamEntry(data: Record<string, string>) {
-    try {
 
-        const start = Date.now();
+    const start = Date.now();
+
+    try {
 
         const eventType = data._type;
         if (!eventType) return;
@@ -53,18 +73,24 @@ async function processStreamEntry(data: Record<string, string>) {
             await process_visit(data, sessionHash);
         }
 
-        const duration = Date.now() - start;
-
         // console.log('Entry processed in', duration, 'ms');
 
     } catch (ex: any) {
         console.error('ERROR PROCESSING STREAM EVENT', ex.message);
     }
+
+    const duration = Date.now() - start;
+
+    durations.push(duration);
+    if (durations.length > 1000) {
+        durations = durations.splice(500);
+    }
+
 }
 
 async function process_visit(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, ip, website, page, referrer, userAgent, flowHash } = data;
+    const { pid, ip, website, page, referrer, userAgent, flowHash, timestamp } = data;
 
     let referrerParsed;
     try {
@@ -89,6 +115,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
             flowHash,
             continent: geoLocation[0],
             country: geoLocation[1],
+            created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } }, { upsert: true }),
         ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } })
@@ -98,7 +125,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 
 async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, instant, flowHash } = data;
+    const { pid, instant, flowHash, timestamp } = data;
 
     const existingSession = await SessionModel.findOne({ project_id: pid, session: sessionHash }, { _id: 1 });
     if (!existingSession) {
@@ -123,7 +150,7 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
 async function process_event(data: Record<string, string>, sessionHash: string) {
 
-    const { name, metadata, pid, flowHash } = data;
+    const { name, metadata, pid, flowHash, timestamp } = data;
 
     let metadataObject;
     try {
@@ -133,7 +160,10 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
     }
 
     await Promise.all([
-        EventModel.create({ project_id: pid, name, flowHash, metadata: metadataObject, session: sessionHash }),
+        EventModel.create({
+            project_id: pid, name, flowHash, metadata: metadataObject, session: sessionHash,
+            created_at: new Date(parseInt(timestamp))
+        }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true }),
         ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } })
     ]);

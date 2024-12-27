@@ -1,6 +1,6 @@
 import { EventModel } from "@schema/metrics/EventSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
-import { ProjectModel } from "@schema/ProjectSchema";
+import { ProjectModel } from "@schema/project/ProjectSchema";
 
 export default defineEventHandler(async event => {
 

@@ -1,6 +1,6 @@
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
-import { ProjectCountModel } from "@schema/ProjectsCounts";
-import { ProjectLimitModel } from "@schema/ProjectsLimits";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
+import { ProjectCountModel } from "@schema/project/ProjectsCounts";
+import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 import { UserSettingsModel } from "@schema/UserSettings";
 import StripeService from '~/server/services/StripeService';
 

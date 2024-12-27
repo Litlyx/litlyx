@@ -1,0 +1,20 @@
+{
+  "name": "litlyx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "author": "Emily",
+  "license": "MIT",
+  "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
+    "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
+    "mongoose": "^8.3.2",
+    "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "globs": "^0.1.4"
+  }
+}

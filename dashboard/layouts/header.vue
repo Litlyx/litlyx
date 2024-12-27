@@ -23,12 +23,6 @@ const entries = [
 const loggedUser = useLoggedUser();
 const { setToken } = useAccessToken();
 
-function logout() {
-    loggedUser.value = { logged: false }
-    setToken('');
-    location.reload();
-}
-
 </script>
 
 

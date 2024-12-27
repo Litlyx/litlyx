@@ -6,6 +6,23 @@ import { useLineChart, LineChart } from 'vue-chart-3';
 
 const errorData = ref<{ errored: boolean, text: string }>({ errored: false, text: '' })
 
+
+function createGradient(startColor: string) {
+    const c = document.createElement('canvas');
+    const ctx = c.getContext("2d");
+    let gradient: any = `${startColor}22`;
+    if (ctx) {
+        gradient = ctx.createLinearGradient(0, 25, 0, 300);
+        gradient.addColorStop(0, `${startColor}99`);
+        gradient.addColorStop(0.35, `${startColor}66`);
+        gradient.addColorStop(1, `${startColor}22`);
+    } else {
+        console.warn('Cannot get context for gradient');
+    }
+
+    return gradient;
+}
+
 const chartOptions = ref<ChartOptions<'line'>>({
     responsive: true,
     maintainAspectRatio: false,
@@ -24,9 +41,12 @@ const chartOptions = ref<ChartOptions<'line'>>({
                 color: '#CCCCCC22',
                 // borderDash: [5, 10]
             },
+            beginAtZero: true,
         },
         x: {
             ticks: { display: true },
+            stacked: false,
+            offset: false,
             grid: {
                 display: true,
                 drawBorder: false,
@@ -65,12 +85,32 @@ const chartData = ref<ChartData<'line' | 'bar' | 'bubble'>>({
             borderColor: '#5655d7',
             borderWidth: 4,
             fill: true,
-            tension: 0.45,
+            tension: 0.35,
             pointRadius: 0,
             pointHoverRadius: 10,
             hoverBackgroundColor: '#5655d7',
             hoverBorderColor: 'white',
             hoverBorderWidth: 2,
+            segment: {
+                borderColor(ctx, options) {
+                    const todayIndex = visitsData.data.value?.todayIndex;
+                    if (!todayIndex || todayIndex == -1) return '#5655d7';
+                    if (ctx.p1DataIndex >= todayIndex) return '#5655d700';
+                    return '#5655d7'
+                },
+                borderDash(ctx, options) {
+                    const todayIndex = visitsData.data.value?.todayIndex;
+                    if (!todayIndex || todayIndex == -1) return undefined;
+                    if (ctx.p1DataIndex == todayIndex - 1) return [3, 5];
+                    return undefined;
+                },
+                backgroundColor(ctx, options) {
+                    const todayIndex = visitsData.data.value?.todayIndex;
+                    if (!todayIndex || todayIndex == -1) return createGradient('#5655d7');
+                    if (ctx.p1DataIndex >= todayIndex) return '#5655d700';
+                    return createGradient('#5655d7');
+                },
+            },
         },
         {
             label: 'Unique sessions',
@@ -81,19 +121,21 @@ const chartData = ref<ChartData<'line' | 'bar' | 'bubble'>>({
             hoverBackgroundColor: '#4abde8',
             hoverBorderColor: '#4abde8',
             hoverBorderWidth: 2,
-            type: 'bar'
+            type: 'bar',
+            // barThickness: 20,
+            borderSkipped: ['bottom']
         },
         {
             label: 'Events',
             data: [],
             backgroundColor: ['#fbbf24'],
-            borderColor: '#fbbf24',
             borderWidth: 2,
             hoverBackgroundColor: '#fbbf24',
             hoverBorderColor: '#fbbf24',
             hoverBorderWidth: 2,
             type: 'bubble',
-            stack: 'combined'
+            stack: 'combined',
+            borderColor: ["#fbbf24"]
         },
     ],
 });
@@ -105,6 +147,17 @@ const externalTooltipElement = ref<null | HTMLDivElement>(null);
 function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'line' | 'bar'> }) {
     const { chart, tooltip } = context;
     const tooltipEl = externalTooltipElement.value;
+
+    const currentIndex = tooltip.dataPoints[0].parsed.x;
+
+    const todayIndex = visitsData.data.value?.todayIndex;
+    if (todayIndex && todayIndex >= 0) {
+        if (currentIndex > todayIndex - 1) {
+            if (!tooltipEl) return;
+            return tooltipEl.style.opacity = '0';
+        }
+    }
+
 
     currentTooltipData.value.visits = (tooltip.dataPoints.find(e => e.datasetIndex == 0)?.raw) as number;
     currentTooltipData.value.sessions = (tooltip.dataPoints.find(e => e.datasetIndex == 1)?.raw) as number;
@@ -130,13 +183,29 @@ function externalTooltipHandler(context: { chart: any, tooltip: TooltipModel<'li
     tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
 
 }
+
+const { snapshotDuration } = useSnapshot();
+
 const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Hour', value: 'hour' },
     { label: 'Day', value: 'day' },
     { label: 'Month', value: 'month' },
 ];
 
-const selectedSlice = computed(() => selectLabels[selectedLabelIndex.value].value);
+const selectLabelsAvailable = computed<{ label: string, value: Slice, disabled: boolean }[]>(() => {
+    return selectLabels.map(e => {
+        return { ...e, disabled: !DateService.canUseSliceFromDays(snapshotDuration.value, e.value)[0] }
+    });
+})
+
+const selectedSlice = computed<Slice>(() => {
+    const targetValue = selectLabelsAvailable.value[selectedLabelIndex.value];
+    if (!targetValue) return 'day';
+    if (targetValue.disabled) {
+        selectedLabelIndex.value = selectLabelsAvailable.value.findIndex(e => !e.disabled);
+    }
+    return selectLabelsAvailable.value[selectedLabelIndex.value].value
+});
 
 const selectedLabelIndex = ref<number>(1);
 const allDatesFull = ref<string[]>([]);
@@ -144,13 +213,18 @@ const allDatesFull = ref<string[]>([]);
 
 function transformResponse(input: { _id: string, count: number }[]) {
     const data = input.map(e => e.count);
-    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, navigator.language, selectLabels[selectedLabelIndex.value].value));
-    allDatesFull.value = input.map(e => e._id.toString());
-    return { data, labels }
+    const labels = input.map(e => DateService.getChartLabelFromISO(e._id, new Date().getTimezoneOffset(), selectedSlice.value));
+    if (input.length > 0) allDatesFull.value = input.map(e => e._id.toString());
+
+    const todayIndex = input.findIndex(e => new Date(e._id).getTime() > (Date.now() - new Date().getTimezoneOffset() * 1000 * 60));
+
+    return { data, labels, todayIndex }
 }
 
 function onResponseError(e: any) {
-    errorData.value = { errored: true, text: e.response._data.message ?? 'Generic error' }
+    let message = e.response._data.message ?? 'Generic error';
+    if (message == 'internal server error') message = 'Please change slice';
+    errorData.value = { errored: true, text: message }
 }
 
 function onResponse(e: any) {
@@ -180,21 +254,7 @@ watch(readyToDisplay, () => {
 })
 
 
-function createGradient(startColor: string) {
-    const c = document.createElement('canvas');
-    const ctx = c.getContext("2d");
-    let gradient: any = `${startColor}22`;
-    if (ctx) {
-        gradient = ctx.createLinearGradient(0, 25, 0, 300);
-        gradient.addColorStop(0, `${startColor}99`);
-        gradient.addColorStop(0.35, `${startColor}66`);
-        gradient.addColorStop(1, `${startColor}22`);
-    } else {
-        console.warn('Cannot get context for gradient');
-    }
 
-    return gradient;
-}
 
 function onDataReady() {
     if (!visitsData.data.value) return;
@@ -208,14 +268,32 @@ function onDataReady() {
 
     chartData.value.datasets[0].data = visitsData.data.value.data;
     chartData.value.datasets[1].data = sessionsData.data.value.data;
+
     chartData.value.datasets[2].data = eventsData.data.value.data.map(e => {
-        const rValue = 25 / maxEventSize * e;
-        return { x: 0, y: maxChartY + 70, r: isNaN(rValue) ? 0 : rValue, r2: e }
+        const rValue = 20 / maxEventSize * e;
+        return { x: 0, y: maxChartY + 20, r: isNaN(rValue) ? 0 : rValue, r2: e }
     });
+
 
     chartData.value.datasets[0].backgroundColor = [createGradient('#5655d7')];
     chartData.value.datasets[1].backgroundColor = [createGradient('#4abde8')];
     chartData.value.datasets[2].backgroundColor = [createGradient('#fbbf24')];
+
+
+    (chartData.value.datasets[1] as any).borderSkipped = sessionsData.data.value.data.map((e, i) => {
+        const todayIndex = eventsData.data.value?.todayIndex || 0;
+        if (i == todayIndex - 1) return true;
+        return 'bottom';
+    });
+
+    chartData.value.datasets[2].borderColor = eventsData.data.value.data.map((e, i) => {
+        const todayIndex = eventsData.data.value?.todayIndex || 0;
+        if (i == todayIndex - 1) return '#fbbf2400';
+        return '#fbbf24';
+    });
+
+
+
 
     updateChart();
 }
@@ -230,7 +308,8 @@ const currentTooltipData = ref<{ visits: number, events: number, sessions: numbe
 const tooltipNameIndex = ['visits', 'sessions', 'events'];
 
 function onLegendChange(dataset: any, index: number, checked: any) {
-    dataset.hidden = !checked;
+    const newValue = !checked;
+    dataset.hidden = newValue;
 }
 
 const legendColors = ref<string[]>(['#5655d7', '#4abde8', '#fbbf24'])
@@ -247,7 +326,7 @@ const legendClasses = ref<string[]>([
     <CardTitled title="Trend chart" sub="Easily match Visits, Unique sessions and Events trends." class="w-full">
         <template #header>
             <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event" :currentIndex="selectedLabelIndex"
-                :options="selectLabels">
+                :options="selectLabelsAvailable">
             </SelectButton>
         </template>
 

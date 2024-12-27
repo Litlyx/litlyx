@@ -2,7 +2,7 @@
 import { Slice } from "@services/DateService";
 import DateService from "@services/DateService";
 import type mongoose from "mongoose";
-
+import * as fns from 'date-fns'
 
 export type TimelineAggregationOptions = {
     projectId: mongoose.Schema.Types.ObjectId | mongoose.Types.ObjectId,
@@ -10,6 +10,7 @@ export type TimelineAggregationOptions = {
     from: string | number,
     to: string | number,
     slice: Slice,
+    timeOffset?: number,
     debug?: boolean
 }
 
@@ -27,33 +28,76 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
     options.customProjection = options.customProjection || {};
     options.customIdGroup = options.customIdGroup || {};
 
-    const { group, sort, fromParts } = DateService.getQueryDateRange(options.slice);
+    const { dateFromParts, granularity } = DateService.getGranularityData(options.slice, '$tmpDate');
+    if (!dateFromParts) throw Error('Slice is probably not correct');
 
-    if (!sort) throw Error('Slice is probably not correct');
+    const [sliceValid, errorOrDays] = checkSliceValidity(options.from, options.to, options.slice);
+    if (!sliceValid) throw Error(errorOrDays);
 
-    const dateDistDays = (new Date(options.to).getTime() - new Date(options.from).getTime()) / (1000 * 60 * 60 * 24)
-    // 15 Days
-    if (options.slice === 'hour' && (dateDistDays > 15)) throw Error('Date gap too big for this slice');
-    // 1 Year
-    if (options.slice === 'day' && (dateDistDays > 365)) throw Error('Date gap too big for this slice');
-    // 3 Years
-    if (options.slice === 'month' && (dateDistDays > 365 * 3)) throw Error('Date gap too big for this slice');
-
+    const timeOffset = options.timeOffset || 0;
 
     const aggregation = [
         {
             $match: {
                 project_id: options.projectId,
-                created_at: { $gte: new Date(options.from), $lte: new Date(options.to) },
+                created_at: {
+                    $gte: new Date(options.from),
+                    $lte: new Date(options.to)
+                },
                 ...options.customMatch
             }
         },
-        { $group: { _id: { ...group, ...options.customIdGroup }, count: { $sum: 1 }, ...options.customGroup } },
-        { $sort: sort },
-        { $project: { _id: { $dateFromParts: fromParts }, count: "$count", ...options.customProjection } }
-    ]
+        {
+            $addFields: {
+                tmpDate: {
+                    $dateSubtract: {
+                        startDate: "$created_at",
+                        unit: "minute",
+                        amount: timeOffset
+                    }
+                }
+            }
+        },
+        {
+            $addFields: { isoDate: { $dateFromParts: dateFromParts } }
+        },
+        {
+            $group: {
+                _id: { isoDate: "$isoDate", ...options.customIdGroup },
+                count: { $sum: 1 },
+                ...options.customGroup
+            }
+        },
+        {
+            $densify: {
+                field: "_id.isoDate",
+                range: {
+                    step: 1,
+                    unit: granularity,
+                    bounds: [
+                        new Date(new Date(options.from).getTime() - (timeOffset * 1000 * 60)),
+                        new Date(new Date(options.to).getTime() - (timeOffset * 1000 * 60) + 1),
+                    ]
+                }
+            }
+        },
+        {
+            $sort: { "_id.isoDate": 1 }
+        },
+        {
+            $addFields: { count: { $ifNull: ["$count", 0] }, }
+        },
+        {
+            $project: {
+                _id: '$_id.isoDate',
+                count: '$count',
+                ...options.customProjection
+            }
+        }
+    ] as any;
 
     if (options.debug === true) {
+        console.log('---------- AGGREAGATION ----------')
         console.log(JSON.stringify(aggregation, null, 2));
     }
 
@@ -67,7 +111,9 @@ export async function executeTimelineAggregation(options: TimelineAggregationOpt
     return executeAdvancedTimelineAggregation(options);
 }
 
-
+/**
+ * @deprecated use fillAndMergeTimelineAggregationV2
+ */
 export function fillAndMergeTimelineAggregation(timeline: { _id: string, count: number }[], slice: Slice) {
     const filledDates = DateService.fillDates(timeline.map(e => e._id), slice);
     const merged = DateService.mergeFilledDates(filledDates, timeline, '_id', slice, { count: 0 });
@@ -75,7 +121,11 @@ export function fillAndMergeTimelineAggregation(timeline: { _id: string, count: 
 }
 
 export function fillAndMergeTimelineAggregationV2(timeline: { _id: string, count: number }[], slice: Slice, from: string, to: string) {
-    const filledDates = DateService.createBetweenDates(from, to, slice);
-    const merged = DateService.mergeFilledDates(filledDates.dates, timeline, '_id', slice, { count: 0 });
+    const allDates = DateService.generateDateSlices(slice, new Date(from), new Date(to));
+    const merged = DateService.mergeDates(timeline, allDates, slice);
     return merged;
+}
+
+export function checkSliceValidity(from: string | number | Date, to: string | number | Date, slice: Slice): [false, string] | [true, number] {
+    return DateService.canUseSlice(from, to, slice);
 }

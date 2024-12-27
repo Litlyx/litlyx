@@ -2,15 +2,19 @@ module.exports = {
     apps: [
         {
             name: 'consumer',
-            exec_mode: 'fork',
+            port: '3031',
+            exec_mode: 'cluster',
+            instances: '2',
             script: './dist/consumer/src/index.js',
             env: {
-                MONGO_CONNECTION_STRING: "",
+                EMAIL_SERVICE: '',
+                BREVO_API_KEY: '',
+                MONGO_CONNECTION_STRING: '',
                 REDIS_URL: "",
                 REDIS_USERNAME: "",
                 REDIS_PASSWORD: "",
                 STREAM_NAME: "",
-                GROUP_NAME: ""
+                GROUP_NAME: ''
             }
         }
     ]

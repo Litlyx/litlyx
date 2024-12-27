@@ -1,4 +1,4 @@
-import { ProjectLimitModel } from "@schema/ProjectsLimits";
+import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 import StripeService from '~/server/services/StripeService';
 
 export default defineEventHandler(async event => {

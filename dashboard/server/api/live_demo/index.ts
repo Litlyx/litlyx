@@ -1,4 +1,4 @@
-import { ProjectModel, TProject } from "@schema/ProjectSchema";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 
 export default defineEventHandler(async event => {
     const liveDemoProject = await ProjectModel.findById('6643cd08a1854e3b81722ab5');
