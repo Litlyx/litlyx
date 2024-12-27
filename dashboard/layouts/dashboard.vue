@@ -3,9 +3,12 @@
 import type { Section } from '~/components/CVerticalNavigation.vue';
 
 import { Lit } from 'litlyx-js';
+import { DialogFeedback } from '#components';
 
 const { userRoles, isLogged } = useLoggedUser();
 const { project } = useProject();
+
+const modal = useModal();
 
 const selfhosted = useSelfhosted();
 
@@ -25,7 +28,13 @@ const sections: Section[] = [
             { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             {
                 grow: true,
-                label: 'Docs', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
+                label: 'Leave a Feedback', icon: 'fal fa-message',
+                action() {
+                    modal.open(DialogFeedback, {});
+                },
+            },
+            {
+                label: 'Documentation', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
                 action() { Lit.event('docs_clicked') },
             },
             {
