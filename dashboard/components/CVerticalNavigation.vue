@@ -163,11 +163,11 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                     </div>
 
                     <div class="flex gap-2">
-                        <UTooltip text="Download report">
+                        <!-- <UTooltip text="Download report">
                             <LyxUiButton @click="generatePDF()" type="outlined" class="!px-3 !py-1">
                                 <div><i class="far fa-download text-[.8rem]"></i></div>
                             </LyxUiButton>
-                        </UTooltip>
+                        </UTooltip> -->
                         <UTooltip text="Create new snapshot">
                             <LyxUiButton @click="openSnapshotDialog()" type="outlined" class="!px-3 !py-1">
                                 <div><i class="fas fa-plus text-[.9rem]"></i></div>
@@ -235,6 +235,13 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
                     </div>
                 </div>
+
+                <div class="w-full flex mt-4">
+                    <LyxUiButton type="outline" class="w-full text-center text-[.7rem]">
+                        Export report
+                    </LyxUiButton>
+                </div>
+
             </div>
 
             <div class="bg-[#202020] h-[1px] w-full"></div>
