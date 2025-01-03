@@ -6,7 +6,8 @@ function iconProvider(e: { _id: string, flag: string, count: number }): ReturnTy
     if (!e.flag) return ['icon', 'far fa-question']
     return [
         'img',
-        `https://raw.githubusercontent.com/hampusborgos/country-flags/main/png250px/${e.flag.toLowerCase()}.png`
+        `https://raw.githubusercontent.com/hampusborgos/country-flags/refs/heads/main/svg/${e.flag.toLowerCase()}.svg`
+        // `https://raw.githubusercontent.com/hampusborgos/country-flags/main/png250px/${e.flag.toLowerCase()}.png`
     ]
 }
 
