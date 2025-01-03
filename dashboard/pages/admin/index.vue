@@ -5,6 +5,10 @@ import type { AdminProjectsList } from '~/server/api/admin/projects';
 definePageMeta({ layout: 'dashboard' });
 
 
+const filterPremium = ref<boolean>(false);
+const filterAppsumo = ref<boolean>(false);
+
+
 
 const timeRange = ref<number>(9);
 
@@ -12,7 +16,7 @@ function setTimeRange(n: number) {
     timeRange.value = n;
 }
 
-const timeRangeTimestamp = computed(()=>{
+const timeRangeTimestamp = computed(() => {
     if (timeRange.value == 1) return Date.now() - 1000 * 60 * 60 * 24;
     if (timeRange.value == 2) return Date.now() - 1000 * 60 * 60 * 24 * 7;
     if (timeRange.value == 3) return Date.now() - 1000 * 60 * 60 * 24 * 30;
@@ -21,7 +25,7 @@ const timeRangeTimestamp = computed(()=>{
 
 
 const { data: projectsAggregatedResponseData } = await useFetch<AdminProjectsList[]>('/api/admin/projects', signHeaders());
-const { data: counts } = await useFetch(()=> `/api/admin/counts?from=${timeRangeTimestamp.value}`, signHeaders());
+const { data: counts } = await useFetch(() => `/api/admin/counts?from=${timeRangeTimestamp.value}`, signHeaders());
 
 
 
@@ -30,12 +34,56 @@ function onHideClicked() {
 }
 
 
+function isAppsumoType(type: number) {
+    return type > 6000 && type < 6004
+}
+
 const projectsAggregated = computed(() => {
-    return projectsAggregatedResponseData.value?.sort((a, b) => {
+
+    let pool = projectsAggregatedResponseData.value ? [...projectsAggregatedResponseData.value] : [];
+
+    let shownPool: AdminProjectsList[] = [];
+
+
+    for (const element of pool) {
+
+        shownPool.push({ ...element, projects: [...element.projects] });
+
+        if (filterAppsumo.value === true) {
+            shownPool.forEach(e => {
+                e.projects = e.projects.filter(project => {
+                    return isAppsumoType(project.premium_type)
+                })
+            })
+
+            shownPool = shownPool.filter(e => {
+                return e.projects.length > 0;
+            })
+
+        } else if (filterPremium.value === true) {
+            shownPool.forEach(e => {
+                e.projects = e.projects.filter(project => {
+                    return project.premium === true;
+                })
+            })
+
+            shownPool = shownPool.filter(e => {
+                return e.projects.length > 0;
+            })
+
+        } else {
+            console.log('NO DATA')
+        }
+    }
+
+
+
+
+    return shownPool.sort((a, b) => {
         const sumVisitsA = a.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0) + (pe.counts?.events || 0), 0);
         const sumVisitsB = b.projects.reduce((pa, pe) => pa + (pe.counts?.visits || 0) + (pe.counts?.events || 0), 0);
         return sumVisitsB - sumVisitsA;
-    }).filter(e=>{
+    }).filter(e => {
         return new Date(e.created_at).getTime() >= timeRangeTimestamp.value
     });
 })
@@ -117,7 +165,6 @@ function getLogBg(last_logged_at?: string) {
 }
 
 
-
 </script>
 
 
@@ -148,6 +195,11 @@ function getLogBg(last_logged_at?: string) {
             <div :class="{ 'text-red-200': timeRange == 2 }" @click="setTimeRange(2)"> Last week </div>
             <div :class="{ 'text-red-200': timeRange == 3 }" @click="setTimeRange(3)"> Last month </div>
             <div :class="{ 'text-red-200': timeRange == 9 }" @click="setTimeRange(9)"> All </div>
+        </Card>
+
+        <Card class="p-2 flex gap-10 items-center justify-center">
+            <UCheckbox v-model="filterPremium" label="Filter Premium"></UCheckbox>
+            <UCheckbox v-model="filterAppsumo" label="Filter Appsumo"></UCheckbox>
         </Card>
 
         <Card class="p-4">
@@ -185,8 +237,9 @@ function getLogBg(last_logged_at?: string) {
 
                 <div class="flex justify-evenly flex-col lg:grid lg:grid-cols-3 gap-2 lg:gap-4">
 
-                    <div v-for="project of item.projects"
-                        class="flex relative flex-col items-center bg-bg p-6 rounded-xl">
+                    <div v-for="project of item.projects" :class="{
+                        'outline outline-[2px] outline-yellow-400': isAppsumoType(project.premium_type)
+                    }" class="flex relative flex-col items-center bg-bg p-6 rounded-xl">
 
                         <div class="absolute left-2 top-2 flex items-center gap-2">
                             <div :class="getLogBg(project?.counts?.updated_at)" class="h-3 w-3 rounded-full"> </div>
@@ -194,7 +247,9 @@ function getLogBg(last_logged_at?: string) {
                         </div>
 
                         <div class="flex gap-4">
-                            <div class="font-bold"> {{ project.premium ? 'PREMIUM' : 'FREE' }} </div>
+                            <div class="font-bold">
+                                {{ project.premium ? 'PREMIUM' : 'FREE' }}
+                            </div>
                             <div class="text-text-sub/90">
                                 {{ new Date(project.created_at).toLocaleDateString('it-IT') }}
                             </div>
