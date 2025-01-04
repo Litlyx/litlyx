@@ -23,7 +23,7 @@ const { data: chatsRemaining, refresh: reloadChatsRemaining } = useFetch(`/api/a
 
 const currentText = ref<string>("");
 const loading = ref<boolean>(false);
-const canSend = ref<boolean>(false);
+const canSend = ref<boolean>(true);
 
 const currentChatId = ref<string>("");
 const currentChatMessages = ref<{ role: string, content: string, charts?: any[], tool_calls?: any }[]>([]);
@@ -75,6 +75,8 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
         setTimeout(() => pollSendMessageStatus(chat_id, times + 1, updateStatus), (times > 10 ? 2000 : 1000));
     } else {
 
+        canSend.value = true;
+
         typer.stop();
 
         const messages = await $fetch(`/api/ai/${chat_id}/get_messages`, {
@@ -84,12 +86,14 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
 
         currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
         currentChatMessageDelta.value = '';
+
     }
 
 }
 
 async function sendMessage() {
 
+    if (canSend.value === false) return;
 
     if (loading.value) return;
     if (!project.value) return;
@@ -128,25 +132,25 @@ async function sendMessage() {
             currentChatMessageDelta.value = status;
         });
 
-        canSend.value = true;
+
 
     } catch (ex: any) {
 
         if (ex.message.includes('CHAT_LIMIT_REACHED')) {
             currentChatMessages.value.push({
                 role: 'assistant',
-                content: 'You have reached your current tier chat limit.\n Upgrade to an higher tier. <a style="color: blue; text-decoration: underline;" href="/plans"> Upgrade now. </a>',
+                content: `Chat limit reached.
+                Upgrade your plan to continue chatting.`
             });
-        }
-
-        if (ex.message.includes('Unauthorized')) {
+        } else if (ex.message.includes('Unauthorized')) {
             currentChatMessages.value.push({
                 role: 'assistant',
                 content: 'To use AI you need to provide AI_ORG, AI_PROJECT and AI_KEY in docker compose',
             });
+        } else {
+            currentChatMessages.value.push({ role: 'assistant', content: ex.message, });
         }
-
-        currentChatMessages.value.push({ role: 'assistant', content: ex.message, });
+        loading.value = false;
 
         canSend.value = true;
 
