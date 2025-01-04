@@ -7,7 +7,7 @@ import { VisitModel } from '@schema/metrics/VisitSchema'
 
 import * as url from 'url';
 import { ProjectModel } from "@schema/project/ProjectSchema";
-import { getAggregation } from "./Aggregations";
+import {  getDayAggregation } from "./Aggregations";
 
 type TAvgInput = { _id: string, count: number }
 
@@ -75,9 +75,9 @@ export async function findAnomalies(project_id: string, callback: AnomalyCallbac
     const from = Date.now() - 1000 * 60 * 60 * 24 * 30;
     const to = Date.now() - 1000 * 60 * 60 * 24;
 
-    const visitsTimelineData = await getAggregation(VisitModel, pid, from, to, 'day');
+    const visitsTimelineData = await getDayAggregation(VisitModel, pid, from, to);
 
-    const eventsTimelineData = await getAggregation(EventModel, pid, from, to, 'day');
+    const eventsTimelineData = await getDayAggregation(EventModel, pid, from, to);
 
 
     const websites: { _id: string, count: number }[] = await VisitModel.aggregate([

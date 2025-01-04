@@ -2,9 +2,11 @@ import DateService, { Slice } from '@services/DateService';
 import { Model, Types } from "mongoose";
 
 
-export async function getAggregation(model: Model<any>, pid: Types.ObjectId, from: number, to: number, slice: Slice) {
+export async function getDayAggregation(model: Model<any>, pid: Types.ObjectId, from: number, to: number) {
 
-    const { group, sort, fromParts } = DateService.getQueryDateRange(slice);
+    const sort = { created_at: 1 };
+    const group = { $dateToString: { format: "%Y-%m-%d", date: "$created_at" } };
+    const fromParts = { year: { $year: "$created_at" }, month: { $month: "$created_at" }, day: { $dayOfMonth: "$created_at" } };
 
     const result = model.aggregate([
         {
@@ -16,7 +18,7 @@ export async function getAggregation(model: Model<any>, pid: Types.ObjectId, fro
         { $group: { _id: group, count: { $sum: 1 } } },
         { $sort: sort },
         { $project: { _id: { $dateFromParts: fromParts }, count: "$count" } }
-    ]);
+    ] as any);
 
     return result;
 

@@ -15,6 +15,6 @@
     "redis": "^4.7.0"
   },
   "devDependencies": {
-    "globs": "^0.1.4"
+    "glob": "^0.1.4"
   }
 }

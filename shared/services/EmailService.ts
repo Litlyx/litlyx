@@ -19,7 +19,7 @@ class EmailService {
     async sendLimitEmail50(target: string, projectName: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "You've reached 50% limit on Litlyx";
+            sendSmtpEmail.subject = "⚡ You've reached 50% limit on Litlyx";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
 
@@ -38,7 +38,7 @@ class EmailService {
     async sendLimitEmail90(target: string, projectName: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "You've reached 90% limit on Litlyx";
+            sendSmtpEmail.subject = "⚡ You've reached 90% limit on Litlyx";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = LIMIT_90_EMAIL
@@ -55,7 +55,7 @@ class EmailService {
     async sendLimitEmailMax(target: string, projectName: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "You've reached your limit on Litlyx!";
+            sendSmtpEmail.subject = "🚨 You've reached your limit on Litlyx!";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = LIMIT_MAX_EMAIL
@@ -108,17 +108,17 @@ class EmailService {
         }) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "🚨 Unexpected Activity Detected by our AI";
+            sendSmtpEmail.subject = "🔍 Unexpected Activity Detected by our AI";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = ANOMALY_VISITS_EVENTS_EMAIL
                 .replace(/\[Project Name\]/, projectName)
                 .replace(/\[ENTRIES\]/,
                     [
-                        ...data.visits.map(e => (`<li> Visits in date ${e._id} [ ${e.count} ] </li>`)),
-                        ...data.events.map(e => (`<li> Events in date ${e._id} [ ${e.count} ] </li>`))
+                        ...data.visits.map(e => (`<li> Visits in date ${new Date(e._id).toLocaleDateString('en-EN')} [ ${e.count} ] </li>`)),
+                        ...data.events.map(e => (`<li> Events in date ${new Date(e._id).toLocaleDateString('en-EN')} [ ${e.count} ] </li>`))
                     ]
-                        .join('<br>')
+                        .join('')
                 )
                 .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
@@ -132,15 +132,15 @@ class EmailService {
     async sendAnomalyDomainEmail(target: string, projectName: string, domains: string[]) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "🚨 Anomaly detected by our AI";
+            sendSmtpEmail.subject = "🔍 Suspicious dns detected by our AI";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = ANOMALY_DOMAIN_EMAIL
                 .replace(/\[Project Name\]/, projectName)
                 .replace(/\[CURRENT_DATE\]/, new Date().toLocaleDateString('en-EN'))
-                .replace(/\[DNS_ENTRIES\]/,
-                    domains.map(e => (`<li> ${e} </li>`)).join('<br>')
-                )
+                // .replace(/\[DNS_ENTRIES\]/,
+                //     domains.map(e => (`<li> ${e} </li>`)).join('<br>')
+                .replace(/\[DNS_ENTRIES\]/, domains[0])
                 .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
