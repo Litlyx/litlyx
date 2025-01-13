@@ -108,12 +108,9 @@ curl -X POST "https://broker.litlyx.com/event" \
 
 To self-host the Litlyx dashboard, first **fork** this repository.
 
-Then run the following command:
-```bash
-docker-compose build
-```
+You can find our Docker images on DockerHub for more.
 
-after the build finishes, run:
+Then run the following command:
 ```bash
 docker-compose up
 ```
