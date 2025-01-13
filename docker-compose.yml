@@ -22,7 +22,7 @@ services:
     command: redis-server --save 20 1 --loglevel warning --requirepass litlyx
 
   producer:
-    image: litlyx-producer
+    image: litlyx/litlyx-producer
     restart: always
     ports:
       - "3099:3099"
@@ -37,7 +37,7 @@ services:
       dockerfile: ./producer/Dockerfile
 
   consumer:
-    image: litlyx-consumer
+    image: litlyx/litlyx-consumer
     restart: always
     ports:
       - "3011:3031"
@@ -58,7 +58,7 @@ services:
       dockerfile: ./consumer/Dockerfile 
 
   dashboard:
-    image: litlyx-dashboard
+    image: litlyx/litlyx-dashboard
     restart: always
     ports:
       - "3000:3000"
