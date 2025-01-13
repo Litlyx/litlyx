@@ -7,6 +7,7 @@ import { PURCHASE_EMAIL } from './email_templates/PurchaseEmail';
 import { ANOMALY_VISITS_EVENTS_EMAIL } from './email_templates/AnomalyUsageEmail';
 import { ANOMALY_DOMAIN_EMAIL } from './email_templates/AnomalyDomainEmail';
 import { CONFIRM_EMAIL } from './email_templates/ConfirmEmail';
+import { RESET_PASSWORD_EMAIL } from './email_templates/ResetPasswordEmail';
 
 class EmailService {
 
@@ -167,6 +168,24 @@ class EmailService {
             return false;
         }
     }
+
+    async sendResetPasswordEmail(target: string, newPassword: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "Password reset";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "no-reply@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+            sendSmtpEmail.htmlContent = RESET_PASSWORD_EMAIL
+                .replace(/\[NEW_PASSWORD\]/, newPassword)
+                .toString();
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
 
 }
 

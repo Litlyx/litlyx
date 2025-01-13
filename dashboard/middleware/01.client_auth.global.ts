@@ -45,7 +45,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             to.path != '/login' &&
             to.path != '/register' &&
             to.path != '/live_demo' &&
-            to.path != '/jwt_login'
+            to.path != '/jwt_login' &&
+            to.path != '/forgot_password'
         ) {
             console.log('REDIRECT TO LOGIN', to.path);
             return '/login';

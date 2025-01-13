@@ -195,6 +195,13 @@ async function signInWithCredentials() {
                             </LyxUiInput>
                         </div>
 
+                        <div class="flex justify-end">
+                            <RouterLink tag="div" to="/forgot_password"
+                                class="text-center text-lyx-text-dark underline cursor-pointer z-[110]">
+                                Forgot password?
+                            </RouterLink>
+                        </div>
+
                         <div class="flex justify-center mt-4 z-[100]">
                             <LyxUiButton @click="signInWithCredentials()" class="text-center" type="primary">
                                 Sign in
@@ -228,10 +235,14 @@ async function signInWithCredentials() {
                         </div>
 
 
-                        <RouterLink tag="div" to="/register"
-                            class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[100]">
-                            You don't have an account ? Sign up
-                        </RouterLink>
+                        <div class="flex flex-col gap-2 mt-4">
+
+                            <RouterLink tag="div" to="/register"
+                                class="text-center text-lyx-text-dark underline cursor-pointer z-[100]">
+                                You don't have an account ? Sign up
+                            </RouterLink>
+
+                        </div>
 
                     </div>
 
