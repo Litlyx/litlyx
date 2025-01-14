@@ -23,6 +23,19 @@ type Props = {
     sections: Section[]
 }
 
+
+
+const colorMode = useColorMode()
+const isDark = computed({
+    get() {
+        return colorMode.value === 'dark'
+    },
+    set() {
+        colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+    }
+})
+
+
 const route = useRoute();
 const props = defineProps<Props>();
 
@@ -108,7 +121,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 </script>
 
 <template>
-    <div class="CVerticalNavigation border-solid border-[#202020] border-r-[1px] h-full w-[20rem] bg-lyx-background flex shadow-[1px_0_10px_#000000] rounded-r-lg"
+    <div class="CVerticalNavigation border-solid border-[#D9D9E0] dark:border-[#202020] border-r-[1px] h-full w-[20rem] bg-lyx-lightmode-background dark:bg-lyx-background flex shadow-[1px_0_10px_#000000]"
         :class="{
             'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
             'hidden lg:flex': !isOpen
@@ -157,7 +170,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
             <div class="w-full flex-col px-2">
 
-                <div class="flex mb-2 items-center justify-between">
+                <div class="flex mb-2 items-center justify-between text-lyx-lightmode-text dark:text-lyx-text">
                     <div class="poppins text-[.8rem]">
                         Snapshots
                     </div>
@@ -170,7 +183,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                         </UTooltip> -->
                         <UTooltip text="Create new snapshot">
                             <LyxUiButton @click="openSnapshotDialog()" type="outlined" class="!px-3 !py-1">
-                                <div><i class="fas fa-plus text-[.9rem]"></i></div>
+                                <div><i class="fas fa-plus text-[.8rem]"></i></div>
                             </LyxUiButton>
                         </UTooltip>
                     </div>
@@ -179,11 +192,11 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
                 <div class="flex items-center gap-2">
                     <USelectMenu :uiMenu="{
-                        select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                        base: '!bg-lyx-widget',
+                        select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                        base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
                         option: {
-                            base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                            active: '!bg-lyx-widget-lighter'
+                            base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                            active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
                         }
                     }" class="w-full" v-model="snapshot" :options="snapshotsItems">
                         <template #label>
@@ -204,7 +217,8 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                 </div>
 
                 <div v-if="snapshot" class="flex flex-col text-[.7rem] mt-2">
-                    <div class="flex gap-1 items-center justify-center text-lyx-text-dark">
+                    <div
+                        class="flex gap-1 items-center justify-center text-lyx-lightmode-text-dark dark:text-lyx-text-dark">
                         <div class="poppins">
                             {{ new Date(snapshot.from).toLocaleString().split(',')[0].trim() }}
                         </div>
@@ -237,14 +251,14 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                 </div>
 
                 <div class="w-full flex mt-4">
-                    <LyxUiButton type="outline" class="w-full text-center text-[.7rem]">
+                    <LyxUiButton type="outline" class="w-full text-center text-[.8rem]">
                         Export report
                     </LyxUiButton>
                 </div>
 
             </div>
 
-            <div class="bg-[#202020] h-[1px] w-full"></div>
+            <div class="bg-lyx-lightmode-widget dark:bg-[#202020] h-[1px] w-full"></div>
 
             <div class="flex flex-col h-full">
 
@@ -253,11 +267,11 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                     <div v-for="entry of section.entries" :class="{ 'grow flex items-end': entry.grow }">
 
                         <div v-if="(!entry.adminOnly || (userRoles.isAdmin.value && !isAdminHidden))"
-                            class="bg-lyx-background w-full cursor-pointer text-lyx-text-dark py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
+                            class="bg-lyx-lightmode-background text-lyx-lightmode-text-dark dark:bg-lyx-background dark:text-lyx-text-dark w-full cursor-pointer py-[.35rem] px-2 rounded-lg text-[.95rem] flex items-center"
                             :class="{
                                 '!text-lyx-text-darker pointer-events-none': entry.disabled,
-                                'bg-lyx-background-lighter !text-lyx-text/90': route.path == (entry.to || '#'),
-                                'hover:bg-lyx-background-light hover:!text-lyx-text/90': route.path != (entry.to || '#'),
+                                'bg-lyx-lightmode-background-light !text-lyx-lightmode-text dark:bg-lyx-background-lighter dark:!text-lyx-text': route.path == (entry.to || '#'),
+                                'hover:bg-lyx-lightmode-background-light hover:!text-lyx-lightmode-text dark:hover:bg-lyx-background-light dark:hover:!text-lyx-text': route.path != (entry.to || '#'),
                             }">
 
                             <NuxtLink @click="close() && entry.action?.()" :target="entry.external ? '_blank' : ''"
@@ -281,36 +295,25 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
                 <div class="grow"></div>
 
-                <div class="bg-[#202020] h-[1px] w-full px-4  mb-3"></div>
+                <div class="bg-lyx-lightmode-widget dark:bg-[#202020] h-[1px] w-full px-4  mb-3"></div>
 
                 <div class="flex justify-end px-2">
 
                     <div class="grow flex gap-3">
-                        <!-- <NuxtLink to="https://github.com/litlyx/litlyx" target="_blank"
-                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
-                            <i class="fab fa-github"></i>
-                        </NuxtLink> -->
-                        <!-- <NuxtLink to="https://discord.gg/9cQykjsmWX" target="_blank"
-                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
-                            <i class="fab fa-discord"></i>
-                        </NuxtLink> -->
-                        <NuxtLink to="https://x.com/litlyx" target="_blank"
-                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
-                            <i class="fab fa-x-twitter"></i>
-                        </NuxtLink>
-                        <!-- <NuxtLink to="https://dev.to/litlyx-org" target="_blank"
-                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
-                            <i class="fab fa-dev"></i>
-                        </NuxtLink> -->
+
+                        <div>
+                            <i @click="isDark = !isDark" class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark"
+                                :class="isDark ? 'far fa-moon' : 'far fa-sun'"></i>
+                        </div>
 
                         <NuxtLink to="/admin" v-if="userRoles.isAdmin.value"
-                            class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
-                            <i class="fas fa-cat"></i>
+                            class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">
+                            <i class="far fa-cat"></i>
                         </NuxtLink>
                     </div>
 
                     <UTooltip text="Logout" :popper="{ arrow: true, placement: 'top' }">
-                        <div @click="onLogout()" class="cursor-pointer hover:text-lyx-text text-lyx-text-dark">
+                        <div @click="onLogout()" class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">
                             <i class="far fa-arrow-right-from-bracket scale-x-[-100%]"></i>
                         </div>
                     </UTooltip>

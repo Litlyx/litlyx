@@ -34,10 +34,10 @@ function showAnomalyInfoAlert() {
 
 
 <template>
-    <div
-        class="w-full px-6 pb-2 lg:pb-6 font-bold text-text-sub/40 flex flex-col xl:flex-row text-lg gap-2 xl:gap-12 lg:text-2xl">
+    <div class="w-full px-6 pb-2 lg:pb-6 font-bold flex flex-col xl:flex-row text-lg gap-2 xl:gap-12 lg:text-2xl">
 
-        <div class="flex gap-2 items-center text-text/90 justify-center md:justify-start">
+        <div
+            class="flex gap-2 items-center text-lyx-lightmode-text/90 dark:text-lyx-text/90 justify-center md:justify-start">
             <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
             <div class="poppins font-medium text-[.9rem]"> {{ onlineUsers.data }} Online users</div>
         </div>
@@ -63,7 +63,8 @@ function showAnomalyInfoAlert() {
             </div>
         </div> -->
 
-        <div v-if="!selfhosted" class="flex gap-2 items-center text-text/90 justify-center md:justify-start">
+        <div v-if="!selfhosted"
+            class="flex gap-2 items-center text-lyx-lightmode-text/90 dark:text-lyx-text/90 justify-center md:justify-start">
             <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
             <div class="poppins font-regular text-[.9rem]"> AI Anomaly Detector </div>
             <div class="flex items-center">

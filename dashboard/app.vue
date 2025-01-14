@@ -16,7 +16,7 @@ const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
 
 <template>
 
-  <div class="w-dvw h-dvh bg-lyx-background-light relative">
+  <div class="w-dvw h-dvh bg-lyx-lightmode-background-light dark:bg-lyx-background-light relative">
 
     <Transition name="drawer">
       <LazyDrawerGeneric @onCloseClick="hideDrawer()" :class="drawerClasses"

@@ -4,7 +4,7 @@ import type { TProject } from '@schema/project/ProjectSchema';
 
 const { user } = useLoggedUser()
 
-const { projectList, guestProjectList,allProjectList, actions, project } = useProject();
+const { projectList, guestProjectList, allProjectList, actions, project } = useProject();
 
 
 function isProjectMine(owner?: string) {
@@ -22,11 +22,11 @@ function onChange(e: TProject) {
 <template>
 
     <USelectMenu :uiMenu="{
-        select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-        base: '!bg-lyx-widget',
+        select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+        base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
         option: {
-            base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-            active: '!bg-lyx-widget-lighter'
+            base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+            active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
         }
     }" class="w-full" v-if="allProjectList" @change="onChange" :value="project" :options="allProjectList">
 

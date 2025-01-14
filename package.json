@@ -13,5 +13,10 @@
     "dayjs": "^1.11.13",
     "mongoose": "^8.3.2",
     "redis": "^4.7.0"
+  },
+  "devDependencies": {
+    "@nuxt/components": "^2.2.1",
+    "@nuxt/types": "^2.18.1",
+    "@nuxt/typescript-build": "^3.0.2"
   }
 }

@@ -34,15 +34,30 @@ module.exports = {
                     dark: '#222A42',
                     hover: '#2A3450'
                 },
+                "lyx-lightmode-text": {
+                    DEFAULT: '#0A0A0A',
+                    dark: '#121212',
+                    darker: '#212121',
+                },
                 "lyx-text": {
                     DEFAULT: '#FFFFFF',
                     dark: '#D4D4D4',
-                    darker: '#6A6A6A'
+                    darker: '#6A6A6A',
+                },
+                "lyx-lightmode-widget": {
+                    DEFAULT: '#D9D9E0',
+                    light: '#EEEDEF',
+                    lighter: '#FF0000'
                 },
                 "lyx-widget": {
                     DEFAULT: '#0E0E0E',
                     light: '#1E1E1E',
                     lighter: '#262626'
+                },
+                "lyx-lightmode-background": {
+                    DEFAULT: '#F2F2F2',
+                    light: '#D4D4D4',
+                    lighter: '#6A6A6A'
                 },
                 "lyx-background": {
                     DEFAULT: '#0A0A0A',

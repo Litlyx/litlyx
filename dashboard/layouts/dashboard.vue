@@ -92,7 +92,7 @@ const { isOpen, close, open } = useMenu();
             </CVerticalNavigation>
 
 
-            <div class="overflow-hidden w-full bg-lyx-background relative h-full">
+            <div class="overflow-hidden w-full bg-lyx-lightmode-background dark:bg-lyx-background relative h-full">
 
                 <div v-if="showDialog" class="barrier w-full h-full z-[34] absolute bg-black/50 backdrop-blur-[2px]">
                     <i
