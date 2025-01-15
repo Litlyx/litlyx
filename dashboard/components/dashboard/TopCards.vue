@@ -101,8 +101,8 @@ const todayIndex = computed(() => {
         <DashboardCountCard :todayIndex="todayIndex" :ready="!visitsData.pending.value" icon="far fa-earth"
             text="Total visits" :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
             :avg="formatNumberK(avgVisitDay) + '/day'" :data="visitsData.data.value?.data"
-            tooltipText="Sum of all page views on your website."
-            :labels="visitsData.data.value?.labels" color="#5655d7">
+            tooltipText="Sum of all page views on your website." :labels="visitsData.data.value?.labels"
+            color="#5655d7">
         </DashboardCountCard>
 
         <DashboardCountCard :todayIndex="todayIndex" :ready="!bouncingRateData.pending.value" icon="far fa-chart-user"
@@ -115,16 +115,15 @@ const todayIndex = computed(() => {
         <DashboardCountCard :todayIndex="todayIndex" :ready="!sessionsData.pending.value" icon="far fa-user"
             text="Unique visitors"
             :value="formatNumberK(sessionsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"
-            tooltipText="Count of distinct users visiting your website."
-            :avg="formatNumberK(avgSessionsDay) + '/day'" :data="sessionsData.data.value?.data"
-            :labels="sessionsData.data.value?.labels" color="#4abde8">
+            tooltipText="Count of distinct users visiting your website." :avg="formatNumberK(avgSessionsDay) + '/day'"
+            :data="sessionsData.data.value?.data" :labels="sessionsData.data.value?.labels" color="#4abde8">
         </DashboardCountCard>
 
 
         <DashboardCountCard :todayIndex="todayIndex" :ready="!sessionsDurationData.pending.value" icon="far fa-timer"
             text="Visit duration" :value="avgSessionDuration" :data="sessionsDurationData.data.value?.data"
-            tooltipText="Average time users spend on your website."
-            :labels="sessionsDurationData.data.value?.labels" color="#f56523">
+            tooltipText="Average time users spend on your website." :labels="sessionsDurationData.data.value?.labels"
+            color="#f56523">
         </DashboardCountCard>
 
     </div>

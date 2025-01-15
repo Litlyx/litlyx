@@ -39,6 +39,9 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@nuxt/components": "^2.2.1",
+    "@nuxt/types": "^2.18.1",
+    "@nuxt/typescript-build": "^3.0.2",
     "@nuxt/ui": "^2.15.2",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/pdfkit": "^0.13.4",

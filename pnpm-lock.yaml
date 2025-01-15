@@ -23,16 +23,6 @@ importers:
       redis:
         specifier: ^4.7.0
         version: 4.7.0
-    devDependencies:
-      '@nuxt/components':
-        specifier: ^2.2.1
-        version: 2.2.1(consola@3.2.3)
-      '@nuxt/types':
-        specifier: ^2.18.1
-        version: 2.18.1
-      '@nuxt/typescript-build':
-        specifier: ^3.0.2
-        version: 3.0.2(@nuxt/types@2.18.1)(eslint@8.57.1)(typescript@5.6.3)(vue-template-compiler@2.7.16)(webpack@5.97.1)
 
   consumer:
     dependencies:
@@ -128,6 +118,15 @@ importers:
         specifier: ^3.24.1
         version: 3.24.1
     devDependencies:
+      '@nuxt/components':
+        specifier: ^2.2.1
+        version: 2.2.1(consola@3.2.3)
+      '@nuxt/types':
+        specifier: ^2.18.1
+        version: 2.18.1
+      '@nuxt/typescript-build':
+        specifier: ^3.0.2
+        version: 3.0.2(@nuxt/types@2.18.1)(eslint@8.57.1)(typescript@5.6.3)(vue-template-compiler@2.7.16)(webpack@5.97.1)
       '@nuxt/ui':
         specifier: ^2.15.2
         version: 2.19.2(change-case@5.4.4)(magicast@0.3.5)(rollup@4.27.2)(ts-node@10.9.2(@types/node@20.17.6)(typescript@5.6.3))(vite@5.4.11(@types/node@20.17.6)(sass@1.81.0)(terser@5.36.0))(vue@3.5.13(typescript@5.6.3))
