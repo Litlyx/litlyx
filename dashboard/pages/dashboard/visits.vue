@@ -91,7 +91,7 @@ function goToUpgrade() {
     <div class="w-full h-dvh flex flex-col">
 
         <div v-if="creatingCsv"
-            class="fixed z-[100] flex items-center justify-center left-0 top-0 w-full h-full bg-black/60 backdrop-blur-[4px]">
+            class="fixed z-[100] flex items-center justify-center left-0 top-0 w-full h-full bg-lyx-lightmode-background-light dark:bg-black/60 backdrop-blur-[4px]">
             <div class="poppins text-[2rem]">
                 Creating csv...
             </div>
@@ -106,11 +106,11 @@ function goToUpgrade() {
             </div>
             <div class="w-[15rem] flex flex-col gap-0">
                 <USelectMenu :uiMenu="{
-                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                    base: '!bg-lyx-widget',
+                    select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                    base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
                     option: {
-                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                        active: '!bg-lyx-widget-lighter'
+                        base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                        active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
                     }
                 }" v-model="selectedTimeFrom" :options="options"></USelectMenu>
             </div>
@@ -131,13 +131,13 @@ function goToUpgrade() {
 
         <UTable v-if="tableData" class="utable px-8" :ui="{
             wrapper: 'overflow-auto w-full h-full',
-            thead: 'sticky top-0 bg-menu',
+            thead: 'sticky top-0 bg-lyx-lightmode-background-light dark:bg-menu',
             td: {
-                color: 'text-[#ffffffb3]',
-                base: 'border-r border-l border-gray-300/20'
+                color: 'text-lyx-lightmode-text dark:text-[#ffffffb3]',
+                base: 'border-r border-l border-lyx-lightmode-widget dark:border-gray-300/20'
             },
-            th: { color: 'text-text-sub' },
-            tbody: 'divide-y divide-gray-300/20',
+            th: { color: 'text-lyx-lightmode-text dark:text-text-sub' },
+            tbody: 'divide-y divide-lyx-lightmode-widget dark:divide-gray-300/20',
             divide: '',
         }" v-model:sort="sort" :columns="selectedColumns" :rows="tableData" :loading="loadingData" sort-mode="manual">
 

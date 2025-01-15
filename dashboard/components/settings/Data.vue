@@ -106,12 +106,12 @@ const sessionsLabel = computed(() => {
 
                 <!-- <div class="text-[.9rem] text-lyx-text-darker"> Select a domain </div> -->
                 <USelectMenu placeholder="Select a domain" :uiMenu="{
-                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                    base: '!bg-lyx-widget',
-                    option: {
-                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                        active: '!bg-lyx-widget-lighter'
-                    }
+                     select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                        base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
+                        option: {
+                            base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                            active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
+                        }
                 }" :options="domains.data.value ?? []" v-model="selectedDomain"></USelectMenu>
 
                 <div v-if="selectedDomain" class="flex flex-col gap-2 mt-4">
@@ -140,15 +140,17 @@ const sessionsLabel = computed(() => {
             </div>
         </template>
         <template #delete_data>
+
             <div
-                class="outline rounded-lg w-full px-8 py-4 flex flex-col gap-4 outline-[1px] outline-[#541c15] bg-[#1e1412]">
+                class="outline rounded-lg w-full px-8 py-4 flex flex-col gap-4 outline-[1px] outline-[#541c15] bg-lyx-lightmode-widget-light dark:bg-[#1e1412]">
                 <div class="poppins font-semibold"> This operation will reset this project to it's initial state (0
-                    visits 0 events 0 sessions)</div>
+                    visits 0 events 0 sessions) </div>
                 <div @click="openDeleteAllDomainDataDialog()"
-                    class="text-[#e95b61] poppins font-semibold cursor-pointer hover:text-black hover:bg-red-700 outline rounded-lg w-fit px-8 py-2 outline-[1px] outline-[#532b26] bg-[#291415]">
+                    class="text-[#e95b61] poppins font-semibold cursor-pointer hover:text-black hover:bg-red-700 outline rounded-lg w-fit px-8 py-2 outline-[1px] outline-[#532b26] bg-lyx-lightmode-widget-light dark:bg-[#291415]">
                     Delete all data
                 </div>
             </div>
+
         </template>
     </SettingsTemplate>
 </template>

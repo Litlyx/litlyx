@@ -56,8 +56,8 @@ const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
     </div>
 
     <div v-if="showDialog"
-      class="custom-dialog w-full h-full flex items-center justify-center lg:pl-32 lg:p-20 p-4 absolute left-0 top-0 z-[100] backdrop-blur-[2px] bg-black/50">
-      <div :style="dialogStyle" class="bg-lyx-widget rounded-xl relative outline outline-1 outline-lyx-widget-lighter">
+      class="custom-dialog w-full h-full flex items-center justify-center lg:pl-32 lg:p-20 p-4 absolute left-0 top-0 z-[100] backdrop-blur-[2px] dark:bg-black/50">
+      <div :style="dialogStyle" class="bg-lyx-lightmode-widget-light outline-lyx-lightmode-widget dark:bg-lyx-widget dark:outline-lyx-widget-lighter rounded-xl relative outline outline-1">
         <div v-if="dialogClosable" class="flex justify-end absolute z-[100] right-8 top-8">
           <i @click="closeDialog()" class="fas fa-close text-[1.6rem] hover:text-gray-500 cursor-pointer"></i>
         </div>

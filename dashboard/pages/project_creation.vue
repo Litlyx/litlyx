@@ -56,6 +56,7 @@ async function createProject() {
 
 }
 
+
 </script>
 
 
@@ -69,7 +70,7 @@ async function createProject() {
 
         <div class="flex flex-col items-center justify-center pt-[12rem] gap-12 relative z-[10]">
 
-            <div class="text-[3rem] font-semibold text-center">
+            <div class="text-[3rem] font-semibold text-center text-lyx-lightmode-text dark:text-lyx-text">
                 Create your {{ isFirstProject ? 'first' : '' }} project
             </div>
 
@@ -78,15 +79,20 @@ async function createProject() {
             </div>
 
             <div class="w-[20rem] flex flex-col gap-2">
-                <div class="text-lg text-text-sub font-semibold">
+                <div class="text-lg text-lyx-lightmode-text-dark dark:text-text-sub font-semibold">
                     {{ isFirstProject ? 'Choose a name' : 'Project name' }}
                 </div>
-                <CInput placeholder="ProjectName" :readonly="creating" v-model="projectName"></CInput>
+                <!-- <CInput placeholder="ProjectName" :readonly="creating" v-model="projectName"></CInput> -->
+                <LyxUiInput class="py-2 px-2" placeholder="Insert" :readonly="creating" v-model="projectName">
+                </LyxUiInput>
             </div>
 
             <div>
-                <CButton :loading="creating" @click="createProject()" :disabled="projectName.length < 2"
-                    class="rounded-lg w-[10rem] text-md font-semibold" label="Create"></CButton>
+
+                <LyxUiButton type="primary" @click="createProject()" :disabled="projectName.length < 2">
+                    Create
+                </LyxUiButton>
+
             </div>
 
         </div>

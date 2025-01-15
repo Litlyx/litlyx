@@ -19,6 +19,6 @@ const handleChange = (event: Event) => {
 
 <template>
     <input
-        class="bg-lyx-widget-light text-lyx-text-dark poppins rounded-md outline outline-[1px] outline-lyx-widget-lighter"
+        class="bg-lyx-lightmode-widget-light outline-lyx-lightmode-widget text-lyx-lightmode-text dark:bg-lyx-widget-light dark:text-lyx-text-dark poppins rounded-md outline outline-[1px] dark:outline-lyx-widget-lighter"
         :type="props.type ?? 'text'" :placeholder="props.placeholder" :value="props.modelValue" @input="handleChange">
 </template>

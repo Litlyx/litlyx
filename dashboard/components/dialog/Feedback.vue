@@ -35,7 +35,7 @@ async function sendFeedback() {
         overlay: {
             background: 'bg-lyx-background/85'
         },
-        background: 'bg-lyx-widget',
+        background: 'dark:bg-lyx-widget bg-lyx-lightmode-widget-light',
         ring: 'border-solid border-[1px] border-[#262626]'
     }">
         <div class="h-full flex flex-col gap-2 p-4">
@@ -43,7 +43,7 @@ async function sendFeedback() {
             <div class="flex flex-col gap-3">
                 <div> Share everything with us. </div>
                 <textarea v-model="text" placeholder="Leave your feedback"
-                    class="p-2 w-full h-[8rem] resize-none rounded-md outline outline-[2px] outline-[#3a3f47]"></textarea>
+                    class="p-2 w-full h-[8rem] dark:bg-lyx-widget bg-lyx-lightmode-widget-light resize-none rounded-md outline outline-[2px] outline-[#3a3f47]"></textarea>
                 <div class="flex justify-between items-center">
                     <div>Need help ? Check the docs <a href="https://docs.litlyx.com" target="_blank"
                             class="text-blue-500">here</a> </div>

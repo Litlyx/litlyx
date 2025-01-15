@@ -333,8 +333,8 @@ const legendClasses = ref<string[]>([
         <div class="flex gap-6 w-full justify-between lg:flex-row flex-col">
             <LyxUiButton type="secondary" :to="isLiveDemo ? '#' : '/analyst'" :disabled="isLiveDemo">
                 <div class="flex items-center gap-2 px-10">
-                    <i class="far fa-sparkles text-yellow-400"></i>
-                    <div class="poppins text-lyx-text"> Ask AI </div>
+                    <i class="far fa-sparkles text-yellow-600 dark:text-yellow-400"></i>
+                    <div class="poppins text-lyx-lightmode-text dark:text-lyx-text"> Ask AI </div>
                 </div>
             </LyxUiButton>
             <div class="flex gap-6">
@@ -352,7 +352,7 @@ const legendClasses = ref<string[]>([
 
 
         <div id='external-tooltip' ref="externalTooltipElement" class="z-[400]">
-            <LyxUiCard>
+            <LyxUiCard class="text-lyx-lightmode-text dark:text-lyx-text">
                 <div class="flex gap-2 items-center">
                     <div> Date: </div>
                     <div v-if="currentTooltipData"> {{ currentTooltipData.date }}</div>

@@ -54,7 +54,7 @@ function openExternalLink(link: string) {
         <div class="flex justify-between mb-3">
             <div class="flex flex-col gap-1">
                 <div class="flex gap-4 items-center">
-                    <div class="poppins font-semibold text-[1.4rem] text-text">
+                    <div class="poppins font-semibold text-[1.4rem] text-lyx-lightmode-text dark:text-lyx-text">
                         {{ label }}
                     </div>
                     <div class="flex items-center">
@@ -63,7 +63,7 @@ function openExternalLink(link: string) {
 
                     </div>
                 </div>
-                <div class="poppins text-[1rem] text-text-sub/90">
+                <div class="poppins text-[1rem] text-lyx-ligtmode-text-darker dark:text-text-sub/90">
                     {{ desc }}
                 </div>
             </div>
@@ -81,7 +81,8 @@ function openExternalLink(link: string) {
         </div>
 
         <div class="h-full flex flex-col">
-            <div class="flex justify-between font-bold text-text-sub/80 text-[1.1rem] mb-4">
+            <div
+                class="flex justify-between font-bold lyx-text-lightmode-text-dark dark:text-text-sub/80 text-[1.1rem] mb-4">
                 <div class="flex items-center gap-2">
                     <div v-if="isDetailView" class="flex items-center justify-center">
                         <i @click="$emit('showGeneral')"
@@ -107,7 +108,7 @@ function openExternalLink(link: string) {
                         <div class="flex gap-1 items-center" @click="showDetails(element._id)"
                             :class="{ 'cursor-pointer line-active': interactive }">
 
-                            <div class="absolute rounded-sm w-full h-full bg-[#92abcf38]"
+                            <div class="absolute rounded-sm w-full h-full bg-[#6f829c38] dark:bg-[#92abcf38]"
                                 :style="'width:' + 100 / maxData * element.count + '%;'"></div>
 
                             <div class="flex px-2 py-1 relative items-center gap-4">
@@ -119,24 +120,28 @@ function openExternalLink(link: string) {
 
                                     <i v-else :class="iconProvider(element)?.[1]"></i>
                                 </div>
-                                <span class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-text/70">
+                                <span
+                                    class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-lyx-lightmode-text-dark dark:text-text/70">
                                     {{ elementTextTransformer?.(element._id) || element._id }}
                                 </span>
                             </div>
                         </div>
                     </div>
-                    <div class="text-text font-semibold text-[.9rem] md:text-[1rem] manrope"> {{
-                        formatNumberK(element.count) }} </div>
+                    <div
+                        class="text-lyx-lightmode-text dark:text-lyx-text font-semibold text-[.9rem] md:text-[1rem] manrope">
+                        {{
+                            formatNumberK(element.count) }} </div>
                 </div>
                 <div v-if="props.data.length == 0" class="flex justify-center text-text-sub font-light text-[1.1rem]">
                     No data yet
                 </div>
             </div>
             <div v-if="!hideShowMore" class="flex justify-center mt-4 text-text-sub/90 items-end grow">
-                <div @click="$emit('showMore')"
-                    class="poppins hover:bg-black cursor-pointer w-fit px-6 py-1 rounded-lg border-[1px] border-text-sub text-[.9rem]">
+
+                <LyxUiButton type="outline" @click="$emit('showMore')">
                     Show more
-                </div>
+                </LyxUiButton>
+
             </div>
         </div>
 

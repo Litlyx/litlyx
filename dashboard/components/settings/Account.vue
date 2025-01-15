@@ -79,10 +79,10 @@ async function changePassword() {
         </template>
         <template #delete>
             <div
-                class="outline rounded-lg w-full px-8 py-4 flex flex-col gap-4 outline-[1px] outline-[#541c15] bg-[#1e1412]">
+                class="outline rounded-lg w-full px-8 py-4 flex flex-col gap-4 outline-[1px] outline-[#541c15] bg-lyx-lightmode-widget-light dark:bg-[#1e1412]">
                 <div class="poppins font-semibold"> Deleting this account will also remove its projects </div>
                 <div @click="deleteAccount()"
-                    class="text-[#e95b61] poppins font-semibold cursor-pointer hover:text-black hover:bg-red-700 outline rounded-lg w-fit px-8 py-2 outline-[1px] outline-[#532b26] bg-[#291415]">
+                    class="text-[#e95b61] poppins font-semibold cursor-pointer hover:text-black hover:bg-red-700 outline rounded-lg w-fit px-8 py-2 outline-[1px] outline-[#532b26] bg-lyx-lightmode-widget-light dark:bg-[#291415]">
                     Delete account
                 </div>
             </div>

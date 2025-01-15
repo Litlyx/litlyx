@@ -61,7 +61,7 @@ async function confirmSnapshot() {
 <template>
     <div class="w-full h-full flex flex-col">
 
-        <div class="poppins text-center">
+        <div class="poppins text-center text-lyx-lightmode-text dark:text-lyx-text">
             Create a snapshot
         </div>
 

@@ -68,7 +68,7 @@ function getPremiumPrice(type: number) {
 }
 
 const entries: SettingsTemplateEntry[] = [
-    { id: 'plan', title: 'Current plan', text: 'Manage current plat for this project' },
+    { id: 'plan', title: 'Current plan', text: 'Manage current plan for this project' },
     { id: 'usage', title: 'Usage', text: 'Show usage of current project' },
     { id: 'info', title: 'Billing address', text: 'This will be reflected in every upcoming invoice,\npast invoices are not affected' },
     { id: 'invoices', title: 'Invoices', text: 'Manage invoices of current project' },
@@ -127,25 +127,25 @@ const { showDrawer } = useDrawer();
             <template #info>
                 <div v-if="!isGuest">
                     <div class="flex flex-col gap-4">
-                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 1"
+                        <LyxUiInput class="px-2 py-2 dark:!bg-[#161616]" placeholder="Address line 1"
                             v-model="currentBillingInfo.line1">
                         </LyxUiInput>
-                        <LyxUiInput class="px-2 py-2 !bg-[#161616]" placeholder="Address line 2"
+                        <LyxUiInput class="px-2 py-2 dark:!bg-[#161616]" placeholder="Address line 2"
                             v-model="currentBillingInfo.line2">
                         </LyxUiInput>
                         <div class="flex gap-4 w-full">
-                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="Country"
+                            <LyxUiInput class="px-2 py-2 w-full dark:!bg-[#161616]" placeholder="Country"
                                 v-model="currentBillingInfo.country">
                             </LyxUiInput>
-                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="Postal code"
+                            <LyxUiInput class="px-2 py-2 w-full dark:!bg-[#161616]" placeholder="Postal code"
                                 v-model="currentBillingInfo.postal_code">
                             </LyxUiInput>
                         </div>
                         <div class="flex gap-4 w-full">
-                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="City"
+                            <LyxUiInput class="px-2 py-2 w-full dark:!bg-[#161616]" placeholder="City"
                                 v-model="currentBillingInfo.city">
                             </LyxUiInput>
-                            <LyxUiInput class="px-2 py-2 w-full !bg-[#161616]" placeholder="State"
+                            <LyxUiInput class="px-2 py-2 w-full dark:!bg-[#161616]" placeholder="State"
                                 v-model="currentBillingInfo.state">
                             </LyxUiInput>
                         </div>
@@ -175,7 +175,7 @@ const { showDrawer } = useDrawer();
                             <div class="flex items-center gap-1">
                                 <div class="poppins font-semibold text-[2rem]"> €
                                     {{ getPremiumPrice(planData.premium_type) }} </div>
-                                <div class="poppins text-text-sub mt-2"> per month </div>
+                                <div class="poppins text-lyx-lightmode-text-dark dark:text-text-sub mt-2"> per month </div>
                             </div>
                         </div>
                         <div class="flex flex-col">
@@ -194,7 +194,7 @@ const { showDrawer } = useDrawer();
                     <div class="my-4 w-full bg-gray-400/30 h-[1px]">
                     </div>
                     <div class="flex justify-between px-8 flex-col lg:flex-row gap-2 lg:gap-0 items-center">
-                        <div class="flex gap-2 text-text-sub text-[.9rem]">
+                        <div class="flex gap-2 text-lyx-lightmode-text-dark dark:text-text-sub text-[.9rem]">
                             <div class="poppins"> Expire date:</div>
                             <div> {{ prettyExpireDate }}</div>
                         </div>
@@ -212,7 +212,7 @@ const { showDrawer } = useDrawer();
                                 <div class="poppins font-semibold text-[1.1rem]">
                                     Usage
                                 </div>
-                                <div class="poppins text-text-sub text-[.9rem]">
+                                <div class="poppins text-lyx-lightmode-text-dark dark:text-text-sub text-[.9rem]">
                                     Check the usage limits of your project.
                                 </div>
                             </div>
@@ -240,7 +240,7 @@ const { showDrawer } = useDrawer();
 
                     <div class="flex flex-col gap-2">
 
-                        <div class="flex justify-between items-center bg-[#161616] p-4 rounded-lg"
+                        <div class="flex justify-between items-center outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none bg-lyx-lightmode-widget-light dark:bg-[#161616] p-4 rounded-lg"
                             v-for="invoice of invoices">
 
                             <div> <i class="fal fa-file-invoice"></i> </div>

@@ -81,11 +81,11 @@ const canSearch = computed(() => {
                 <div class="flex-[2]">
                     <div class="flex flex-col gap-2">
                         <USelectMenu :uiMenu="{
-                            select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                            base: '!bg-lyx-widget',
+                            select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                            base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
                             option: {
-                                base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                                active: '!bg-lyx-widget-lighter'
+                                base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                                active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
                             }
                         }" searchable searchable-placeholder="Search an event..." class="w-full"
                             placeholder="Select an event" :options="eventNames.data.value || []"
@@ -93,11 +93,11 @@ const canSearch = computed(() => {
                         </USelectMenu>
 
                         <USelectMenu :uiMenu="{
-                            select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                            base: '!bg-lyx-widget',
+                            select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                            base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
                             option: {
-                                base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                                active: '!bg-lyx-widget-lighter'
+                                base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                                active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
                             }
                         }" searchable searchable-placeholder="Search a field..." class="w-full"
                             placeholder="Select a field" :options="metadataFields" v-model="selectedMetadataField">

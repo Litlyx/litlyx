@@ -67,7 +67,7 @@ function reloadPage() {
         <div class="flex items-center justify-center">
 
             <div class="mr-4 animate-pulse w-[1rem] h-[1rem] bg-accent rounded-full"> </div>
-            <div class="text-text/90 poppins text-[1.1rem] font-medium">
+            <div class="text-lyx-lightmode-text dark:text-text/90 poppins text-[1.1rem] font-medium">
                 Waiting for your first visit
             </div>
             <LyxUiButton class="ml-6" type="secondary" @click="reloadPage()">

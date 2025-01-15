@@ -33,7 +33,7 @@ const columns = [
 
     <div class="home w-full h-full px-10 pt-6 overflow-y-auto">
 
-        <div class="flex gap-2 items-center text-text/90 justify-end">
+        <div class="flex gap-2 items-center text-lyx-lightmode-text dark:text-text/90 justify-end">
             <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
             <div class="poppins font-regular text-[1rem]"> AI Anomaly Detector </div>
             <div class="flex items-center">
@@ -47,7 +47,7 @@ const columns = [
 
 
                 <template #scan-data="{ row }">
-                    <div class="text-lyx-text-dark">
+                    <div class="text-lyx-lightmode-text dark:text-lyx-text-dark">
                         {{ new Date(row.data.created_at).toLocaleString() }}
                     </div>
                 </template>
@@ -59,7 +59,7 @@ const columns = [
                 </template>
 
                 <template #data-data="{ row }">
-                    <div class="text-lyx-text-dark">
+                    <div class="text-lyx-lightmode-text dark:text-lyx-text-dark">
                         <div v-if="row.type === 'domain'">
                             {{ row.data.domain }}
                         </div>

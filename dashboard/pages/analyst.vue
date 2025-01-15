@@ -268,7 +268,9 @@ async function clearAllChats() {
                     </div>
                     <div class="flex flex-col xl:grid xl:grid-cols-2 gap-4 mt-6">
                         <div v-for="prompt of defaultPrompts" @click="currentText = prompt"
-                            class="bg-lyx-widget-light hover:bg-lyx-widget-lighter cursor-pointer p-4 rounded-lg poppins text-center whitespace-pre-wrap flex items-center justify-center text-[.9rem]">
+                            class="
+                            bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light hover:bg-lyx-lightmode-widget dark:hover:bg-lyx-widget outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none
+                            cursor-pointer p-4 rounded-lg poppins text-center whitespace-pre-wrap flex items-center justify-center text-[.9rem]">
                             {{ prompt }}
                         </div>
                     </div>
@@ -280,7 +282,7 @@ async function clearAllChats() {
                     <div class="flex w-full flex-col" v-for="(message, messageIndex) of currentChatMessages">
 
                         <div v-if="message.role === 'user'" class="flex justify-end w-full poppins text-[1.1rem]">
-                            <div class="bg-lyx-widget-light px-5 py-3 rounded-lg">
+                            <div class="bg-lyx-lightmode-widget dark:bg-lyx-widget-light px-5 py-3 rounded-lg">
                                 {{ message.content }}
                             </div>
                         </div>
@@ -290,7 +292,7 @@ async function clearAllChats() {
                             <div class="flex items-center justify-center shrink-0">
                                 <img class="h-[3.5rem] w-auto" :src="'analyst.png'">
                             </div>
-                            <div class="max-w-[70%] text-text/90 ai-message">
+                            <div class="max-w-[70%] text-lyx-lightmode-text dark:text-text/90 ai-message">
 
                                 <vue-markdown v-if="message.content" :source="message.content" :options="{
                                     html: true,
@@ -364,9 +366,9 @@ async function clearAllChats() {
 
                 <div class="flex gap-2 items-center md:absolute fixed bottom-8 left-0 w-full px-10 xl:px-28">
                     <input @keydown="onKeyDown" v-model="currentText"
-                        class="bg-lyx-widget-light w-full focus:outline-none px-4 py-2 rounded-lg" type="text">
+                        class="bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light w-full dark:focus:outline-none px-4 py-2 rounded-lg outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none" type="text">
                     <div @click="sendMessage()"
-                        class="bg-lyx-widget-light hhover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
+                        class="bg-lyx-lightmode-widget-light hover:bg-lyx-lightmode-widget dark:bg-lyx-widget-light dark:hover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-arrow-up"></i>
                     </div>
                     <div @click="menuOpen = !menuOpen"
@@ -381,7 +383,8 @@ async function clearAllChats() {
             <div :class="{
                 'absolute top-0 left-0 w-full': menuOpen,
                 'hidden xl:flex': !menuOpen
-            }" class="flex-[2] bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
+            }"
+                class="flex-[2] bg-lyx-lightmode-background border-l-[1px] dark:bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
 
                 <div class="gap-2 flex flex-col">
                     <div class="xl:hidden absolute right-6 top-2 text-[1.5rem]">
@@ -396,7 +399,8 @@ async function clearAllChats() {
                     <div class="flex items-center gap-2">
                         <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
                         </div>
-                        <div class="manrope font-semibold text-text-dirty"> {{ chatsRemaining }} remaining requests
+                        <div class="manrope font-semibold text-lyx-lightmode-text dark:text-text-dirty"> {{
+                            chatsRemaining }} remaining requests
                         </div>
                     </div>
                     <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">
@@ -414,7 +418,7 @@ async function clearAllChats() {
 
                 <div class="px-2">
                     <div @click="openChat()"
-                        class="bg-lyx-widget-light cursor-pointer hover:bg-lyx-widget rounded-lg px-4 py-3 poppins flex gap-4 items-center">
+                        class="bg-lyx-lightmode-widget-light hover:bg-lyx-lightmode-widget dark:bg-lyx-widget-light cursor-pointer dark:hover:bg-lyx-widget rounded-lg px-4 py-3 poppins flex gap-4 items-center outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none">
                         <div> <i class="fas fa-plus"></i> </div>
                         <div> New chat </div>
                     </div>
@@ -424,7 +428,7 @@ async function clearAllChats() {
                 <div class="overflow-y-auto">
                     <div class="flex flex-col gap-2 px-2">
                         <div :class="{ '!bg-accent/60': chat._id.toString() === currentChatId }"
-                            class="flex text-lyx-text-dark text-[.9rem] font-light rounded-lg items-center gap-4 w-full px-4 bg-lyx-widget-light hover:bg-lyx-widget"
+                            class="flex text-lyx-lightmode-text-dark dark:text-lyx-text-dark text-[.9rem] font-light rounded-lg items-center gap-4 w-full px-4 bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light hover:bg-lyx-lightmode-widget dark:hover:bg-lyx-widget outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none"
                             v-for="chat of viewChatsList">
                             <i @click="deleteChat(chat._id.toString())"
                                 class="far fa-trash hover:text-gray-300 cursor-pointer"></i>

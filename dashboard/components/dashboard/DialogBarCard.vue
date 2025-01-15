@@ -13,8 +13,8 @@ const columns = [
 
 <template>
 
-    <div class="w-full h-full bg-bg rounded-xl p-8">
-        <div class="full h-full overflow-y-auto">
+    <div class="w-full h-full bg-lyx-lightmode-background dark:bg-lyx-background-light rounded-xl p-8">
+        <div class="full h-full overflow-y-auto text-lyx-lightmode-text dark:text-lyx-text">
             <UTable :columns="columns" :rows="dialogBarData" :loading="isDataLoading" v-if="dialogBarData">
                 <template #count-data="{ row }">
                     <div class="font-bold"> {{ formatNumberK(row.count) }} </div>

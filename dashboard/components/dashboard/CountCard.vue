@@ -29,12 +29,12 @@ const { showDrawer } = useDrawer();
             </div>
             <div class="flex flex-col grow">
                 <div class="flex items-center gap-2">
-                    <div class="brockmann text-text-dirty text-[1.2rem] 2xl:text-[1.4rem]">
+                    <div class="brockmann text-lyx-lightmode-text-dark dark:text-text-dirty text-[1.2rem] 2xl:text-[1.4rem]">
                         {{ value }}
                     </div>
-                    <div class="poppins text-text-sub text-[.65rem] 2xl:text-[.8rem]"> {{ avg }} </div>
+                    <div class="poppins text-lyx-lightmode-darker dark:text-text-sub text-[.65rem] 2xl:text-[.8rem]"> {{ avg }} </div>
                 </div>
-                <div class="poppins text-text-sub text-[.9rem] 2xl:text-[1rem]"> {{ text }} </div>
+                <div class="poppins text-lyx-lightmode-darker dark:text-text-sub text-[.9rem] 2xl:text-[1rem]"> {{ text }} </div>
             </div>
 
             <div class="flex flex-col items-center gap-1">

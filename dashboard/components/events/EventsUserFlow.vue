@@ -46,12 +46,12 @@ async function analyzeEvent() {
 
             <div class="py-2 flex items-center gap-3">
                 <USelectMenu :uiMenu="{
-                    select: '!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter !ring-lyx-widget-lighter',
-                    base: '!bg-lyx-widget',
-                    option: {
-                        base: 'hover:!bg-lyx-widget-lighter cursor-pointer',
-                        active: '!bg-lyx-widget-lighter'
-                    }
+                    select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                        base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
+                        option: {
+                            base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                            active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
+                        }
                 }" searchable searchable-placeholder="Search an event..." class="w-full" placeholder="Select an event"
                     :options="eventNames.data.value || []" v-model="selectedEventName">
                 </USelectMenu>
