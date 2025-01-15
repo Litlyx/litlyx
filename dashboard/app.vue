@@ -27,7 +27,7 @@ const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
 
     <div class="fixed top-4 right-8 z-[999] flex flex-col gap-2" v-if="alerts.length > 0">
       <div v-for="alert of alerts"
-        class="w-[30vw] min-w-[20rem] relative bg-[#151515] overflow-hidden border-solid border-[2px] border-[#262626] rounded-lg p-6 drop-shadow-lg">
+        class="w-[30vw] min-w-[20rem] relative bg-lyx-lightmode-background dark:bg-[#151515] overflow-hidden border-solid border-[2px] border-lyx-lightmode-widget dark:border-[#262626] rounded-lg p-6 drop-shadow-lg">
         <div class="flex items-start gap-4">
           <div> <i :class="alert.icon"></i> </div>
           <div class="grow">
