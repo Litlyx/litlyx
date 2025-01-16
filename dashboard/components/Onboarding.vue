@@ -109,11 +109,11 @@ const showOnboarding = computed(() => {
 
 
 
-        <div v-if="page == 0" class="bg-lyx-background-light mt-[10vh] w-[50vw] min-w-[400px] h-fit p-8 rounded-md">
+        <div v-if="page == 0" class="bg-lyx-lightmode-background-light dark:bg-lyx-background-light mt-[10vh] w-[50vw] min-w-[400px] h-fit p-8 rounded-md">
 
-            <div class="text-lyx-text text-[1.4rem] text-center font-medium"> Getting Started </div>
+            <div class="text-lyx-lightmode-text dark:text-lyx-text text-[1.4rem] text-center font-medium"> Getting Started </div>
 
-            <div class="text-lyx-text mt-4">
+            <div class="text-lyx-lightmode-text dark:text-lyx-text mt-4">
                 For the current project do you already have other Analytics tools implemented (e.g. GA4) or Litlyx is
                 going to be your first/main analytics?
             </div>
@@ -122,7 +122,7 @@ const showOnboarding = computed(() => {
                 <div v-for="(e, i) of analyticsList">
                     <div @click="selectIndex(i)"
                         :class="{ 'outline outline-[1px] outline-[#5680f8]': selectedIndex == i }"
-                        class="bg-lyx-widget-light text-center p-2 rounded-md cursor-pointer">
+                        class="bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light text-center p-2 rounded-md cursor-pointer">
                         {{ e }}
                     </div>
                 </div>
@@ -140,11 +140,11 @@ const showOnboarding = computed(() => {
             </div>
 
         </div>
-        <div v-if="page == 1" class="bg-lyx-background-light mt-[10vh] w-[50vw] min-w-[400px] h-fit p-8 rounded-md">
+        <div v-if="page == 1" class="bg-lyx-lightmode-background-light dark:bg-lyx-background-light mt-[10vh] w-[50vw] min-w-[400px] h-fit p-8 rounded-md">
 
-            <div class="text-lyx-text text-[1.4rem] text-center font-medium"> Getting Started </div>
+            <div class="text-lyx-lightmode-text dark:text-lyx-text text-[1.4rem] text-center font-medium"> Getting Started </div>
 
-            <div class="text-lyx-text mt-4">
+            <div class="text-lyx-lightmode-text dark:text-lyx-text mt-4">
                 What is your job title ?
             </div>
 
@@ -152,7 +152,7 @@ const showOnboarding = computed(() => {
                 <div v-for="(e, i) of jobsList">
                     <div @click="selectIndex2(i)"
                         :class="{ 'outline outline-[1px] outline-[#5680f8]': selectedIndex2 == i }"
-                        class="bg-lyx-widget-light text-center p-2 rounded-md cursor-pointer">
+                        class="bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light text-center p-2 rounded-md cursor-pointer">
                         {{ e }}
                     </div>
                 </div>

@@ -198,16 +198,21 @@ function getPricingsData() {
                 <div class="poppins text-[2rem] font-semibold">
                     Do you need help ?
                 </div>
-                <div class="poppins text-[1.2rem] text-text/90">
+                <div class="poppins text-[1.2rem]">
                     We respond in max. 1-2 days
                 </div>
             </div>
-            <div class="mt-2">
-                <div class="rounded-lg px-10 py-3 bg-[#151515]">
-                    <a href="mailto:help@litlyx.com" class="poppins text-[1.3rem]">
+            <div class="flex flex-col gap-2">
+                <LyxUiButton type="secondary">
+                    <a href="mailto:help@litlyx.com" class="poppins text-[1.1rem]">
                         help@litlyx.com
                     </a>
-                </div>
+                </LyxUiButton>
+                <LyxUiButton type="secondary">
+                    <a href="https://discord.com/invite/9cQykjsmWX" class="poppins text-[1.1rem]">
+                        Discord support
+                    </a>
+                </LyxUiButton>
             </div>
         </div>
 

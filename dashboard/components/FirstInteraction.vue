@@ -122,8 +122,8 @@ function reloadPage() {
                             <CardTitled class="h-full w-full" title="Project id"
                                 sub="This is the identifier for this project, used to forward data">
                                 <div class="flex items-center justify-between gap-4 mt-6">
-                                    <div class="p-2 bg-[#1c1b1b] rounded-md w-full">
-                                        <div class="w-full text-[.9rem] text-[#acacac]"> {{ project?._id }} </div>
+                                    <div class="p-2 bg-lyx-lightmode-widget dark:bg-[#1c1b1b] rounded-md w-full">
+                                        <div class="w-full text-[.9rem] dark:text-[#acacac]"> {{ project?._id }} </div>
                                     </div>
                                     <LyxUiButton type="secondary" @click="copyProjectId()"> Copy </LyxUiButton>
                                 </div>

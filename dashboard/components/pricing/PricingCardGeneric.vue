@@ -41,7 +41,7 @@ async function onUpgradeClick() {
 
 <template>
     <div
-        class="relative bg-[#151515] outline outline-[1px] outline-[#262626] py-8 px-10 rounded-lg w-full max-w-[30rem]">
+        class="relative bg-lyx-lightmode-widget-light dark:bg-[#151515] outline outline-[1px] outline-lyx-lightmode-widget dark:outline-[#262626] py-8 px-10 rounded-lg w-full max-w-[30rem]">
 
         <div class="flex flex-col gap-3 text-center pt-3">
             <div v-if="data.active"
@@ -56,7 +56,7 @@ async function onUpgradeClick() {
             <div class="poppins text-4xl font-medium"> {{ data.price }} </div>
         </div>
 
-        <div class="sep bg-[#262626] h-[1px] my-8"></div>
+        <div class="sep bg-lyx-lightmode-widget dark:bg-[#262626] h-[1px] my-8"></div>
 
         <div class="flex flex-col text-center h-[6rem] justify-center gap-2">
             <div v-if="datas.length > 1">
@@ -76,7 +76,7 @@ async function onUpgradeClick() {
             </div>
         </div>
 
-        <div class="sep bg-[#262626] h-[1px] my-8"></div>
+        <div class="sep bg-lyx-lightmode-widget dark:bg-[#262626] h-[1px] my-8"></div>
 
         <div class="flex flex-col gap-2">
             <div class="flex gap-2" v-for="feature of data.features">

@@ -27,7 +27,6 @@ const chartOptions = ref<ChartOptions<'doughnut'>>({
             position: 'top',
             align: 'center',
             labels: {
-                color: 'white',
                 font: {
                     family: 'Poppins',
                     size: 16

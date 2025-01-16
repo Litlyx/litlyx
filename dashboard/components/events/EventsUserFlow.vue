@@ -71,7 +71,7 @@ async function analyzeEvent() {
             </div>
 
             <div class="flex flex-col gap-2" v-if="userFlowData">
-                <div class="flex gap-4 items-center bg-bg py-2 px-2 bg-lyx-widget-light rounded-lg"
+                <div class="flex gap-4 items-center bg-bg py-2 px-2 bg-lyx-lightmode-widget dark:bg-lyx-widget-light rounded-lg"
                     v-for="(count, referrer) in userFlowData">
                     <div class="w-5 h-5 flex items-center justify-center">
                         <img :src="`https://s2.googleusercontent.com/s2/favicons?domain=${referrer}&sz=64`"

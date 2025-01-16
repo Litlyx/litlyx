@@ -462,7 +462,6 @@ async function clearAllChats() {
         font-weight: bold;
         margin-top: 1.5em;
         margin-bottom: 0.5em;
-        color: white;
     }
 
     p:last-of-type {

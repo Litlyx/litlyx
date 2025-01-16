@@ -154,6 +154,7 @@ async function signInWithCredentials() {
     }
 }
 
+
 </script>
 
 
@@ -161,21 +162,21 @@ async function signInWithCredentials() {
 
     <div class="home w-full h-full">
 
-        <div class="flex h-full">
+        <div class="flex h-full bg-lyx-lightmode-background dark:bg-lyx-background">
 
             <div class="flex-1 flex flex-col items-center pt-20 xl:pt-[22vh]">
 
-                <div class="rotating-thing absolute top-0"></div>
+                <!-- <div class="rotating-thing absolute top-0"></div> -->
 
                 <div class="mb-8 bg-black rounded-xl">
                     <img class="w-[5rem]" :src="'logo.png'">
                 </div>
 
-                <div class="text-text text-[2.2rem] font-bold poppins">
+                <div class="text-lyx-lightmode-text dark:text-lyx-text text-[2.2rem] font-bold poppins">
                     Sign in
                 </div>
 
-                <div class="text-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
+                <div class="text-lyx-lightmode-text/80 dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
                     Track web analytics and custom events
                     with extreme simplicity in under 30 sec.
                     <br>
@@ -197,7 +198,7 @@ async function signInWithCredentials() {
 
                         <div class="flex justify-end">
                             <RouterLink tag="div" to="/forgot_password"
-                                class="text-center text-lyx-text-dark underline cursor-pointer z-[110]">
+                                class="text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[110]">
                                 Forgot password?
                             </RouterLink>
                         </div>
@@ -209,17 +210,17 @@ async function signInWithCredentials() {
                         </div>
 
                         <div @click="goBackToEmailLogin()"
-                            class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[100]">
+                            class="mt-4 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[100]">
                             Go back
                         </div>
 
 
                     </div>
 
-                    <div v-if="!isNoAuth && !isEmailLogin" class="flex flex-col gap-2">
+                    <div v-if="!isNoAuth && !isEmailLogin" class="flex flex-col text-lyx-lightmode-text dark:text-lyx-text gap-2">
 
                         <div @click="login"
-                            class="hover:bg-lyx-primary cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                            class="hover:bg-lyx-primary bg-white dark:bg-transparent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
                             <div class="flex items-center">
                                 <i class="fab fa-google"></i>
                             </div>
@@ -227,7 +228,7 @@ async function signInWithCredentials() {
                         </div>
 
                         <div @click="isEmailLogin = true"
-                            class="hover:bg-[#262626] cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
+                            class="hover:bg-[#d3d3d3] dark:hover:bg-[#262626] bg-white dark:bg-transparent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
                             <div class="flex items-center">
                                 <i class="far fa-envelope"></i>
                             </div>
@@ -238,7 +239,7 @@ async function signInWithCredentials() {
                         <div class="flex flex-col gap-2 mt-4">
 
                             <RouterLink tag="div" to="/register"
-                                class="text-center text-lyx-text-dark underline cursor-pointer z-[100]">
+                                class="text-center text-lyx-lightmode-text-dark dark:text-lyx-text-dark underline cursor-pointer z-[100]">
                                 You don't have an account ? Sign up
                             </RouterLink>
 
@@ -256,7 +257,7 @@ async function signInWithCredentials() {
 
                 </div>
 
-                <div class="text-[.9rem] poppins mt-20 text-text-sub text-center relative z-[2]">
+                <div class="text-[.9rem] poppins mt-20 text-lyx-lightmode-text-dark dark:text-lyx-text-dark text-center relative z-[2]">
                     By continuing you are accepting
                     <br>
                     our

@@ -49,11 +49,11 @@ async function resetPassword() {
                     <img class="w-[5rem]" :src="'logo.png'">
                 </div>
 
-                <div class="text-text text-[2.2rem] font-bold poppins">
+                <div class="text-lyx-lightmode-text dark:text-lyx-text text-[2.2rem] font-bold poppins">
                     Reset password
                 </div>
 
-                <div class="text-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
+                <div class="text-lyx-lightmode-text dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
                     Enter your user account's verified email address and we will send you a temporary password.
                 </div>
 
@@ -73,7 +73,7 @@ async function resetPassword() {
                         </div>
 
                         <NuxtLink to="/login"
-                            class="mt-4 text-center text-lyx-text-dark underline cursor-pointer z-[110]">
+                            class="mt-4 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[110]">
                             Go back
                         </NuxtLink>
 
@@ -86,7 +86,7 @@ async function resetPassword() {
                             Check your email inbox.
                         </div>
                         <RouterLink tag="div" to="/login"
-                            class="mt-6 text-center text-lyx-text-dark underline cursor-pointer z-[110]">
+                            class="mt-6 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[110]">
                             Go back
                         </RouterLink>
                     </div>

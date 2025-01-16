@@ -20,7 +20,7 @@ const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
 
     <Transition name="drawer">
       <LazyDrawerGeneric @onCloseClick="hideDrawer()" :class="drawerClasses"
-        class="bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if="drawerVisible">
+        class="bg-lyx-lightmode-background-light dark:bg-black fixed right-0 top-0 w-full xl:w-[60vw] xl:min-w-[65rem] h-full z-[20]" v-if="drawerVisible">
       </LazyDrawerGeneric>
     </Transition>
 

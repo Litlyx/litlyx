@@ -110,7 +110,7 @@ const canSearch = computed(() => {
                         </div>
                         <div v-if="canSearch" class="h-full flex items-center text-[1.2rem]">
 
-                            <div class="bg-lyx-widget-light flex items-center rounded-md pl-4">
+                            <div class="bg-lyx-lightmode-widget dark:bg-lyx-widget-light flex items-center rounded-md pl-4">
                                 <div><i class="far fa-search"></i></div>
                                 <input class="bg-transparent px-4 py-2 text-[1rem] outline-none" type="text"
                                     placeholder="Filter by metadata name" v-model="currentSearchText">
@@ -121,7 +121,7 @@ const canSearch = computed(() => {
 
                     <div class="flex flex-wrap gap-2 lg:mt-4 mt-10">
 
-                        <div class="bg-lyx-widget-light text-lyx-text-dark px-3 py-2 rounded-md w-fit"
+                        <div class="bg-lyx-lightmode-widget dark:bg-lyx-widget-light text-lyx-lightmode-text dark:text-lyx-text-dark px-3 py-2 rounded-md w-fit"
                             v-for="item of metadataFieldGroupedFiltered">
                             <div class="flex gap-2 items-center">
                                 <div> {{ item._id || 'OLD_EVENTS' }} </div>
