@@ -63,47 +63,46 @@ services:
     ports:
       - "3000:3000"
     environment:
-      PORT: "3000"
+      NUXT_PORT: "3000"
       # Change "litlyx:litlyx" with "mongodb://YOUR_MONGO_USERNAME:YOUR_MONGO_PASSWORD"
-      MONGO_CONNECTION_STRING: 'mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin'
-      
-      STREAM_NAME: "LITLYX"
-      REDIS_URL: "redis://cache"
-      REDIS_USERNAME: "default"
+      NUXT_MONGO_CONNECTION_STRING: 'mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin'
+      NUXT_REDIS_URL: "redis://cache"
+      NUXT_REDIS_USERNAME: "default"
       # Change with your redis password
-      REDIS_PASSWORD: "litlyx"
+      NUXT_REDIS_PASSWORD: "litlyx"
+
       # Optional - Used for Lit, the AI analyst
-      # AI_ORG: 'OPEN_AI_ORGANIZATION'
-      # AI_PROJECT: 'OPEN_AI_PROJECT'
-      # AI_KEY: 'OPEN_AI_KEY'
+      # NUXT_AI_ORG: 'OPEN_AI_ORGANIZATION'
+      # NUXT_AI_PROJECT: 'OPEN_AI_PROJECT'
+      # NUXT_AI_KEY: 'OPEN_AI_KEY'
 
       # Optional - Used to send welcome and quota emails
-      # EMAIL_SERVICE: "Brevo"      
-      # BREVO_API_KEY: ""
+      # NUXT_EMAIL_SERVICE: "Brevo"      
+      # NUXT_BREVO_API_KEY: ""
 
       # Change with your jwt secret
-      AUTH_JWT_SECRET: "litlyx_jwt_secret"
+      NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
 
       # Optional - Used to register / login via google
-      # GOOGLE_AUTH_CLIENT_ID: ""
-      # GOOGLE_AUTH_CLIENT_SECRET: ""
+      # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
+      # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
 
       # NO_AUTH or GOOGLE
-      PUBLIC_AUTH_MODE: 'NO_AUTH'
+      NUXT_PUBLIC_AUTH_MODE: 'NO_AUTH'
 
       # Default user created in NO_AUTH mode
-      NOAUTH_USER_EMAIL: 'default@user.com'
-      NOAUTH_USER_NAME: "defaultuser"
+      NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
+      NUXT_NOAUTH_USER_NAME: "defaultuser"
 
-      SELFHOSTED: 'true'
+      NUXT_SELFHOSTED: 'true'
 
       # Optional - Used for tests
-      # STRIPE_SECRET_TEST: ""
-      # STRIPE_WH_SECRET_TEST: ""
+      # NUXT_STRIPE_SECRET_TEST: ""
+      # NUXT_STRIPE_WH_SECRET_TEST: ""
 
       # Optional - Stripe secret - Used to change plans of the projects
-      # STRIPE_SECRET: ""
-      # STRIPE_WH_SECRET: ""
+      # NUXT_STRIPE_SECRET: ""
+      # NUXT_STRIPE_WH_SECRET: ""
 
     build:
       dockerfile: ./dashboard/Dockerfile 
