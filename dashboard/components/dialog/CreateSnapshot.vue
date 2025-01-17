@@ -36,7 +36,7 @@ function onColorChange() {
 
 const snapshotName = ref<string>("");
 
-const { updateSnapshots } = useSnapshot();
+const { updateSnapshots, snapshot, snapshots } = useSnapshot();
 const { createAlert } = useAlert()
 
 async function confirmSnapshot() {
@@ -54,6 +54,9 @@ async function confirmSnapshot() {
     await updateSnapshots();
     closeDialog();
     createAlert('Snapshot created', 'Snapshot created successfully', 'far fa-circle-check', 5000);
+    const newSnapshot = snapshots.value.at(-1);
+    if (newSnapshot) snapshot.value = newSnapshot;
+
 }
 
 </script>
