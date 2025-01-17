@@ -55,8 +55,8 @@ export default defineNuxtConfig({
     STRIPE_SECRET_TEST: process.env.STRIPE_SECRET_TEST,
     STRIPE_WH_SECRET_TEST: process.env.STRIPE_WH_SECRET_TEST,
     NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
-    NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME || 'FALSE',
-    SELFHOSTED: process.env.SELFHOSTED,
+    NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME,
+    SELFHOSTED: process.env.SELFHOSTED || 'FALSE',
     public: {
       AUTH_MODE: process.env.AUTH_MODE,
       GITHUB_CLIENT_ID: process.env.GITHUB_AUTH_CLIENT_ID || 'NONE',

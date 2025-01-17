@@ -12,6 +12,8 @@ const modal = useModal();
 
 const selfhosted = useSelfhosted();
 
+console.log({ selfhosted })
+
 const sections: Section[] = [
     {
         title: '',
