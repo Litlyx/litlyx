@@ -95,6 +95,7 @@ services:
       NUXT_NOAUTH_USER_NAME: "defaultuser"
 
       NUXT_SELFHOSTED: 'true'
+      NUXT_PUBLIC_SELFHOSTED: 'true'
 
       # Optional - Used for tests
       # NUXT_STRIPE_SECRET_TEST: ""

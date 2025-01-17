@@ -10,7 +10,7 @@ export default defineEventHandler(async event => {
 
     const exist = await OnboardingModel.exists({ user_id: data.user.id });
 
-    if (SELFHOSTED === 'TRUE' || SELFHOSTED === 'true') {
+    if (SELFHOSTED.toString() === 'TRUE' || SELFHOSTED.toString() === 'true') {
         return { exists: true }
     }
     return { exist: exist != null }

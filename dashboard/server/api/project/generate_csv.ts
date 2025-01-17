@@ -66,7 +66,7 @@ export default defineEventHandler(async event => {
     const { project, project_id, user } = data;
 
 
-    if (SELFHOSTED !== 'TRUE' && SELFHOSTED !== 'true') {
+    if (SELFHOSTED.toString() !== 'TRUE' && SELFHOSTED.toString() !== 'true') {
         const PREMIUM_TYPE = project.premium_type;
         if (PREMIUM_TYPE === 0) return setResponseStatus(event, 400, 'Project not premium');
     }

@@ -42,6 +42,12 @@ export default async () => {
     logger.info('[SERVER] Completed');
 
     logger.warn('[ANOMALY LOOP] Disabled');
+
+
+    logger.warn(`[SELFHOSTED_SERVER] ${config.SELFHOSTED}`);
+    logger.warn(`[SELFHOSTED_CLIENT] ${config.public.SELFHOSTED}`);
+    logger.warn(`[AUTH] ${config.public.AUTH_MODE}`);
+
     // anomalyLoop();
 
 };
