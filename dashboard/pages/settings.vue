@@ -2,6 +2,7 @@
 
 definePageMeta({ layout: 'dashboard' });
 
+const selfhosted = useSelfhosted();
 
 const items = [
     { label: 'General', slot: 'general' },
@@ -16,7 +17,7 @@ const items = [
 
 <template>
     <div class="lg:px-10 lg:py-8 h-dvh overflow-y-auto overflow-x-hidden hide-scrollbars">
-        
+
         <div class="poppins font-semibold text-[1.3rem] lg:px-0 px-4 lg:py-0 py-4"> Settings </div>
 
         <CustomTab :items="items" class="mt-8">
@@ -30,10 +31,18 @@ const items = [
                 <SettingsMembers :key="refreshKey"></SettingsMembers>
             </template>
             <template #billing>
-                <SettingsBilling :key="refreshKey"></SettingsBilling>
+                <SettingsBilling v-if="!selfhosted" :key="refreshKey"></SettingsBilling>
+                <div class="flex popping text-[1.2rem] font-semibold justify-center mt-[20vh] text-lyx-lightmode-text dark:text-lyx-text"
+                    v-if="selfhosted">
+                    Billing disabled in self-host mode
+                </div>
             </template>
             <template #codes>
-                <SettingsCodes :key="refreshKey"></SettingsCodes>
+                <SettingsCodes v-if="!selfhosted" :key="refreshKey"></SettingsCodes>
+                <div class="flex popping text-[1.2rem] font-semibold justify-center mt-[20vh] text-lyx-lightmode-text dark:text-lyx-text"
+                    v-if="selfhosted">
+                    Codes disabled in self-host mode
+                </div>
             </template>
             <template #account>
                 <SettingsAccount :key="refreshKey"></SettingsAccount>

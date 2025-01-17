@@ -32,6 +32,7 @@ const sections: Section[] = [
                 action() {
                     modal.open(DialogFeedback, {});
                 },
+                disabled: selfhosted
             },
             {
                 label: 'Documentation', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,

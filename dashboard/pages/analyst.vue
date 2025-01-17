@@ -4,6 +4,7 @@ import VueMarkdown from 'vue-markdown-render';
 
 definePageMeta({ layout: 'dashboard' });
 
+const selfhosted = useSelfhosted();
 
 const debugModeAi = ref<boolean>(false);
 
@@ -87,6 +88,7 @@ async function pollSendMessageStatus(chat_id: string, times: number, updateStatu
         currentChatMessages.value = messages.map(e => ({ ...e, charts: e.charts.map(k => JSON.parse(k)) })) as any;
         currentChatMessageDelta.value = '';
 
+        loading.value = false;
     }
 
 }
@@ -366,7 +368,8 @@ async function clearAllChats() {
 
                 <div class="flex gap-2 items-center md:absolute fixed bottom-8 left-0 w-full px-10 xl:px-28">
                     <input @keydown="onKeyDown" v-model="currentText"
-                        class="bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light w-full dark:focus:outline-none px-4 py-2 rounded-lg outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none" type="text">
+                        class="bg-lyx-lightmode-widget-light dark:bg-lyx-widget-light w-full dark:focus:outline-none px-4 py-2 rounded-lg outline-[1px] outline outline-lyx-lightmode-widget dark:outline-none"
+                        type="text">
                     <div @click="sendMessage()"
                         class="bg-lyx-lightmode-widget-light hover:bg-lyx-lightmode-widget dark:bg-lyx-widget-light dark:hover:bg-lyx-widget-light cursor-pointer px-4 py-2 rounded-full">
                         <i class="far fa-arrow-up"></i>
@@ -384,7 +387,7 @@ async function clearAllChats() {
                 'absolute top-0 left-0 w-full': menuOpen,
                 'hidden xl:flex': !menuOpen
             }"
-                class="flex-[2] bg-lyx-lightmode-background border-l-[1px] dark:bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
+                class="flex-[2] bg-lyx-lightmode-background border-l-[1px] dark:border-l-0 dark:bg-lyx-background-light p-6 flex flex-col gap-4 h-full overflow-hidden">
 
                 <div class="gap-2 flex flex-col">
                     <div class="xl:hidden absolute right-6 top-2 text-[1.5rem]">
@@ -403,7 +406,7 @@ async function clearAllChats() {
                             chatsRemaining }} remaining requests
                         </div>
                     </div>
-                    <LyxUiButton type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">
+                    <LyxUiButton v-if="!selfhosted" type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">
                         Upgrade
                     </LyxUiButton>
                 </div>

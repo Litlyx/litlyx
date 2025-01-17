@@ -53,6 +53,9 @@ async function redeemCode() {
             <div class="text-lyx-text-darker mt-1 text-[.9rem] poppins">
                 Redeemed codes: {{ valid_codes.data.value?.count || '0' }}
             </div>
+            <div class="poppins text-[1.1rem] text-lyx-lightmode-text dark:text-yellow-400 mb-2">
+                *Plan upgrades are applicable exclusively to this project(workspace).
+            </div>
         </template>
     </SettingsTemplate>
 </template>
