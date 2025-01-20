@@ -251,7 +251,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                 </div>
 
                 <div class="w-full flex mt-4">
-                    <LyxUiButton type="outline" class="w-full text-center text-[.8rem]">
+                    <LyxUiButton @click="generatePDF()" type="outline" class="w-full text-center text-[.8rem]">
                         Export report
                     </LyxUiButton>
                 </div>

@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import type { ButtonType } from '../LyxUi/Button.vue';
 
 const emit = defineEmits(['success', 'cancel'])
 
 const props = defineProps<{
-    buttonType: string,
+    buttonType: ButtonType,
     message: string,
     deleteData: { isAll: boolean, visits: boolean, sessions: boolean, events: boolean, domain: string }
 }>();
@@ -47,7 +48,7 @@ async function deleteData() {
         overlay: {
             background: 'bg-lyx-background/85'
         },
-        background: 'bg-lyx-widget',
+        background: 'bg-lyx-lightmode-widget dark:bg-lyx-widget',
         ring: 'border-solid border-[1px] border-[#262626]'
     }">
         <div class="h-full flex flex-col gap-2 p-4">
@@ -71,7 +72,8 @@ async function deleteData() {
 
             <div v-if="!isDone" class="flex justify-end gap-2">
                 <LyxUiButton type="secondary" @click="emit('cancel')"> Cancel </LyxUiButton>
-                <LyxUiButton :disabled="!canDelete" @click="canDelete ? deleteData() : () => { }" :type="buttonType"> Confirm </LyxUiButton>
+                <LyxUiButton :disabled="!canDelete" @click="canDelete ? deleteData() : () => { }" :type="buttonType">
+                    Confirm </LyxUiButton>
             </div>
 
             <div v-if="isDone" class="flex justify-end w-full">

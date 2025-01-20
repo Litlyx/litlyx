@@ -27,7 +27,7 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
         color: '#FF8531',
         default: true
     }
-    
+
 
     const lastMonth: DefaultSnapshot = {
         project_id,
@@ -76,7 +76,7 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
         project_id,
         _id: '___allTime' as any,
         name: 'All Time',
-        from: new Date(project_created_at.toString()),
+        from: fns.addMinutes(fns.startOfMonth(new Date(project_created_at.toString())), -new Date().getTimezoneOffset()),
         to: new Date(Date.now()),
         color: '#9362FF',
         default: true

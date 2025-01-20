@@ -37,7 +37,7 @@ class DateService {
         if (slice === 'hour') return fns.format(date, 'HH:mm');
         if (slice === 'day') return fns.format(date, 'dd/MM');
         if (slice === 'week') return fns.format(date, 'dd/MM');
-        if (slice === 'month') return fns.format(date, 'MM MMMM');
+        if (slice === 'month') return fns.format(date, 'MMMM');
         if (slice === 'year') return fns.format(date, 'YYYY');
         return iso;
     }
