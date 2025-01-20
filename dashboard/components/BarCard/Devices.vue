@@ -5,17 +5,17 @@ import type { IconProvider } from './Base.vue';
 
 function iconProvider(e: { _id: string, count: number }): ReturnType<IconProvider> {
     if (e._id === 'desktop') return ['icon','far fa-desktop'];
-    if (e._id === 'tablet') return ['icon','far fa-tablet'];
-    if (e._id === 'mobile') return ['icon','far fa-mobile'];
+    if (e._id === 'tablet') return ['icon','far fa-tablet ml-1'];
+    if (e._id === 'mobile') return ['icon','far fa-mobile ml-1'];
     if (e._id === 'smarttv') return ['icon','far fa-tv'];
     if (e._id === 'console') return ['icon','far fa-game-console-handheld'];
-    return ['icon', 'far fa-question']
+    return ['icon', 'far fa-question ml-1 mr-1']
 }
 
 
 function transform(data: { _id: string, count: number }[]) {
     console.log(data);
-    return data.map(e => ({ ...e, _id: e._id == null ? 'unknown' : e._id }))
+    return data.map(e => ({ ...e, _id: e._id == null ? 'others' : e._id }))
 }
 
 const devicesData = useFetch('/api/data/devices', {
