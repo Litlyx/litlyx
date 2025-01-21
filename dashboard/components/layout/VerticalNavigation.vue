@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import CreateSnapshot from './dialog/CreateSnapshot.vue';
+import CreateSnapshot from '../dialog/CreateSnapshot.vue';
 
 export type Entry = {
     label: string,
@@ -139,7 +139,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
                 <div class="flex items-center gap-2 w-full">
 
-                    <ProjectSelector></ProjectSelector>
+                    <SelectorProjectSelector></SelectorProjectSelector>
 
                     <div class="grow flex justify-end text-[1.4rem] mr-2 lg:hidden">
                         <i @click="close()" class="fas fa-close"></i>

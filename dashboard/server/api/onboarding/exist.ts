@@ -5,7 +5,7 @@ import { OnboardingModel } from '@schema/OnboardingSchema';
 const { SELFHOSTED } = useRuntimeConfig();
 
 export default defineEventHandler(async event => {
-    const data = await getRequestData(event);
+    const data = await getRequestDataOld(event);
     if (!data) return;
 
     const exist = await OnboardingModel.exists({ user_id: data.user.id });

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { Section } from '~/components/CVerticalNavigation.vue';
+import type { Section } from '~/components/layout/VerticalNavigation.vue';
 
 import { Lit } from 'litlyx-js';
 import { DialogFeedback } from '#components';
@@ -91,8 +91,8 @@ const { isOpen, close, open } = useMenu();
             </div>
 
 
-            <CVerticalNavigation :sections="sections">
-            </CVerticalNavigation>
+            <LayoutVerticalNavigation :sections="sections">
+            </LayoutVerticalNavigation>
 
 
             <div class="overflow-hidden w-full bg-lyx-lightmode-background dark:bg-lyx-background relative h-full">
@@ -106,6 +106,8 @@ const { isOpen, close, open } = useMenu();
                     v-if="showDialog">
                     <DashboardDialogBarCard @click.stop="null" class="z-[36]"></DashboardDialogBarCard>
                 </div>
+
+                <LayoutTopNavigation></LayoutTopNavigation>
 
                 <slot></slot>
             </div>

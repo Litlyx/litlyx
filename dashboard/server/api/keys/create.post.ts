@@ -18,7 +18,7 @@ export default defineEventHandler(async event => {
     if (body.name.length < 3) return setResponseStatus(event, 400, 'name too short');
     if (body.name.length > 32) return setResponseStatus(event, 400, 'name too long');
 
-    const data = await getRequestData(event, { allowGuests: false, allowLitlyx: false, });
+    const data = await getRequestDataOld(event, { allowGuests: false, allowLitlyx: false, });
     if (!data) return;
 
     const { project_id } = data;

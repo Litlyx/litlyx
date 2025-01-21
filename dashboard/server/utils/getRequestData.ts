@@ -32,6 +32,8 @@ export type GetRequestDataOptions = {
     /** @default false */ requireOffset?: boolean,
 }
 
+export type RequestDataScope = 'GUEST' | 'SCHEMA' | 'LIVEMODE' | 'SLICE' | 'RANGE' | 'OFFSET';
+
 async function hasAccessToProject(user_id: string, project: TProject) {
     if (!project) return [false, 'NONE'];
     const owner = project.owner.toString();
@@ -42,8 +44,77 @@ async function hasAccessToProject(user_id: string, project: TProject) {
     return [false, 'NONE'];
 }
 
+export async function getRequestData(event: H3Event<EventHandlerRequest>, required_scopes: RequestDataScope[] = []) {
 
-export async function getRequestData(event: H3Event<EventHandlerRequest>, options?: GetRequestDataOptions) {
+    const requireSchema = required_scopes.includes('SCHEMA');
+    const allowGuests = required_scopes.includes('GUEST');
+    const allowLitlyx = required_scopes.includes('LIVEMODE');
+    const requireSlice = required_scopes.includes('SLICE');
+    const requireRange = required_scopes.includes('RANGE');
+    const requireOffset = required_scopes.includes('OFFSET');
+
+    const pid = getHeader(event, 'x-pid');
+    if (!pid) return setResponseStatus(event, 400, 'x-pid is required');
+
+    const slice = getHeader(event, 'x-slice') as Slice;
+    if (!slice && requireSlice) return setResponseStatus(event, 400, 'x-slice is required');
+
+    const from = getRequestHeader(event, 'x-from');
+    const to = getRequestHeader(event, 'x-to');
+    if (requireRange) {
+        if (!from || !to) return setResponseStatus(event, 400, 'x-from and x-to are required');
+    }
+
+    const offsetRaw = getRequestHeader(event, 'x-time-offset');
+    const offset = parseInt(offsetRaw?.toString() as string);
+    if (requireOffset) {
+        if (offset === null || offset === undefined || isNaN(offset)) return setResponseStatus(event, 400, 'x-time-offset is required');
+    }
+
+    let model: Model<any> = undefined as any;
+
+    const schemaName = getRequestHeader(event, 'x-schema');
+    if (requireSchema) {
+        if (!schemaName) return setResponseStatus(event, 400, 'x-schema is required');
+        if (!Object.keys(allowedModels).includes(schemaName)) return setResponseStatus(event, 400, 'x-schema value is not valid');
+        const allowedModel = allowedModels[schemaName as TModelName];
+        model = allowedModel.model;
+    }
+
+
+    const limitHeader = getRequestHeader(event, 'x-limit');
+    const limitNumber = parseInt(limitHeader as string);
+    const limit = isNaN(limitNumber) ? 10 : limitNumber;
+
+    const user = getRequestUser(event);
+
+    if (!user || !user.logged) return setResponseStatus(event, 403, 'you must be logged');
+
+    const project_id = new Types.ObjectId(pid);
+
+    const project = await ProjectModel.findById(project_id);
+    if (!project) return setResponseStatus(event, 400, 'project not found');
+
+
+    if (pid !== LITLYX_PROJECT_ID) {
+        const [hasAccess, role] = await hasAccessToProject(user.id, project);
+        if (!hasAccess) return setResponseStatus(event, 400, 'no access to project');
+        if (role === 'GUEST' && !allowGuests) return setResponseStatus(event, 403, 'only owner can access this');
+    } else {
+        if (!allowLitlyx) return setResponseStatus(event, 400, 'no access to project');
+    }
+
+    return {
+        from: from as string,
+        to: to as string,
+        pid, project_id, project, user, limit, slice, schemaName, model, timeOffset: offset
+    }
+}
+
+/**
+ * @deprecated - use getRequestData instead
+ */
+export async function getRequestDataOld(event: H3Event<EventHandlerRequest>, options?: GetRequestDataOptions) {
 
     const requireSchema = options?.requireSchema || false;
     const allowGuests = options?.allowGuests || true;

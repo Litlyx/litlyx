@@ -7,7 +7,7 @@ function cryptApiKeyName(apiSettings: TApiSettings): TApiSettings {
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { allowGuests: false, allowLitlyx: false, requireRange: false });
+    const data = await getRequestDataOld(event, { allowGuests: false, allowLitlyx: false, requireRange: false });
     if (!data) return;
 
     const { project_id } = data;

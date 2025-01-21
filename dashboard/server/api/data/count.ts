@@ -1,11 +1,11 @@
 
 import { Redis } from "~/server/services/CacheService";
-import { getRequestData } from "~/server/utils/getRequestData";
+import { getRequestDataOld } from "~/server/utils/getRequestData";
 
 export default defineEventHandler(async event => {
 
 
-    const data = await getRequestData(event, { requireSchema: true });
+    const data = await getRequestDataOld(event, { requireSchema: true });
     if (!data) return;
 
     const { schemaName, pid, from, to, model, project_id } = data;

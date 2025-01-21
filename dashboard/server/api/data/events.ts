@@ -1,11 +1,11 @@
 
 import { EventModel } from "@schema/metrics/EventSchema";
 import { Redis } from "~/server/services/CacheService";
-import { getRequestData } from "~/server/utils/getRequestData";
+import { getRequestDataOld } from "~/server/utils/getRequestData";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false });
+    const data = await getRequestDataOld(event, { requireSchema: false });
     if (!data) return;
 
     const { pid, from, to, project_id, limit } = data;

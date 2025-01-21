@@ -81,7 +81,7 @@ function createPdf(data: PDFGenerationData) {
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false, allowGuests: true, requireRange: false });
+    const data = await getRequestDataOld(event, { requireSchema: false, allowGuests: true, requireRange: false });
     if (!data) return;
 
     const userData = getRequestUser(event);

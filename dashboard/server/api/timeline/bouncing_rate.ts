@@ -9,7 +9,7 @@ import { checkSliceValidity } from "~/server/services/TimelineService";
 export default defineEventHandler(async event => {
 
 
-    const data = await getRequestData(event, { requireSchema: false, requireSlice: true });
+    const data = await getRequestDataOld(event, { requireSchema: false, requireSlice: true });
     if (!data) return;
 
     const { pid, from, to, slice, project_id } = data;

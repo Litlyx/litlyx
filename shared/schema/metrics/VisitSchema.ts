@@ -33,7 +33,7 @@ const VisitSchema = new Schema<TVisit>({
     flowHash: { type: String },
     device: { type: String },
 
-    website: { type: String, required: true },
+    website: { type: String, required: true, index: true },
     page: { type: String, required: true },
     referrer: { type: String, required: true },
     created_at: { type: Date, default: () => Date.now() },
