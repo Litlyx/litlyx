@@ -32,7 +32,7 @@ export type GetRequestDataOptions = {
     /** @default false */ requireOffset?: boolean,
 }
 
-export type RequestDataScope = 'GUEST' | 'SCHEMA' | 'LIVEMODE' | 'SLICE' | 'RANGE' | 'OFFSET';
+export type RequestDataScope = 'GUEST' | 'SCHEMA' | 'ANON' | 'SLICE' | 'RANGE' | 'OFFSET' | 'DOMAIN';
 
 async function hasAccessToProject(user_id: string, project: TProject) {
     if (!project) return [false, 'NONE'];
@@ -48,13 +48,19 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
 
     const requireSchema = required_scopes.includes('SCHEMA');
     const allowGuests = required_scopes.includes('GUEST');
-    const allowLitlyx = required_scopes.includes('LIVEMODE');
+    const allowAnon = required_scopes.includes('ANON');
     const requireSlice = required_scopes.includes('SLICE');
     const requireRange = required_scopes.includes('RANGE');
     const requireOffset = required_scopes.includes('OFFSET');
+    const requireDomain = required_scopes.includes('DOMAIN');
 
     const pid = getHeader(event, 'x-pid');
     if (!pid) return setResponseStatus(event, 400, 'x-pid is required');
+
+    const domain = getHeader(event, 'x-domain');
+    if (requireDomain) {
+        if (domain == null || domain == undefined || domain.length == 0) return setResponseStatus(event, 400, 'x-domain is required');
+    }
 
     const slice = getHeader(event, 'x-slice') as Slice;
     if (!slice && requireSlice) return setResponseStatus(event, 400, 'x-slice is required');
@@ -95,18 +101,16 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'project not found');
 
-
-    if (pid !== LITLYX_PROJECT_ID) {
+    if (!allowAnon) {
         const [hasAccess, role] = await hasAccessToProject(user.id, project);
         if (!hasAccess) return setResponseStatus(event, 400, 'no access to project');
         if (role === 'GUEST' && !allowGuests) return setResponseStatus(event, 403, 'only owner can access this');
-    } else {
-        if (!allowLitlyx) return setResponseStatus(event, 400, 'no access to project');
     }
 
     return {
         from: from as string,
         to: to as string,
+        domain: domain as string,
         pid, project_id, project, user, limit, slice, schemaName, model, timeOffset: offset
     }
 }

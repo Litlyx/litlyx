@@ -3,7 +3,7 @@ import { VisitModel } from "@schema/metrics/VisitSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['GUEST', 'LIVEMODE']);
+    const data = await getRequestData(event, ['GUEST']);
     if (!data) return;
 
     const { project_id } = data;
