@@ -1,77 +1,10 @@
 import type { MetricsTimeline } from "~/server/api/metrics/[project_id]/timeline/generic";
 
-
-
-// Calcola date snapshot
-// 1- Frontend
-// 2- Backend
-// 3- Data singola
-
-// 4- Aggregazione
-
-// ISO
-// UTC UTENTE
-
-// Utility - per date snapshot
-
-// getStartDay: data => 00.00 della data
-// getEndDay: data => 23.59 della data
-
-// getStartWeek: data => 00.00 del primo giorno
-// getEndWeek: data => 23.59 dell ultimo giorno
-
-// getStartMonth: data => 00.00 del primo giorno del mese
-// getEndMonth: data => 23.59 dell ulrimo giorno del mese
-
-
-// Snapshot -> Current Week -> 11/11-00:00 - 17/11-23:59
-// Converti UTC UTENTE -> ISO
-
-// Backend -> Prendi dati da ISO_A a ISO_B
-
-
-
-// Funzioni da creare
-
-// Converte utc -> Iso
-// UTC TO ISO
-// UTC TO ISO Day
-// UTC TO ISO Month
-
-// UTC_IS_NEXT_DAY
-// True se il giorno passa a quello successivo
-
-// UTC_IS_PREV_DAY
-// True se il giorno passa a quello precedente
-
-
-
-
-
-
-
-
-
-export const slicesData = {
-    hour: {
-        fromOffset: 1000 * 60 * 60 * 24
-    },
-    day: {
-        fromOffset: 1000 * 60 * 60 * 24 * 7
-    },
-    month: {
-        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12
-    },
-    year: {
-        fromOffset: 1000 * 60 * 60 * 24 * 30 * 12 * 10
-    }
-}
-
-export type SliceName = keyof typeof slicesData;
+import { type Slice } from '../shared/services/DateService';
 
 export const hoursOffset = -(new Date().getTimezoneOffset() / 60);
 
-function matchDateWithSlice(a: Date, b: Date, slice: SliceName): boolean {
+function matchDateWithSlice(a: Date, b: Date, slice: Slice): boolean {
     if (a.getFullYear() != b.getFullYear()) return false;
     if (a.getMonth() != b.getMonth()) return false;
     if (slice === 'month') return true;
@@ -87,7 +20,7 @@ type FixMetricsOptions = {
     advancedGroupKey?: string,
     timeLabels?: boolean
 }
-export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: string }, slice: SliceName, _options?: FixMetricsOptions) {
+export function fixMetrics(result: { data: MetricsTimeline[], from: string, to: string }, slice: Slice, _options?: FixMetricsOptions) {
 
     const options = {
         advanced: false,

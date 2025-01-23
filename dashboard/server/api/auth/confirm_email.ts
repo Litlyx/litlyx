@@ -2,7 +2,7 @@
 import {  createUserJwt, readRegisterJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
 import { PasswordModel } from '@schema/PasswordSchema';
-import EmailService from '@services/EmailService';
+// import EmailService from '@services/EmailService';
 
 export default defineEventHandler(async event => {
 
@@ -14,7 +14,7 @@ export default defineEventHandler(async event => {
     try {
         await PasswordModel.create({ email: data.email, password: data.password })
         await UserModel.create({ email: data.email, given_name: '', name: 'EmailLogin', locale: '', picture: '', created_at: Date.now() });
-        setImmediate(() => { EmailService.sendWelcomeEmail(data.email); });
+        // setImmediate(() => { EmailService.sendWelcomeEmail(data.email); });
         const jwt = createUserJwt({ email: data.email, name: 'EmailLogin' });
         return sendRedirect(event,`https://dashboard.litlyx.com/jwt_login?jwt_login=${jwt}`);
     } catch (ex) {

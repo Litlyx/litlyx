@@ -1,17 +1,6 @@
 <script lang="ts" setup>
-;
-
-const { user } = useLoggedUser()
 
 const { domainList, domain, setActiveDomain } = useDomain();
-
-
-// function isProjectMine(owner?: string) {
-//     if (!owner) return false;
-//     if (!user.value) return false;
-//     if (!user.value.logged) return;
-//     return user.value.id == owner;
-// }
 
 function onChange(e: string) {
     setActiveDomain(e);
@@ -24,7 +13,7 @@ function onChange(e: string) {
         select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
         base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget w-max',
         option: {
-            base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+            base: 'z-[999] hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
             active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
         }
     }" class="w-full" v-if="domainList" @change="onChange" :value="domain" :options="domainList">

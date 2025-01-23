@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Redis } from "~/server/services/CacheService";
-import EmailService from '@services/EmailService';
+// import EmailService from '@services/EmailService';
 import StripeService from '~/server/services/StripeService';
 import { logger } from "./Logger";
 
@@ -14,10 +14,10 @@ export default async () => {
 
     logger.info('[SERVER] Initializing');
 
-    if (config.EMAIL_SERVICE) {
-        EmailService.init(config.BREVO_API_KEY);
-        logger.info('[EMAIL] Initialized');
-    }
+    // if (config.EMAIL_SERVICE) {
+    //     EmailService.init(config.BREVO_API_KEY);
+    //     logger.info('[EMAIL] Initialized');
+    // }
 
 
     if (config.STRIPE_SECRET) {

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
-import DateService from '@services/DateService';
-import type { Slice } from '@services/DateService';
+import DateService, { type Slice } from '../../shared/services/DateService';
+
 
 const { snapshot, safeSnapshotDates, snapshotDuration } = useSnapshot()
 

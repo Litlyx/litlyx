@@ -2,7 +2,7 @@
 import { OAuth2Client } from 'google-auth-library';
 import { createUserJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
-import EmailService from '@services/EmailService';
+// import EmailService from '@services/EmailService';
 
 const { GOOGLE_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig()
 
@@ -58,10 +58,10 @@ export default defineEventHandler(async event => {
 
     const savedUser = await newUser.save();
 
-    setImmediate(() => {
-        console.log('SENDING WELCOME EMAIL TO', payload.email);
-        if (payload.email) EmailService.sendWelcomeEmail(payload.email);
-    });
+    // setImmediate(() => {
+    //     console.log('SENDING WELCOME EMAIL TO', payload.email);
+    //     if (payload.email) EmailService.sendWelcomeEmail(payload.email);
+    // });
 
     return { error: false, access_token: createUserJwt({ email: savedUser.email, name: savedUser.name }) }
 

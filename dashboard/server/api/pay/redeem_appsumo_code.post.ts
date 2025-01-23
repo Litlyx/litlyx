@@ -1,5 +1,4 @@
-import { getPlanFromId } from "@data/PREMIUM";
-import { PREMIUM_PLAN } from "../../../../shared/data/PREMIUM";
+import { getPlanFromId, PREMIUM_PLAN } from "@data/PREMIUM";
 import { canTryAppsumoCode, checkAppsumoCode, useAppsumoCode, useTryAppsumoCode } from "~/server/services/AppsumoService";
 import StripeService from '~/server/services/StripeService';
 

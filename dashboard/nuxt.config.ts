@@ -26,15 +26,16 @@ export default defineNuxtConfig({
 
   pages: true,
   ssr: false,
-  css: ['~/assets/scss/main.scss'],
-
+  css: [
+    '~/assets/main.css',
+    '~/assets/scss/main.scss',
+  ],
   alias: {
-    '@schema': fileURLToPath(new URL('../shared/schema', import.meta.url)),
-    '@services': fileURLToPath(new URL('../shared/services', import.meta.url)),
-    '@data': fileURLToPath(new URL('../shared/data', import.meta.url)),
-    '@functions': fileURLToPath(new URL('../shared/functions', import.meta.url)),
+    '@schema': fileURLToPath(new URL('./shared/schema', import.meta.url)),
+    '@services': fileURLToPath(new URL('./shared/services', import.meta.url)),
+    '@data': fileURLToPath(new URL('./shared/data', import.meta.url)),
+    '@functions': fileURLToPath(new URL('./shared/functions', import.meta.url)),
   },
-
   runtimeConfig: {
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     REDIS_URL: process.env.REDIS_URL,

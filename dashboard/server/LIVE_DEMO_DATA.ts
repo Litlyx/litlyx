@@ -1,12 +1,11 @@
 import { AuthContext } from "./middleware/01-authorization";
 import { ProjectModel } from "@schema/project/ProjectSchema";
-import { LITLYX_PROJECT_ID } from '@data/LITLYX'
 import { hasAccessToProject } from "./utils/hasAccessToProject";
 
 export async function getUserProjectFromId(project_id: string, user: AuthContext | undefined, allowGuest: boolean = true) {
     if (!project_id) return;
 
-    if (project_id === LITLYX_PROJECT_ID) {
+    if (project_id === "6643cd08a1854e3b81722ab5") {
         return await ProjectModel.findOne({ _id: project_id });
     }
 

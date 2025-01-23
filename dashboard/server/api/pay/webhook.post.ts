@@ -4,7 +4,7 @@ import type Event from 'stripe';
 import { ProjectModel } from '@schema/project/ProjectSchema';
 import { PREMIUM_DATA, PREMIUM_PLAN, getPlanFromId, getPlanFromPrice, getPlanFromTag } from '@data/PREMIUM';
 import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
-import EmailService from '@services/EmailService'
+// import EmailService from '@services/EmailService'
 import { UserModel } from '@schema/UserSchema';
 
 
@@ -93,9 +93,9 @@ async function onPaymentOnetimeSuccess(event: Event.PaymentIntentSucceededEvent)
         const user = await UserModel.findOne({ _id: project.owner });
         if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
 
-        setTimeout(() => {
-            EmailService.sendPurchaseEmail(user.email, project.name);
-        }, 1);
+        // setTimeout(() => {
+        //     EmailService.sendPurchaseEmail(user.email, project.name);
+        // }, 1);
 
         return { ok: true };
     }
@@ -140,10 +140,10 @@ async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
         const user = await UserModel.findOne({ _id: project.owner });
         if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
 
-        setTimeout(() => {
-            if (PLAN.ID == 0) return;
-            if (isNewSubscription) EmailService.sendPurchaseEmail(user.email, project.name);
-        }, 1);
+        // setTimeout(() => {
+        //     if (PLAN.ID == 0) return;
+        //     if (isNewSubscription) EmailService.sendPurchaseEmail(user.email, project.name);
+        // }, 1);
 
 
         return { ok: true };

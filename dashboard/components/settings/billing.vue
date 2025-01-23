@@ -175,7 +175,8 @@ const { showDrawer } = useDrawer();
                             <div class="flex items-center gap-1">
                                 <div class="poppins font-semibold text-[2rem]"> €
                                     {{ getPremiumPrice(planData.premium_type) }} </div>
-                                <div class="poppins text-lyx-lightmode-text-dark dark:text-text-sub mt-2"> per month </div>
+                                <div class="poppins text-lyx-lightmode-text-dark dark:text-text-sub mt-2"> per month
+                                </div>
                             </div>
                         </div>
                         <div class="flex flex-col">

@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
 import DateService, { type Slice } from '@services/DateService';
 import type { ChartData, ChartOptions, TooltipModel } from 'chart.js';
 import { useLineChart, LineChart } from 'vue-chart-3';

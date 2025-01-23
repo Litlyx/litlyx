@@ -1,5 +1,3 @@
-import { CustomPremiumPriceModel } from "../schema/CustomPremiumPriceSchema";
-
 export type PREMIUM_TAG = typeof PREMIUM_TAGS[number];
 
 export const PREMIUM_TAGS = [
@@ -152,25 +150,6 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         COST: 0
     },
 }
-
-try {
-
-    CustomPremiumPriceModel.find({}).then(custom_prices => {
-        for (const custom_price of custom_prices) {
-            PREMIUM_PLAN[custom_price.tag] = {
-                ID: custom_price.price_id,
-                COUNT_LIMIT: custom_price.count_limit,
-                AI_MESSAGE_LIMIT: custom_price.ai_message_limit,
-                PRICE: custom_price.price,
-                PRICE_TEST: custom_price.price_test || ''
-            }
-        }
-    });
-
-} catch (ex) {
-
-}
-
 
 export function getPlanFromTag(tag: PREMIUM_TAG) {
     return PREMIUM_PLAN[tag];

@@ -1,7 +1,6 @@
 import type { AuthContext } from "../middleware/01-authorization";
 import type { EventHandlerRequest, H3Event } from 'h3'
 import { allowedModels, TModelName } from "../services/DataService";
-import { LITLYX_PROJECT_ID } from "@data/LITLYX";
 import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { Model, Types } from "mongoose";
 import { TeamMemberModel } from "@schema/TeamMemberSchema";
@@ -171,7 +170,7 @@ export async function getRequestDataOld(event: H3Event<EventHandlerRequest>, opt
     if (!project) return setResponseStatus(event, 400, 'project not found');
 
 
-    if (pid !== LITLYX_PROJECT_ID) {
+    if (pid !== "6643cd08a1854e3b81722ab5") {
         const [hasAccess, role] = await hasAccessToProject(user.id, project);
         if (!hasAccess) return setResponseStatus(event, 400, 'no access to project');
         if (role === 'GUEST' && !allowGuests) return setResponseStatus(event, 403, 'only owner can access this');
