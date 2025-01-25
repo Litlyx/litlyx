@@ -3,7 +3,7 @@ const fs = require('fs');
 const { SharedHelper } = require('../shared-helper.js');
 
 
-const helper = new SharedHelper(path.join(__dirname, '../../dashboard'))
+const helper = new SharedHelper(path.join(__dirname, '../../dashboard/shared'))
 
 helper.clear();
 
