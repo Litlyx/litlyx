@@ -3,5 +3,12 @@
 	"version": "1.0.0",
 	"author": "Emily",
 	"license": "MIT",
-	"description": ""
+	"description": "",
+	"devDependencies": {
+		"@types/node": "^22.10.10",
+		"date-fns": "^4.1.0",
+		"dayjs": "^1.11.13",
+		"mongoose": "^8.9.5",
+		"redis": "^4.7.0"
+	}
 }

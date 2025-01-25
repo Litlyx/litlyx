@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dashboard:clear-logs": "node scripts/dashboard/clear-logs.js"
+    "dashboard:clear-logs": "node scripts/dashboard/clear-logs.js",
+    "dashboard:shared": "node scripts/dashboard/shared.js",
+    "producer:shared": "node scripts/producer/shared.js"
   },
   "keywords": [],
   "author": "Emily",
