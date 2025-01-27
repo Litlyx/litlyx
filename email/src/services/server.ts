@@ -34,7 +34,7 @@ app.use((req, res, next) => {
         res.status(403).json({ error: 'token not valid' });
         return;
     }
-    console.log(req.path, req.body);
+    console.log(req.path);
     next();
 });
 
