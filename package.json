@@ -6,19 +6,10 @@
   "scripts": {
     "dashboard:clear-logs": "node scripts/dashboard/clear-logs.js",
     "dashboard:shared": "node scripts/dashboard/shared.js",
-    "producer:shared": "node scripts/producer/shared.js"
+    "producer:shared": "node scripts/producer/shared.js",
+    "email:deploy": "ts-node scripts/email/deploy.ts"
   },
   "keywords": [],
   "author": "Emily",
-  "license": "MIT",
-  "dependencies": {
-    "@getbrevo/brevo": "^2.2.0",
-    "cors": "^2.8.5",
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
-    "@types/node": "^22.10.10"
-  }
+  "license": "MIT"
 }
