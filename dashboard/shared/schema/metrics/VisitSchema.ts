@@ -29,7 +29,7 @@ const VisitSchema = new Schema<TVisit>({
     continent: { type: String },
     country: { type: String },
 
-    session: { type: String },
+    session: { type: String, index: true },
     flowHash: { type: String },
     device: { type: String },
 

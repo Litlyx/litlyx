@@ -16,6 +16,7 @@ export const PREMIUM_TAGS = [
     'APPSUMO_INCUBATION',
     'APPSUMO_ACCELERATION',
     'APPSUMO_GROWTH',
+    'APPSUMO_UNICORN'
 ] as const;
 
 
@@ -149,6 +150,14 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
         PRICE_TEST: '',
         COST: 0
     },
+    APPSUMO_UNICORN: {
+        ID: 6006,
+        COUNT_LIMIT: 5_000_000,
+        AI_MESSAGE_LIMIT: 20_000,
+        PRICE: 'price_1Qls1lB2lPUiVs9VI6ej8hwE',
+        PRICE_TEST: '',
+        COST: 0
+    }
 }
 
 export function getPlanFromTag(tag: PREMIUM_TAG) {

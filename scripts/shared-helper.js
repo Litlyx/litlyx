@@ -27,7 +27,14 @@ class SharedHelper {
 
     copy(name) {
         const localSharedFile = path.join(this.localSharedPath, name);
-        fs.cpSync(SharedHelper.getSharedPath(), localSharedFile);
+        const sharedFile = path.join(SharedHelper.getSharedPath(), name);
+        fs.cpSync(sharedFile, localSharedFile);
+    }
+
+    copyFolder(name) {
+        const localFolder = path.join(this.localSharedPath, name);
+        const sharedFolder = path.join(SharedHelper.getSharedPath(), name);
+        fs.cpSync(sharedFolder, localFolder, { force: true, recursive: true });
     }
 
 }
