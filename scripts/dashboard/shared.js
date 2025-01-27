@@ -9,8 +9,7 @@ helper.clear();
 
 // TODO: Email service as external repo
 
-
-// helper.create('/shared/services');
+helper.create('services');
 
 
 // // ---------------- Services ----------------
