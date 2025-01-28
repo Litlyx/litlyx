@@ -12,7 +12,8 @@
     "docker-build": "docker build -t litlyx-dashboard -f Dockerfile ../",
     "docker-inspect": "docker run -it litlyx-dashboard sh",
     "docker-run": "docker run -p 3000:3000 litlyx-dashboard",
-    "workspace:shared": "node ../scripts/dashboard/shared.js"
+    "workspace:shared": "ts-node ../scripts/dashboard/shared.ts",
+    "workspace:deploy": "ts-node ../scripts/dashboard/deploy.ts --testmode"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "^6.12.0",

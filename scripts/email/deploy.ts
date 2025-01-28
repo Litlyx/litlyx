@@ -15,6 +15,7 @@ async function main() {
     if (fs.existsSync(TMP_PATH)) fs.rmSync(TMP_PATH, { force: true, recursive: true });
     fs.ensureDirSync(TMP_PATH);
 
+    console.log('Creting zip file');
     const archive = createZip(TMP_PATH + '/email.zip');
     archive.directory(LOCAL_PATH + '/dist', '/dist');
 
