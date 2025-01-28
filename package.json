@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dashboard:clear-logs": "node scripts/dashboard/clear-logs.js",
-    "dashboard:shared": "node scripts/dashboard/shared.js",
+    "dashboard:clear-logs": "ts-node scripts/dashboard/clear-logs.ts",
+    "dashboard:shared": "ts-node scripts/dashboard/shared.ts",
     "producer:shared": "node scripts/producer/shared.js",
     "email:deploy": "ts-node scripts/email/deploy.ts"
   },

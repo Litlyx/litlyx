@@ -4,19 +4,11 @@ import path from 'path';
 import { createZip } from '../helpers/zip-helper';
 import { DeployHelper } from '../helpers/deploy-helper';
 
-const MODE = process.env.MODE;
-const isProduction = MODE === 'prod';
-
-if (MODE === 'prod') {
-    console.error('production mode not implemented yet')
-    process.exit();
-}
-
 const TMP_PATH = path.join(__dirname, '../../tmp');
 
 const LOCAL_PATH = path.join(__dirname, '../../email');
 
-const REMOTE_PATH = '/home/testmode/litlyx/email';
+const REMOTE_PATH = '/home/production/litlyx/email';
 
 async function main() {
 
@@ -26,9 +18,7 @@ async function main() {
     const archive = createZip(TMP_PATH + '/email.zip');
     archive.directory(LOCAL_PATH + '/dist', '/dist');
 
-    const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
-    const devContent = ecosystemContent.replace(/name: '(.*?)'/, "name: 'test-$1'");
-    archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' })
+    archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
 
     archive.file(LOCAL_PATH + '/package.json', { name: '/package.json' });
     archive.file(LOCAL_PATH + '/pnpm-lock.yaml', { name: '/pnpm-lock.yaml' });

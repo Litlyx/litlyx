@@ -1,7 +1,5 @@
-const path = require('path');
-const fs = require('fs');
-const { SharedHelper } = require('../shared-helper.js');
-
+import { SharedHelper } from "../helpers/shared-helper";
+import path from "path";
 
 const helper = new SharedHelper(path.join(__dirname, '../../dashboard/shared'))
 
