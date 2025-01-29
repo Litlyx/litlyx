@@ -3,14 +3,15 @@ import fs from 'fs-extra';
 import path from 'path';
 import { createZip } from '../helpers/zip-helper';
 import { DeployHelper } from '../helpers/deploy-helper';
+import { REMOTE_HOST_TESTMODE } from '../.config';
 
 const TMP_PATH = path.join(__dirname, '../../tmp');
-const LOCAL_PATH = path.join(__dirname, '../../email');
-const REMOTE_PATH = '/home/litlyx/email';
-const ZIP_NAME = 'email.zip';
+const LOCAL_PATH = path.join(__dirname, '../../producer');
+const REMOTE_PATH = '/home/litlyx/producer';
+const ZIP_NAME = 'producer.zip';
 
 const MODE = DeployHelper.getMode();
-console.log('Deploying mail-service in mode:', MODE);
+console.log('Deploying producer in mode:', MODE);
 
 setTimeout(() => { main(); }, 3000);
 
@@ -22,7 +23,16 @@ async function main() {
     console.log('Creting zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/dist', '/dist');
-    archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
+
+    if (MODE === 'testmode') {
+        const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
+        const devContent = ecosystemContent.replace("redis://litlyx.com", `redis://${REMOTE_HOST_TESTMODE}`);
+        archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
+    } else {
+        archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
+    }
+
+
     archive.file(LOCAL_PATH + '/package.json', { name: '/package.json' });
     archive.file(LOCAL_PATH + '/pnpm-lock.yaml', { name: '/pnpm-lock.yaml' });
     await archive.finalize();
@@ -56,6 +66,7 @@ async function main() {
     console.log('Installing remote');
     await DeployHelper.execute(`cd ${REMOTE_PATH} && /root/.nvm/versions/node/v21.2.0/bin/pnpm i`);
 
+    console.log('Executing remote');
     await DeployHelper.execute(`cd ${REMOTE_PATH} && /root/.nvm/versions/node/v21.2.0/bin/pm2 start ecosystem.config.js`);
 
     ssh.dispose();

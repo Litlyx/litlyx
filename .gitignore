@@ -6,3 +6,4 @@ dev
 docker-compose.admin.yml
 full_reload.sh
 tmp
+ecosystem.config.js

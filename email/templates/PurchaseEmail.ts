@@ -1,4 +1,3 @@
-
 export const PURCHASE_EMAIL = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,15 +20,10 @@ export const PURCHASE_EMAIL = `<!DOCTYPE html>
 
     <p>If you have any questions about your new plan or need assistance, feel free to reach out to our support team at <a href="mailto:help@litlyx.com" style="color: #28a745; text-decoration: none;"><strong>help@litlyx.com</strong></a>. We’re here to help you make the most out of your upgraded plan!</p>
 
-    <p><strong>Thank you for using Litlyx every day as your analytics tool and for being a part of our journey.</strong></p>
-
-    <p>We look forward to continuing to support your growth and success!</p>
-
     <p>Best regards,</p>
 
     <p>Antonio,</p>
-    <p>CEO | Litlyx</p>
+    <p>CEO @ Litlyx</p>
 
 </body>
-</html>
-`
+</html>`

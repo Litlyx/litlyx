@@ -8,12 +8,12 @@ export class SharedHelper {
     constructor(private localSharedPath: string) { }
 
     static getSharedPath() { return path.join(__dirname, '../../shared_global'); }
-
+    
     clear() {
         if (fs.existsSync(this.localSharedPath)) {
             fs.rmSync(this.localSharedPath, { force: true, recursive: true });
-            fs.mkdirSync(this.localSharedPath);
         }
+        fs.mkdirSync(this.localSharedPath);
     }
 
     create(name: string) {
