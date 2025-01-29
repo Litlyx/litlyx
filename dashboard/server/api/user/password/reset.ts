@@ -1,7 +1,8 @@
 
 import crypto from 'crypto';
 import { PasswordModel } from '@schema/PasswordSchema';
-// import EmailService from '@services/EmailService'
+import { EmailService } from '@services/EmailService'
+import { EmailServiceHelper } from '~/server/services/EmailServiceHelper';
 
 export default defineEventHandler(async event => {
 
@@ -19,8 +20,9 @@ export default defineEventHandler(async event => {
     target.password = hashedPassword;
     await target.save();
 
-    // await EmailService.sendResetPasswordEmail(email, newPass);
-    
+    const emailData = EmailService.getEmailServerInfo('reset_password', { target: email, newPassword: newPass });
+    EmailServiceHelper.sendEmail(emailData);
+
     return { error: false, message: 'Password changed' }
 
 });

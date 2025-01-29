@@ -1,9 +1,10 @@
 
-import { createRegisterJwt, createUserJwt } from '~/server/AuthManager';
+import { createRegisterJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
 import { RegisterModel } from '@schema/RegisterSchema';
-// import EmailService from '@services/EmailService';
+import { EmailService } from '@services/EmailService';
 import crypto from 'crypto';
+import { EmailServiceHelper } from '~/server/services/EmailServiceHelper';
 
 function canRegister(email: string, password: string) {
     if (email.length == 0) return false;
@@ -33,9 +34,10 @@ export default defineEventHandler(async event => {
 
     await RegisterModel.create({ email, password: hashedPassword });
 
-    // setImmediate(() => {
-    //     EmailService.sendConfirmEmail(email, `https://dashboard.litlyx.com/api/auth/confirm_email?register_code=${jwt}`);
-    // });
+    setImmediate(() => {
+        const emailData = EmailService.getEmailServerInfo('confirm', { target: email, link: `https://dashboard.litlyx.com/api/auth/confirm_email?register_code=${jwt}` });
+        EmailServiceHelper.sendEmail(emailData);
+    });
 
     return {
         error: false,

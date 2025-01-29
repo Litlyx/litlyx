@@ -1,14 +1,13 @@
 import { SharedHelper } from "../helpers/shared-helper";
-import path from "path";
+import path from "node:path";
 
 const helper = new SharedHelper(path.join(__dirname, '../../dashboard/shared'))
 
 helper.clear();
 
-// TODO: Email service as external repo
-
 helper.create('services');
 helper.copy('services/DateService.ts');
+helper.copy('services/EmailService.ts');
 
 
 helper.create('data');

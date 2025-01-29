@@ -6,6 +6,7 @@
   "scripts": {
     "dashboard:clear-logs": "ts-node scripts/dashboard/clear-logs.ts",
     "dashboard:shared": "ts-node scripts/dashboard/shared.ts",
+    "dashboard:deploy": "ts-node scripts/dashboard/deploy.ts",
     "producer:shared": "node scripts/producer/shared.js",
     "email:deploy": "ts-node scripts/email/deploy.ts"
   },

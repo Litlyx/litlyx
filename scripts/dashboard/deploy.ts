@@ -28,8 +28,8 @@ async function main() {
     if (fs.existsSync(TMP_PATH)) fs.rmSync(TMP_PATH, { force: true, recursive: true });
     fs.ensureDirSync(TMP_PATH);
 
-    // console.log('Building');
-    // child.execSync(`cd ${LOCAL_PATH} && pnpm i && pnpm run build`)
+    console.log('Building');
+    child.execSync(`cd ${LOCAL_PATH} && pnpm i && pnpm run build`)
 
     console.log('Creting zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
@@ -71,12 +71,12 @@ async function main() {
     console.log('Extracting remote');
     await DeployHelper.execute(`cd ${REMOTE_PATH} && unzip ${ZIP_NAME} && rm -r ${ZIP_NAME}`);
 
-    // console.log('Installing remote');
-    // await DeployHelper.execute(`cd ${REMOTE_PATH} && /root/.nvm/versions/node/v21.2.0/bin/pnpm i`);
+    console.log('Installing remote');
+    await DeployHelper.execute(`cd ${REMOTE_PATH}/.output/server && /root/.nvm/versions/node/v21.2.0/bin/pnpm i`);
 
-    // await DeployHelper.execute(`cd ${REMOTE_PATH} && /root/.nvm/versions/node/v21.2.0/bin/pm2 start ecosystem.config.js`);
+    console.log('Executing remote');
+    await DeployHelper.execute(`cd ${REMOTE_PATH} && /root/.nvm/versions/node/v21.2.0/bin/pm2 start ecosystem.config.js`);
 
     ssh.dispose();
-
 
 }
