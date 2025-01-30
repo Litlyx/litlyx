@@ -26,7 +26,8 @@ async function main() {
 
     if (MODE === 'testmode') {
         const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
-        const devContent = ecosystemContent.replace("redis://litlyx.com", `redis://${REMOTE_HOST_TESTMODE}`);
+        const REDIS_URL = ecosystemContent.match(/REDIS_URL: ["'](.*?)["']/)[1];
+        const devContent = ecosystemContent.replace(REDIS_URL, `redis://${REMOTE_HOST_TESTMODE}`);
         archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
     } else {
         archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })

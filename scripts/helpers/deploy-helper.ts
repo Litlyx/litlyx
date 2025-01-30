@@ -13,7 +13,7 @@ export class DeployHelper {
         const argvMode = process.argv[2]
         if (argvMode != '--production' && argvMode != '--testmode') {
             console.error('use --production or --testmode');
-            process.exit(1);
+            process.exit(0);
         }
         const MODE = argvMode === '--production' ? 'production' : 'testmode';
         return MODE;
