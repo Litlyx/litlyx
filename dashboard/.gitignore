@@ -37,4 +37,5 @@ tests
 explains
 
 #Ecosystem
+ecosystem.config.cjs
 ecosystem.config.js
