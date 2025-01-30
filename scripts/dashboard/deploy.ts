@@ -30,9 +30,9 @@ async function main() {
     console.log('Creating zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/.output', '/.output');
+    
     archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
 
-    // archive.file(LOCAL_PATH + '/.env', { name: '/.env' });
     await archive.finalize();
 
     await DeployHelper.connect();
