@@ -22,15 +22,24 @@ async function main() {
     if (fs.existsSync(TMP_PATH)) fs.rmSync(TMP_PATH, { force: true, recursive: true });
     fs.ensureDirSync(TMP_PATH);
 
+
+
     if (!SKIP_BUILD) {
         console.log('Building');
-        child.execSync(`cd ${LOCAL_PATH} && pnpm i && pnpm run build`)
+        if (MODE === 'testmode') {
+            child.execSync(`cd ${LOCAL_PATH} && pnpm run build`);
+        } else if (MODE === 'production') {
+            child.execSync(`cd ${LOCAL_PATH} && pnpm run build:prod`);
+
+        }
     }
+
+    fs.rmSync(path.join(LOCAL_PATH, '.env'), { force: true });
 
     console.log('Creating zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/.output', '/.output');
-    
+
     archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
 
     await archive.finalize();
