@@ -13,27 +13,19 @@ import express from 'express';
 
 import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
 import { ProjectCountModel } from './shared/schema/project/ProjectsCounts';
+import { MetricsManager, metricsRouter } from './Metrics';
 
 
 const app = express();
 
-let durations: number[] = [];
-
-app.get('/status', async (req, res) => {
-    try {
-        return res.json({ status: 'ALIVE', durations })
-    } catch (ex) {
-        console.error(ex);
-        return res.setStatus(500).json({ error: ex.message });
-    }
-})
+app.use('/metrics', metricsRouter);
 
 app.listen(process.env.PORT);
 
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
 
-
+const CONSUMER_NAME = `CONSUMER_${process.env.NODE_APP_INSTANCE || 'DEFAULT'}`
 
 async function main() {
 
@@ -43,7 +35,7 @@ async function main() {
     const group_name = requireEnv('GROUP_NAME') as any; // Checks are inside "startReadingLoop"
 
     await RedisStreamService.startReadingLoop({
-        stream_name, group_name, consumer_name: `CONSUMER_${process.env.NODE_APP_INSTANCE || 'DEFAULT'}`
+        stream_name, group_name, consumer_name: CONSUMER_NAME
     }, processStreamEntry);
 
 }
@@ -73,18 +65,13 @@ async function processStreamEntry(data: Record<string, string>) {
             await process_visit(data, sessionHash);
         }
 
-        // console.log('Entry processed in', duration, 'ms');
-
     } catch (ex: any) {
         console.error('ERROR PROCESSING STREAM EVENT', ex.message);
     }
 
     const duration = Date.now() - start;
 
-    durations.push(duration);
-    if (durations.length > 1000) {
-        durations = durations.splice(500);
-    }
+    MetricsManager.onProcess(CONSUMER_NAME, duration);
 
 }
 

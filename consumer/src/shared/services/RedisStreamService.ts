@@ -29,9 +29,20 @@ export class RedisStreamService {
         await this.client.connect();
     }
 
+
+    static async getQueueInfo(stream_name: string) {
+        try {
+            const size = await this.client.xLen(stream_name);
+            return size;
+        } catch (ex) {
+            console.error(ex);
+            return 0;
+        }
+    }
+
     static async readFromStream(stream_name: string, group_name: string, consumer_name: string, process_function: (content: Record<string, string>) => Promise<any>) {
 
-        const result: xReadGgroupResult = await this.client.xReadGroup(group_name, consumer_name, [{ key: stream_name, id: '>' }], { COUNT: 5, BLOCK: 10000 });
+        const result: xReadGgroupResult = await this.client.xReadGroup(group_name, consumer_name, [{ key: stream_name, id: '>' }], { COUNT: 5, BLOCK: 2000 });
 
         if (!result) {
             setTimeout(() => this.readFromStream(stream_name, group_name, consumer_name, process_function), 10);
