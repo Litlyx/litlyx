@@ -1,18 +1,18 @@
 
-import { requireEnv } from '@utils/requireEnv';
-import { connectDatabase } from '@services/DatabaseService';
-import { RedisStreamService } from '@services/RedisStreamService';
-import { ProjectModel } from "@schema/project/ProjectSchema";
-import { VisitModel } from "@schema/metrics/VisitSchema";
-import { SessionModel } from "@schema/metrics/SessionSchema";
-import { EventModel } from "@schema/metrics/EventSchema";
+import { requireEnv } from './shared/utils/requireEnv';
+import { connectDatabase } from './shared/services/DatabaseService';
+import { RedisStreamService } from './shared/services/RedisStreamService';
+import { ProjectModel } from "./shared/schema/project/ProjectSchema";
+import { VisitModel } from "./shared/schema/metrics/VisitSchema";
+import { SessionModel } from "./shared/schema/metrics/SessionSchema";
+import { EventModel } from "./shared/schema/metrics/EventSchema";
 import { lookup } from './lookup';
 import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
 import express from 'express';
 
-import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
-import { ProjectCountModel } from '@schema/project/ProjectsCounts';
+import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
+import { ProjectCountModel } from './shared/schema/project/ProjectsCounts';
 
 
 const app = express();

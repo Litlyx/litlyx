@@ -11,6 +11,9 @@
     "producer:shared": "ts-node scripts/producer/shared.ts",
     "producer:deploy": "ts-node scripts/producer/deploy.ts",
 
+    "consumer:shared": "ts-node scripts/consumer/shared.ts",
+    "consumer:deploy": "ts-node scripts/consumer/deploy.ts",
+
     "email:deploy": "ts-node scripts/email/deploy.ts"
   },
   "keywords": [],

@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.7.9",
     "express": "^4.19.2",
     "ua-parser-js": "^1.0.37"
   },
@@ -19,7 +20,9 @@
     "build": "npm run compile && npm run build_project && npm run create_db",
     "create_db": "cd scripts && ts-node create_database.ts",
     "docker-build": "docker build -t litlyx-consumer -f Dockerfile ../",
-    "docker-inspect": "docker run -it litlyx-consumer sh"
+    "docker-inspect": "docker run -it litlyx-consumer sh",
+    "workspace:shared": "ts-node ../scripts/consumer/shared.ts",
+    "workspace:deploy": "ts-node ../scripts/consumer/deploy.ts"
   },
   "keywords": [],
   "author": "Emily",

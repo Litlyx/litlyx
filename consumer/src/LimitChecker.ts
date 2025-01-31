@@ -1,7 +1,7 @@
 
 
-import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
-import { MAX_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
+import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
+import { MAX_LOG_LIMIT_PERCENT } from './shared/data/broker/Limits';
 import { checkLimitsForEmail } from './EmailController';
 
 export async function checkLimits(project_id: string) {

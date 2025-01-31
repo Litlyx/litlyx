@@ -1,9 +1,7 @@
 {
-    "extends": "../tsconfig.json",
     "compilerOptions": {
         "module": "NodeNext",
         "target": "ESNext",
-        "esModuleInterop": true,
         "outDir": "dist"
     },
     "include": [
