@@ -112,7 +112,7 @@ const chartData = ref<ChartData<'line' | 'bar' | 'bubble'>>({
             },
         },
         {
-            label: 'Unique sessions',
+            label: 'Unique visitors',
             data: [],
             backgroundColor: ['#4abde8'],
             borderColor: '#4abde8',
