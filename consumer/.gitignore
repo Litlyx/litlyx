@@ -1,8 +1,9 @@
+
 node_modules
-static
+
 ecosystem.config.cjs
-dist
+ecosystem.config.js
+
 scripts/start_dev.js
-package-lock.json
-build_all.bat
-tests
+dist
+src/shared
