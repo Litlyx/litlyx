@@ -1,6 +1,7 @@
 
 import fs from 'fs-extra';
 import path from 'path';
+import child from 'child_process';
 import { createZip } from '../helpers/zip-helper';
 import { DeployHelper } from '../helpers/deploy-helper';
 import { REMOTE_HOST_TESTMODE } from '../.config';
@@ -11,6 +12,8 @@ const REMOTE_PATH = '/home/litlyx/producer';
 const ZIP_NAME = 'producer.zip';
 
 const MODE = DeployHelper.getMode();
+const SKIP_BUILD = DeployHelper.getArgAt(0) == '--no-build';
+
 console.log('Deploying producer in mode:', MODE);
 
 setTimeout(() => { main(); }, 3000);
@@ -19,6 +22,13 @@ async function main() {
 
     if (fs.existsSync(TMP_PATH)) fs.rmSync(TMP_PATH, { force: true, recursive: true });
     fs.ensureDirSync(TMP_PATH);
+
+
+    if (!SKIP_BUILD) {
+        console.log('Building');
+        child.execSync(`cd ${LOCAL_PATH} && pnpm run build`);
+    }
+
 
     console.log('Creting zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);

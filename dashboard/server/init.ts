@@ -14,7 +14,8 @@ export default async () => {
     logger.info('[SERVER] Initializing');
 
     if (config.STRIPE_SECRET) {
-        StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, false);
+        const TEST_MODE = config.MODE === 'TEST';
+        StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, TEST_MODE);
         logger.info('[STRIPE] Initialized');
     } else {
         StripeService.disable();

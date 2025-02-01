@@ -7,7 +7,6 @@ export type ReadingLoopOptions = {
     consumer_name: string
 }
 
-
 type xReadGroupMessage = { id: string, message: { [x: string]: string } }
 type xReadGgroupResult = { name: string, messages: xReadGroupMessage[] }[] | null
 
@@ -24,6 +23,22 @@ export class RedisStreamService {
         password: requireEnv("REDIS_PASSWORD"),
         database: process.env.DEV_MODE === 'true' ? 1 : 0
     });
+
+
+    private static METRICS_MAX_ENTRIES = 1000;
+
+    static async METRICS_onProcess(id: string, time: number) {
+        const key = `___dev_metrics`;
+        await this.client.lPush(key, `${id}:${time.toString()}`);
+        await this.client.lTrim(key, 0, this.METRICS_MAX_ENTRIES - 1);
+    }
+
+    static async METRICS_get() {
+        const key = `___dev_metrics`;
+        const data = await this.client.lRange(key, 0, -1);
+        return data.map(e => e.split(':')) as [string, string][];
+    }
+
 
     static async connect() {
         await this.client.connect();

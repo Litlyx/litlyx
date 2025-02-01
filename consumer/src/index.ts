@@ -13,14 +13,14 @@ import express from 'express';
 
 import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
 import { ProjectCountModel } from './shared/schema/project/ProjectsCounts';
-import { MetricsManager, metricsRouter } from './Metrics';
+import { metricsRouter } from './Metrics';
 
 
 const app = express();
 
 app.use('/metrics', metricsRouter);
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));
 
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
@@ -47,15 +47,15 @@ async function processStreamEntry(data: Record<string, string>) {
     try {
 
         const eventType = data._type;
-        if (!eventType) return;
+        if (!eventType) return console.log('No type');
 
         const { pid, sessionHash } = data;
 
         const project = await ProjectModel.exists({ _id: pid });
-        if (!project) return;
+        if (!project) return console.log('No project');
 
         const canLog = await checkLimits(pid);
-        if (!canLog) return;
+        if (!canLog) return console.log('No limits');
 
         if (eventType === 'event') {
             await process_event(data, sessionHash);
@@ -71,7 +71,7 @@ async function processStreamEntry(data: Record<string, string>) {
 
     const duration = Date.now() - start;
 
-    MetricsManager.onProcess(CONSUMER_NAME, duration);
+    RedisStreamService.METRICS_onProcess(CONSUMER_NAME, duration);
 
 }
 

@@ -56,6 +56,7 @@ export default defineNuxtConfig({
     STRIPE_WH_SECRET_TEST: process.env.STRIPE_WH_SECRET_TEST,
     NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
     NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME,
+    MODE: process.env.MODE || 'NONE',
     SELFHOSTED: process.env.SELFHOSTED || 'FALSE',
     public: {
       AUTH_MODE: process.env.AUTH_MODE,

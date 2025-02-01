@@ -2,7 +2,6 @@ import { ProjectModel } from "./shared/schema/project/ProjectSchema";
 import { UserModel } from "./shared/schema/UserSchema";
 import { LimitNotifyModel } from "./shared/schema/broker/LimitNotifySchema";
 import { EmailService } from './shared/services/EmailService';
-import { requireEnv } from "./shared/utils/requireEnv";
 import { TProjectLimit } from "./shared/schema/project/ProjectsLimits";
 import { EmailServiceHelper } from "./EmailServiceHelper";
 

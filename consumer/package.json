@@ -19,8 +19,7 @@
   "scripts": {
     "dev": "node scripts/start_dev.js",
     "compile": "tsc",
-    "build_project": "node ../scripts/build.js",
-    "build": "npm run compile && npm run build_project && npm run create_db",
+    "build": "npm run compile && npm run create_db",
     "create_db": "cd scripts && ts-node create_database.ts",
     "docker-build": "docker build -t litlyx-consumer -f Dockerfile ../",
     "docker-inspect": "docker run -it litlyx-consumer sh",
