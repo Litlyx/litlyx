@@ -16,7 +16,7 @@ function onChange(e: string) {
             base: 'z-[999] hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
             active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
         }
-    }" class="w-full" v-if="domainList" @change="onChange" :value="domain" :options="domainList">
+    }" class="w-full" searchable v-if="domainList" @change="onChange" :value="domain" :options="domainList">
 
         <template #option="{ option, active, selected }">
             <div class="flex items-center gap-2">

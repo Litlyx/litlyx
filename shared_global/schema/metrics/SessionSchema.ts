@@ -6,6 +6,7 @@ export type TSession = {
     session: string,
     flowHash: string,
     duration: number,
+    website: string,
     updated_at: Date,
     created_at: Date,
 }
@@ -14,6 +15,7 @@ const SessionSchema = new Schema<TSession>({
     project_id: { type: Types.ObjectId, index: 1 },
     session: { type: String, required: true, index: 1 },
     flowHash: { type: String },
+    website: { type: String },
     duration: { type: Number, required: true, default: 0 },
     updated_at: { type: Date, default: () => Date.now() },
     created_at: { type: Date, default: () => Date.now(), index: true },

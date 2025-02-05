@@ -4,12 +4,12 @@ import { executeAdvancedTimelineAggregation } from "~/server/services/TimelineSe
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, { requireSchema: false, requireSlice: true });
+    const data = await getRequestData(event, ['GUEST', 'RANGE', 'SLICE', 'DOMAIN']);
     if (!data) return;
 
-    const { from, to, slice, project_id, timeOffset } = data;
+    const { from, to, slice, project_id, timeOffset, domain } = data;
 
-    return await Redis.useCache({ key: `timeline:events_stacked:${project_id}:${slice}:${from || 'none'}:${to || 'none'}`, exp: TIMELINE_EXPIRE_TIME }, async () => {
+    return await Redis.useCache({ key: `timeline:events_stacked:${project_id}:${slice}:${from || 'none'}:${to || 'none'}:${domain}`, exp: TIMELINE_EXPIRE_TIME }, async () => {
 
         const timelineStackedEvents = await executeAdvancedTimelineAggregation<{ name: String }>({
             model: EventModel,
@@ -17,7 +17,8 @@ export default defineEventHandler(async event => {
             from, to, slice,
             customProjection: { name: "$_id.name" },
             customIdGroup: { name: '$name' },
-            timeOffset
+            timeOffset,
+            domain
         })
 
         return timelineStackedEvents;

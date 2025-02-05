@@ -1,14 +1,25 @@
 <script lang="ts" setup>
 import EventsFunnelChart from '~/components/events/EventsFunnelChart.vue';
-
+import DateService, { type Slice } from '@services/DateService';
 
 definePageMeta({ layout: 'dashboard' });
 
-const selectLabelsEvents = [
+
+const { snapshotDuration } = useSnapshot();
+
+const selectedLabelIndex = ref<number>(0);
+
+const selectLabels: { label: string, value: Slice }[] = [
+    { label: 'Hour', value: 'hour' },
     { label: 'Day', value: 'day' },
     { label: 'Month', value: 'month' },
 ];
-const eventsStackedSelectIndex = ref<number>(0);
+
+const selectLabelsAvailable = computed<{ label: string, value: Slice, disabled: boolean }[]>(() => {
+    return selectLabels.map(e => {
+        return { ...e, disabled: !DateService.canUseSliceFromDays(snapshotDuration.value, e.value)[0] }
+    });
+})
 
 const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeaders({ custom: { 'x-schema': 'events' } }), lazy: true });
 
@@ -23,9 +34,6 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
             <div class="flex flex-col gap-1">
                 <div>
                     Total events: {{ eventsData.data.value?.[0]?.count || '0' }}
-                </div>
-                <div v-if="(eventsData.data.value?.[0]?.count || 0) === 0">
-                    Waiting for your first event...
                 </div>
             </div>
             <div>
@@ -45,12 +53,14 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
             <CardTitled :key="refreshKey" class="p-4 xl:flex-[4] w-full h-full" title="Events"
                 sub="Events stacked bar chart.">
                 <template #header>
-                    <SelectButton @changeIndex="eventsStackedSelectIndex = $event"
-                        :currentIndex="eventsStackedSelectIndex" :options="selectLabelsEvents">
-                    </SelectButton>
+
+                    <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event" :currentIndex="selectedLabelIndex"
+                :options="selectLabelsAvailable">
+            </SelectButton>
+
                 </template>
                 <div class="h-full">
-                    <EventsStackedBarChart :slice="(selectLabelsEvents[eventsStackedSelectIndex].value as any)">
+                    <EventsStackedBarChart :slice="(selectLabelsAvailable[selectedLabelIndex].value as any)">
                     </EventsStackedBarChart>
                 </div>
             </CardTitled>

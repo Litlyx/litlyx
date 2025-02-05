@@ -10,13 +10,14 @@ export default defineEventHandler(async event => {
     const { pid, from, to, slice, project_id, timeOffset, domain } = data;
 
     const cacheKey = `timeline:visits:${pid}:${slice}:${from}:${to}:${domain}`;
-    const cacheExp = 60;
+    const cacheExp = 20;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
         const timelineData = await executeAdvancedTimelineAggregation({
             projectId: project_id,
             model: VisitModel,
-            from, to, slice, timeOffset, domain
+            from, to, slice, timeOffset, domain,
+            debug: true
         });
         return timelineData;
     });
