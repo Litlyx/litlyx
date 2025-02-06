@@ -107,9 +107,12 @@ const { isOpen, close, open } = useMenu();
                     <DashboardDialogBarCard @click.stop="null" class="z-[36]"></DashboardDialogBarCard>
                 </div>
 
-                <LayoutTopNavigation></LayoutTopNavigation>
+                <LayoutTopNavigation class="flex"></LayoutTopNavigation>
 
-                <slot></slot>
+                <div class="h-full pb-[3rem]">
+                    <slot></slot>
+                </div>
+
             </div>
         </div>
 
