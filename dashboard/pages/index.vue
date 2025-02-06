@@ -40,7 +40,7 @@ const selfhosted = useSelfhosted();
 
 
         <div v-if="showDashboard">
-            <!-- <div class="w-full px-4 py-2 gap-2 flex flex-col">
+             <div class="w-full px-4 py-2 gap-2 flex flex-col">
                 <BannerLimitsInfo v-if="!selfhosted" :key="refreshKey"></BannerLimitsInfo>
                 <BannerOffer v-if="!selfhosted" :key="refreshKey"></BannerOffer>
             </div>
@@ -49,14 +49,14 @@ const selfhosted = useSelfhosted();
                 <DashboardTopSection :key="refreshKey"></DashboardTopSection>
                 <DashboardTopCards :key="refreshKey"></DashboardTopCards>
             </div>
-            -->
+           
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
                 <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
             </div> 
 
 
-             <!-- <div class="flex w-full justify-center mt-6 px-6">
+              <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <BarCardReferrers :key="refreshKey"></BarCardReferrers>
@@ -88,7 +88,7 @@ const selfhosted = useSelfhosted();
                         <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
                     </div>
                 </div>
-            </div>  -->
+            </div> 
 
         </div>
 
