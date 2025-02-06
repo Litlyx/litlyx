@@ -253,8 +253,6 @@ watch(readyToDisplay, () => {
 })
 
 
-
-
 function onDataReady() {
     if (!visitsData.data.value) return;
     if (!eventsData.data.value) return;

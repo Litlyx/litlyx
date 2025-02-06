@@ -7,7 +7,7 @@ definePageMeta({ layout: 'dashboard' });
 
 const { snapshotDuration } = useSnapshot();
 
-const selectedLabelIndex = ref<number>(0);
+const selectedLabelIndex = ref<number>(1);
 
 const selectLabels: { label: string, value: Slice }[] = [
     { label: 'Hour', value: 'hour' },
@@ -21,7 +21,10 @@ const selectLabelsAvailable = computed<{ label: string, value: Slice, disabled: 
     });
 })
 
-const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeaders({ custom: { 'x-schema': 'events' } }), lazy: true });
+const eventsData = await useFetch(`/api/data/count`, {
+    headers: useComputedHeaders({ custom: { 'x-schema': 'events' } }),
+    lazy: true
+});
 
 </script>
 
@@ -54,9 +57,9 @@ const eventsData = await useFetch(`/api/data/count`, { headers: useComputedHeade
                 sub="Events stacked bar chart.">
                 <template #header>
 
-                    <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event" :currentIndex="selectedLabelIndex"
-                :options="selectLabelsAvailable">
-            </SelectButton>
+                    <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event"
+                        :currentIndex="selectedLabelIndex" :options="selectLabelsAvailable">
+                    </SelectButton>
 
                 </template>
                 <div class="h-full">

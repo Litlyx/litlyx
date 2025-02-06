@@ -10,9 +10,9 @@ export default defineEventHandler(async event => {
 
     const result = await VisitModel.aggregate([
         { $match: { project_id, } },
-        { $group: { _id: "$website" } },
+        { $group: { _id: "$website", visits: { $sum: 1 } } },
     ]);
 
-    return result as { _id: string }[];
+    return result as { _id: string, visits: number }[];
 
 });

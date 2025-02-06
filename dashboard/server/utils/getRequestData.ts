@@ -56,9 +56,12 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
     const pid = getHeader(event, 'x-pid');
     if (!pid) return setResponseStatus(event, 400, 'x-pid is required');
 
-    const domain = getHeader(event, 'x-domain');
+    let domain: any = getHeader(event, 'x-domain');
     if (requireDomain) {
         if (domain == null || domain == undefined || domain.length == 0) return setResponseStatus(event, 400, 'x-domain is required');
+    }
+    if (domain === 'ALL DOMAINS') {
+        domain = { $ne: '_NODOMAIN_' }
     }
 
     const slice = getHeader(event, 'x-slice') as Slice;
