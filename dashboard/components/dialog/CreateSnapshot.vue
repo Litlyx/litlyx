@@ -53,7 +53,7 @@ async function confirmSnapshot() {
 
     await updateSnapshots();
     closeDialog();
-    createAlert('Snapshot created', 'Snapshot created successfully', 'far fa-circle-check', 5000);
+    createAlert('Timeframe created', 'Timeframe created successfully', 'far fa-circle-check', 5000);
     const newSnapshot = snapshots.value.at(-1);
     if (newSnapshot) snapshot.value = newSnapshot;
 
@@ -65,7 +65,7 @@ async function confirmSnapshot() {
     <div class="w-full h-full flex flex-col">
 
         <div class="poppins text-center text-lyx-lightmode-text dark:text-lyx-text">
-            Create a snapshot
+            Create a timeframe
         </div>
 
         <div class="mt-10 flex items-center gap-2">
@@ -74,7 +74,7 @@ async function confirmSnapshot() {
                 <input @input="onColorChange" ref="colorpicker" class="relative w-0 h-0 z-[-100]" type="color">
             </div>
             <div class="grow">
-                <LyxUiInput placeholder="Snapshot name" v-model="snapshotName" class="px-4 py-1 w-full"></LyxUiInput>
+                <LyxUiInput placeholder="Timeframe name" v-model="snapshotName" class="px-4 py-1 w-full"></LyxUiInput>
             </div>
         </div>
 

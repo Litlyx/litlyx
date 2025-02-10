@@ -24,18 +24,6 @@ type Props = {
 }
 
 
-
-const colorMode = useColorMode()
-const isDark = computed({
-    get() {
-        return colorMode.value === 'dark'
-    },
-    set() {
-        colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
-    }
-})
-
-
 const route = useRoute();
 const props = defineProps<Props>();
 
@@ -172,7 +160,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
                 <div class="flex mb-2 items-center justify-between text-lyx-lightmode-text dark:text-lyx-text">
                     <div class="poppins text-[.8rem]">
-                        Snapshots
+                        Timeframes
                     </div>
 
                     <div class="flex gap-2">
@@ -181,7 +169,7 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                                 <div><i class="far fa-download text-[.8rem]"></i></div>
                             </LyxUiButton>
                         </UTooltip> -->
-                        <UTooltip text="Create new snapshot">
+                        <UTooltip text="Create new timeframe">
                             <LyxUiButton @click="openSnapshotDialog()" type="outlined" class="!px-3 !py-1">
                                 <div><i class="fas fa-plus text-[.8rem]"></i></div>
                             </LyxUiButton>
@@ -300,11 +288,6 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                 <div class="flex justify-end px-2">
 
                     <div class="grow flex gap-3">
-
-                        <div>
-                            <i @click="isDark = !isDark" class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark"
-                                :class="isDark ? 'far fa-moon' : 'far fa-sun'"></i>
-                        </div>
 
                         <NuxtLink to="/admin" v-if="userRoles.isAdmin.value"
                             class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">

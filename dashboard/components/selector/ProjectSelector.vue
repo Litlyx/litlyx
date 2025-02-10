@@ -5,7 +5,7 @@ import type { TProject } from '@schema/project/ProjectSchema';
 const { user } = useLoggedUser()
 
 const { projectList, guestProjectList, allProjectList, actions, project } = useProject();
-
+const { setActiveDomain } = useDomain();
 
 function isProjectMine(owner?: string) {
     if (!owner) return false;
@@ -16,6 +16,7 @@ function isProjectMine(owner?: string) {
 
 function onChange(e: TProject) {
     actions.setActiveProject(e._id.toString());
+    setActiveDomain('ALL DOMAINS');
 }
 </script>
 

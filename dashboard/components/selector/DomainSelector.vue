@@ -8,7 +8,7 @@ function onChange(e: string) {
 </script>
 
 <template>
-    <div class="flex gap-2">
+    <div class="flex gap-2 absolute">
         <USelectMenu :uiMenu="{
             select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
             base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget w-max',

@@ -403,7 +403,7 @@ async function clearAllChats() {
                         <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
                         </div>
                         <div class="manrope font-semibold text-lyx-lightmode-text dark:text-text-dirty"> {{
-                            chatsRemaining }} remaining requests
+                            chatsRemaining }} messages left
                         </div>
                     </div>
                     <LyxUiButton v-if="!selfhosted" type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">

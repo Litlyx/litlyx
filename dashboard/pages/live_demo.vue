@@ -70,7 +70,7 @@ const selectLabelsEvents = [
                             Litlyx open metrics
                         </div>
                         <div v-if="project" class="flex gap-2 items-center text-text/90">
-                            <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
+                            <div class="animate-pulse w-[.8rem] h-[.8rem] bg-green-400 rounded-full"> </div>
                             <div> {{ onlineUsers }} Online users</div>
                         </div>
                     </div>
