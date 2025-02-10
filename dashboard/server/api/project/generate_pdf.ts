@@ -33,17 +33,19 @@ function formatNumberK(value: string | number, decimals: number = 1) {
 
 const LINE_SPACING = 0.5;
 
+const resourcePath = process.env.MODE === 'TEST' ? './public/pdf/' : '../public/pdf/';
+
 function createPdf(data: PDFGenerationData) {
 
     const pdf = new pdfkit({ size: 'A4', margins: { top: 50, bottom: 50, left: 50, right: 50 }, });
     pdf.fillColor('#ffffff').rect(0, 0, pdf.page.width, pdf.page.height).fill('#000000');
 
-    pdf.font('./server/pdf/pdf_fonts/Poppins-Bold.ttf').fontSize(16).fillColor('#ffffff');
+    pdf.font(resourcePath + 'pdf_fonts/Poppins-Bold.ttf').fontSize(16).fillColor('#ffffff');
 
     pdf.text(`Project name: ${data.projectName}`, { align: 'left' }).moveDown(LINE_SPACING);
     pdf.text(`Timeframe name: ${data.snapshotName}`, { align: 'left' }).moveDown(LINE_SPACING);
 
-    pdf.font('./server/pdf/pdf_fonts/Poppins-Regular.ttf').fontSize(12).fillColor('#ffffff')
+    pdf.font(resourcePath + 'pdf_fonts/Poppins-Regular.ttf').fontSize(12).fillColor('#ffffff')
 
     pdf.text(`Total visits: ${data.totalVisits}`, { align: 'left' }).moveDown(LINE_SPACING);
     pdf.text(`Average visits per day: ${data.avgVisitsDay}`, { align: 'left' }).moveDown(LINE_SPACING);
@@ -64,16 +66,16 @@ function createPdf(data: PDFGenerationData) {
     pdf.text('Average growth:', { align: 'left' }).moveDown(LINE_SPACING);
     pdf.text(`${data.avgGrowthText}`, { align: 'left' }).moveDown(LINE_SPACING);
 
-    pdf.font('./server/pdf/pdf_fonts/Poppins-Italic.ttf')
+    pdf.font(resourcePath + 'pdf_fonts/Poppins-Italic.ttf')
         .text('This gives you an idea of the average growth your website is experiencing over time.', { align: 'left' })
         .moveDown(LINE_SPACING);
 
-    pdf.font('./server/pdf/pdf_fonts/Poppins-Regular.ttf')
+    pdf.font(resourcePath + 'pdf_fonts/Poppins-Regular.ttf')
         .fontSize(10)
         .fillColor('#ffffff')
         .text('Created with Litlyx.com', 50, 760, { align: 'center' });
 
-    pdf.image('./server/pdf/pdf_images/logo.png', 460, 700, { width: 100 });
+    pdf.image(resourcePath + 'pdf_images/logo.png', 460, 700, { width: 100 });
 
     pdf.end();
     return pdf;

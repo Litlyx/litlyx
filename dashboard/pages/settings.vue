@@ -16,7 +16,7 @@ const items = [
 </script>
 
 <template>
-    <div class="lg:px-10 lg:py-8 h-dvh overflow-y-auto overflow-x-hidden hide-scrollbars">
+    <div class="lg:px-10 lg:py-8 h-dvh overflow-y-auto overflow-x-hidden hide-scrollbars !pb-[10rem]">
 
         <div class="poppins font-semibold text-[1.3rem] lg:px-0 px-4 lg:py-0 py-4"> Settings </div>
 

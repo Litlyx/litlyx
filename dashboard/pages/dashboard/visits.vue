@@ -16,7 +16,7 @@ const canDownload = computed(() => {
 const metricsInfo = ref<number>(0);
 
 const columns = [
-    { key: 'website', label: 'Website', sortable: true },
+    { key: 'website', label: 'Domain', sortable: true },
     { key: 'page', label: 'Page', sortable: true },
     { key: 'referrer', label: 'Referrer', sortable: true },
     { key: 'browser', label: 'Browser', sortable: true },

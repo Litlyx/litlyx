@@ -98,6 +98,7 @@ const entries: SettingsTemplateEntry[] = [
                     User should have been registered to Litlyx
                 </div>
             </div>
+            <div v-if="isGuest" class="text-lyx-text-darker"> Guests cannot add members</div>
         </template>
         <template #members>
 

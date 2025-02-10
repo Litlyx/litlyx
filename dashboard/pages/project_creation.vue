@@ -71,7 +71,7 @@ async function createProject() {
         <div class="flex flex-col items-center justify-center pt-[12rem] gap-12 relative z-[10]">
 
             <div class="text-[3rem] font-semibold text-center text-lyx-lightmode-text dark:text-lyx-text">
-                Create your {{ isFirstProject ? 'first' : '' }} project
+                Create {{ isFirstProject ? '' : 'a new' }} {{ isFirstProject ? 'your first' : '' }} project
             </div>
 
             <div v-if="isFirstProject" class="text-[1.5rem]">

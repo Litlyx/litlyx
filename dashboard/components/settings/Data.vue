@@ -2,6 +2,9 @@
 import DeleteDomainData from '../dialog/DeleteDomainData.vue';
 import type { SettingsTemplateEntry } from './Template.vue';
 
+
+const { isGuest } = useProject();
+
 const entries: SettingsTemplateEntry[] = [
     { id: 'delete_dns', title: 'Delete domain data', text: 'Delete data of a specific domain from this project' },
     { id: 'delete_data', title: 'Delete project data', text: 'Delete all data from this project' },
@@ -105,14 +108,16 @@ const sessionsLabel = computed(() => {
             <div class="flex flex-col">
 
                 <!-- <div class="text-[.9rem] text-lyx-text-darker"> Select a domain </div> -->
-                <USelectMenu placeholder="Select a domain" :uiMenu="{
-                     select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
-                        base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
-                        option: {
-                            base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
-                            active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
-                        }
+                <USelectMenu v-if="!isGuest" placeholder="Select a domain" :uiMenu="{
+                    select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
+                    base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget',
+                    option: {
+                        base: 'hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
+                        active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
+                    }
                 }" :options="domains.data.value ?? []" v-model="selectedDomain"></USelectMenu>
+
+                <div v-if="isGuest" class="text-lyx-text-darker"> Guests cannot delete data</div>
 
                 <div v-if="selectedDomain" class="flex flex-col gap-2 mt-4">
                     <div class="text-[.9rem] text-lyx-text-dark"> Select data to delete </div>
@@ -141,7 +146,7 @@ const sessionsLabel = computed(() => {
         </template>
         <template #delete_data>
 
-            <div
+            <div v-if="!isGuest"
                 class="outline rounded-lg w-full px-8 py-4 flex flex-col gap-4 outline-[1px] outline-[#541c15] bg-lyx-lightmode-widget-light dark:bg-[#1e1412]">
                 <div class="poppins font-semibold"> This operation will reset this project to it's initial state (0
                     visits 0 events 0 sessions) </div>
@@ -151,6 +156,7 @@ const sessionsLabel = computed(() => {
                 </div>
             </div>
 
+            <div v-if="isGuest" class="text-lyx-text-darker"> Guests cannot delete data</div>
         </template>
     </SettingsTemplate>
 </template>

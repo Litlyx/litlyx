@@ -22,7 +22,7 @@ function getPlanToActivate(current_plan_id: number) {
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
+    const data = await getRequestData(event, []);
     if (!data) return;
 
     const { project, pid, user } = data;

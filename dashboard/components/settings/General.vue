@@ -156,20 +156,28 @@ function copyProjectId() {
 <template>
     <SettingsTemplate :entries="entries" :key="project?.name || 'NONE'">
         <template #pname>
-            <div class="flex items-center gap-4">
-                <LyxUiInput class="w-full px-4 py-2" :disabled="isGuest" v-model="projectNameInputVal"></LyxUiInput>
-                <LyxUiButton v-if="!isGuest" @click="changeProjectName()" :disabled="!canChange" type="primary"> Change
-                </LyxUiButton>
+            <div class="flex flex-col gap-2">
+                <div class="flex items-center gap-4">
+                    <LyxUiInput class="w-full px-4 py-2" :disabled="isGuest" v-model="projectNameInputVal"></LyxUiInput>
+                    <LyxUiButton v-if="!isGuest" @click="changeProjectName()" :disabled="!canChange" type="primary">
+                        Change
+                    </LyxUiButton>
+                </div>
+                <div v-if="isGuest" class="text-lyx-text-darker"> *Guests cannot change project name </div>
             </div>
         </template>
         <template #api>
-            <div class="flex items-center gap-4" v-if="apiKeys && apiKeys.length < 5">
-                <LyxUiInput class="grow px-4 py-2" :disabled="isGuest" placeholder="ApiKeyName" v-model="newApiKeyName">
-                </LyxUiInput>
-                <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length < 3"
-                    type="primary">
-                    <i class="far fa-plus"></i>
-                </LyxUiButton>
+            <div class="flex flex-col gap-2" v-if="apiKeys && apiKeys.length < 5">
+                <div class="flex items-center gap-4">
+                    <LyxUiInput class="grow px-4 py-2" :disabled="isGuest" placeholder="ApiKeyName"
+                        v-model="newApiKeyName">
+                    </LyxUiInput>
+                    <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length < 3"
+                        type="primary">
+                        <i class="far fa-plus"></i>
+                    </LyxUiButton>
+                </div>
+                <div v-if="isGuest" class="text-lyx-text-darker"> *Guests cannot manage api keys </div>
             </div>
             <LyxUiCard v-if="apiKeys && apiKeys.length > 0" class="w-full flex flex-col gap-4 items-center mt-4">
                 <div v-for="apiKey of apiKeys" class="flex flex-col w-full">
@@ -201,10 +209,10 @@ function copyProjectId() {
                 <div class="hidden lg:flex"><i class="far fa-copy" @click="copyScript()"></i></div>
             </LyxUiCard>
             <div class="flex justify-end w-full">
-            <LyxUiButton type="outline" class="flex lg:hidden mt-4">
-                Copy script
-            </LyxUiButton>
-        </div>
+                <LyxUiButton type="outline" class="flex lg:hidden mt-4">
+                    Copy script
+                </LyxUiButton>
+            </div>
         </template>
         <template #pdelete>
             <div class="flex lg:justify-end" v-if="!isGuest">
@@ -212,6 +220,7 @@ function copyProjectId() {
                     Delete project
                 </LyxUiButton>
             </div>
+            <div v-if="isGuest"> *Guests cannot delete project </div>
         </template>
     </SettingsTemplate>
 </template>
