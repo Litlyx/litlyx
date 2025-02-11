@@ -18,6 +18,7 @@
   "main": "dist/index.js",
   "scripts": {
     "dev": "node scripts/start_dev.js",
+    "dev_prod": "node scripts/start_dev_prod.js",
     "compile": "tsc",
     "build": "npm run compile && npm run create_db",
     "create_db": "cd scripts && ts-node create_database.ts",

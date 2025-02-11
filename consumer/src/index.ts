@@ -52,10 +52,10 @@ async function processStreamEntry(data: Record<string, string>) {
         const { pid, sessionHash } = data;
 
         const project = await ProjectModel.exists({ _id: pid });
-        if (!project) return console.log('No project');
+        if (!project) return;
 
         const canLog = await checkLimits(pid);
-        if (!canLog) return console.log('No limits');
+        if (!canLog) return;
 
         if (eventType === 'event') {
             await process_event(data, sessionHash);
