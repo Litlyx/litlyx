@@ -1,17 +1,16 @@
 
 import { Redis } from "~/server/services/CacheService";
-import { getRequestData } from "~/server/utils/getRequestData";
 
 export default defineEventHandler(async event => {
 
 
-    const data = await getRequestData(event, { requireSchema: true });
+    const data = await getRequestData(event, ['GUEST', 'DOMAIN', 'RANGE', 'SCHEMA']);
     if (!data) return;
 
-    const { schemaName, pid, from, to, model, project_id } = data;
+    const { schemaName, pid, from, to, model, project_id, domain } = data;
 
-    const cacheKey = `count:${schemaName}:${pid}:${from}:${to}`;
-    const cacheExp = 60;
+    const cacheKey = `count:${schemaName}:${pid}:${from}:${to}:${domain}`;
+    const cacheExp = 20;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
 
@@ -19,7 +18,8 @@ export default defineEventHandler(async event => {
             {
                 $match: {
                     project_id,
-                    created_at: { $gte: new Date(from), $lte: new Date(to) }
+                    created_at: { $gte: new Date(from), $lte: new Date(to) },
+                    website: domain
                 }
             },
             { $count: 'count' },

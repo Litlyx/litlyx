@@ -1,39 +1,31 @@
 
-import { requireEnv } from '@utils/requireEnv';
-import { connectDatabase } from '@services/DatabaseService';
-import { RedisStreamService } from '@services/RedisStreamService';
-import { ProjectModel } from "@schema/project/ProjectSchema";
-import { VisitModel } from "@schema/metrics/VisitSchema";
-import { SessionModel } from "@schema/metrics/SessionSchema";
-import { EventModel } from "@schema/metrics/EventSchema";
+import { requireEnv } from './shared/utils/requireEnv';
+import { connectDatabase } from './shared/services/DatabaseService';
+import { RedisStreamService } from './shared/services/RedisStreamService';
+import { ProjectModel } from "./shared/schema/project/ProjectSchema";
+import { VisitModel } from "./shared/schema/metrics/VisitSchema";
+import { SessionModel } from "./shared/schema/metrics/SessionSchema";
+import { EventModel } from "./shared/schema/metrics/EventSchema";
 import { lookup } from './lookup';
 import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
 import express from 'express';
 
-import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
-import { ProjectCountModel } from '@schema/project/ProjectsCounts';
+import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
+import { ProjectCountModel } from './shared/schema/project/ProjectsCounts';
+import { metricsRouter } from './Metrics';
 
 
 const app = express();
 
-let durations: number[] = [];
+app.use('/metrics', metricsRouter);
 
-app.get('/status', async (req, res) => {
-    try {
-        return res.json({ status: 'ALIVE', durations })
-    } catch (ex) {
-        console.error(ex);
-        return res.setStatus(500).json({ error: ex.message });
-    }
-})
-
-app.listen(process.env.PORT);
+app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));
 
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
 
-
+const CONSUMER_NAME = `CONSUMER_${process.env.NODE_APP_INSTANCE || 'DEFAULT'}`
 
 async function main() {
 
@@ -43,7 +35,7 @@ async function main() {
     const group_name = requireEnv('GROUP_NAME') as any; // Checks are inside "startReadingLoop"
 
     await RedisStreamService.startReadingLoop({
-        stream_name, group_name, consumer_name: `CONSUMER_${process.env.NODE_APP_INSTANCE || 'DEFAULT'}`
+        stream_name, group_name, consumer_name: CONSUMER_NAME
     }, processStreamEntry);
 
 }
@@ -55,7 +47,7 @@ async function processStreamEntry(data: Record<string, string>) {
     try {
 
         const eventType = data._type;
-        if (!eventType) return;
+        if (!eventType) return console.log('No type');
 
         const { pid, sessionHash } = data;
 
@@ -73,18 +65,13 @@ async function processStreamEntry(data: Record<string, string>) {
             await process_visit(data, sessionHash);
         }
 
-        // console.log('Entry processed in', duration, 'ms');
-
     } catch (ex: any) {
         console.error('ERROR PROCESSING STREAM EVENT', ex.message);
     }
 
     const duration = Date.now() - start;
 
-    durations.push(duration);
-    if (durations.length > 1000) {
-        durations = durations.splice(500);
-    }
+    RedisStreamService.METRICS_onProcess(CONSUMER_NAME, duration);
 
 }
 

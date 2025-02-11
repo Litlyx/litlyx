@@ -1,6 +1,12 @@
 {
-	"dependencies": {},
 	"devDependencies": {
-		"glob": "^11.0.0"
+		"@types/archiver": "^6.0.3",
+		"@types/fs-extra": "^11.0.4",
+		"@types/node": "^22.10.10",
+		"archiver": "^7.0.1",
+		"fs-extra": "^11.3.0",
+		"glob": "^11.0.0",
+		"node-scp": "^0.0.23",
+		"node-ssh": "^13.2.0"
 	}
 }

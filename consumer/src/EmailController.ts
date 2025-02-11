@@ -1,13 +1,10 @@
-import { ProjectModel } from "@schema/project/ProjectSchema";
-import { UserModel } from "@schema/UserSchema";
-import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
-import EmailService from '@services/EmailService';
-import { requireEnv } from "@utils/requireEnv";
-import { TProjectLimit } from "@schema/project/ProjectsLimits";
+import { ProjectModel } from "./shared/schema/project/ProjectSchema";
+import { UserModel } from "./shared/schema/UserSchema";
+import { LimitNotifyModel } from "./shared/schema/broker/LimitNotifySchema";
+import { EmailService } from './shared/services/EmailService';
+import { TProjectLimit } from "./shared/schema/project/ProjectsLimits";
+import { EmailServiceHelper } from "./EmailServiceHelper";
 
-if (process.env.EMAIL_SERVICE) {
-    EmailService.init(requireEnv('BREVO_API_KEY'));
-}
 
 export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
 
@@ -27,7 +24,14 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
         const owner = await UserModel.findById(project.owner);
         if (!owner) return;
 
-        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmailMax(owner.email, project.name);
+        setImmediate(() => {
+            const emailData = EmailService.getEmailServerInfo('limit_max', {
+                target: owner.email,
+                projectName: project.name
+            });
+            EmailServiceHelper.sendEmail(emailData);
+        });
+
         await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: true, limit3: true });
 
     } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.9)) {
@@ -40,7 +44,14 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
         const owner = await UserModel.findById(project.owner);
         if (!owner) return;
 
-        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmail90(owner.email, project.name);
+        setImmediate(() => {
+            const emailData = EmailService.getEmailServerInfo('limit_90', {
+                target: owner.email,
+                projectName: project.name
+            });
+            EmailServiceHelper.sendEmail(emailData);
+        });
+
         await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: true, limit3: false });
 
     } else if ((projectCounts.visits + projectCounts.events) >= (projectCounts.limit * 0.5)) {
@@ -53,7 +64,14 @@ export async function checkLimitsForEmail(projectCounts: TProjectLimit) {
         const owner = await UserModel.findById(project.owner);
         if (!owner) return;
 
-        if (process.env.EMAIL_SERVICE) await EmailService.sendLimitEmail50(owner.email, project.name);
+        setImmediate(() => {
+            const emailData = EmailService.getEmailServerInfo('limit_50', {
+                target: owner.email,
+                projectName: project.name
+            });
+            EmailServiceHelper.sendEmail(emailData);
+        });
+        
         await LimitNotifyModel.updateOne({ project_id: projectCounts.project_id }, { limit1: true, limit2: false, limit3: false });
 
     }

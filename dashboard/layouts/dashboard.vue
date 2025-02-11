@@ -1,6 +1,6 @@
 <script setup lang="ts">
 
-import type { Section } from '~/components/CVerticalNavigation.vue';
+import type { Section } from '~/components/layout/VerticalNavigation.vue';
 
 import { Lit } from 'litlyx-js';
 import { DialogFeedback } from '#components';
@@ -12,8 +12,6 @@ const modal = useModal();
 
 const selfhosted = useSelfhosted();
 
-console.log({ selfhosted })
-
 const sections: Section[] = [
     {
         title: '',
@@ -21,30 +19,32 @@ const sections: Section[] = [
             { label: 'Web Analytics', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Custom Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'Ask AI', to: '/analyst', icon: 'fal fa-sparkles' },
-            { label: 'Security', to: '/security', icon: 'fal fa-shield', disabled: selfhosted },
 
+            // { label: 'Security', to: '/security', icon: 'fal fa-shield', disabled: selfhosted },
             // { label: 'Insights (soon)', to: '#', icon: 'fal fa-lightbulb', disabled: true },
             // { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             // { label: 'Integrations (soon)', to: '/integrations', icon: 'fal fa-cube', disabled: true },
 
-            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
-            {
-                grow: true,
-                label: 'Leave a Feedback', icon: 'fal fa-message',
-                action() {
-                    modal.open(DialogFeedback, {});
-                },
-                disabled: selfhosted
-            },
-            {
-                label: 'Documentation', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
-                action() { Lit.event('docs_clicked') },
-            },
-            {
-                label: 'Discord support', icon: 'fab fa-discord',
-                to: 'https://discord.gg/9cQykjsmWX',
-                external: true,
-            },
+            { grow: true, label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
+            // {
+            //     grow: true,
+            //     label: 'Leave a Feedback', icon: 'fal fa-message',
+            //     action() {
+            //         modal.open(DialogFeedback, {});
+            //     },
+            //     disabled: selfhosted
+            // },
+            // {
+            //     grow: true,
+            //     label: 'Documentation', to: 'https://docs.litlyx.com', icon: 'fal fa-book', external: true,
+            //     action() { Lit.event('docs_clicked') },
+            // },
+            // {
+            //     grow: true,
+            //     label: 'Discord support', icon: 'fab fa-discord',
+            //     to: 'https://discord.gg/9cQykjsmWX',
+            //     external: true,
+            // },
             // {
             //     label: 'Slack support', icon: 'fab fa-slack',
             //     to: '#',
@@ -76,11 +76,11 @@ const { isOpen, close, open } = useMenu();
 
 
         <div
-            class="px-6 py-3 flex items-center justify-center shadow-[0_0_10px_#000000CC] z-[20] rounded-xl mx-2 my-2 lg:hidden">
+            class="px-6 py-3 flex items-center justify-center dark:bg-lyx-background-light z-[20] rounded-xl mx-2 my-2 lg:hidden">
             <i @click="open()" class="fas fa-bars text-[1.2rem] absolute left-6"></i>
-            <div class="nunito font-semibold text-[1.2rem]">
+            <!-- <div class="nunito font-semibold text-[1.2rem]">
                 Litlyx
-            </div>
+            </div> -->
         </div>
 
         <div class="flex h-full">
@@ -91,8 +91,8 @@ const { isOpen, close, open } = useMenu();
             </div>
 
 
-            <CVerticalNavigation :sections="sections">
-            </CVerticalNavigation>
+            <LayoutVerticalNavigation :sections="sections">
+            </LayoutVerticalNavigation>
 
 
             <div class="overflow-hidden w-full bg-lyx-lightmode-background dark:bg-lyx-background relative h-full">
@@ -107,7 +107,12 @@ const { isOpen, close, open } = useMenu();
                     <DashboardDialogBarCard @click.stop="null" class="z-[36]"></DashboardDialogBarCard>
                 </div>
 
-                <slot></slot>
+                <LayoutTopNavigation class="flex"></LayoutTopNavigation>
+
+                <div class="h-full pb-[3rem]">
+                    <slot></slot>
+                </div>
+
             </div>
         </div>
 

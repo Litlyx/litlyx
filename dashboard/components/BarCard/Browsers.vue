@@ -57,7 +57,7 @@ async function showMore() {
 
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-full">
         <BarCardBase @showMore="showMore()" @dataReload="browsersData.refresh()" :data="browsersData.data.value || []"
             desc="The browsers most used to search your website." :dataIcons="true" :iconProvider="iconProvider"
             :loading="browsersData.pending.value" label="Browsers" sub-label="Browsers">

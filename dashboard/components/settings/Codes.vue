@@ -2,7 +2,7 @@
 import type { TApiSettings } from '@schema/ApiSettingsSchema';
 import type { SettingsTemplateEntry } from './Template.vue';
 
-const { project } = useProject();
+const { project, isGuest } = useProject();
 
 const entries: SettingsTemplateEntry[] = [
     { id: 'acodes', title: 'Appsumo codes', text: 'Redeem appsumo codes' },
@@ -39,7 +39,7 @@ async function redeemCode() {
 
 
 <template>
-    <SettingsTemplate :entries="entries" :key="project?.name || 'NONE'">
+    <SettingsTemplate v-if="!isGuest" :entries="entries" :key="project?.name || 'NONE'">
         <template #acodes>
             <div class="flex items-center gap-4">
                 <LyxUiInput class="w-full px-4 py-2" placeholder="Appsumo code" v-model="currentCode"></LyxUiInput>
@@ -58,4 +58,9 @@ async function redeemCode() {
             </div>
         </template>
     </SettingsTemplate>
+
+    <div v-if="isGuest" class="text-lyx-text-darker flex w-full h-full justify-center mt-20">
+        Guests cannot view billing
+    </div>
+
 </template>

@@ -26,15 +26,16 @@ export default defineNuxtConfig({
 
   pages: true,
   ssr: false,
-  css: ['~/assets/scss/main.scss'],
-
+  css: [
+    '~/assets/main.css',
+    '~/assets/scss/main.scss',
+  ],
   alias: {
-    '@schema': fileURLToPath(new URL('../shared/schema', import.meta.url)),
-    '@services': fileURLToPath(new URL('../shared/services', import.meta.url)),
-    '@data': fileURLToPath(new URL('../shared/data', import.meta.url)),
-    '@functions': fileURLToPath(new URL('../shared/functions', import.meta.url)),
+    '@schema': fileURLToPath(new URL('./shared/schema', import.meta.url)),
+    '@services': fileURLToPath(new URL('./shared/services', import.meta.url)),
+    '@data': fileURLToPath(new URL('./shared/data', import.meta.url)),
+    '@functions': fileURLToPath(new URL('./shared/functions', import.meta.url)),
   },
-
   runtimeConfig: {
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     REDIS_URL: process.env.REDIS_URL,
@@ -43,8 +44,7 @@ export default defineNuxtConfig({
     AI_ORG: process.env.AI_ORG,
     AI_PROJECT: process.env.AI_PROJECT,
     AI_KEY: process.env.AI_KEY,
-    EMAIL_SERVICE: process.env.EMAIL_SERVICE,
-    BREVO_API_KEY: process.env.BREVO_API_KEY,
+    EMAIL_SECRET: process.env.EMAIL_SECRET,
     AUTH_JWT_SECRET: process.env.AUTH_JWT_SECRET,
     GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
     GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET,
@@ -56,6 +56,7 @@ export default defineNuxtConfig({
     STRIPE_WH_SECRET_TEST: process.env.STRIPE_WH_SECRET_TEST,
     NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
     NOAUTH_USER_NAME: process.env.NOAUTH_USER_NAME,
+    MODE: process.env.MODE || 'NONE',
     SELFHOSTED: process.env.SELFHOSTED || 'FALSE',
     public: {
       AUTH_MODE: process.env.AUTH_MODE,

@@ -398,24 +398,29 @@ async function clearAllChats() {
                 <div :class="{ '!text-green-500': debugModeAi }" class="cursor-pointer text-red-500 w-fit"
                     v-if="userRoles.isAdmin.value" @click="debugModeAi = !debugModeAi"> Debug mode </div>
 
-                <div class="flex justify-between items-center pt-3">
+                <div class="flex pt-3 px-4">
                     <div class="flex items-center gap-2">
-                        <div class="bg-accent w-5 h-5 rounded-full animate-pulse">
-                        </div>
-                        <div class="manrope font-semibold text-lyx-lightmode-text dark:text-text-dirty"> {{
-                            chatsRemaining }} remaining requests
+                        <!-- <div class="bg-accent w-4 h-4 rounded-full animate-pulse">
+                        </div> -->
+                        <div class="manrope font-semibold text-lyx-lightmode-text dark:text-text-dirty">
+                            {{ chatsRemaining }} messages left
                         </div>
                     </div>
-                    <LyxUiButton v-if="!selfhosted" type="primary" class="text-[.9rem] text-center " @click="showDrawer('PRICING')">
+                    <div class="grow"></div>
+                    <LyxUiButton v-if="!selfhosted" type="primary" class="text-[.9rem] text-center "
+                        @click="showDrawer('PRICING')">
                         Upgrade
                     </LyxUiButton>
                 </div>
 
-                <div class="flex items-center gap-4">
+                <div class="dark:bg-lyx-widget-light bg-lyx-lightmode-widget-light h-[1px]"></div>
+
+                <div class="flex items-center gap-4 px-4 mt-4">
                     <div class="poppins font-semibold text-[1.1rem]"> History </div>
+                    <div class="grow"></div>
                     <LyxUiButton v-if="chatsList && chatsList.length > 0" @click="clearAllChats()" type="secondary"
                         class="text-center text-[.8rem]">
-                        Clear all
+                        Clear all chats
                     </LyxUiButton>
                 </div>
 

@@ -18,18 +18,6 @@ function copyProjectId() {
     createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
 }
 
-
-function showAnomalyInfoAlert() {
-    createAlert('AI Anomaly Detector info',
-        `Anomaly detector is running. It helps you detect a spike in visits or events, it could mean an
-         attack or simply higher traffic due to good performance. Additionally, it can detect if someone is
-         stealing parts of your website and hosting a duplicate version—an unfortunately common practice.
-         Litlyx will notify you via email with actionable advices`,
-        'far fa-shield',
-        10000
-    )
-
-}
 </script>
 
 
@@ -38,7 +26,7 @@ function showAnomalyInfoAlert() {
 
         <div
             class="flex gap-2 items-center text-lyx-lightmode-text/90 dark:text-lyx-text/90 justify-center md:justify-start">
-            <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
+            <div class="animate-pulse w-[.8rem] h-[.8rem] bg-green-400 rounded-full"> </div>
             <div class="poppins font-medium text-[.9rem]"> {{ onlineUsers.data }} Online users</div>
         </div>
 
@@ -62,7 +50,7 @@ function showAnomalyInfoAlert() {
                 </div>
             </div>
         </div> -->
-
+<!-- 
         <div v-if="!selfhosted"
             class="flex gap-2 items-center text-lyx-lightmode-text/90 dark:text-lyx-text/90 justify-center md:justify-start">
             <div class="animate-pulse w-[1rem] h-[1rem] bg-green-400 rounded-full"> </div>
@@ -71,7 +59,7 @@ function showAnomalyInfoAlert() {
                 <i class="far fa-info-circle text-[.9rem] hover:text-lyx-primary cursor-pointer"
                     @click="showAnomalyInfoAlert"></i>
             </div>
-        </div>
+        </div> -->
 
     </div>
 </template>

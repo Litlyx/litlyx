@@ -3,7 +3,7 @@ import { VisitModel } from "@schema/metrics/VisitSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, {
+    const data = await getRequestDataOld(event, {
         requireSchema: false,
         allowLitlyx: false,
         requireSlice: false

@@ -60,7 +60,7 @@ const { SELFHOSTED } = useRuntimeConfig();
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false });
+    const data = await getRequestDataOld(event, { requireSchema: false });
     if (!data) return;
 
     const { project, project_id, user } = data;

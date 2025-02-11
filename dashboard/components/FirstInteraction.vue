@@ -80,7 +80,7 @@ function reloadPage() {
 
 
         <div class="flex items-center justify-center mt-10">
-            <div class="flex flex-col-reverse gap-6">
+            <div class="flex flex-col gap-6">
 
                 <div class="flex gap-6 xl:flex-row flex-col">
 
@@ -135,8 +135,8 @@ function reloadPage() {
                 </div>
                 <div>
                     <div>
-                        <CardTitled class="w-full h-full" title="Documentation"
-                            sub="Learn how to use Litlyx in every tech stack">
+                        <CardTitled class="w-full h-full" title="Modules"
+                            sub="Get started with your favorite framework.">
                             <template #header>
                                 <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
                                     to="https://docs.litlyx.com">

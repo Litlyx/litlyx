@@ -49,7 +49,7 @@ async function showMore() {
 
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-full">
         <BarCardBase @showMore="showMore()" @dataReload="geolocationData.refresh()"
             :data="geolocationData.data.value || []" :dataIcons="false" :loading="geolocationData.pending.value"
             label="Countries" sub-label="Countries" :iconProvider="iconProvider" :customIconStyle="customIconStyle"

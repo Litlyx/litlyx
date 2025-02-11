@@ -5,7 +5,7 @@ import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
 
 
 export default defineEventHandler(async event => {
-    const data = await getRequestData(event);
+    const data = await getRequestDataOld(event);
     if (!data) return;
 
     const { pid } = data;

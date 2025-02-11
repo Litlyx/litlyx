@@ -24,7 +24,6 @@ winston-*.ndjson
 .env.*
 !.env.example
 
-
 # Test reports
 *.report.txt
 
@@ -35,5 +34,10 @@ out.pdf
 tests
 
 # EXPLAINS MONGODB
-
 explains
+
+#Ecosystem
+ecosystem.config.cjs
+ecosystem.config.js
+
+shared

@@ -3,7 +3,7 @@ import { ProjectSnapshotModel } from "@schema/project/ProjectSnapshot";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false, allowGuests: true, requireRange: false });
+    const data = await getRequestDataOld(event, { requireSchema: false, allowGuests: true, requireRange: false });
     if (!data) return;
 
     const body = await readBody(event);

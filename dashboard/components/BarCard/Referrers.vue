@@ -43,7 +43,7 @@ async function showMore() {
 
 
 <template>
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-2 h-full">
         <BarCardBase @showMore="showMore()" :elementTextTransformer="elementTextTransformer"
             :iconProvider="iconProvider" @dataReload="referrersData.refresh()" :showLink=true
             :data="referrersData.data.value || []" :interactive="false" desc="Where users find your website."

@@ -3,11 +3,10 @@ import { EventModel } from "@schema/metrics/EventSchema";
 import { SessionModel } from "@schema/metrics/SessionSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { Types } from "mongoose";
-import { getRequestData } from "~/server/utils/getRequestData";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false });
+    const data = await getRequestData(event, []);
     if (!data) return;
 
     const { project_id } = data;

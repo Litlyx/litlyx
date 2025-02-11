@@ -1,7 +1,7 @@
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
+    const data = await getRequestDataOld(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
     if (!data) return;
 
     const { project } = data;

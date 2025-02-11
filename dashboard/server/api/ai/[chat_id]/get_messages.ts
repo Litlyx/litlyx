@@ -4,7 +4,7 @@ import type OpenAI from "openai";
 import { getChartsInMessage } from "~/server/services/AiService";
 
 export default defineEventHandler(async event => {
-    const data = await getRequestData(event);
+    const data = await getRequestDataOld(event);
     if (!data) return;
 
     const isAdmin = data.user.user.roles.includes('ADMIN');

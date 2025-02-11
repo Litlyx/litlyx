@@ -1,16 +1,15 @@
 
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { Redis } from "~/server/services/CacheService";
-import { getRequestData } from "~/server/utils/getRequestData";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false });
+    const data = await getRequestData(event, ['OFFSET', 'RANGE', 'GUEST', 'DOMAIN']);
     if (!data) return;
 
-    const { pid, from, to, project_id, limit } = data;
+    const { pid, from, to, project_id, limit, domain } = data;
 
-    const cacheKey = `referrers:${pid}:${limit}:${from}:${to}`;
+    const cacheKey = `referrers:${pid}:${limit}:${from}:${to}:${domain}`;
     const cacheExp = 60;
 
     return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
@@ -19,13 +18,15 @@ export default defineEventHandler(async event => {
             {
                 $match: {
                     project_id,
-                    created_at: { $gte: new Date(from), $lte: new Date(to) }
+                    created_at: { $gte: new Date(from), $lte: new Date(to) },
+                    website: domain,
                 }
             },
             { $group: { _id: "$referrer", count: { $sum: 1, } } },
             { $sort: { count: -1 } },
             { $limit: limit }
         ]);
+
 
         return result as { _id: string, count: number }[];
 

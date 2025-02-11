@@ -10,7 +10,7 @@ export async function getAiChatRemainings(project_id: string) {
 }
 
 export default defineEventHandler(async event => {
-    const data = await getRequestData(event);
+    const data = await getRequestDataOld(event);
     if (!data) return;
 
     const { pid } = data;

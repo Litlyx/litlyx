@@ -121,7 +121,7 @@ function openExternalLink(link: string) {
                                     <i v-else :class="iconProvider(element)?.[1]"></i>
                                 </div>
                                 <span
-                                    class="text-ellipsis line-clamp-1 ui-font z-[20] text-[.95rem] text-lyx-lightmode-text-dark dark:text-text/70">
+                                    class="text-ellipsis line-clamp-1 ui-font z-[19] text-[.95rem] text-lyx-lightmode-text-dark dark:text-text/70">
                                     {{ elementTextTransformer?.(element._id) || element._id }}
                                 </span>
                             </div>

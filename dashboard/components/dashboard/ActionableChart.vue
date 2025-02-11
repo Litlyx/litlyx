@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { onMounted } from 'vue';
 import DateService, { type Slice } from '@services/DateService';
 import type { ChartData, ChartOptions, TooltipModel } from 'chart.js';
 import { useLineChart, LineChart } from 'vue-chart-3';
@@ -113,7 +112,7 @@ const chartData = ref<ChartData<'line' | 'bar' | 'bubble'>>({
             },
         },
         {
-            label: 'Unique sessions',
+            label: 'Unique visitors',
             data: [],
             backgroundColor: ['#4abde8'],
             borderColor: '#4abde8',
@@ -252,8 +251,6 @@ const readyToDisplay = computed(() => !visitsData.pending.value && !eventsData.p
 watch(readyToDisplay, () => {
     if (readyToDisplay.value === true) onDataReady();
 })
-
-
 
 
 function onDataReady() {

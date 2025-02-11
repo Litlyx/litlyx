@@ -1,7 +1,8 @@
 {
 	"dependencies": {
 		"cors": "^2.8.5",
-		"express": "^4.19.2"
+		"express": "^4.19.2",
+		"redis": "^4.7.0"
 	},
 	"devDependencies": {
 		"@types/cors": "^2.8.17",
@@ -16,10 +17,11 @@
 	"scripts": {
 		"dev": "node scripts/start_dev.js",
 		"compile": "tsc",
-		"build_project": "node ../scripts/build.js",
-		"build": "npm run compile && npm run build_project",
+		"build": "npm run compile",
 		"docker-build": "docker build -t litlyx-producer -f Dockerfile ../",
-		"docker-inspect": "docker run -it litlyx-producer sh"
+		"docker-inspect": "docker run -it litlyx-producer sh",
+		"workspace:shared": "ts-node ../scripts/producer/shared.ts",
+		"workspace:deploy": "ts-node ../scripts/producer/deploy.ts"
 	},
 	"keywords": [],
 	"author": "Emily",

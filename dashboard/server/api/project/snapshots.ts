@@ -3,7 +3,7 @@ import { ProjectSnapshotModel, TProjectSnapshot } from "@schema/project/ProjectS
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, { requireSchema: false, allowLitlyx: false });
+    const data = await getRequestDataOld(event, { requireSchema: false, allowLitlyx: false });
     if (!data) return;
 
     const { project_id } = data;

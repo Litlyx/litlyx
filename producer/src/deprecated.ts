@@ -1,7 +1,7 @@
 import { Router, json } from "express";
 import { createSessionHash, getIPFromRequest } from "./utils";
-import { requireEnv } from "@utils/requireEnv";
-import { RedisStreamService } from "@services/RedisStreamService";
+import { requireEnv } from "./shared/utils/requireEnv";
+import { RedisStreamService } from "./shared/services/RedisStreamService";
 
 const router = Router();
 
@@ -16,7 +16,8 @@ router.post('/keep_alive', json(jsonOptions), async (req, res) => {
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
         await RedisStreamService.addToStream(streamName, {
             ...req.body, _type: 'keep_alive', sessionHash, ip,
-            instant: req.body.instant + ''
+            instant: req.body.instant + '',
+            timestamp: Date.now()
         });
         return res.sendStatus(200);
     } catch (ex: any) {
@@ -38,12 +39,14 @@ router.post('/metrics/push', json(jsonOptions), async (req, res) => {
                 ...req.body, _type: 'visit', sessionHash, ip,
                 screenWidth: '0',
                 screenHeight: '0',
-                type: req.body.type.toString()
+                type: req.body.type.toString(),
+                timestamp: Date.now()
             });
         } else {
             await RedisStreamService.addToStream(streamName, {
                 ...req.body, _type: 'event', sessionHash, ip,
-                type: req.body.type.toString()
+                type: req.body.type.toString(),
+                timestamp: Date.now()
             });
         }
 

@@ -2,7 +2,7 @@
 import { FeedbackModel } from '@schema/FeedbackSchema';
 
 export default defineEventHandler(async event => {
-    const data = await getRequestData(event);
+    const data = await getRequestDataOld(event);
     if (!data) return;
 
     const { text } = await readBody(event);

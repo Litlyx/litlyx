@@ -123,7 +123,7 @@ const { showDrawer } = useDrawer();
             <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
         </div>
 
-        <SettingsTemplate v-if="!invoicesPending && !planPending" :entries="entries">
+        <SettingsTemplate v-if="!invoicesPending && !planPending && !isGuest" :entries="entries">
             <template #info>
                 <div v-if="!isGuest">
                     <div class="flex flex-col gap-4">
@@ -175,7 +175,8 @@ const { showDrawer } = useDrawer();
                             <div class="flex items-center gap-1">
                                 <div class="poppins font-semibold text-[2rem]"> €
                                     {{ getPremiumPrice(planData.premium_type) }} </div>
-                                <div class="poppins text-lyx-lightmode-text-dark dark:text-text-sub mt-2"> per month </div>
+                                <div class="poppins text-lyx-lightmode-text-dark dark:text-text-sub mt-2"> per month
+                                </div>
                             </div>
                         </div>
                         <div class="flex flex-col">
@@ -266,6 +267,10 @@ const { showDrawer } = useDrawer();
                 </CardTitled>
             </template>
         </SettingsTemplate>
+
+        <div v-if="isGuest" class="text-lyx-text-darker flex w-full h-full justify-center mt-20">
+            Guests cannot view billing
+        </div>
     </div>
 
 

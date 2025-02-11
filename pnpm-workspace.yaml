@@ -1,6 +1,0 @@
-packages:
-  - "dashboard"
-  - "producer"
-  - "consumer"
-  - "security"
-  - "shared"

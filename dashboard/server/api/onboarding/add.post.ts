@@ -2,7 +2,7 @@
 import { OnboardingModel } from '@schema/OnboardingSchema';
 
 export default defineEventHandler(async event => {
-    const data = await getRequestData(event);
+    const data = await getRequestDataOld(event);
     if (!data) return;
 
     const { job, analytics } = await readBody(event);

@@ -11,14 +11,16 @@ export type TimelineAggregationOptions = {
     to: string | number,
     slice: Slice,
     timeOffset?: number,
-    debug?: boolean
+    debug?: boolean,
+    domain?: string
 }
 
 export type AdvancedTimelineAggregationOptions = TimelineAggregationOptions & {
     customMatch?: Record<string, any>,
     customGroup?: Record<string, any>,
     customProjection?: Record<string, any>,
-    customIdGroup?: Record<string, any>
+    customIdGroup?: Record<string, any>,
+    customAfterMatch?: Record<string, any>
 }
 
 export async function executeAdvancedTimelineAggregation<T = {}>(options: AdvancedTimelineAggregationOptions) {
@@ -36,6 +38,9 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
 
     const timeOffset = options.timeOffset || 0;
 
+    const domainMatch: any = {}
+    if (options.domain) domainMatch.website = options.domain
+
     const aggregation = [
         {
             $match: {
@@ -44,6 +49,7 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                     $gte: new Date(options.from),
                     $lte: new Date(options.to)
                 },
+                ...domainMatch,
                 ...options.customMatch
             }
         },
@@ -94,7 +100,11 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                 ...options.customProjection
             }
         }
-    ] as any;
+    ] as any[];
+
+
+    if (options.customAfterMatch) aggregation.splice(1, 0, options.customAfterMatch);
+
 
     if (options.debug === true) {
         console.log('---------- AGGREAGATION ----------')

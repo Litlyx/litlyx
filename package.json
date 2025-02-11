@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dashboard:clear-logs": "ts-node scripts/dashboard/clear-logs.ts",
+    "dashboard:shared": "ts-node scripts/dashboard/shared.ts",
+    "dashboard:deploy": "ts-node scripts/dashboard/deploy.ts",
+    
+    "producer:shared": "ts-node scripts/producer/shared.ts",
+    "producer:deploy": "ts-node scripts/producer/deploy.ts",
+
+    "consumer:shared": "ts-node scripts/consumer/shared.ts",
+    "consumer:deploy": "ts-node scripts/consumer/deploy.ts",
+
+    "email:deploy": "ts-node scripts/email/deploy.ts"
+  },
   "keywords": [],
   "author": "Emily",
-  "license": "MIT",
-  "dependencies": {
-    "@getbrevo/brevo": "^2.2.0",
-    "date-fns": "^4.1.0",
-    "dayjs": "^1.11.13",
-    "mongoose": "^8.3.2",
-    "redis": "^4.7.0"
-  }
+  "license": "MIT"
 }

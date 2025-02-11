@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { Redis } from "~/server/services/CacheService";
-import EmailService from '@services/EmailService';
 import StripeService from '~/server/services/StripeService';
 import { logger } from "./Logger";
 
@@ -14,14 +13,9 @@ export default async () => {
 
     logger.info('[SERVER] Initializing');
 
-    if (config.EMAIL_SERVICE) {
-        EmailService.init(config.BREVO_API_KEY);
-        logger.info('[EMAIL] Initialized');
-    }
-
-
     if (config.STRIPE_SECRET) {
-        StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, false);
+        const TEST_MODE = config.MODE === 'TEST';
+        StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, TEST_MODE);
         logger.info('[STRIPE] Initialized');
     } else {
         StripeService.disable();
@@ -41,13 +35,8 @@ export default async () => {
 
     logger.info('[SERVER] Completed');
 
-    logger.warn('[ANOMALY LOOP] Disabled');
-
-
     logger.warn(`[SELFHOSTED_SERVER] ${config.SELFHOSTED}`);
     logger.warn(`[SELFHOSTED_CLIENT] ${config.public.SELFHOSTED}`);
     logger.warn(`[AUTH] ${config.public.AUTH_MODE}`);
-
-    // anomalyLoop();
 
 };

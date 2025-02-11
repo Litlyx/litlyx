@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
-import DateService from '@services/DateService';
-import type { Slice } from '@services/DateService';
+import DateService, { type Slice } from '../../shared/services/DateService';
+
 
 const { snapshot, safeSnapshotDates, snapshotDuration } = useSnapshot()
 
@@ -75,7 +75,7 @@ const avgSessionDuration = computed(() => {
         .filter(e => e > 0)
         .reduce((a, e) => e + a, 0);
 
-    const avg = counts / Math.max(sessionsDurationData.data.value.data.filter(e => e > 0).length, 1);
+    const avg = counts / (Math.max(sessionsDurationData.data.value.data.filter(e => e > 0).length, 1)) / 5;
 
     let hours = 0;
     let minutes = 0;

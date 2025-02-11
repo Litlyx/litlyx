@@ -76,7 +76,7 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
         project_id,
         _id: '___allTime' as any,
         name: 'All Time',
-        from: fns.addMinutes(fns.startOfMonth(new Date(project_created_at.toString())), -new Date().getTimezoneOffset()),
+        from: fns.addMinutes(fns.startOfMonth(new Date(project_created_at.toString())), 0),
         to: new Date(Date.now()),
         color: '#9362FF',
         default: true
