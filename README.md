@@ -154,4 +154,4 @@ If you want to contribute to Litlyx's development, reach out to us on [Discord](
 
 # License
 
-Litlyx is licensed under the [Apache 2.0](/LICENSE) license and distributed as "it is".
+Litlyx is licensed under the [Apache 2.0](/LICENSE) license.
