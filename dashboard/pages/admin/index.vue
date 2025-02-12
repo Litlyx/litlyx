@@ -167,7 +167,7 @@ function getLogBg(last_logged_at?: string) {
 
 const tabs: CItem[] = [
     { label: 'Overview', slot: 'overview' },
-    { label: 'Premiums', slot: 'premiums' },
+    { label: 'Users', slot: 'users' },
     { label: 'Feedbacks', slot: 'feedbacks' },
     { label: 'OnBoarding', slot: 'onboarding' },
     { label: 'Backend', slot: 'backend' }
@@ -182,6 +182,9 @@ const tabs: CItem[] = [
         <CustomTab :items="tabs" :manualScroll="true">
             <template #overview>
                 <AdminOverview></AdminOverview>
+            </template>
+            <template #users>
+                <AdminUsers></AdminUsers>
             </template>
         </CustomTab>
 
