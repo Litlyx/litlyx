@@ -96,7 +96,7 @@ const todayIndex = computed(() => {
 
 
 <template>
-    <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 m-cards-wrap:grid-cols-4">
+    <div class="gap-6 px-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 m-cards-wrap:grid-cols-4">
 
         <DashboardCountCard :todayIndex="todayIndex" :ready="!visitsData.pending.value" icon="far fa-earth"
             text="Total visits" :value="formatNumberK(visitsData.data.value?.data.reduce((a, e) => a + e, 0) || '...')"

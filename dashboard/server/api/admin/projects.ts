@@ -1,24 +1,34 @@
-import { UserModel } from "@schema/UserSchema";
+import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
+import { TProjectLimit } from "~/shared/schema/project/ProjectsLimits";
 
-export type AdminProjectsList = {
-    _id: string,
-    name: string,
-    given_name: string,
-    created_at: string,
-    email: string,
-    projects: {
-        _id: string,
-        owner: string,
-        name: string,
-        premium: boolean,
-        premium_type: number,
-        customer_id: string,
-        subscription_id: string,
-        premium_expire_at: string,
-        created_at: string,
-        __v: number,
-        counts: { _id: string, project_id: string, events: number, visits: number, sessions: number, updated_at?: string }
-    }[],
+type ExtendedProject = {
+    limits: TProjectLimit[],
+    counts: [{
+        events: number,
+        visits: number,
+        sessions: number
+    }],
+    visits: number,
+    events: number,
+    sessions: number,
+    limit_visits: number,
+    limit_events: number,
+    limit_max: number,
+    limit_ai_messages: number,
+    limit_ai_max: number,
+    limit_total: number
+}
+
+export type TAdminProject = TProject & ExtendedProject;
+
+function addFieldsFromArray(data: { fieldName: string, projectedName: string, arrayName: string }[]) {
+    const content: Record<string, any> = {};
+    data.forEach(e => {
+        content[e.projectedName] = {
+            "$ifNull": [{ "$getField": { "field": e.fieldName, "input": { "$arrayElemAt": [`$${e.arrayName}`, 0] } } }, 0]
+        }
+    });
+    return content;
 }
 
 export default defineEventHandler(async event => {
@@ -27,58 +37,61 @@ export default defineEventHandler(async event => {
     if (!userData?.logged) return;
     if (!userData.user.roles.includes('ADMIN')) return;
 
-    const data: AdminProjectsList[] = await UserModel.aggregate([
+    const { page, limit, sortQuery } = getQuery(event);
+
+    const pageNumber = parseInt(page as string);
+    const limitNumber = parseInt(limit as string);
+
+    const projects = await ProjectModel.aggregate([
         {
             $lookup: {
-                from: "projects",
+                from: "project_limits",
                 localField: "_id",
-                foreignField: "owner",
-                as: "projects"
-            }
-        },
-        {
-            $unwind: {
-                path: "$projects",
-                preserveNullAndEmptyArrays: true
+                foreignField: "project_id",
+                as: "limits"
             }
         },
         {
             $lookup: {
                 from: "project_counts",
-                localField: "projects._id",
+                localField: "_id",
                 foreignField: "project_id",
-                as: "projects.counts"
+                as: "counts"
             }
+        },
+        {
+            $addFields: addFieldsFromArray([
+                { arrayName: 'counts', fieldName: 'visits', projectedName: 'visits' },
+                { arrayName: 'counts', fieldName: 'events', projectedName: 'events' },
+                { arrayName: 'counts', fieldName: 'session', projectedName: 'session' },
+            ]),
+        },
+        {
+            $addFields: addFieldsFromArray([
+                { arrayName: 'limits', fieldName: 'visits', projectedName: 'limit_visits' },
+                { arrayName: 'limits', fieldName: 'events', projectedName: 'limit_events' },
+                { arrayName: 'limits', fieldName: 'limit', projectedName: 'limit_max' },
+                { arrayName: 'limits', fieldName: 'ai_messages', projectedName: 'limit_ai_messages' },
+                { arrayName: 'limits', fieldName: 'ai_limit', projectedName: 'limit_ai_max' },
+            ]),
         },
         {
             $addFields: {
-                "projects.counts": {
-                    $arrayElemAt: ["$projects.counts", 0]
-                }
+                limit_total: {
+                    $add: [
+                        { $ifNull: ["$limit_visits", 0] },
+                        { $ifNull: ["$limit_events", 0] }
+                    ]
+                },
             }
         },
-        {
-            $group: {
-                _id: "$_id",
-                name: {
-                    $first: "$name"
-                },
-                given_name: {
-                    $first: "$given_name"
-                },
-                created_at: {
-                    $first: "$created_at"
-                },
-                email: {
-                    $first: "$email"
-                },
-                projects: {
-                    $push: "$projects"
-                }
-            }
-        }
+        { $unset: 'counts' },
+        { $unset: 'limits' },
+        { $sort: JSON.parse(sortQuery as string) },
+        { $skip: pageNumber * limitNumber },
+        { $limit: limitNumber }
     ]);
 
-    return data;
+    return projects as TAdminProject[];
 
 });

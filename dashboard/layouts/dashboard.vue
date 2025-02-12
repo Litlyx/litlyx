@@ -83,7 +83,7 @@ const { isOpen, close, open } = useMenu();
             </div> -->
         </div>
 
-        <div class="flex h-full">
+        <div class="flex h-full overflow-y-hidden">
 
 
             <div v-if="isOpen" @click="close()"
@@ -95,7 +95,7 @@ const { isOpen, close, open } = useMenu();
             </LayoutVerticalNavigation>
 
 
-            <div class="overflow-hidden w-full bg-lyx-lightmode-background dark:bg-lyx-background relative h-full">
+            <div class="flex flex-col overflow-hidden w-full bg-lyx-lightmode-background dark:bg-lyx-background relative h-full">
 
                 <div v-if="showDialog" class="barrier w-full h-full z-[34] absolute bg-black/50 backdrop-blur-[2px]">
                     <i
@@ -107,9 +107,9 @@ const { isOpen, close, open } = useMenu();
                     <DashboardDialogBarCard @click.stop="null" class="z-[36]"></DashboardDialogBarCard>
                 </div>
 
-                <LayoutTopNavigation class="flex"></LayoutTopNavigation>
+                <LayoutTopNavigation class="flex shrink-0"></LayoutTopNavigation>
 
-                <div class="h-full pb-[3rem]">
+                <div class="flex-1 overflow-auto">
                     <slot></slot>
                 </div>
 
