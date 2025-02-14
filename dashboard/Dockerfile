@@ -9,7 +9,7 @@ WORKDIR /home/app
 
 COPY --link ./dashboard/package.json ./dashboard/pnpm-lock.yaml ./dashboard/
 
-RUN pnpm install
+WORKDIR /home/app/dashboard
 RUN pnpm install --filter dashboard
 
 WORKDIR /home/app
