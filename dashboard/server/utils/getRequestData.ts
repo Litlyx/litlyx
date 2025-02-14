@@ -5,6 +5,7 @@ import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { Model, Types } from "mongoose";
 import { TeamMemberModel } from "@schema/TeamMemberSchema";
 import { Slice } from "@services/DateService";
+import { ADMIN_EMAILS } from "~/shared/data/ADMINS";
 
 export function getRequestUser(event: H3Event<EventHandlerRequest>) {
     if (!event.context.auth) return;
@@ -40,6 +41,10 @@ async function hasAccessToProject(user_id: string, project: TProject) {
     if (owner === user_id) return [true, 'OWNER'];
     const isGuest = await TeamMemberModel.exists({ project_id, user_id });
     if (isGuest) return [true, 'GUEST'];
+
+    //TODO: Create table with admins
+    if (user_id === '66520c90f381ec1e9284938b') return [true, 'ADMIN'];
+
     return [false, 'NONE'];
 }
 
@@ -60,7 +65,7 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
     if (requireDomain) {
         if (domain == null || domain == undefined || domain.length == 0) return setResponseStatus(event, 400, 'x-domain is required');
     }
-    if (domain === 'ALL DOMAINS') {
+    if (domain === 'All domains') {
         domain = { $ne: '_NODOMAIN_' }
     }
 

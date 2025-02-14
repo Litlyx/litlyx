@@ -52,7 +52,7 @@ const { showDrawer } = useDrawer();
         </div>
         <div v-if="!ready" class="flex justify-center items-center w-full h-full flex-col gap-2">
             <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
-            <div v-if="props.slow"> Can be very slow on large timeframes </div>
+            <!-- <div v-if="props.slow"> Can be very slow on large timeframes </div> -->
         </div>
     </LyxUiCard>
 

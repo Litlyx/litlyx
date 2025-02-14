@@ -5,12 +5,12 @@ definePageMeta({ layout: 'dashboard' });
 const selfhosted = useSelfhosted();
 
 const items = [
-    { label: 'General', slot: 'general' },
-    { label: 'Data', slot: 'data' },
-    { label: 'Members', slot: 'members' },
-    { label: 'Billing', slot: 'billing' },
-    { label: 'Codes', slot: 'codes' },
-    { label: 'Account', slot: 'account' }
+    { label: 'General', slot: 'general', tab: 'general' },
+    { label: 'Domains', slot: 'domains', tab: 'domains' },
+    { label: 'Members', slot: 'members', tab: 'members' },
+    { label: 'Billing', slot: 'billing', tab: 'billing' },
+    { label: 'Codes', slot: 'codes', tab: 'codes' },
+    { label: 'Account', slot: 'account', tab: 'account' }
 ]
 
 </script>
@@ -20,11 +20,11 @@ const items = [
 
         <div class="poppins font-semibold text-[1.3rem] lg:px-0 px-4 lg:py-0 py-4"> Settings </div>
 
-        <CustomTab :items="items" class="mt-8">
+        <CustomTab :items="items" :route="true" class="mt-8">
             <template #general>
                 <SettingsGeneral :key="refreshKey"></SettingsGeneral>
             </template>
-            <template #data>
+            <template #domains>
                 <SettingsData :key="refreshKey"></SettingsData>
             </template>
             <template #members>

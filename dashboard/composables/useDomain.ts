@@ -21,7 +21,7 @@ const refreshingDomains = computed(() => domainsRequest.pending.value);
 const domainList = computed(() => {
     return [
         {
-            _id: 'ALL DOMAINS', visits: domainsRequest.data.value?.reduce((a, e) => a + e.visits, 0)
+            _id: 'All domains', visits: domainsRequest.data.value?.reduce((a, e) => a + e.visits, 0)
         },
         ...(domainsRequest.data.value?.sort((a, b) => b.visits - a.visits) || [])
     ]

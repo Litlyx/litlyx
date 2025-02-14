@@ -1,6 +1,5 @@
 
 import pdfkit from 'pdfkit';
-
 import { PassThrough } from 'node:stream';
 
 import { ProjectModel } from "@schema/project/ProjectSchema";
@@ -33,7 +32,7 @@ function formatNumberK(value: string | number, decimals: number = 1) {
 
 const LINE_SPACING = 0.5;
 
-const resourcePath = process.env.MODE === 'TEST' ? './public/pdf/' : '../public/pdf/';
+const resourcePath = process.env.MODE === 'TEST' ? './public/pdf/' : './.output/public/pdf/';
 
 function createPdf(data: PDFGenerationData) {
 

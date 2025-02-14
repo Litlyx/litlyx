@@ -40,9 +40,12 @@ function onChange(e: string) {
                 </div>
             </template>
         </USelectMenu>
-        <div @click="refreshDomains" v-if="!refreshingDomains"
-            class="flex items-center hover:rotate-[60deg] transition-all duration-200 ease-in-out cursor-pointer">
-            <i class="far fa-refresh"></i>
-        </div>
+
+        <UTooltip text="Manage domains">
+            <NuxtLink to="/settings?tab=domains"
+                class="flex items-center hover:rotate-[60deg] transition-all duration-200 ease-in-out cursor-pointer">
+                <i class="far fa-gear"></i>
+            </NuxtLink>
+        </UTooltip>
     </div>
 </template>

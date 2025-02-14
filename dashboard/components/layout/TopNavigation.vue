@@ -16,6 +16,8 @@ const isDark = computed({
     }
 })
 
+const {safeSnapshotDates} = useSnapshot();
+
 </script>
 
 <template>
@@ -26,13 +28,23 @@ const isDark = computed({
             <SelectorDomainSelector></SelectorDomainSelector>
         </div>
 
+        <div class="hidden lg:flex pl-[12rem] items-center popping text-[.9rem] dark:text-lyx-text-dark">
+            Timeframe: 
+            {{new Date(safeSnapshotDates.from).toLocaleDateString()}} 
+            to
+             {{new Date(safeSnapshotDates.to).toLocaleDateString()}}
+        </div>
+
+
         <div class="grow"></div>
         <div class="flex items-center gap-6 mr-10">
+            
             <div v-if="!selfhosted" @click="modal.open(DialogFeedback, {});"
-                class="flex gap-2 items-center cursor-pointer">
+                class="flex gap-2 items-center cursor-pointer  outline-[1px] outline-lyx-widget-lighter p-1 px-3 rounded-md outline">
                 <i class="far fa-message"></i>
                 Feedback
             </div>
+
             <div @click="modal.open(DialogHelp, {});" class="cursor-pointer"> Help </div>
             <NuxtLink to="https://docs.litlyx.com" target="_blank" class="cursor-pointer">
                 Docs

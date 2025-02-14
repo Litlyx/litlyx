@@ -1,26 +1,8 @@
 import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { TProjectLimit } from "~/shared/schema/project/ProjectsLimits";
-
-type ExtendedProject = {
-    limits: TProjectLimit[],
-    counts: [{
-        events: number,
-        visits: number,
-        sessions: number
-    }],
-    visits: number,
-    events: number,
-    sessions: number,
-    limit_visits: number,
-    limit_events: number,
-    limit_max: number,
-    limit_ai_messages: number,
-    limit_ai_max: number,
-    limit_total: number,
-    last_log_at: string
-}
-
-export type TAdminProject = TProject & ExtendedProject;
+import { TAdminProject } from "./projects";
+import { Types } from "mongoose";
+import { VisitModel } from "~/shared/schema/metrics/VisitSchema";
 
 function addFieldsFromArray(data: { fieldName: string, projectedName: string, arrayName: string }[]) {
     const content: Record<string, any> = {};
@@ -38,25 +20,12 @@ export default defineEventHandler(async event => {
     if (!userData?.logged) return;
     if (!userData.user.roles.includes('ADMIN')) return;
 
-    const { page, limit, sortQuery, filterQuery, filterFrom, filterTo } = getQuery(event);
-
-    const pageNumber = parseInt(page as string);
-    const limitNumber = parseInt(limit as string);
-
-    const matchQuery = {
-        ...JSON.parse(filterQuery as string),
-        created_at: {
-            $gte: new Date(filterFrom as string),
-            $lte: new Date(filterTo as string)
-        }
-    }
-
-    const count = await ProjectModel.countDocuments(matchQuery);
+    const { pid } = getQuery(event);
 
     const projects = await ProjectModel.aggregate([
-        { 
-            $match: matchQuery
-         },
+        {
+            $match: { _id: new Types.ObjectId(pid as string) }
+        },
         {
             $lookup: {
                 from: "project_limits",
@@ -102,14 +71,19 @@ export default defineEventHandler(async event => {
         },
         { $unset: 'counts' },
         { $unset: 'limits' },
-        { $sort: JSON.parse(sortQuery as string) },
-        { $skip: pageNumber * limitNumber },
-        { $limit: limitNumber }
     ]);
 
-    return {
-        count,
-        projects: projects as TAdminProject[]
-    };
+    const domains = await VisitModel.aggregate([
+        {
+            $match: { project_id: new Types.ObjectId(pid as string) }
+        },
+        {
+            $group: {
+                _id: '$website',
+            }
+        }
+    ])
+
+    return { domains, project: (projects[0] as TAdminProject) };
 
 });
