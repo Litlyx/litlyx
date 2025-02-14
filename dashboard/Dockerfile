@@ -10,15 +10,11 @@ WORKDIR /home/app
 COPY --link ./dashboard/package.json ./dashboard/pnpm-lock.yaml ./dashboard/
 
 WORKDIR /home/app/dashboard
-RUN pnpm install --filter dashboard
-
-WORKDIR /home/app
+RUN pnpm install
 
 COPY --link ./dashboard ./
 
-WORKDIR /home/app/dashboard
-
-RUN pnpm run build
+RUN pnpm run build:compose
 
 FROM node:21-alpine AS production
 

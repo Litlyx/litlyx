@@ -5,6 +5,7 @@
   "scripts": {
     "build": "npm run workspace:shared && nuxt build --dotenv .env.testmode",
     "build:prod": "npm run workspace:shared && nuxt build --dotenv .env.prod",
+    "build:compose": "nuxt build",
     "dev": "npm run workspace:shared && nuxt dev --dotenv .env.testmode",
     "dev:prod": "npm run workspace:shared && nuxi dev --dotenv .env.prod",
     "dev:docker": "npm run workspace:shared && nuxi dev --dotenv .env.docker",
