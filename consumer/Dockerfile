@@ -14,4 +14,4 @@ COPY --link ../consumer ./
 
 RUN pnpm run build
 
-CMD ["node", "/home/app/consumer/dist/consumer/src/index.js"]
+CMD ["node", "/home/app/consumer/dist/index.js"]

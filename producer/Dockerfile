@@ -14,4 +14,4 @@ COPY --link ../producer ./
 
 RUN pnpm run build
 
-CMD ["node", "/home/app/producer/dist/producer/src/index.js"]
+CMD ["node", "/home/app/producer/dist/index.js"]
