@@ -14,7 +14,7 @@ RUN pnpm install --filter dashboard
 
 WORKDIR /home/app
 
-COPY --link ./dashboard ./dashboard
+COPY --link ./dashboard ./
 
 WORKDIR /home/app/dashboard
 
