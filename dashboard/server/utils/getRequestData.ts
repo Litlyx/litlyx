@@ -65,7 +65,7 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
     if (requireDomain) {
         if (domain == null || domain == undefined || domain.length == 0) return setResponseStatus(event, 400, 'x-domain is required');
     }
-    if (domain === 'ALL DOMAINS') {
+    if (domain === 'All domains') {
         domain = { $ne: '_NODOMAIN_' }
     }
 

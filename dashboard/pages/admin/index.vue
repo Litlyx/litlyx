@@ -186,6 +186,15 @@ const tabs: CItem[] = [
             <template #users>
                 <AdminUsers></AdminUsers>
             </template>
+            <template #feedbacks>
+                <AdminFeedbacks></AdminFeedbacks>
+            </template>
+            <template #onboarding>
+                <AdminOnboardings></AdminOnboardings>
+            </template>
+            <template #backend>
+                <AdminBackend></AdminBackend>
+            </template>
         </CustomTab>
 
     </div>

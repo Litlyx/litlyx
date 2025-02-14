@@ -18,7 +18,9 @@ export default defineEventHandler(async event => {
             model: VisitModel,
             from, to, slice, timeOffset, domain
         });
+
         return timelineData;
+
     });
 
 

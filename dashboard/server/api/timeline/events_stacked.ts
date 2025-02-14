@@ -21,7 +21,7 @@ export default defineEventHandler(async event => {
             domain
         })
 
-        return timelineStackedEvents;
+        return timelineStackedEvents.filter(e => e.name != undefined);
     });
 
 });

@@ -19,7 +19,7 @@ metricsRouter.get('/queue', async (req, res) => {
 
 metricsRouter.get('/durations', async (req, res) => {
     try {
-        const durations = RedisStreamService.METRICS_get()
+        const durations = await RedisStreamService.METRICS_get()
         res.json({ durations });
     } catch (ex) {
         console.error(ex);

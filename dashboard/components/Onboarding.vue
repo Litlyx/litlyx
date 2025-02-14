@@ -98,7 +98,8 @@ async function saveJobTitle() {
 const showOnboarding = computed(() => {
     if (route.path === '/login') return false;
     if (route.path === '/register') return false;
-    if (needsOnboarding.value?.exist === false) return true;
+    if ((needsOnboarding.value as any)?.exist === false) return true;
+    if ((needsOnboarding.value as any)?.exists === false) return true;
 })
 
 </script>
