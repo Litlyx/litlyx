@@ -90,9 +90,9 @@ services:
       # NO_AUTH or GOOGLE
       NUXT_PUBLIC_AUTH_MODE: 'NO_AUTH'
 
-      # Default user created in NO_AUTH mode
+      # Credentials to login in NO_AUTH mode
       NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
-      NUXT_NOAUTH_USER_NAME: "defaultuser"
+      NUXT_NOAUTH_USER_PASS: "litlyx123"
 
       NUXT_SELFHOSTED: 'true'
       NUXT_PUBLIC_SELFHOSTED: 'true'
