@@ -7,7 +7,6 @@ RUN npm i -g pnpm
 
 WORKDIR /home/app
 
-COPY --link ./package.json ./tsconfig.json ./pnpm-lock.yaml ./
 COPY --link ./dashboard/package.json ./dashboard/pnpm-lock.yaml ./dashboard/
 
 RUN pnpm install
@@ -16,7 +15,6 @@ RUN pnpm install --filter dashboard
 WORKDIR /home/app
 
 COPY --link ./dashboard ./dashboard
-COPY --link ./shared ./shared
 
 WORKDIR /home/app/dashboard
 
