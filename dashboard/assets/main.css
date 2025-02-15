@@ -1,13 +1,14 @@
 @import './font-awesome/css/all.css';
+/* Are these many fonts required? For the time being switching to privacy friendly bunny.net for Google fonts. NOTE: No variable font support in bunnet.net yet. */
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap');
+@import url('https://fonts.bunny.net/css?family=nunito:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
 @import url('https://fonts.cdnfonts.com/css/brockmann');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.bunny.net/css?family=inter:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
 
 
 @import url('https://fonts.cdnfonts.com/css/geometric-sans-serif-v1');
-@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.bunny.net/css?family=manrope:300,400,500,600,700,800');
+@import url('https://fonts.bunny.net/css?family=lato:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
+@import url('https://fonts.bunny.net/css?family=poppins:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i');
 
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0');
+@import url('https://cdn.jsdelivr.net/npm/material-symbols@0.28.2/index.css');
