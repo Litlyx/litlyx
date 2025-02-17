@@ -4,13 +4,14 @@
 </p>
 
 <h4 align="center">
-🌐 <a href="https://litlyx.com">Website</a> 📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Join Discord</a> 🔥 <a href="https://dashboard.litlyx.com">Try Litlyx Cloud. It's Free.</a> 
+📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Join Discord</a> 🌐 <a href="https://litlyx.com">Website</a>  🔥 <a href="https://dashboard.litlyx.com">Try Litlyx Cloud. It's Free forever.</a> 
 </h4>
 
 #
 <p align="center">
-  The freshest, developer-friendly analytics tool.<br>
-  Litlyx is an open-source, self-hostable analytics solution for modern frameworks. Setup takes less than 30 seconds!
+  Litlys is a modern, developer-friendly, cookie-free analytics tool.<br>
+  Setup takes less than 30 seconds! Completely self-hostable with docker.<br>
+  Alternative to Google Analytics, Matomo, Umami, Plausible & Simple Analytics.
 </p>
 
 #
@@ -25,7 +26,7 @@
 
 ## Get Started on our Cloud Version
 
-Sign-up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then simply use your project_id to connect Litlyx to your website OR Self-Host Litlyx with Docker.
+Sign-up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then simply use your `project_id` to connect Litlyx to your website.
 
 ## Universal Installation
 
@@ -33,25 +34,25 @@ Sign-up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then
 <script defer data-project="your_project_id" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
 ```
 
-Importing Litlyx with a direct script instantly starts tracking `Page visits`, `Browsers`, `Devices`, `Operating Systems`, `Bouncing Rate`, `Real-Time Online Users`, `Unique Sessions`, `Countries`, and `Average Session Time`.
+Importing Litlyx with a direct script instantly starts tracking `Visits`, `Top Pages`, `Bouncing Rate`,  `Real-Time Online Users`, `Unique Visitors`, `Countries`, and `Average Session Duration`.
 
 # All Javascript Runtimes
 
-You can install Litlyx using `npm`, `pnpm`, `yarn` or any modern package managers:
+You can install Litlyx using `npm`, `pnpm` or any modern package managers:
 
 ```sh
 npm i litlyx-js
 ```
 
-Litlyx natively works with all JavaScript / TypeScript frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a plug-in. Litlyx also works in serverless environments with Cloud (or Edge) Functions.
+Litlyx natively works with all JavaScript / TypeScript frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a third party plug-in. 
 
 <p align="center">
   <img src="assets/tech.png" />
 </p>
 
-# Import
+# Import using a package manager
 
-Import litlyx-js library into your code:
+First, Import litlyx-js library into your code:
 
 ```js
 import { Lit } from 'litlyx-js';
@@ -63,9 +64,9 @@ Once imported, you need to initialize Litlyx:
 Lit.init('your_project_id');
 ```
 
-After initialization, Litlyx will automatically track analytics such as `Page visits`, `Browsers`, `Devices`, `Operating Systems`, `Real-Time Online Users`, `Unique Sessions`, `Countries`, and `Average Session Time`.
+After initialization, Litlyx will automatically track web analytics such as `Page visits`, `Real-Time Online Users`, `Unique Vistors`, and many more.
 
-# Track Custom Events
+# Track Custom Events (Actions)
 
 You aren't just limited to the built-in KPIs. With Litlyx, you can create your own events to track in your project.
 
@@ -104,11 +105,9 @@ curl -X POST "https://broker.litlyx.com/event" \
   }'
 ```
 
-# Self-Hosting with Docker
+# Self-hosting with docker
 
-To self-host the Litlyx dashboard, first **fork** this repository.
-
-You can find our Docker images on DockerHub for more.
+To self-host the Litlyx dashboard, first **clone** this repository. (Litlyx's Docker images are hosted on DockerHub). 
 
 Then run the following command:
 ```bash
@@ -117,9 +116,9 @@ docker-compose up
 
 at localhost:3000 you will see your own instance of the Litlyx Dashboard.
 
-## Forward data to your local instance with script tag
+## Forward data to your self-hosted instance with script tag
 
-To forward your data on your self-hosted instance, you need to set up the following variables: add your `data-host`, add your `data-port`, and add your `data-secure`, setting it to true if it is HTTPS, and false if it is HTTP.
+To forward your data on your self-hosted instance, you need to set up the following variables: `data-host`, `data-port`,  `data-secure`(`true` if it is HTTPS or `false` if it is HTTP).
 
 ```html
 <script defer data-project="your_project_id" 
@@ -130,17 +129,23 @@ To forward your data on your self-hosted instance, you need to set up the follow
 </script>
 ```
 
-# Official Docs
+# Read our docs
 
-For more info read our [documentation](https://docs.litlyx.com). (will be improved in the near future using Mintlify!)
+For more info on how to use litlyx read our [documentation](https://docs.litlyx.com). 
 
-# Join Discord
 
-If you need more information, interact with us or the community, help, or want to provide  feedbacks, feel free to join us on the Litlyx [Discord](https://discord.gg/9cQykjsmWX)
+# Stay updated with our roadmap
 
-# Contributors
+To keep track on what we are cooking behind the scene we have a public [Roadmap](https://litlyx.com/roadmap) for you to check. 
 
-Every kind of contribution is accepted in this stage of the project. In the future we will improve the contributor onboarding process.
+
+# Join discord
+
+If you need more information, want to interact with us or the community, need help, or have feedback to share, feel free to join us on Litlyx's [Discord](https://discord.gg/9cQykjsmWX) channel.
+
+# Contribution
+
+If you want to contribute to Litlyx's development, reach out to us on [Discord](https://discord.gg/9cQykjsmWX) in our `#contribution` channel.
 
 ### Thank you!
 <a href="https://github.com/litlyx/litlyx/graphs/contributors">

@@ -13,32 +13,6 @@ const useCodeClientWrapper = isNoAuth.value === false ?
         return { isReady: false, login: () => { } }
     }
 
-async function loginWithoutAuth() {
-    try {
-        const result = await $fetch('/api/auth/no_auth');
-        if (result.error) return alert('Error during login, please try again');
-
-        setToken(result.access_token);
-
-        const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
-        const loggedUser = useLoggedUser();
-        loggedUser.user = user;
-
-        console.log('LOGIN DONE - USER', loggedUser.user);
-
-        const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
-
-        if (isFirstTime === true) {
-            router.push('/project_creation?just_logged=true');
-        } else {
-            router.push('/?just_logged=true');
-        }
-
-    } catch (ex: any) {
-        alert('Error during login.' + ex.message);
-    }
-}
-
 const { isReady, login } = useCodeClientWrapper({ onSuccess: handleOnSuccess, onError: handleOnError, });
 
 const router = useRouter();
@@ -121,6 +95,39 @@ function goBackToEmailLogin() {
     password.value = '';
 }
 
+async function signInSelfhosted() {
+    try {
+        const result = await $fetch(`/api/auth/no_auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email.value, password: password.value })
+        });
+        if (result.error) {
+            if (result.errorMessage) return alert(result.errorMessage);
+            return alert('Error during login, please try again');
+        }
+
+        setToken(result.access_token);
+
+        const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
+        const loggedUser = useLoggedUser();
+        loggedUser.user = user;
+
+        console.log('LOGIN DONE - USER', loggedUser.user);
+
+        const isFirstTime = await $fetch<boolean>('/api/user/is_first_time', { headers: { 'Authorization': 'Bearer ' + token.value } })
+
+        if (isFirstTime === true) {
+            router.push('/project_creation?just_logged=true');
+        } else {
+            router.push('/?just_logged=true');
+        }
+
+    } catch (ex: any) {
+        alert('Error during login.' + ex.message);
+    }
+}
+
 async function signInWithCredentials() {
 
     try {
@@ -176,7 +183,8 @@ async function signInWithCredentials() {
                     Sign in
                 </div>
 
-                <div class="text-lyx-lightmode-text/80 dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
+                <div
+                    class="text-lyx-lightmode-text/80 dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
                     Track web analytics and custom events
                     with extreme simplicity in under 30 sec.
                     <br>
@@ -217,7 +225,8 @@ async function signInWithCredentials() {
 
                     </div>
 
-                    <div v-if="!isNoAuth && !isEmailLogin" class="flex flex-col text-lyx-lightmode-text dark:text-lyx-text gap-2">
+                    <div v-if="!isNoAuth && !isEmailLogin"
+                        class="flex flex-col text-lyx-lightmode-text dark:text-lyx-text gap-2">
 
                         <div @click="login"
                             class="hover:bg-lyx-primary bg-white dark:bg-transparent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
@@ -247,17 +256,30 @@ async function signInWithCredentials() {
 
                     </div>
 
+
+
                     <div v-if="isNoAuth" @click="loginWithoutAuth"
-                        class="hover:bg-accent cursor-pointer flex text-[1.3rem] gap-4 items-center border-[1px] border-gray-400 rounded-lg px-8 py-3 relative z-[2]">
-                        <div class="flex items-center">
-                            <i class="far fa-crown"></i>
+                        class="flex text-[1.3rem] flex-col gap-4 items-center px-8 py-3 relative z-[2]">
+                        <div class="flex flex-col gap-4 z-[100] w-[20vw] min-w-[20rem]">
+                            <LyxUiInput class="px-3 py-2" placeholder="Email" v-model="email"></LyxUiInput>
+                            <LyxUiInput class="px-3 py-2" placeholder="Password" v-model="password" type="password">
+                            </LyxUiInput>
                         </div>
-                        Continue as Admin
+                        <div class="flex justify-center mt-4 z-[100]">
+                            <LyxUiButton @click="signInSelfhosted()" class="text-center" type="primary">
+                                Sign in
+                            </LyxUiButton>
+                        </div>
                     </div>
+
+
+
+
 
                 </div>
 
-                <div class="text-[.9rem] poppins mt-20 text-lyx-lightmode-text-dark dark:text-lyx-text-dark text-center relative z-[2]">
+                <div
+                    class="text-[.9rem] poppins mt-20 text-lyx-lightmode-text-dark dark:text-lyx-text-dark text-center relative z-[2]">
                     By continuing you are accepting
                     <br>
                     our
