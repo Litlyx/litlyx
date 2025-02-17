@@ -1,11 +1,15 @@
 @use './utilities.scss';
 @use './colors.scss';
 
+:root{
+  --font-sans: "SF Pro Text","SF Pro Icons", "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", "Google Sans", "Helvetica Neue", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"
+}
+
+
 @font-face {
   font-family: "Geist";
   src: url("../fonts/GeistVF.ttf");
 }
-
 
 .actionable-visits-color-checkbox {
   color: #5655d7;
@@ -19,7 +23,7 @@
 }
 
 .geist {
-  font-family: "Geist";
+  font-family: "Geist", var(--font-sans);
 }
 
 
@@ -34,38 +38,38 @@
 }
 
 .brockmann {
-  font-family: "Brockmann" !important;
+  font-family: "Brockmann", var(--font-sans)!important;
 }
 
 .nunito {
-  font-family: "Nunito" !important;
+  font-family: "Nunito",var(--font-sans)!important;
 }
 
 .inter {
-  font-family: "Inter" !important;
+  font-family: "Inter", var(--font-sans)!important;
 }
 
 .geometric {
-  font-family: 'Geometric Sans Serif v1' !important;
+  font-family: "Geometric Sans Serif v1", var(--font-sans)!important;
 }
 
 .manrope {
-  font-family: 'Manrope' !important;
+  font-family: "Manrope", var(--font-sans)!important;
 }
 
 .lato {
-  font-family: 'Lato' !important;
+  font-family: "Lato", var(--font-sans)!important;
 }
 
 .poppins {
-  font-family: 'Poppins' !important;
+  font-family: "Poppins", var(--font-sans)!important;
 }
 
 .poppins-childs {
-  font-family: 'Poppins' !important;
+  font-family: "Poppins", var(--font-sans)!important;
 
   * {
-    font-family: 'Poppins' !important;
+    font-family: "Poppins", var(--font-sans)!important;
   }
 }
 
@@ -105,5 +109,5 @@ body {
 }
 
 * {
-  font-family: 'Nunito';
+  font-family: 'Nunito', var(--font-sans);
 }
