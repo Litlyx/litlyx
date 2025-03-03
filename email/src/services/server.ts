@@ -38,6 +38,36 @@ app.use((req, res, next) => {
     next();
 });
 
+app.post('/send/invite', express.json(), async (req, res) => {
+    try {
+        const { target, projectName, link } = req.body;
+        const ok = await EmailService.sendInviteEmail(target, projectName, link);
+        res.json({ ok });
+    } catch (ex) {
+        res.status(500).json({ error: ex.message });
+    }
+});
+
+app.post('/send/invite/noaccount', express.json(), async (req, res) => {
+    try {
+        const { target, projectName, link } = req.body;
+        const ok = await EmailService.sendInviteEmailNoAccount(target, projectName, link);
+        res.json({ ok });
+    } catch (ex) {
+        res.status(500).json({ error: ex.message });
+    }
+});
+
+app.post('/brevolist/add', express.json(), async (req, res) => {
+    try {
+        const { email } = req.body;
+        const ok = await EmailService.createContact(email);
+        res.json({ ok });
+    } catch (ex) {
+        res.status(500).json({ error: ex.message });
+    }
+});
+
 app.post('/send/confirm', express.json(), async (req, res) => {
     try {
         const { target, link } = req.body;

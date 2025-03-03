@@ -4,7 +4,7 @@ import { Redis } from "~/server/services/CacheService";
 export default defineEventHandler(async event => {
 
 
-    const data = await getRequestData(event, ['GUEST', 'DOMAIN', 'RANGE', 'SCHEMA']);
+    const data = await getRequestData(event, ['DOMAIN', 'RANGE', 'SCHEMA'], ['WEB']);
     if (!data) return;
 
     const { schemaName, pid, from, to, model, project_id, domain } = data;

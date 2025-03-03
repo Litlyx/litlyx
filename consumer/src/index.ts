@@ -112,7 +112,7 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
 
 async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
 
-    const { pid, instant, flowHash, timestamp } = data;
+    const { pid, instant, flowHash, timestamp, website } = data;
 
     const existingSession = await SessionModel.findOne({ project_id: pid, session: sessionHash }, { _id: 1 });
     if (!existingSession) {
@@ -123,13 +123,15 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
         await SessionModel.updateOne({ project_id: pid, session: sessionHash, }, {
             $inc: { duration: 0 },
             flowHash,
-            updated_at: Date.now()
+            website,
+            updated_at: new Date(parseInt(timestamp))
         }, { upsert: true });
     } else {
         await SessionModel.updateOne({ project_id: pid, session: sessionHash, }, {
             $inc: { duration: 1 },
             flowHash,
-            updated_at: Date.now()
+            website,
+            updated_at: new Date(parseInt(timestamp))
         }, { upsert: true });
     }
 
@@ -137,7 +139,7 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
 async function process_event(data: Record<string, string>, sessionHash: string) {
 
-    const { name, metadata, pid, flowHash, timestamp } = data;
+    const { name, metadata, pid, flowHash, timestamp, website } = data;
 
     let metadataObject;
     try {
@@ -149,6 +151,7 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
     await Promise.all([
         EventModel.create({
             project_id: pid, name, flowHash, metadata: metadataObject, session: sessionHash,
+            website,
             created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true }),

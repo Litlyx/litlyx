@@ -4,10 +4,10 @@ import { executeAdvancedTimelineAggregation, fillAndMergeTimelineAggregationV2 }
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['SLICE', 'GUEST', 'DOMAIN', 'RANGE']);
+    const data = await getRequestData(event, ['SLICE', 'DOMAIN', 'RANGE'], ['WEB']);
     if (!data) return;
 
-    const { pid, from, to, slice, project_id, timeOffset, domain } = data;
+    const { pid, from, to, slice, project_id, domain } = data;
 
     const cacheKey = `timeline:sessions_duration:${pid}:${slice}:${from}:${to}:${domain}`;
     const cacheExp = 60;

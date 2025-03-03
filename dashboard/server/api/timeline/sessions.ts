@@ -4,7 +4,7 @@ import { executeTimelineAggregation } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['SLICE', 'GUEST', 'DOMAIN', 'RANGE', 'OFFSET']);
+    const data = await getRequestData(event, ['SLICE', 'DOMAIN', 'RANGE', 'OFFSET'], ['WEB']);
     if (!data) return;
 
     const { pid, from, to, slice, project_id, timeOffset, domain } = data;

@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "tsc"
+    "compile": "tsc",
+    "workspace:deploy": "ts-node ../scripts/email/deploy.ts"
   },
   "keywords": [],
   "author": "Emily",

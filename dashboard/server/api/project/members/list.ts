@@ -1,11 +1,20 @@
 import { ProjectModel } from "@schema/project/ProjectSchema";
-import { TeamMemberModel } from "@schema/TeamMemberSchema";
+import { TeamMemberModel, TeamMemberRole, TPermission, TTeamMember } from "@schema/TeamMemberSchema";
 import { UserModel } from "@schema/UserSchema";
 
+export type MemberWithPermissions = {
+    id: string | null,
+    email: string,
+    name: string,
+    role: TeamMemberRole,
+    pending: boolean,
+    me: boolean,
+    permission: TPermission
+}
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, { requireSchema: false });
+    const data = await getRequestData(event);
     if (!data) return;
 
     const { project_id, project, user } = data;
@@ -15,25 +24,42 @@ export default defineEventHandler(async event => {
 
     const members = await TeamMemberModel.find({ project_id });
 
-    const result: { email: string, name: string, role: string, pending: boolean, me: boolean }[] = [];
+    const result: MemberWithPermissions[] = [];
 
     result.push({
+        id: null,
         email: owner.email,
         name: owner.name,
         role: 'OWNER',
         pending: false,
-        me: user.id === owner.id
+        me: user.id === owner.id,
+        permission: {
+            webAnalytics: true,
+            events: true,
+            ai: true,
+            domains: ['All domains']
+        }
     })
 
     for (const member of members) {
         const userMember = await UserModel.findById(member.user_id);
         if (!userMember) continue;
+
+        const permission: TPermission = {
+            webAnalytics: member.permission?.webAnalytics || false,
+            events: member.permission?.events || false,
+            ai: member.permission?.ai || false,
+            domains: member.permission?.domains || []
+        }
+
         result.push({
+            id: member.id,
             email: userMember.email,
             name: userMember.name,
             role: member.role,
             pending: member.pending,
-            me: user.id === userMember.id
+            me: user.id === userMember.id,
+            permission
         })
     }
 

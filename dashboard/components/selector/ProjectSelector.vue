@@ -16,7 +16,6 @@ function isProjectMine(owner?: string) {
 
 function onChange(e: TProject) {
     actions.setActiveProject(e._id.toString());
-    setActiveDomain('All domains');
 }
 </script>
 

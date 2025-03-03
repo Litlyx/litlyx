@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 
+import { DialogInviteManager } from '#components';
 import CreateSnapshot from '../dialog/CreateSnapshot.vue';
 
 export type Entry = {
@@ -26,6 +27,10 @@ type Props = {
 
 const route = useRoute();
 const props = defineProps<Props>();
+
+const { data: pendingInvites, refresh: refreshInvites } = useFetch('/api/project/members/pending', {
+    headers: useComputedHeaders({})
+});
 
 const { userRoles, setLoggedUser } = useLoggedUser();
 const { projectList } = useProject();
@@ -105,6 +110,28 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
     })
 });
 
+
+const modal = useModal();
+
+function openPendingInvites() {
+    if (!pendingInvites.value) return;
+    if (pendingInvites.value.length == 0) return;
+
+    console.log(pendingInvites);
+    modal.open(DialogInviteManager, {
+        invites: pendingInvites.value.map(e => {
+            return { project_id: e._id, project_name: e.project_name }
+        }),
+        onSuccess: () => {
+            modal.close();
+            refreshInvites();
+        },
+        onCancel: () => {
+            modal.close();
+            refreshInvites();
+        },
+    });
+}
 
 </script>
 
@@ -249,7 +276,6 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
             <div class="bg-lyx-lightmode-widget dark:bg-[#202020] h-[1px] w-full"></div>
 
             <div class="flex flex-col h-full">
-
                 <div v-for="section of sections" class="flex flex-col gap-1 h-full pb-6">
 
                     <div v-for="entry of section.entries" :class="{ 'grow flex items-end': entry.grow }">
@@ -283,6 +309,18 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 
                 <div class="grow"></div>
 
+                <div v-if="pendingInvites && pendingInvites.length > 0" @click="openPendingInvites()"
+                    class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex flex-col justify-center cursor-pointer">
+                    <div class="poppins font-medium dark:text-lyx-text text-lyx-lightmode-text">
+                        Pending invitation
+                    </div>
+                    <div class="poppins dark:text-lyx-text-dark text-lyx-lightmode-text-dark">
+                        You have {{ pendingInvites.length }}
+                        pending invitation{{ pendingInvites.length != 1 ? 's' : '' }}
+                        awaiting your response
+                    </div>
+                </div>
+
                 <div class="bg-lyx-lightmode-widget dark:bg-[#202020] h-[1px] w-full px-4  mb-3"></div>
 
                 <div class="flex justify-end px-2">
@@ -296,7 +334,8 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
                     </div>
 
                     <UTooltip text="Logout" :popper="{ arrow: true, placement: 'top' }">
-                        <div @click="onLogout()" class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">
+                        <div @click="onLogout()"
+                            class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">
                             <i class="far fa-arrow-right-from-bracket scale-x-[-100%]"></i>
                         </div>
                     </UTooltip>

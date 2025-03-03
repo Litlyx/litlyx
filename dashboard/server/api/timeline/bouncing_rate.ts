@@ -9,16 +9,16 @@ import { checkSliceValidity } from "~/server/services/TimelineService";
 export default defineEventHandler(async event => {
 
 
-    const data = await getRequestDataOld(event, { requireSchema: false, requireSlice: true });
+    const data = await getRequestData(event, ['SLICE', 'RANGE', 'DOMAIN'], ['WEB']);
     if (!data) return;
 
-    const { pid, from, to, slice, project_id } = data;
+    const { pid, from, to, slice, project_id, domain } = data;
 
 
     const cacheKey = `timeline:bouncing_rate:${pid}:${slice}:${from}:${to}`;
     const cacheExp = 60 * 60; //1 hour
 
-    return await Redis.useCacheV2(cacheKey, cacheExp, async (noStore, updateExp) => {
+    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
 
         const [sliceValid, errorOrDays] = checkSliceValidity(from, to, slice);
         if (!sliceValid) throw Error(errorOrDays);
@@ -36,7 +36,8 @@ export default defineEventHandler(async event => {
                         created_at: {
                             $gte: DateService.startOfSlice(date, slice),
                             $lte: DateService.endOfSlice(date, slice)
-                        }
+                        },
+                        website: domain
                     },
                 },
                 { $group: { _id: "$session", count: { $sum: 1, } } },

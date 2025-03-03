@@ -88,12 +88,15 @@ onMounted(() => {
 
 const filter = ref<string>('{}');
 
-const { data: projectsInfo, pending: pendingProjects } = await useFetch<{ count: number, projects: TAdminProject[] }>(
+const { data: projectsInfo, pending: pendingProjects } = useFetch<{ count: number, projects: TAdminProject[] }>(
     () => `/api/admin/projects?page=${page.value - 1}&limit=${limit.value}&sortQuery=${order.value}&filterQuery=${filter.value}&filterFrom=${selected.value.start.toISOString()}&filterTo=${selected.value.end.toISOString()}`,
     signHeaders()
 );
 
-
+const { data: metrics, pending: pendingMetrics } = useFetch(
+    () => `/api/admin/metrics?filterFrom=${selected.value.start.toISOString()}&filterTo=${selected.value.end.toISOString()}`,
+    signHeaders()
+);
 
 const { uiMenu } = useSelectMenuStyle();
 
@@ -136,7 +139,7 @@ const { uiMenu } = useSelectMenuStyle();
                 <div class="flex gap-2 items-center shrink-0">
                     <div>Page {{ page }} </div>
                     <div> {{ Math.min(limit, projectsInfo?.count || 0) }} of {{ projectsInfo?.count || 0
-                        }}</div>
+                    }}</div>
                 </div>
 
                 <div>
@@ -165,6 +168,23 @@ const { uiMenu } = useSelectMenuStyle();
                 </UPopover>
             </div>
 
+
+            <div class="w-[80%]">
+                <div v-if="pendingMetrics"> Loading... </div>
+                <div class="flex gap-10 flex-wrap" v-if="!pendingMetrics && metrics">
+                    <div> Projects: {{ metrics.totalProjects }} ({{ metrics.premiumProjects }} premium) </div>
+                    <div>
+                        Total visits: {{ formatNumberK(metrics.totalVisits) }}
+                    </div>
+                    <div>
+                        Active: {{ metrics.totalProjects - metrics.deadProjects }} |
+                        Dead: {{ metrics.deadProjects }}
+                    </div>
+                    <div>
+                        Total events: {{ formatNumberK(metrics.totalEvents) }}
+                    </div>
+                </div>
+            </div>
         </div>
 
 

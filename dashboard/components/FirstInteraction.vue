@@ -79,13 +79,13 @@ function reloadPage() {
         </div>
 
 
-        <div class="flex items-center justify-center mt-10">
+        <div class="flex items-center justify-center mt-10 w-full px-10">
             <div class="flex flex-col gap-6">
 
                 <div class="flex gap-6 xl:flex-row flex-col">
 
                     <div class="h-full w-full">
-                        <CardTitled class="h-full w-full xl:min-w-[500px] xl:h-[35rem]" title="Quick setup tutorial"
+                        <CardTitled class="h-full w-full xl:min-w-[400px] xl:h-[35rem]" title="Quick setup tutorial"
                             sub="Quickly Set Up Litlyx in 30 Seconds!">
 
                             <div class="flex items-center justify-center h-full w-full">
@@ -131,6 +131,28 @@ function reloadPage() {
                             </CardTitled>
                         </div>
 
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <CardTitled class="w-full h-full" title="Wordpress + Elementor"
+                            sub="Our WordPress plugin is coming soon!.">
+                            <template #header>
+                                <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
+                                    to="https://docs.litlyx.com">
+                                    Visit documentation
+                                </LyxUiButton>
+                            </template>
+
+                            <div class="flex flex-col items-end">
+                                <div class="justify-center w-full hidden xl:flex gap-3">
+                                    <a href="#">
+                                    <img class="cursor-pointer" :src="'tech-icons/wpel.png'" alt="Litlyx-Wordpress-Elementor">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </CardTitled>
                     </div>
                 </div>
                 <div>

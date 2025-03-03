@@ -6,6 +6,8 @@ definePageMeta({ layout: 'dashboard' });
 
 const selfhosted = useSelfhosted();
 
+const { permission, canSeeAi } = usePermission();
+
 const debugModeAi = ref<boolean>(false);
 
 const { userRoles } = useLoggedUser();
@@ -253,7 +255,12 @@ async function clearAllChats() {
 </script>
 
 <template>
-    <div class="w-full h-full overflow-y-hidden">
+
+    <div v-if="!canSeeAi" class="h-full w-full flex mt-[20vh] justify-center">
+        <div> You need AI permission to view this page </div>
+    </div>
+
+    <div v-if="canSeeAi" class="w-full h-full overflow-y-hidden">
 
         <div class="flex flex-row h-full overflow-y-hidden">
 

@@ -19,7 +19,7 @@ async function main() {
     if (fs.existsSync(TMP_PATH)) fs.rmSync(TMP_PATH, { force: true, recursive: true });
     fs.ensureDirSync(TMP_PATH);
 
-    console.log('Creting zip file');
+    console.log('Creating zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/dist', '/dist');
     archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })

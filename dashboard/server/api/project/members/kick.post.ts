@@ -5,7 +5,7 @@ import { UserModel } from "@schema/UserSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
+    const data = await getRequestData(event, [], ['OWNER']);
     if (!data) return;
 
     const { project_id } = data;

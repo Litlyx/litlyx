@@ -4,6 +4,7 @@ import DateService, { type Slice } from '@services/DateService';
 
 definePageMeta({ layout: 'dashboard' });
 
+const { permission, canSeeEvents } = usePermission();
 
 const { snapshotDuration } = useSnapshot();
 
@@ -30,7 +31,12 @@ const eventsData = await useFetch(`/api/data/count`, {
 
 
 <template>
-    <div class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
+
+    <div v-if="!canSeeEvents" class="h-full w-full flex mt-[20vh] justify-center">
+        <div> You need events permission to view this page </div>
+    </div>
+
+    <div v-if="canSeeEvents" class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
 
 
         <LyxUiCard class="w-full flex justify-between items-center lg:flex-row flex-col gap-6 lg:gap-0">

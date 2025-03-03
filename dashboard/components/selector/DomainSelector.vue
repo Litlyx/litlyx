@@ -8,7 +8,7 @@ function onChange(e: string) {
 </script>
 
 <template>
-    <div class="flex gap-2 absolute">
+    <div class="flex gap-2">
         <USelectMenu :uiMenu="{
             select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
             base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget w-max',
@@ -18,7 +18,7 @@ function onChange(e: string) {
             },
             input: 'z-[999] !bg-lyx-lightmode-widget dark:!bg-lyx-widget-light'
         }" class="w-full" searchable searchable-placeholder="Search domain..." v-if="domainList" @change="onChange"
-            :value="domain" value-attribute="_id" :options="domainList">
+            :value="domain" :loading="refreshingDomains" value-attribute="_id" :options="domainList">
 
             <template #option="{ option, active, selected }">
                 <div class="flex items-center gap-2">
@@ -35,7 +35,7 @@ function onChange(e: string) {
                         <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
                     </div>
                     <div>
-                        {{ domain || '-' }}
+                        {{ refreshingDomains ? 'Loading...' : (domain || '-') }}
                     </div>
                 </div>
             </template>

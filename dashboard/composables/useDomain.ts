@@ -16,26 +16,22 @@ function refreshDomains() {
     domainsRequest.refresh();
 }
 
+watch(domainsRequest.data, () => {
+    if (!domainsRequest.data.value) return;
+    setActiveDomain(domainList.value[0]._id);
+});
+
 const refreshingDomains = computed(() => domainsRequest.pending.value);
 
 const domainList = computed(() => {
-    return [
-        {
-            _id: 'All domains', visits: domainsRequest.data.value?.reduce((a, e) => a + e.visits, 0)
-        },
-        ...(domainsRequest.data.value?.sort((a, b) => b.visits - a.visits) || [])
-    ]
+    return (domainsRequest.data.value?.sort((a, b) => b.visits - a.visits) || []);
 })
 
 
 const activeDomain = ref<string>();
 
 const domain = computed(() => {
-    if (activeDomain.value) return activeDomain.value;
-    if (!domainList.value) return;
-    if (domainList.value.length == 0) return;
-    setActiveDomain(domainList.value[0]._id);
-    return domainList.value[0]._id;
+    return activeDomain.value;
 })
 
 function setActiveDomain(domain: string) {

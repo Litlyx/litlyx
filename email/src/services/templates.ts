@@ -7,7 +7,8 @@ import { ANOMALY_VISITS_EVENTS_EMAIL } from '../../templates/AnomalyUsageEmail';
 import { ANOMALY_DOMAIN_EMAIL } from '../../templates/AnomalyDomainEmail';
 import { CONFIRM_EMAIL } from '../../templates/ConfirmEmail';
 import { RESET_PASSWORD_EMAIL } from '../../templates/ResetPasswordEmail';
-
+import { PROJECT_INVITE_EMAIL } from '../../templates/ProjectInviteEmail';
+import { PROJECT_INVITE_EMAIL_NO_ACCOUNT } from '../../templates/ProjectInviteEmailNoAccount';
 
 
 export {
@@ -19,5 +20,7 @@ export {
     ANOMALY_VISITS_EVENTS_EMAIL,
     ANOMALY_DOMAIN_EMAIL,
     CONFIRM_EMAIL,
-    RESET_PASSWORD_EMAIL
+    RESET_PASSWORD_EMAIL,
+    PROJECT_INVITE_EMAIL,
+    PROJECT_INVITE_EMAIL_NO_ACCOUNT
 }

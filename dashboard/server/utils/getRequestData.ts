@@ -3,7 +3,7 @@ import type { EventHandlerRequest, H3Event } from 'h3'
 import { allowedModels, TModelName } from "../services/DataService";
 import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 import { Model, Types } from "mongoose";
-import { TeamMemberModel } from "@schema/TeamMemberSchema";
+import { TeamMemberModel, TPermission } from "@schema/TeamMemberSchema";
 import { Slice } from "@services/DateService";
 import { ADMIN_EMAILS } from "~/shared/data/ADMINS";
 
@@ -32,7 +32,22 @@ export type GetRequestDataOptions = {
     /** @default false */ requireOffset?: boolean,
 }
 
-export type RequestDataScope = 'GUEST' | 'SCHEMA' | 'ANON' | 'SLICE' | 'RANGE' | 'OFFSET' | 'DOMAIN';
+export type RequestDataScope = 'SCHEMA' | 'ANON' | 'SLICE' | 'RANGE' | 'OFFSET' | 'DOMAIN';
+export type RequestDataPermissions = 'WEB' | 'EVENTS' | 'AI' | 'OWNER';
+
+async function getAccessPermission(user_id: string, project: TProject): Promise<TPermission> {
+    if (!project) return { ai: false, domains: [], events: false, webAnalytics: false }
+
+    //TODO: Create table with admins
+    if (user_id === '66520c90f381ec1e9284938b') return { ai: true, domains: ['All domains'], events: true, webAnalytics: true }
+
+    const owner = project.owner.toString();
+    const project_id = project._id;
+    if (owner === user_id) return { ai: true, domains: ['All domains'], events: true, webAnalytics: true }
+    const member = await TeamMemberModel.findOne({ project_id, user_id }, { permission: 1 });
+    if (!member) return { ai: false, domains: [], events: false, webAnalytics: false }
+    return { ai: false, domains: [], events: false, webAnalytics: false, ...member.permission as any }
+}
 
 async function hasAccessToProject(user_id: string, project: TProject) {
     if (!project) return [false, 'NONE'];
@@ -48,10 +63,9 @@ async function hasAccessToProject(user_id: string, project: TProject) {
     return [false, 'NONE'];
 }
 
-export async function getRequestData(event: H3Event<EventHandlerRequest>, required_scopes: RequestDataScope[] = []) {
+export async function getRequestData(event: H3Event<EventHandlerRequest>, required_scopes: RequestDataScope[] = [], required_permissions: RequestDataPermissions[] = []) {
 
     const requireSchema = required_scopes.includes('SCHEMA');
-    const allowGuests = required_scopes.includes('GUEST');
     const allowAnon = required_scopes.includes('ANON');
     const requireSlice = required_scopes.includes('SLICE');
     const requireRange = required_scopes.includes('RANGE');
@@ -61,7 +75,10 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
     const pid = getHeader(event, 'x-pid');
     if (!pid) return setResponseStatus(event, 400, 'x-pid is required');
 
-    let domain: any = getHeader(event, 'x-domain');
+    const originalDomain = getHeader(event, 'x-domain')?.toString();
+
+    let domain: any = originalDomain;
+
     if (requireDomain) {
         if (domain == null || domain == undefined || domain.length == 0) return setResponseStatus(event, 400, 'x-domain is required');
     }
@@ -108,16 +125,40 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
     const project = await ProjectModel.findById(project_id);
     if (!project) return setResponseStatus(event, 400, 'project not found');
 
-    if (!allowAnon) {
-        const [hasAccess, role] = await hasAccessToProject(user.id, project);
-        if (!hasAccess) return setResponseStatus(event, 400, 'no access to project');
-        if (role === 'GUEST' && !allowGuests) return setResponseStatus(event, 403, 'only owner can access this');
+
+    if (user.id != project.owner.toString()) {
+        if (required_permissions.includes('OWNER')) return setResponseStatus(event, 403, 'ADMIN permission required');
+        const hasAccess = await TeamMemberModel.findOne({ project_id, user_id: user.id });
+        if (!hasAccess) return setResponseStatus(event, 403, 'No permissions');
+    }
+
+
+    if (required_permissions.length > 0 || requireDomain) {
+
+        const permission = await getAccessPermission(user.id, project);
+
+        if (required_permissions.includes('WEB') && permission.webAnalytics === false) {
+            return setResponseStatus(event, 403, 'WEB permission required');
+        }
+        if (required_permissions.includes('EVENTS') && permission.events === false) {
+            return setResponseStatus(event, 403, 'EVENTS permission required');
+        }
+        if (required_permissions.includes('AI') && permission.ai === false) {
+            return setResponseStatus(event, 403, 'AI permission required');
+        }
+        if (requireDomain && originalDomain) {
+            if (!permission.domains.includes('All domains') && !permission.domains.includes(originalDomain)) {
+                return setResponseStatus(event, 403, 'DOMAIN permission required');
+            }
+        }
+
     }
 
     return {
         from: from as string,
         to: to as string,
         domain: domain as string,
+        originalDomain: originalDomain as string,
         pid, project_id, project, user, limit, slice, schemaName, model, timeOffset: offset
     }
 }

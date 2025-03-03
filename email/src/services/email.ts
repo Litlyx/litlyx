@@ -1,12 +1,64 @@
-import { TransactionalEmailsApi, SendSmtpEmail } from '@getbrevo/brevo';
+import { TransactionalEmailsApi, SendSmtpEmail, ContactsApi } from '@getbrevo/brevo';
 import * as TEMPLATE from './templates'
 
 export class EmailService {
 
     private static apiInstance = new TransactionalEmailsApi();
+    private static apiContacts = new ContactsApi();
 
     static init(apiKey: string) {
         this.apiInstance.setApiKey(0, apiKey);
+        this.apiContacts.setApiKey(0, apiKey);
+    }
+
+    static async sendInviteEmail(target: string, projectName: string, link: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "⚡ Invite";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+
+            sendSmtpEmail.htmlContent = TEMPLATE.PROJECT_INVITE_EMAIL
+                .replace(/\[Project Name\]/, projectName)
+                .replace(/\[Link\]/, link)
+                .toString();
+
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    static async sendInviteEmailNoAccount(target: string, projectName: string, link: string) {
+        try {
+            const sendSmtpEmail = new SendSmtpEmail();
+            sendSmtpEmail.subject = "⚡ Invite - No account";
+            sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
+            sendSmtpEmail.to = [{ "email": target }];
+
+            sendSmtpEmail.htmlContent = TEMPLATE.PROJECT_INVITE_EMAIL_NO_ACCOUNT
+                .replace(/\[Project Name\]/, projectName)
+                .replace(/\[Link\]/, link)
+                .toString();
+
+            await this.apiInstance.sendTransacEmail(sendSmtpEmail);
+            return true;
+        } catch (ex) {
+            console.error('ERROR SENDING EMAIL', ex);
+            return false;
+        }
+    }
+
+    static async createContact(email: string) {
+        try {
+            await this.apiContacts.createContact({ email });
+            await this.apiContacts.addContactToList(12, { emails: [email] })
+        } catch (ex) {
+            console.error('ERROR ADDING CONTACT', ex);
+            return false;
+        }
     }
 
     static async sendLimitEmail50(target: string, projectName: string) {

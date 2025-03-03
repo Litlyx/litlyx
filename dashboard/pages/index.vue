@@ -11,6 +11,9 @@ const jwtLogin = computed(() => route.query.jwt_login as string);
 
 const { token, setToken } = useAccessToken();
 
+const { refreshingDomains } = useDomain();
+const { permission, canSeeWeb, canSeeEvents } = usePermission();
+
 onMounted(async () => {
 
     if (jwtLogin.value) {
@@ -36,27 +39,39 @@ const selfhosted = useSelfhosted();
 
 <template>
 
-    <div class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
+    <div v-if="!canSeeWeb" class="h-full w-full flex mt-[20vh] justify-center">
+        <div> You need webAnalytics permission to view this page </div>
+    </div>
 
+    <div v-if="canSeeWeb && refreshingDomains">
+        <div class="w-full flex justify-center items-center mt-[20vh]">
+            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
+        </div>
+    </div>
+
+    <div v-if="canSeeWeb && !refreshingDomains" class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
 
         <div v-if="showDashboard">
-             <div class="w-full px-4 py-2 gap-2 flex flex-col">
+
+            <div class="w-full px-4 py-2 gap-2 flex flex-col">
                 <BannerLimitsInfo v-if="!selfhosted" :key="refreshKey"></BannerLimitsInfo>
-                <!-- <BannerOffer v-if="!selfhosted" :key="refreshKey"></BannerOffer> -->
             </div>
 
             <div>
                 <DashboardTopSection :key="refreshKey"></DashboardTopSection>
                 <DashboardTopCards :key="refreshKey"></DashboardTopCards>
             </div>
-           
+
 
             <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
-                <DashboardActionableChart :key="refreshKey"></DashboardActionableChart>
-            </div> 
+                <DashboardActionableChart v-if="canSeeWeb && canSeeEvents" :key="refreshKey"></DashboardActionableChart>
+                <LyxUiCard v-else class="flex justify-center w-full py-4">
+                    You need events permission to view this widget
+                </LyxUiCard>
+            </div>
 
 
-              <div class="flex w-full justify-center mt-6 px-6">
+            <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
                         <BarCardReferrers :key="refreshKey"></BarCardReferrers>
@@ -66,7 +81,7 @@ const selfhosted = useSelfhosted();
                     </div>
                 </div>
             </div>
-   
+
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -76,9 +91,9 @@ const selfhosted = useSelfhosted();
                         <BarCardDevices :key="refreshKey"></BarCardDevices>
                     </div>
                 </div>
-            </div> 
+            </div>
 
-         
+
             <div class="flex w-full justify-center mt-6 px-6">
                 <div class="flex w-full gap-6 flex-col xl:flex-row">
                     <div class="flex-1">
@@ -88,10 +103,9 @@ const selfhosted = useSelfhosted();
                         <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
                     </div>
                 </div>
-            </div> 
+            </div>
 
         </div>
-
 
         <FirstInteraction v-if="!justLogged" :refresh-interaction="firstInteraction.refresh"
             :first-interaction="(firstInteraction.data.value || false)"></FirstInteraction>

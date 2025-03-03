@@ -198,10 +198,15 @@ const selectLabelsAvailable = computed<{ label: string, value: Slice, disabled: 
 })
 
 const selectedSlice = computed<Slice>(() => {
+    console.log({ available: selectLabelsAvailable.value })
     const targetValue = selectLabelsAvailable.value[selectedLabelIndex.value];
     if (!targetValue) return 'day';
     if (targetValue.disabled) {
         selectedLabelIndex.value = selectLabelsAvailable.value.findIndex(e => !e.disabled);
+    }
+    if (selectedLabelIndex.value === -1) {
+        console.error('ERROR CANNOT FIND CORRECT SLICE')
+        return 'day';
     }
     return selectLabelsAvailable.value[selectedLabelIndex.value].value
 });

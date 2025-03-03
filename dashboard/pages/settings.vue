@@ -7,7 +7,6 @@ const selfhosted = useSelfhosted();
 const items = [
     { label: 'General', slot: 'general', tab: 'general' },
     { label: 'Domains', slot: 'domains', tab: 'domains' },
-    { label: 'Members', slot: 'members', tab: 'members' },
     { label: 'Billing', slot: 'billing', tab: 'billing' },
     { label: 'Codes', slot: 'codes', tab: 'codes' },
     { label: 'Account', slot: 'account', tab: 'account' }
@@ -26,9 +25,6 @@ const items = [
             </template>
             <template #domains>
                 <SettingsData :key="refreshKey"></SettingsData>
-            </template>
-            <template #members>
-                <SettingsMembers :key="refreshKey"></SettingsMembers>
             </template>
             <template #billing>
                 <SettingsBilling v-if="!selfhosted" :key="refreshKey"></SettingsBilling>
