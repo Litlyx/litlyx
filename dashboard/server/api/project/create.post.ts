@@ -8,7 +8,7 @@ export default defineEventHandler(async event => {
 
     const body = await readBody(event);
 
-    const newProjectName = body.name;
+    const newProjectName = body.name.trim();
 
     if (!newProjectName) return setResponseStatus(event, 400, 'ProjectName too short');
     if (newProjectName.length < 2) return setResponseStatus(event, 400, 'ProjectName too short');

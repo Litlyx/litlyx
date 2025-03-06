@@ -135,7 +135,7 @@ const chartData = ref<ChartData<'line' | 'bar' | 'bubble'>>({
             type: 'bubble',
             stack: 'combined',
             borderColor: ["#fbbf24"]
-        },
+        }
     ],
 });
 
@@ -366,6 +366,11 @@ const legendClasses = ref<string[]>([
                     <div v-if="currentTooltipData" class="grow text-right px-4">
                         {{ (currentTooltipData as any)[tooltipNameIndex[index]] }}
                     </div>
+                </div>
+                <div class="mt-3 font-normal flex flex-col text-[.9rem] dark:text-lyx-text-dark text-lyx-lightmode-text-dark"
+                    v-if="(currentTooltipData as any).sessions > (currentTooltipData as any).visits">
+                    <div> Unique visitors is greater than visits. </div>
+                    <div> This can indicate bot traffic. </div>
                 </div>
                 <!-- <div class="bg-lyx-background-lighter h-[2px] w-full my-2"> </div> -->
             </LyxUiCard>

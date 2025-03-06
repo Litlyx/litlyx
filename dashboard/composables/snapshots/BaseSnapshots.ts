@@ -71,7 +71,6 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
     }
 
 
-
     const allTime: DefaultSnapshot = {
         project_id,
         _id: '___allTime' as any,
@@ -83,8 +82,42 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
     }
 
 
+    const last30Days: DefaultSnapshot = {
+        project_id,
+        _id: '___last30days' as any,
+        name: 'Last 30 days',
+        from: fns.startOfDay(fns.subDays(Date.now(), 30)),
+        to: fns.endOfDay(fns.subDays(Date.now(), 0)),
+        color: '#BC5090',
+        default: true
+    }
 
-    const snapshotList = [lastDay, today, lastMonth, currentMonth, lastWeek, currentWeek, allTime]
+    const last60Days: DefaultSnapshot = {
+        project_id,
+        _id: '___last60days' as any,
+        name: 'Last 60 days',
+        from: fns.startOfDay(fns.subDays(Date.now(), 60)),
+        to: fns.endOfDay(fns.subDays(Date.now(), 0)),
+        color: '#BC5090',
+        default: true
+    }
+
+    const last90Days: DefaultSnapshot = {
+        project_id,
+        _id: '___last90days' as any,
+        name: 'Last 90 days',
+        from: fns.startOfDay(fns.subDays(Date.now(), 90)),
+        to: fns.endOfDay(fns.subDays(Date.now(), 0)),
+        color: '#BC5090',
+        default: true
+    }
+
+
+    const snapshotList = [
+        lastDay, today, lastMonth, currentMonth,
+        lastWeek, currentWeek, allTime,
+        last30Days, last60Days, last90Days
+    ]
 
     return snapshotList;
 

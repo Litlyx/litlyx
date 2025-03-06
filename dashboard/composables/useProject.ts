@@ -33,7 +33,10 @@ const guestProjectList = computed(() => {
     return guestProjectsRequest.data.value;
 })
 
-const refreshProjectsList = () => projectsRequest.refresh();
+const refreshProjectsList = () => {
+    projectsRequest.refresh();
+    guestProjectsRequest.refresh();
+}
 
 const activeProjectId = ref<string | undefined>();
 

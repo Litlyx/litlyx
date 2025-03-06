@@ -9,11 +9,15 @@ export default defineEventHandler(async event => {
     const data = await getRequestData(event, [], ['OWNER']);
     if (!data) return;
 
-    const { project_id, project } = data;
+    const { project_id, project, user } = data;
 
     const { email } = await readBody(event);
 
     const targetUser = await UserModel.findOne({ email });
+
+    if (targetUser && targetUser._id.toString() === project.owner.toString()) {
+        return setResponseStatus(event, 400, 'You cannot invite yourself');
+    }
 
 
     const link = `http://127.0.0.1:3000/accept_invite?project_id=${project_id.toString()}`;

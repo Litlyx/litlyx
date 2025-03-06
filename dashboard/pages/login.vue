@@ -19,6 +19,8 @@ const router = useRouter();
 
 const { token, setToken } = useAccessToken();
 
+const { createErrorAlert } = useAlert();
+
 async function handleOnSuccess(response: any) {
 
     try {
@@ -97,7 +99,7 @@ function goBackToEmailLogin() {
 
 async function signInSelfhosted() {
     try {
-        const result = await $fetch(`/api/auth/no_auth`, {
+        const result: any = await $fetch(`/api/auth/no_auth`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: email.value, password: password.value })
@@ -124,7 +126,7 @@ async function signInSelfhosted() {
         }
 
     } catch (ex: any) {
-        alert('Error during login.' + ex.message);
+        createErrorAlert('Error', 'Error during login.' + ex.message);
     }
 }
 
@@ -137,7 +139,7 @@ async function signInWithCredentials() {
             body: JSON.stringify({ email: email.value, password: password.value })
         })
 
-        if (result.error) return alert(result.message);
+        if (result.error) return createErrorAlert('Error', result.message);
 
         setToken(result.access_token);
 
@@ -156,8 +158,8 @@ async function signInWithCredentials() {
         }
 
 
-    } catch (ex) {
-        alert('Something went wrong.');
+    } catch (ex: any) {
+        createErrorAlert('Error', 'Something went wrong.' + ex.message);
     }
 }
 
@@ -258,7 +260,7 @@ async function signInWithCredentials() {
 
 
 
-                    <div v-if="isNoAuth" @click="loginWithoutAuth"
+                    <div v-if="isNoAuth"
                         class="flex text-[1.3rem] flex-col gap-4 items-center px-8 py-3 relative z-[2]">
                         <div class="flex flex-col gap-4 z-[100] w-[20vw] min-w-[20rem]">
                             <LyxUiInput class="px-3 py-2" placeholder="Email" v-model="email"></LyxUiInput>

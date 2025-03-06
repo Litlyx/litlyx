@@ -13,12 +13,42 @@ const props = defineProps<{
     }[]
 }>();
 
-function acceptInvite(project_id: string) {
-
+async function acceptInvite(project_id: string) {
+    try {
+        await $fetch('/api/project/members/accept', {
+            method: 'POST',
+            body: JSON.stringify({ project_id }),
+            headers: useComputedHeaders({
+                custom: {
+                    'Content-Type': 'application/json'
+                }
+            }).value
+        });
+        emit('success');
+    } catch (ex) {
+        console.error(ex);
+        alert('Error accepting invite');
+        emit('cancel');       
+    }
 }
 
-function declineInvite(project_id: string) {
-
+async function declineInvite(project_id: string) {
+    try {
+        await $fetch('/api/project/members/decline', {
+            method: 'POST',
+            body: JSON.stringify({ project_id }),
+            headers: useComputedHeaders({
+                custom: {
+                    'Content-Type': 'application/json'
+                }
+            }).value
+        });
+        emit('success');
+    } catch (ex) {
+        console.error(ex);
+        alert('Error accepting invite');
+        emit('cancel');
+    }
 }
 
 </script>
@@ -32,9 +62,9 @@ function declineInvite(project_id: string) {
         background: 'dark:bg-lyx-widget bg-lyx-lightmode-widget-light',
         ring: 'border-solid border-[1px] border-[#262626]'
     }">
-        <div class="h-full flex flex-col gap-8 p-4">
+        <div class="h-full flex flex-col gap-8 p-6">
 
-            <div class="flex flex-col gap-2" v-for="invite of [...invites, ...invites, ...invites]">
+            <div class="flex flex-col gap-2" v-for="invite of invites">
 
                 <div class="dark:text-lyx-text text-lyx-lightmode-text">
                     You are invited to join

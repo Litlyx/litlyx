@@ -4,7 +4,7 @@ import { TeamMemberModel } from "@schema/TeamMemberSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, []);
+    const data = await getRequestData(event, [], []);
     if (!data) return;
 
     const { project_id, user } = data;

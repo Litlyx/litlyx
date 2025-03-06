@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 
-import { DialogInviteManager } from '#components';
+import { DialogConfirmLogout, DialogInviteManager } from '#components';
 import CreateSnapshot from '../dialog/CreateSnapshot.vue';
 
 export type Entry = {
@@ -94,12 +94,25 @@ async function generatePDF() {
 
 const { setToken } = useAccessToken();
 const router = useRouter();
+const { actions } = useProject();
+
+
+const modal = useModal();
+
 
 function onLogout() {
-    console.log('LOGOUT')
-    setToken('');
-    setLoggedUser(undefined);
-    router.push('/login');
+    modal.open(DialogConfirmLogout, {
+        onSuccess() {
+            modal.close();
+            console.log('LOGOUT');
+            setToken('');
+            setLoggedUser(undefined);
+            router.push('/login');
+        },
+        onCancel() {
+            modal.close();
+        }
+    })
 }
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", {
@@ -111,8 +124,6 @@ const { data: maxProjects } = useFetch("/api/user/max_projects", {
 });
 
 
-const modal = useModal();
-
 function openPendingInvites() {
     if (!pendingInvites.value) return;
     if (pendingInvites.value.length == 0) return;
@@ -120,14 +131,16 @@ function openPendingInvites() {
     console.log(pendingInvites);
     modal.open(DialogInviteManager, {
         invites: pendingInvites.value.map(e => {
-            return { project_id: e._id, project_name: e.project_name }
+            return { project_id: e.project_id, project_name: e.project_name }
         }),
         onSuccess: () => {
             modal.close();
+            actions.refreshProjectsList();
             refreshInvites();
         },
         onCancel: () => {
             modal.close();
+            actions.refreshProjectsList();
             refreshInvites();
         },
     });

@@ -4,6 +4,8 @@ import type { SettingsTemplateEntry } from './Template.vue';
 
 const { project, actions, projectList, isGuest, projectId } = useProject();
 
+const { createErrorAlert, createAlert } = useAlert();
+
 const entries: SettingsTemplateEntry[] = [
     { id: 'pname', title: 'Name', text: 'Project name' },
     { id: 'api', title: 'ApiKeys', text: 'Manage your authorization token' },
@@ -37,7 +39,7 @@ async function createApiKey() {
         apiKeys.value.push(res);
         newApiKeyName.value = '';
     } catch (ex: any) {
-        alert(ex.message);
+        createErrorAlert('Error', ex.message, 10000);
     }
 }
 
@@ -53,7 +55,7 @@ async function deleteApiKey(api_id: string) {
         newApiKeyName.value = '';
         await updateApiKeys();
     } catch (ex: any) {
-        alert(ex.message);
+        createErrorAlert('Error', ex.message, 10000);
     }
 
 }
@@ -116,13 +118,11 @@ async function deleteProject() {
 
 
     } catch (ex: any) {
-        alert(ex.message);
+        createErrorAlert('Error', ex.message);
     }
 
 
 }
-
-const { createAlert } = useAlert()
 
 function copyScript() {
     if (!navigator.clipboard) alert('You can\'t copy in HTTP');
@@ -172,7 +172,7 @@ function copyProjectId() {
                     <LyxUiInput class="grow px-4 py-2" :disabled="isGuest" placeholder="ApiKeyName"
                         v-model="newApiKeyName">
                     </LyxUiInput>
-                    <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length < 3"
+                    <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length.trim() < 3"
                         type="primary">
                         <i class="far fa-plus"></i>
                     </LyxUiButton>

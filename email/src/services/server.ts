@@ -90,6 +90,8 @@ app.post('/send/welcome', express.json(), async (req, res) => {
 
 app.post('/send/purchase', express.json(), async (req, res) => {
     try {
+        console.log('PURCHASE EMAIL DISABLED')
+        return;
         const { target, projectName } = req.body;
         const ok = await EmailService.sendPurchaseEmail(target, projectName);
         res.json({ ok });

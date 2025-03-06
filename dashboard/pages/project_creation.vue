@@ -23,7 +23,7 @@ onMounted(() => {
 
 
 async function createProject() {
-    if (projectName.value.length < 2) return;
+    if (projectName.value.trim().length < 2) return;
 
     Lit.event('create_project');
 
@@ -34,7 +34,7 @@ async function createProject() {
         await $fetch('/api/project/create', {
             method: 'POST',
             ...signHeaders({ 'Content-Type': 'application/json' }),
-            body: JSON.stringify({ name: projectName.value })
+            body: JSON.stringify({ name: projectName.value.trim() })
         });
 
         await actions.refreshProjectsList();
@@ -89,7 +89,7 @@ async function createProject() {
 
             <div>
 
-                <LyxUiButton type="primary" @click="createProject()" :disabled="projectName.length < 2">
+                <LyxUiButton type="primary" @click="createProject()" :disabled="projectName.trim().length < 2">
                     Create
                 </LyxUiButton>
 

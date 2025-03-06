@@ -107,7 +107,7 @@ async function confirmSnapshot() {
                 Cancel
             </LyxUiButton>
             <LyxUiButton @click="confirmSnapshot()" type="primary" class="w-full text-center"
-                :disabled="snapshotName.length == 0">
+                :disabled="snapshotName.trim().length == 0">
                 Confirm
             </LyxUiButton>
         </div>

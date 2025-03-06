@@ -53,17 +53,16 @@ class DateService {
     }
 
     canUseSliceFromDays(days: number, slice: Slice): [false, string] | [true, number] {
-
-        // 3 Days
+        // HOUR - 3 DAYS - 72 SAMPLES
         if (slice === 'hour' && (days > 3)) return [false, 'Date gap too big for this slice'];
-        // 3 Weeks
-        if (slice === 'day' && (days > 31)) return [false, 'Date gap too big for this slice'];
-        // 3 Years
-        if (slice === 'month' && (days > 365 * 3)) return [false, 'Date gap too big for this slice'];
+        // DAY - 2 MONTHS - 62 SAMPLES
+        if (slice === 'day' && (days > 31 * 2)) return [false, 'Date gap too big for this slice'];
+        // MONTH - 4 YEARS - 60 SAMPLES
+        if (slice === 'month' && (days > 365 * 4)) return [false, 'Date gap too big for this slice'];
 
-        // 2 days
+        // DAY - 2 DAYS - 2 SAMPLES
         if (slice === 'day' && (days < 2)) return [false, 'Date gap too small for this slice'];
-        // 2 month
+        // MONTH - 2 MONTHS - 2 SAMPLES
         if (slice === 'month' && (days < 31 * 2)) return [false, 'Date gap too small for this slice'];
 
         return [true, days]

@@ -22,6 +22,8 @@ const showAddMember = ref<boolean>(false);
 
 const addMemberEmail = ref<string>("");
 
+const { createErrorAlert } = useAlert();
+
 async function kickMember(email: string) {
     const sure = confirm('Are you sure to kick ' + email + ' ?');
     if (!sure) return;
@@ -34,7 +36,7 @@ async function kickMember(email: string) {
             }),
             body: JSON.stringify({ email }),
             onResponseError({ request, response, options }) {
-                alert(response.statusText);
+                createErrorAlert('Error', response.statusText);
             }
         });
 
@@ -58,7 +60,7 @@ async function addMember() {
             }),
             body: JSON.stringify({ email: addMemberEmail.value }),
             onResponseError({ request, response, options }) {
-                alert(response.statusText);
+                createErrorAlert('Error', response.statusText);
             }
         });
 
@@ -101,12 +103,25 @@ function permissionToString(permission: TPermission) {
     }
     return result.join('');
 }
+
+async function leaveProject() {
+    try {
+        await $fetch('/api/project/members/leave', {
+            headers: useComputedHeaders({}).value
+        });
+        location.reload();
+    } catch (ex: any) {
+        alert(ex.message);
+    }
+
+
+}
 </script>
 
 <template>
     <div class="p-6 pt-10">
 
-        <div class="flex flex-col gap-8">
+        <div v-if="!isGuest" class="flex flex-col gap-8">
 
             <div class="flex flex-col">
                 <div class="flex gap-4 items-center">
@@ -144,7 +159,9 @@ function permissionToString(permission: TPermission) {
                             <div v-if="e.row.role !== 'OWNER' && !isGuest">
                                 <LyxUiButton class="!px-2" type="secondary"
                                     @click="openPermissionManagerDialog(e.row.id.toString())">
-                                    <i class="far fa-gear"></i>
+                                    <UTooltip text="Manage permissions">
+                                        <i class="far fa-gear"></i>
+                                    </UTooltip>
                                 </LyxUiButton>
                             </div>
 
@@ -181,6 +198,12 @@ function permissionToString(permission: TPermission) {
 
         </div>
 
+        <div v-if="isGuest" class="flex flex-col gap-8 mt-[10vh]">
+            <div class="flex flex-col gap-4 items-center">
+                <div class="text-[1.2rem]"> Leave this project </div>
+                <LyxUiButton @click="leaveProject()" type="primary"> Leave </LyxUiButton>
+            </div>
+        </div>
 
     </div>
 </template>

@@ -1,6 +1,6 @@
 import { model, Schema, Types } from 'mongoose';
 
-export type TeamMemberRole = 'ADMIN' | 'GUEST';
+export type TeamMemberRole = 'OWNER' | 'GUEST' | 'MANAGER';
 
 
 export type TPermission = {

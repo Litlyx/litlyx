@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
     const { name: newSnapshotName, from, to, color: snapshotColor } = body;
 
     if (!newSnapshotName) return setResponseStatus(event, 400, 'SnapshotName too short');
-    if (newSnapshotName.length == 0) return setResponseStatus(event, 400, 'SnapshotName too short');
+    if (newSnapshotName.trim().length == 0) return setResponseStatus(event, 400, 'SnapshotName too short');
 
     if (!from) return setResponseStatus(event, 400, 'from is required');
     if (!to) return setResponseStatus(event, 400, 'to is required');
@@ -26,7 +26,7 @@ export default defineEventHandler(async event => {
 
 
     const newSnapshot = await ProjectSnapshotModel.create({
-        name: newSnapshotName,
+        name: newSnapshotName.trim(),
         from: new Date(from),
         to: new Date(to),
         color: snapshotColor,

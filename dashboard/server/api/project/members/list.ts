@@ -14,7 +14,7 @@ export type MemberWithPermissions = {
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event);
+    const data = await getRequestData(event, [], ['OWNER']);
     if (!data) return;
 
     const { project_id, project, user } = data;

@@ -116,7 +116,7 @@ const { showDrawer } = useDrawer();
 </script>
 
 <template>
-    <div class="relative">
+    <div class="relative pb-[6rem]">
 
         <div v-if="invoicesPending || planPending"
             class="backdrop-blur-[1px] z-[20] mt-20 w-full h-full flex items-center justify-center font-bold">

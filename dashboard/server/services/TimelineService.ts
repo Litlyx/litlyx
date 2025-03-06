@@ -80,10 +80,11 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
                 range: {
                     step: 1,
                     unit: granularity,
-                    bounds: [
-                        new Date(new Date(options.from).getTime() - (timeOffset * 1000 * 60)),
-                        new Date(new Date(options.to).getTime() - (timeOffset * 1000 * 60) + 1),
-                    ]
+                    bounds: 'full'
+                    // [
+                    //     new Date(new Date(options.from).getTime() - (timeOffset * 1000 * 60)),
+                    //     new Date(new Date(options.to).getTime() - (timeOffset * 1000 * 60) + 1),
+                    // ]
                 }
             }
         },

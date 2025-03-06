@@ -10,6 +10,8 @@ export default defineEventHandler(async event => {
     const { project_id } = body;
     if (!project_id) return setResponseStatus(event, 400, 'project_id is required');
 
+    console.log({ project_id, user_id: data.user.id });
+
     const member = await TeamMemberModel.findOne({ project_id, user_id: data.user.id });
     if (!member) return setResponseStatus(event, 400, 'member not found');
 

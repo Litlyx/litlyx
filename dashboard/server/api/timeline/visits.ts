@@ -12,16 +12,17 @@ export default defineEventHandler(async event => {
     const cacheKey = `timeline:visits:${pid}:${slice}:${from}:${to}:${domain}`;
     const cacheExp = 20;
 
-    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
-        const timelineData = await executeAdvancedTimelineAggregation({
-            projectId: project_id,
-            model: VisitModel,
-            from, to, slice, timeOffset, domain
-        });
-
-        return timelineData;
-
+    // return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
+    const timelineData = await executeAdvancedTimelineAggregation({
+        projectId: project_id,
+        model: VisitModel,
+        from, to, slice, timeOffset, domain,
+        debug: true
     });
+
+    return timelineData;
+
+    // });
 
 
 
