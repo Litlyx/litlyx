@@ -88,7 +88,7 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
         name: 'Last 30 days',
         from: fns.startOfDay(fns.subDays(Date.now(), 30)),
         to: fns.endOfDay(fns.subDays(Date.now(), 0)),
-        color: '#BC5090',
+        color: '#606c38',
         default: true
     }
 
@@ -98,7 +98,7 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
         name: 'Last 60 days',
         from: fns.startOfDay(fns.subDays(Date.now(), 60)),
         to: fns.endOfDay(fns.subDays(Date.now(), 0)),
-        color: '#BC5090',
+        color: '#bc6c25',
         default: true
     }
 
@@ -108,15 +108,18 @@ export function getDefaultSnapshots(project_id: TProjectSnapshot['project_id'], 
         name: 'Last 90 days',
         from: fns.startOfDay(fns.subDays(Date.now(), 90)),
         to: fns.endOfDay(fns.subDays(Date.now(), 0)),
-        color: '#BC5090',
+        color: '#fefae0',
         default: true
     }
 
 
     const snapshotList = [
-        lastDay, today, lastMonth, currentMonth,
-        lastWeek, currentWeek, allTime,
-        last30Days, last60Days, last90Days
+        allTime,
+        lastDay, today,
+        lastWeek, currentWeek,
+        lastMonth, currentMonth,
+        last30Days,
+        last60Days, last90Days,
     ]
 
     return snapshotList;

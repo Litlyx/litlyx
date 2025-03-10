@@ -8,16 +8,27 @@ export default defineEventHandler(async event => {
     if (!userData?.logged) return;
     if (!userData.user.roles.includes('ADMIN')) return;
 
-    const { page, limit, sortQuery, filterQuery } = getQuery(event);
+    const { page, limit, sortQuery, filterQuery, filterFrom, filterTo } = getQuery(event);
 
     const pageNumber = parseInt(page as string);
     const limitNumber = parseInt(limit as string);
 
-    const count = await UserModel.countDocuments(JSON.parse(filterQuery as string));
+    const matchQuery = {
+        ...JSON.parse(filterQuery as string),
+        created_at: {
+            $gte: new Date(filterFrom as string),
+            $lte: new Date(filterTo as string)
+        }
+    }
+
+    
+    const count = await UserModel.countDocuments(matchQuery);
+
+
 
     const users = await UserModel.aggregate([
         {
-            $match: JSON.parse(filterQuery as string)
+            $match: matchQuery
         },
         {
             $lookup: {

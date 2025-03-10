@@ -114,7 +114,6 @@ async function leaveProject() {
         alert(ex.message);
     }
 
-
 }
 </script>
 
@@ -129,8 +128,8 @@ async function leaveProject() {
                     </LyxUiInput>
                     <LyxUiButton @click="addMember" type="secondary"> Add </LyxUiButton>
                 </div>
-                <div class="poppins text-[.8rem] mt-2 text-lyx-text-darker">
-                    User should have been registered to Litlyx
+                <div class="poppins text-[.8rem] mt-2 dark:text-lyx-text-dark">
+                    We will send an invitation email to the user you wish to add to this project.
                 </div>
             </div>
 
@@ -150,7 +149,7 @@ async function leaveProject() {
 
                     <template #pending-data="e">
                         <div class="text-lyx-lightmode-text dark:text-lyx-text">
-                            {{ e.row.pending ? 'Pending' : 'Ok' }}
+                            {{ e.row.pending ? 'Pending' : 'Accepted' }}
                         </div>
                     </template>
 
@@ -166,6 +165,10 @@ async function leaveProject() {
                             </div>
 
                             <div class="flex gap-2 flex-wrap">
+                                <UBadge variant="outline" size="sm" color="yellow"
+                                    v-if="!e.row.permission.webAnalytics && !e.row.permission.events && !e.row.permission.ai && e.row.permission.domains.length == 0">
+                                    No permission given
+                                </UBadge>
                                 <UBadge variant="outline" size="sm" v-if="e.row.permission.webAnalytics"
                                     label="Analytics"> </UBadge>
                                 <UBadge variant="outline" size="sm" v-if="e.row.permission.events" label="Events">
@@ -188,7 +191,7 @@ async function leaveProject() {
                     <template #action-data="e" v-if="!isGuest">
                         <div @click="kickMember(e.row.email)" v-if="e.row.role != 'OWNER'"
                             class="text-red-500 hover:bg-black/20 cursor-pointer outline outline-[1px] outline-red-500 px-3 py-1 rounded-lg text-center">
-                            Kick
+                            Remove
                         </div>
                     </template>
 

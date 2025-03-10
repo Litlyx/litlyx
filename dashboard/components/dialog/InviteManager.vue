@@ -64,17 +64,17 @@ async function declineInvite(project_id: string) {
     }">
         <div class="h-full flex flex-col gap-8 p-6">
 
-            <div class="flex flex-col gap-2" v-for="invite of invites">
+            <div class="flex flex-col gap-6" v-for="invite of invites">
 
                 <div class="dark:text-lyx-text text-lyx-lightmode-text">
                     You are invited to join
                     <span class="font-semibold">{{ invite.project_name }}</span>.
-                    Do you accept this invitation?
+                    Do you accept?
                 </div>
 
-                <div class="flex gap-4">
+                <div class="flex gap-4 w-full justify-end">
+                    <LyxUiButton @click="declineInvite(invite.project_id)" type="secondary"> Decline </LyxUiButton>
                     <LyxUiButton @click="acceptInvite(invite.project_id)" type="primary"> Accept </LyxUiButton>
-                    <LyxUiButton @click="declineInvite(invite.project_id)" type="danger"> Decline </LyxUiButton>
                 </div>
 
             </div>

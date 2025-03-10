@@ -46,9 +46,17 @@ async function save(member_id: string) {
     }">
         <div class="p-8">
             <div v-if="member" class="manage flex flex-col gap-4">
+
+                <div class="flex flex-col gap-1">
+                    <div class="poppins text-[1.1rem]"> Manage permissions </div>
+                    <div class="poppins text-[.9rem] dark:text-lyx-text-dark"> Choose what this member can do on this project. </div>
+                </div>
+
+                <LyxUiSeparator></LyxUiSeparator>
+
                 <div class="flex flex-col gap-1">
                     <div>
-                        <div class="mb-1"> Allowed domains </div>
+                        <div class="mb-1"> Select what domain is allowed to see: </div>
                         <div class="mb-1">
                             <USelectMenu v-model="member.permission.domains" :options="domainList" multiple
                                 value-attribute="_id">
@@ -89,7 +97,7 @@ async function save(member_id: string) {
                     </div>
                     <div class="flex items-center gap-2">
                         <UCheckbox v-model="member.permission.ai"></UCheckbox>
-                        <div> Allow AI page </div>
+                        <div> Allow to use AI data analyst </div>
                     </div>
                 </div>
             </div>
@@ -98,10 +106,10 @@ async function save(member_id: string) {
 
 
             <div class="flex gap-2 justify-end mt-8">
-                <LyxUiButton v-if="member?.permission" @click="save(member._id.toString())" type="primary">
+                <LyxUiButton class="!w-[6rem] text-center" type="secondary" @click="emit('cancel')"> Cancel </LyxUiButton>
+                <LyxUiButton class="!w-[6rem] text-center" v-if="member?.permission" @click="save(member._id.toString())" type="primary">
                     Save
                 </LyxUiButton>
-                <LyxUiButton type="secondary" @click="emit('cancel')"> Cancel </LyxUiButton>
             </div>
 
         </div>
