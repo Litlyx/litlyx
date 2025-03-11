@@ -220,9 +220,14 @@ function transformResponse(input: { _id: string, count: number }[]) {
     const labels = input.map(e => DateService.getChartLabelFromISO(e._id, new Date().getTimezoneOffset(), selectedSlice.value));
     if (input.length > 0) allDatesFull.value = input.map(e => e._id.toString());
 
-    const todayIndex = input.findIndex(e => new Date(e._id).getTime() > (Date.now() - new Date().getTimezoneOffset() * 1000 * 60));
+    const current = (Date.now());
+    //console.log(input.map(e => e._id));
+    //console.log(new Date(current));
 
-    return { data, labels, todayIndex }
+    const todayIndex = input.findIndex(e => new Date(e._id).getTime() >= current);
+
+    //console.log({ todayIndex })
+    return { data, labels, todayIndex: todayIndex + 1 }
 }
 
 function onResponseError(e: any) {
@@ -280,7 +285,6 @@ function onDataReady() {
     chartData.value.datasets[0].backgroundColor = [createGradient('#5655d7')];
     chartData.value.datasets[1].backgroundColor = [createGradient('#4abde8')];
     chartData.value.datasets[2].backgroundColor = [createGradient('#fbbf24')];
-
 
     (chartData.value.datasets[1] as any).borderSkipped = sessionsData.data.value.data.map((e, i) => {
         const todayIndex = eventsData.data.value?.todayIndex || 0;

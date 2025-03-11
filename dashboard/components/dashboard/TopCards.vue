@@ -88,7 +88,7 @@ const avgSessionDuration = computed(() => {
 
 const todayIndex = computed(() => {
     if (!visitsData.data.value) return -1;
-    return visitsData.data.value.input.findIndex(e => new Date(e._id).getTime() > (Date.now() - new Date().getTimezoneOffset() * 1000 * 60));
+    return visitsData.data.value.input.findIndex(e => new Date(e._id).getTime() > (Date.now()));
 })
 
 
