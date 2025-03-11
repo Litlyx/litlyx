@@ -172,7 +172,7 @@ function copyProjectId() {
                     <LyxUiInput class="grow px-4 py-2" :disabled="isGuest" placeholder="ApiKeyName"
                         v-model="newApiKeyName">
                     </LyxUiInput>
-                    <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.length.trim() < 3"
+                    <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.trim().length < 3"
                         type="primary">
                         <i class="far fa-plus"></i>
                     </LyxUiButton>
