@@ -20,7 +20,7 @@ export default defineEventHandler(async event => {
     }
 
 
-    const link = `http://127.0.0.1:3000/accept_invite?project_id=${project_id.toString()}`;
+    const link = `https://dashboard.litlyx.com/accept_invite?project_id=${project_id.toString()}`;
 
     if (!targetUser) {
 

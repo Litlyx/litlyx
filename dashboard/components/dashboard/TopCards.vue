@@ -68,21 +68,47 @@ const avgBouncingRate = computed(() => {
     return avg.toFixed(2) + ' %';
 })
 
+function weightedAverage(data: number[]): number {
+    if (data.length === 0) return 0;
+    
+    // Compute median
+    const sortedData = [...data].sort((a, b) => a - b);
+    const middle = Math.floor(sortedData.length / 2);
+    const median = sortedData.length % 2 === 0 
+        ? (sortedData[middle - 1] + sortedData[middle]) / 2 
+        : sortedData[middle];
+    
+    // Define a threshold (e.g., 3 times the median) to filter out extreme values
+    const threshold = median * 3;
+    const filteredData = data.filter(num => num <= threshold);
+    
+    if (filteredData.length === 0) return median; // Fallback to median if all are removed
+    
+    // Compute weights based on inverse absolute deviation from median
+    const weights = filteredData.map(num => 1 / (1 + Math.abs(num - median)));
+    
+    // Compute weighted sum and sum of weights
+    const weightedSum = filteredData.reduce((sum, num, i) => sum + num * weights[i], 0);
+    const sumOfWeights = weights.reduce((sum, weight) => sum + weight, 0);
+    
+    return weightedSum / sumOfWeights;
+}
 const avgSessionDuration = computed(() => {
     if (!sessionsDurationData.data.value) return '0.00 %'
 
     const counts = sessionsDurationData.data.value.data
-        .filter(e => e > 0)
+        // .filter(e => e > 0)
         .reduce((a, e) => e + a, 0);
 
-    const avg = counts / (Math.max(sessionsDurationData.data.value.data.filter(e => e > 0).length, 1)) / 5;
+    const avg = weightedAverage(sessionsDurationData.data.value.data);
+    // counts / (Math.max(sessionsDurationData.data.value.data.length, 1));
 
     let hours = 0;
     let minutes = 0;
     let seconds = 0;
     seconds += avg * 60;
-    while (seconds > 60) { seconds -= 60; minutes += 1; }
-    while (minutes > 60) { minutes -= 60; hours += 1; }
+    while (seconds >= 60) { seconds -= 60; minutes += 1; }
+    while (minutes >= 60) { minutes -= 60; hours += 1; }
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds.toFixed()}s`
 });
 

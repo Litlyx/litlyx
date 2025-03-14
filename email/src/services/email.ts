@@ -34,7 +34,7 @@ export class EmailService {
     static async sendInviteEmailNoAccount(target: string, projectName: string, link: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
-            sendSmtpEmail.subject = "⚡ Invite - No account";
+            sendSmtpEmail.subject = "⚡ Invite on a Litlyx project";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
 

@@ -42,7 +42,7 @@ export default defineEventHandler(async event => {
     })
 
     for (const member of members) {
-        const userMember = await UserModel.findById(member.user_id);
+        const userMember = member.user_id ? await UserModel.findById(member.user_id) : await UserModel.findOne({ email: member.email });
         if (!userMember) continue;
 
         const permission: TPermission = {

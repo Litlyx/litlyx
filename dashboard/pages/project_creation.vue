@@ -40,8 +40,10 @@ async function createProject() {
         await actions.refreshProjectsList();
 
         const newActiveProjectId = projectList.value?.[projectList.value?.length - 1]._id.toString();
+        
         if (newActiveProjectId) {
             await actions.setActiveProject(newActiveProjectId);
+            console.log('Set active project', newActiveProjectId);
         }
 
         setPageLayout('dashboard');

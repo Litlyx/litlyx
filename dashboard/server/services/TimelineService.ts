@@ -20,7 +20,8 @@ export type AdvancedTimelineAggregationOptions = TimelineAggregationOptions & {
     customGroup?: Record<string, any>,
     customProjection?: Record<string, any>,
     customIdGroup?: Record<string, any>,
-    customAfterMatch?: Record<string, any>
+    customAfterMatch?: Record<string, any>,
+    customQueries?: { index: number, query: Record<string, any> }[]
 }
 
 export async function executeAdvancedTimelineAggregation<T = {}>(options: AdvancedTimelineAggregationOptions) {
@@ -29,6 +30,7 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
     options.customGroup = options.customGroup || {};
     options.customProjection = options.customProjection || {};
     options.customIdGroup = options.customIdGroup || {};
+    options.customQueries = options.customQueries || [];
 
     const { dateFromParts, granularity } = DateService.getGranularityData(options.slice, '$tmpDate');
     if (!dateFromParts) throw Error('Slice is probably not correct');
@@ -103,6 +105,9 @@ export async function executeAdvancedTimelineAggregation<T = {}>(options: Advanc
         }
     ] as any[];
 
+    for (const customQuery of options.customQueries) {
+        aggregation.splice(customQuery.index, 0, customQuery.query);
+    }
 
     if (options.customAfterMatch) aggregation.splice(1, 0, options.customAfterMatch);
 

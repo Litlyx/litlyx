@@ -24,6 +24,28 @@ export default defineEventHandler(async event => {
             customProjection: {
                 count: { $divide: ["$duration", "$count"] }
             },
+            customQueries: [
+                {
+                    index: 1,
+                    query: {
+                        "$lookup": {
+                            "from": "visits",
+                            "localField": "session",
+                            "foreignField": "session",
+                            "as": "visits",
+                            "pipeline": [{ "$limit": 1 }]
+                        }
+                    },
+                },
+                {
+                    index: 2,
+                    query: {
+                        "$match": {
+                            "visits.0": { "$exists": true }
+                        }
+                    }
+                }
+            ]
         });
         const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
         return timelineFilledMerged;
