@@ -55,6 +55,7 @@ export class EmailService {
         try {
             await this.apiContacts.createContact({ email });
             await this.apiContacts.addContactToList(12, { emails: [email] })
+            return true;
         } catch (ex) {
             console.error('ERROR ADDING CONTACT', ex);
             return false;

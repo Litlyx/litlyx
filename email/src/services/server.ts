@@ -58,7 +58,7 @@ app.post('/send/invite/noaccount', express.json(), async (req, res) => {
     }
 });
 
-app.post('/brevolist/add', express.json(), async (req, res) => {
+app.post('/send/brevolist/add', express.json(), async (req, res) => {
     try {
         const { email } = req.body;
         const ok = await EmailService.createContact(email);

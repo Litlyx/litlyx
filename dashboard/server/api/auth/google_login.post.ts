@@ -59,6 +59,13 @@ export default defineEventHandler(async event => {
 
     const savedUser = await newUser.save();
 
+
+    setImmediate(() => {
+        const emailData = EmailService.getEmailServerInfo('brevolist_add', { email: payload.email as string });
+        EmailServiceHelper.sendEmail(emailData);
+    });
+
+
     setImmediate(() => {
         console.log('SENDING WELCOME EMAIL TO', payload.email);
         if (!payload.email) return;

@@ -9,7 +9,23 @@ const avgDuration = computed(() => {
     return (backendData.value.durations.durations.reduce((a: any, e: any) => a + parseInt(e[1]), 0) / backendData.value.durations.durations.length);
 })
 
-const labels = new Array(650).fill('-');
+const labels = computed(() => {
+    if (!backendData?.value?.durations) return [];
+
+    const sizes = new Map<string, number>();
+
+    for (const e of backendData.value.durations.durations) {
+        if (!sizes.has(e[0])) {
+            sizes.set(e[0], 0);
+        } else {
+            const data = sizes.get(e[0]) ?? 0;
+            sizes.set(e[0], data + 1);
+        }
+    }
+
+    const max = Array.from(sizes.values()).reduce((a, e) => a > e ? a : e, 0);
+    return new Array(max).fill('-');
+});
 
 const durationsDatasets = computed(() => {
     if (!backendData?.value?.durations) return [];
@@ -26,7 +42,7 @@ const durationsDatasets = computed(() => {
 
         datasets.push({
             points: consumerDurations.map((e: any) => {
-                return 1000 /  parseInt(e[1])
+                return 1000 / parseInt(e[1])
             }),
             color: colors[i],
             chartType: 'line',
@@ -45,7 +61,7 @@ const durationsDatasets = computed(() => {
 
         <div class="cursor-default flex justify-center w-full">
 
-            <div v-if="backendData" class="flex flex-col mt-8 gap-6 px-20 items-center w-full">
+            <div v-if="backendData && !backendPending" class="flex flex-col mt-8 gap-6 px-20 items-center w-full">
 
                 <div class="flex gap-8">
                     <div> Queue size: {{ backendData.queue?.size || 'ERROR' }} </div>

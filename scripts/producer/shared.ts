@@ -11,3 +11,8 @@ helper.copy('utils/requireEnv.ts');
 
 helper.create('services');
 helper.copy('services/RedisStreamService.ts');
+helper.copy('services/DatabaseService.ts');
+
+helper.create('schema');
+helper.create('schema/shields');
+helper.copy('schema/shields/DomainWhitelistSchema.ts');

@@ -11,5 +11,5 @@ const widgetStyle = computed(() => {
 </script>
 
 <template>
-    <div :style="widgetStyle" class="bg-lyx-widget-light"></div>
+    <div :style="widgetStyle" class="dark:bg-lyx-widget-light bg-lyx-lightmode-widget"></div>
 </template>

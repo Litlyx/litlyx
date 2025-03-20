@@ -35,6 +35,11 @@ export default defineEventHandler(async event => {
     await RegisterModel.create({ email, password: hashedPassword });
 
     setImmediate(() => {
+        const emailData = EmailService.getEmailServerInfo('brevolist_add', { email });
+        EmailServiceHelper.sendEmail(emailData);
+    });
+
+    setImmediate(() => {
         const emailData = EmailService.getEmailServerInfo('confirm', { target: email, link: `https://dashboard.litlyx.com/api/auth/confirm_email?register_code=${jwt}` });
         EmailServiceHelper.sendEmail(emailData);
     });

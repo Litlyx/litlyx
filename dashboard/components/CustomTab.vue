@@ -54,7 +54,7 @@ onMounted(() => {
         <div class="flex overflow-x-auto hide-scrollbars">
             <div class="flex">
                 <div v-for="(tab, index) of items" @click="onChangeTab(index)"
-                    class="px-6 pb-3 poppins font-medium text-lyx-lightmode-text dark:text-lyx-text-darker border-b-[1px] border-lyx-text-darker"
+                    class="px-6 whitespace-nowrap pb-3 poppins font-medium text-lyx-lightmode-text dark:text-lyx-text-darker border-b-[1px] border-lyx-text-darker"
                     :class="{
                         'dark:!border-[#FFFFFF] dark:!text-[#FFFFFF] !border-lyx-primary !text-lyx-primary': activeTabIndex === index,
                         'hover:border-lyx-lightmode-text-dark hover:text-lyx-lightmode-text-dark/60 dark:hover:border-lyx-text-dark dark:hover:text-lyx-text-dark cursor-pointer': activeTabIndex !== index

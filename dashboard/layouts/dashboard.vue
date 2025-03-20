@@ -19,6 +19,7 @@ const sections: Section[] = [
             { label: 'Web Analytics', to: '/', icon: 'fal fa-table-layout' },
             { label: 'Custom Events', to: '/events', icon: 'fal fa-square-bolt' },
             { label: 'Members', to: '/members', icon: 'fal fa-users' },
+            { label: 'Shields', to: '/shields', icon: 'fal fa-shield' },
             { label: 'Ask AI', to: '/analyst', icon: 'fal fa-sparkles' },
 
             // { label: 'Security', to: '/security', icon: 'fal fa-shield', disabled: selfhosted },

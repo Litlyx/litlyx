@@ -69,6 +69,7 @@ const { drawerVisible, hideDrawer, drawerClasses } = useDrawer();
 
 
     <UModals />
+    <UNotifications />
 
     <LazyOnboarding> </LazyOnboarding>
 

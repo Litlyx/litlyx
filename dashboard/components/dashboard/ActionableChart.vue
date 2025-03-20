@@ -373,8 +373,9 @@ const legendClasses = ref<string[]>([
                 </div>
                 <div class="mt-3 font-normal flex flex-col text-[.9rem] dark:text-lyx-text-dark text-lyx-lightmode-text-dark"
                     v-if="(currentTooltipData as any).sessions > (currentTooltipData as any).visits">
-                    <div> Unique visitors is greater than visits. </div>
-                    <div> This can indicate bot traffic. </div>
+                    <div> Unique visitors are higher than total visits </div>
+                    <div> which often means bots (automated scripts or crawlers)</div>
+                    <div> are inflating the numbers.</div>
                 </div>
                 <!-- <div class="bg-lyx-background-lighter h-[2px] w-full my-2"> </div> -->
             </LyxUiCard>

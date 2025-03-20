@@ -9,7 +9,8 @@ const templateMap = {
     limit_90: '/limit/90',
     limit_max: '/limit/max',
     invite_project: '/invite',
-    invite_project_noaccount: '/invite/noaccount'
+    invite_project_noaccount: '/invite/noaccount',
+    brevolist_add: '/brevolist/add'
 } as const;
 
 export type EmailTemplate = keyof typeof templateMap;
@@ -27,6 +28,7 @@ type EmailData =
     | { template: 'limit_max', data: { target: string, projectName: string } }
     | { template: 'invite_project', data: { target: string, projectName: string, link: string } }
     | { template: 'invite_project_noaccount', data: { target: string, projectName: string, link: string } }
+    | { template: 'brevolist_add', data: { email: string } }
 
 export class EmailService {
     static getEmailServerInfo<T extends EmailTemplate>(template: T, data: Extract<EmailData, { template: T }>['data']): EmailServerInfo {
