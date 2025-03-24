@@ -50,7 +50,7 @@ async function addDomain() {
                             subdomains.
                         </div>
                     </div>
-                    <div> NB: Once added, we will start rejecting traffic from non-matching hostnames within a few
+                    <div> NB: Once added, we will start allowing traffic only from matching hostnames within a few
                         minutes.</div>
                 </div>
 

@@ -16,8 +16,8 @@ router.post('/keep_alive', json(jsonOptions), async (req, res) => {
         const ip = getIPFromRequest(req);
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
 
-        const allowed = await isAllowedToLog(req.body.pid, req.body.website);
-        if (!allowed) return res.status(400);
+        const allowed = await isAllowedToLog(req.body.pid, req.body.website, ip, req.body.userAgent);
+        if (!allowed) return res.sendStatus(400);
 
         await RedisStreamService.addToStream(streamName, {
             ...req.body, _type: 'keep_alive', sessionHash, ip,
@@ -37,9 +37,9 @@ router.post('/metrics/push', json(jsonOptions), async (req, res) => {
         const ip = getIPFromRequest(req);
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
 
-        const allowed = await isAllowedToLog(req.body.pid, req.body.website);
-        if (!allowed) return res.status(400);
-        
+        const allowed = await isAllowedToLog(req.body.pid, req.body.website, ip, req.body.userAgent);
+        if (!allowed) return res.sendStatus(400);
+
         const { type } = req.body;
 
         if (type === 0) {

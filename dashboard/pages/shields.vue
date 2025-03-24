@@ -7,8 +7,9 @@ const selfhosted = useSelfhosted();
 const items = [
     { label: 'Domains', slot: 'domains', tab: 'domains' },
     { label: 'IP Addresses', slot: 'ipaddresses', tab: 'ipaddresses' },
-    { label: 'Countries', slot: 'countries', tab: 'countries' },
-    { label: 'Pages', slot: 'pages', tab: 'pages' },
+    { label: 'Bot traffic', slot: 'bots', tab: 'bots' },
+    // { label: 'Countries', slot: 'countries', tab: 'countries' },
+    // { label: 'Pages', slot: 'pages', tab: 'pages' },
 ]
 
 </script>
@@ -23,14 +24,10 @@ const items = [
                 <ShieldsDomains></ShieldsDomains>
             </template>
             <template #ipaddresses>
-                <div class="flex items-center justify-center py-20 text-[1.2rem]"> Coming soon </div>
-                <!-- <ShieldsAddresses></ShieldsAddresses> -->
+                <ShieldsAddresses></ShieldsAddresses>
             </template>
-            <template #countries>
-                <div class="flex items-center justify-center py-20 text-[1.2rem]"> Coming soon </div>
-            </template>
-            <template #pages>
-                <div class="flex items-center justify-center py-20 text-[1.2rem]"> Coming soon </div>
+            <template #bots>
+                <ShieldsBots></ShieldsBots>
             </template>
         </CustomTab>
 

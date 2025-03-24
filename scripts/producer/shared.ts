@@ -15,4 +15,8 @@ helper.copy('services/DatabaseService.ts');
 
 helper.create('schema');
 helper.create('schema/shields');
+helper.copy('schema/shields/AddressBlacklistSchema.ts');
+helper.copy('schema/shields/BotTrafficOptionSchema.ts');
+helper.copy('schema/shields/CountryBlacklistSchema.ts');
 helper.copy('schema/shields/DomainWhitelistSchema.ts');
+helper.copy('schema/shields/PageBlacklistSchema.ts');

@@ -3,8 +3,6 @@ import { DialogShieldsAddDomain, DialogShieldsDeleteDomain } from '#components';
 
 definePageMeta({ layout: 'dashboard' });
 
-const { project } = useProject();
-
 const { data: allowedDomains, refresh: refreshDomains, pending: pendingDomains } = useFetch('/api/shields/domains/list', {
     headers: useComputedHeaders({})
 });
@@ -61,7 +59,7 @@ function showDeleteDomainModal(domain: string) {
             <div>
                 <div class="text-[1.2rem] font-semibold"> Domains allow list </div>
                 <div class="dark:text-lyx-text-dark text-lyx-lightmode-text-dark">
-                    Accept incoming traffic only from familiar domains
+                    Accept incoming traffic only from familiar domains.
                 </div>
             </div>
             <LyxUiSeparator class="my-3"></LyxUiSeparator>
