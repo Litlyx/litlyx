@@ -42,8 +42,15 @@ export default defineEventHandler(async event => {
     })
 
     for (const member of members) {
-        const userMember = member.user_id ? await UserModel.findById(member.user_id) : await UserModel.findOne({ email: member.email });
-        if (!userMember) continue;
+
+        let userMember;
+
+        if (member.user_id) {
+            userMember = await UserModel.findById(member.user_id);
+        } else {
+            userMember = await UserModel.findOne({ email: member.email });
+        }
+
 
         const permission: TPermission = {
             webAnalytics: member.permission?.webAnalytics || false,
@@ -54,11 +61,11 @@ export default defineEventHandler(async event => {
 
         result.push({
             id: member.id,
-            email: userMember.email,
-            name: userMember.name,
+            email: userMember?.email || member.email || 'NO_EMAIL',
+            name: userMember?.name || 'NO_NAME',
             role: member.role,
             pending: member.pending,
-            me: user.id === userMember.id,
+            me: user.id === (userMember?.id || member.user_id || 'NO_ID'),
             permission
         })
     }

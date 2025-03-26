@@ -19,13 +19,18 @@ export default defineEventHandler(async event => {
         webAnalytics: true
     }
 
-    const member = await TeamMemberModel.findOne({ project_id, user_id: user.id });
+    const member = await TeamMemberModel.findOne({
+        project_id,
+        $or: [
+            { user_id: user.id }, { email: user.user.email }
+        ]
+    });
 
     if (!member) return {
-        ai: true,
-        domains: ['All domains'],
-        events: true,
-        webAnalytics: true
+        ai: false,
+        domains: [],
+        events: false,
+        webAnalytics: false
     }
 
     return {

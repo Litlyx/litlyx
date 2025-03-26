@@ -14,7 +14,7 @@ export async function getUserProjectFromId(project_id: string, user: AuthContext
     const project = await ProjectModel.findById(project_id);
     if (!project) return;
 
-    const [hasAccess, role] = await hasAccessToProject(user.id, project_id, project);
+    const [hasAccess, role] = await hasAccessToProject(user.id, project_id, user.user.email, project);
     if (!hasAccess) return;
 
     if (role === 'GUEST' && !allowGuest) return false;

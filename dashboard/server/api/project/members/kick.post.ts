@@ -16,6 +16,7 @@ export default defineEventHandler(async event => {
     if (!user) return setResponseStatus(event, 400, 'Email not found');
 
     await TeamMemberModel.deleteOne({ project_id, user_id: user.id });
+    await TeamMemberModel.deleteOne({ project_id, email: email });
 
     return { ok: true }
 

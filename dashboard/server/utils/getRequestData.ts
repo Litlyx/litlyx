@@ -35,7 +35,7 @@ export type GetRequestDataOptions = {
 export type RequestDataScope = 'SCHEMA' | 'ANON' | 'SLICE' | 'RANGE' | 'OFFSET' | 'DOMAIN';
 export type RequestDataPermissions = 'WEB' | 'EVENTS' | 'AI' | 'OWNER';
 
-async function getAccessPermission(user_id: string, project: TProject): Promise<TPermission> {
+async function getAccessPermission(user_id: string, project: TProject, email: string): Promise<TPermission> {
     if (!project) return { ai: false, domains: [], events: false, webAnalytics: false }
 
     //TODO: Create table with admins
@@ -44,17 +44,17 @@ async function getAccessPermission(user_id: string, project: TProject): Promise<
     const owner = project.owner.toString();
     const project_id = project._id;
     if (owner === user_id) return { ai: true, domains: ['All domains'], events: true, webAnalytics: true }
-    const member = await TeamMemberModel.findOne({ project_id, user_id }, { permission: 1 });
+    const member = await TeamMemberModel.findOne({ project_id, $or: [{ user_id }, { email }] }, { permission: 1 });
     if (!member) return { ai: false, domains: [], events: false, webAnalytics: false }
     return { ai: false, domains: [], events: false, webAnalytics: false, ...member.permission as any }
 }
 
-async function hasAccessToProject(user_id: string, project: TProject) {
+async function hasAccessToProject(user_id: string, project: TProject, email: string) {
     if (!project) return [false, 'NONE'];
     const owner = project.owner.toString();
     const project_id = project._id;
     if (owner === user_id) return [true, 'OWNER'];
-    const isGuest = await TeamMemberModel.exists({ project_id, user_id });
+    const isGuest = await TeamMemberModel.exists({ project_id, $or: [{ user_id }, { email }] });
     if (isGuest) return [true, 'GUEST'];
 
     //TODO: Create table with admins
@@ -128,14 +128,14 @@ export async function getRequestData(event: H3Event<EventHandlerRequest>, requir
 
     if (user.id != project.owner.toString()) {
         if (required_permissions.includes('OWNER')) return setResponseStatus(event, 403, 'ADMIN permission required');
-        const hasAccess = await TeamMemberModel.findOne({ project_id, user_id: user.id });
+        const hasAccess = await TeamMemberModel.findOne({ project_id, $or: [{ user_id: user.id }, { email: user.user.email }] });
         if (!hasAccess) return setResponseStatus(event, 403, 'No permissions');
     }
 
 
     if (required_permissions.length > 0 || requireDomain) {
 
-        const permission = await getAccessPermission(user.id, project);
+        const permission = await getAccessPermission(user.id, project, user.user.email);
 
         if (required_permissions.includes('WEB') && permission.webAnalytics === false) {
             return setResponseStatus(event, 403, 'WEB permission required');
@@ -220,7 +220,7 @@ export async function getRequestDataOld(event: H3Event<EventHandlerRequest>, opt
 
 
     if (pid !== "6643cd08a1854e3b81722ab5") {
-        const [hasAccess, role] = await hasAccessToProject(user.id, project);
+        const [hasAccess, role] = await hasAccessToProject(user.id, project, user.user.email);
         if (!hasAccess) return setResponseStatus(event, 400, 'no access to project');
         if (role === 'GUEST' && !allowGuests) return setResponseStatus(event, 403, 'only owner can access this');
     } else {

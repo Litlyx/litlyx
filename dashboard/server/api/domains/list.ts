@@ -23,7 +23,7 @@ export default defineEventHandler(async event => {
         ...result
     ]
 
-    const member = await TeamMemberModel.findOne({ project_id, user_id: data.user.id, pending: false });
+    const member = await TeamMemberModel.findOne({ project_id, $or: [{ user_id: user.id }, { email: user.user.email }], pending: false });
     if (!member) return setResponseStatus(event, 400, 'Not a member');
     if (!member.permission) return setResponseStatus(event, 400, 'No permission');
 

@@ -11,7 +11,7 @@ export default defineEventHandler(async event => {
     const project = await ProjectModel.findOne({ _id: project_id });
     if (!project) return;
 
-    const [hasAccess] = await hasAccessToProject(user.id, project_id, project)
+    const [hasAccess] = await hasAccessToProject(user.id, project_id, user.user.email, project)
     if (!hasAccess) return;
 
     const query = getQuery(event);

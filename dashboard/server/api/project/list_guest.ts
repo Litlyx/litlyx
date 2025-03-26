@@ -7,7 +7,13 @@ export default defineEventHandler(async event => {
     if (!userData?.logged) return [];
 
 
-    const members = await TeamMemberModel.find({ user_id: userData.id, pending: false });
+    const members = await TeamMemberModel.find({
+        $or: [
+            { user_id: userData.id },
+            { email: userData.user.email }
+        ],
+        pending: false
+    });
 
     const projects: TProject[] = [];
 
