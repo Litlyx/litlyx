@@ -1,0 +1,28 @@
+{
+  "name": "payments",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "node scripts/start_dev.js",
+    "dev_prod": "node scripts/start_dev_prod.js",
+    "compile": "tsc",
+    "build": "npm run compile",
+    "workspace:shared": "ts-node ../scripts/payments/shared.ts",
+    "workspace:deploy": "ts-node ../scripts/payments/deploy.ts"
+  },
+  "keywords": [],
+  "author": "Emily",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "mongoose": "^8.13.0",
+    "stripe": "^17.7.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17"
+  }
+}
