@@ -1,6 +1,6 @@
-export type PREMIUM_TAG = typeof PREMIUM_TAGS[number];
+export type PLAN_TAG = typeof PLAN_TAGS[number];
 
-export const PREMIUM_TAGS = [
+export const PLAN_TAGS = [
     'FREE',
     'PLAN_1',
     'PLAN_2',
@@ -20,17 +20,17 @@ export const PREMIUM_TAGS = [
 ] as const;
 
 
-export type PREMIUM_DATA = {
+export type PLAN_DATA = {
     COUNT_LIMIT: number,
     AI_MESSAGE_LIMIT: number,
     PRICE: string,
     PRICE_TEST: string,
     ID: number,
     COST: number,
-    TAG: PREMIUM_TAG
+    TAG: PLAN_TAG
 }
 
-export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
+export const PREMIUM_PLAN: Record<PLAN_TAG, PLAN_DATA> = {
     FREE: {
         ID: 0,
         COUNT_LIMIT: 5_000,
@@ -177,19 +177,19 @@ export const PREMIUM_PLAN: Record<PREMIUM_TAG, PREMIUM_DATA> = {
     }
 }
 
-export function getPlanFromTag(tag: PREMIUM_TAG) {
+export function getPlanFromTag(tag: PLAN_TAG) {
     return PREMIUM_PLAN[tag];
 }
 
 export function getPlanFromId(id: number) {
-    for (const tag of PREMIUM_TAGS) {
+    for (const tag of PLAN_TAGS) {
         const plan = getPlanFromTag(tag);
         if (plan.ID === id) return plan;
     }
 }
 
 export function getPlanFromPrice(price: string, testMode: boolean) {
-    for (const tag of PREMIUM_TAGS) {
+    for (const tag of PLAN_TAGS) {
         const plan = getPlanFromTag(tag);
         if (testMode) {
             if (plan.PRICE_TEST === price) return plan;

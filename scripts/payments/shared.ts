@@ -15,9 +15,8 @@ helper.copy('services/EmailService.ts');
 
 helper.create('schema');
 helper.copy('schema/UserSchema.ts');
-
-helper.create('schema/project');
-helper.copy('schema/project/ProjectSchema.ts');
+helper.copy('schema/PremiumSchema.ts');
+helper.copy('schema/UserLimitSchema.ts');
 
 helper.create('data');
 helper.copy('data/PLANS.ts');

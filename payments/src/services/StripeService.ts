@@ -51,7 +51,7 @@ class StripeService {
         return checkout;
     }
 
-    async createPayment(price: string, success_url: string, pid: string, customer: string) {
+    async createPayment(price: string, success_url: string, user_id: string, customer: string) {
         if (!this.stripe) throw Error('Stripe not initialized');
 
         const checkout = await this.stripe.checkout.sessions.create({
@@ -61,7 +61,7 @@ class StripeService {
                 { price, quantity: 1 }
             ],
             subscription_data: {
-                metadata: { pid },
+                metadata: { user_id },
             },
             customer,
             success_url,
