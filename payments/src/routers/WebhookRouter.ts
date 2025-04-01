@@ -21,12 +21,12 @@ webhookRouter.get('/', json(), async (req, res) => {
             const response = await WebhookController.onPaymentSuccess(eventData);
             return sendJson(res, 200, response);
         }
+
+        if (eventData.type === 'invoice.payment_failed') {
+            const response = await WebhookController.onPaymentFailed(eventData);
+            return sendJson(res, 200, response);
+        }
         
-        // if (eventData.type === 'payment_intent.succeeded') return await onPaymentOnetimeSuccess(eventData);
-        // if (eventData.type === 'invoice.payment_failed') return await onPaymentFailed(eventData);
-        // if (eventData.type === 'customer.subscription.deleted') return await onSubscriptionDeleted(eventData);
-        // if (eventData.type === 'customer.subscription.created') return await onSubscriptionCreated(eventData);
-        // if (eventData.type === 'customer.subscription.updated') return await onSubscriptionUpdated(eventData);
 
     } catch (ex) {
         res.status(500).json({ error: ex.message });

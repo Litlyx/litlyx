@@ -1,7 +1,7 @@
 
 import type Event from 'stripe';
 import StripeService from '../services/StripeService';
-import { getPlanFromPrice, PLAN_DATA } from '../shared/data/PLANS';
+import { getPlanFromPrice, getPlanFromTag, PLAN_DATA } from '../shared/data/PLANS';
 import { PremiumModel } from '../shared/schema/PremiumSchema';
 import { UserLimitModel } from '../shared/schema/UserLimitSchema';
 
@@ -29,6 +29,27 @@ async function addSubscriptionToUser(user_id: string, plan: PLAN_DATA, subscript
 
 }
 
+export async function onPaymentFailed(event: Event.InvoicePaymentFailedEvent) {
+
+    
+    if (event.data.object.attempt_count == 0) return { received: true, warn: 'attempt_count = 0' }
+    
+    //TODO: Send emails
+
+    const customer_id = event.data.object.customer as string;
+    const premiumData = await PremiumModel.findOne({ customer_id });
+    if (!premiumData) return { error: 'customer not found' }
+
+    const subscription_id = event.data.object.subscription as string;
+    await StripeService.deleteSubscription(subscription_id);
+
+    const freeSub = await StripeService.createFreeSubscription(customer_id);
+    await PremiumModel.updateOne({ customer_id }, { subscription_id: freeSub.id });
+
+    await addSubscriptionToUser(premiumData.user_id.toString(), getPlanFromTag('FREE'), subscription_id, event.data.object.period_start, event.data.object.period_end);
+
+    return { ok: true }
+}
 
 export async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 

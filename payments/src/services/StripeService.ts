@@ -1,5 +1,6 @@
 
 import Stripe from "stripe";
+import { getPlanFromTag } from "../shared/data/PLANS";
 
 
 
@@ -186,22 +187,21 @@ class StripeService {
     //     return subscription;
     // }
 
-    // async createFreeSubscription(customer_id: string) {
-    //     if (this.disabledMode) return;
-    //     if (!this.stripe) throw Error('Stripe not initialized');
+    async createFreeSubscription(customer_id: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
 
-    //     const FREE_PLAN = getPlanFromTag('FREE');
+        const FREE_PLAN = getPlanFromTag('FREE');
 
-    //     const subscription = await this.stripe.subscriptions.create({
-    //         customer: customer_id,
-    //         items: [
-    //             { price: this.testMode ? FREE_PLAN.PRICE_TEST : FREE_PLAN.PRICE, quantity: 1 }
-    //         ]
-    //     });
+        const subscription = await this.stripe.subscriptions.create({
+            customer: customer_id,
+            items: [
+                { price: this.testMode ? FREE_PLAN.PRICE_TEST : FREE_PLAN.PRICE, quantity: 1 }
+            ]
+        });
 
-    //     return subscription;
+        return subscription;
 
-    // }
+    }
 
 }
 

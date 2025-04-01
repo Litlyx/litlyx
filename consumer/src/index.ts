@@ -11,10 +11,9 @@ import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
 import express from 'express';
 
-import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
 import { ProjectCountModel } from './shared/schema/project/ProjectsCounts';
 import { metricsRouter } from './Metrics';
-
+import { UserLimitModel } from './shared/schema/UserLimitSchema';
 
 const app = express();
 
@@ -26,6 +25,12 @@ connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
 
 const CONSUMER_NAME = `CONSUMER_${process.env.NODE_APP_INSTANCE || 'DEFAULT'}`
+
+
+async function getProjectOwner(pid: string) {
+    const ownerData = await ProjectModel.findOne({ _id: pid }, { owner: 1 });
+    return ownerData.owner;
+}
 
 async function main() {
 
@@ -51,18 +56,18 @@ async function processStreamEntry(data: Record<string, string>) {
 
         const { pid, sessionHash } = data;
 
-        const project = await ProjectModel.exists({ _id: pid });
-        if (!project) return;
+        const owner = await getProjectOwner(pid);
+        if (!owner) return;
 
-        const canLog = await checkLimits(pid);
+        const canLog = await checkLimits(owner.toString());
         if (!canLog) return;
 
         if (eventType === 'event') {
-            await process_event(data, sessionHash);
+            await process_event(data, sessionHash, owner.toString());
         } else if (eventType === 'keep_alive') {
-            await process_keep_alive(data, sessionHash);
+            await process_keep_alive(data, sessionHash, owner.toString());
         } else if (eventType === 'visit') {
-            await process_visit(data, sessionHash);
+            await process_visit(data, sessionHash, owner.toString());
         }
 
     } catch (ex: any) {
@@ -75,7 +80,7 @@ async function processStreamEntry(data: Record<string, string>) {
 
 }
 
-async function process_visit(data: Record<string, string>, sessionHash: string) {
+async function process_visit(data: Record<string, string>, sessionHash: string, user_id: string) {
 
     const { pid, ip, website, page, referrer, userAgent, flowHash, timestamp } = data;
 
@@ -105,12 +110,12 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
             created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } }, { upsert: true }),
-        ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } })
+        UserLimitModel.updateOne({ user_id }, { $inc: { 'visits': 1 } })
     ]);
 
 }
 
-async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
+async function process_keep_alive(data: Record<string, string>, sessionHash: string, user_id: string) {
 
     const { pid, instant, flowHash, timestamp, website } = data;
 
@@ -137,7 +142,7 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
 }
 
-async function process_event(data: Record<string, string>, sessionHash: string) {
+async function process_event(data: Record<string, string>, sessionHash: string, user_id: string) {
 
     const { name, metadata, pid, flowHash, timestamp, website } = data;
 
@@ -155,7 +160,7 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
             created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true }),
-        ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } })
+        UserLimitModel.updateOne({ user_id }, { $inc: { 'events': 1 } })
     ]);
 
 
