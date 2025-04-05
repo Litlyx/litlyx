@@ -34,6 +34,7 @@ export default defineEventHandler(async event => {
     const passwordDeletation = await PasswordModel.deleteMany({ user_id: userData.id });
 
     const limitdeletation = await UserLimitModel.deleteMany({ user_id: userData.id });
+    const notifiesDeletation = await LimitNotifyModel.deleteMany({ user_id: userData.id });
 
     await StripeService.deleteCustomer(premium.customer_id);
 
@@ -43,7 +44,6 @@ export default defineEventHandler(async event => {
         const userSettingsDeletation = await UserSettingsModel.deleteOne({ project_id });
         const countDeletation = await ProjectCountModel.deleteMany({ project_id });
         const sessionsDeletation = await SessionModel.deleteMany({ project_id });
-        const notifiesDeletation = await LimitNotifyModel.deleteMany({ project_id });
         const aiChatsDeletation = await AiChatModel.deleteMany({ project_id });
 
         //Shields

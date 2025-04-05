@@ -69,6 +69,9 @@ export async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
     const databaseSubscription = premiumData.subscription_id;
 
+    const currentSubscriptionData = await StripeService.getSubscription(subscription_id);
+    if (!currentSubscriptionData || currentSubscriptionData.status !== 'active') return { error: 'subscription not active' }
+
     if (databaseSubscription != subscription_id) {
         try {
             await StripeService.deleteSubscription(databaseSubscription);
