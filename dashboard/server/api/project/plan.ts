@@ -1,44 +1,46 @@
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
+import { UserLimitModel } from "@schema/UserLimitSchema";
 import StripeService from '~/server/services/StripeService';
+import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, []);
+    const data = await getRequestData(event, [], ['OWNER']);
     if (!data) return;
 
-    const { project, project_id } = data;
+    const premium = await PremiumModel.findOne({ user_id: data.user.id });
+    if (!premium) return;
 
-    if (project.subscription_id === 'onetime') {
+    if (premium.subscription_id === 'onetime') {
 
-        const projectLimits = await ProjectLimitModel.findOne({ project_id });
-        if (!projectLimits) return setResponseStatus(event, 400, 'Project limits not found');
+        const userLimits = await UserLimitModel.findOne({ user_id: data.user.id });
+        if (!userLimits) return setResponseStatus(event, 400, 'User limits not found');
 
         const result = {
-            premium: project.premium,
-            premium_type: project.premium_type,
-            billing_start_at: projectLimits.billing_start_at,
-            billing_expire_at: projectLimits.billing_expire_at,
-            limit: projectLimits.limit,
-            count: projectLimits.events + projectLimits.visits,
+            premium: premium.premium_type > 0,
+            premium_type: premium.premium_type,
+            billing_start_at: userLimits.billing_start_at,
+            billing_expire_at: userLimits.billing_expire_at,
+            limit: userLimits.limit,
+            count: userLimits.events + userLimits.visits,
             subscription_status: StripeService.isDisabled() ? 'Disabled mode' : ('One time payment')
         }
 
         return result;
     }
 
-    const subscription = await StripeService.getSubscription(project.subscription_id);
+    const subscription = await StripeService.getSubscription(premium.subscription_id);
 
-    const projectLimits = await ProjectLimitModel.findOne({ project_id });
-    if (!projectLimits) return setResponseStatus(event, 400, 'Project limits not found');
+    const userLimits = await UserLimitModel.findOne({ user_id: data.user.id });
+    if (!userLimits) return setResponseStatus(event, 400, 'User limits not found');
 
 
     const result = {
-        premium: project.premium,
-        premium_type: project.premium_type,
-        billing_start_at: projectLimits.billing_start_at,
-        billing_expire_at: projectLimits.billing_expire_at,
-        limit: projectLimits.limit,
-        count: projectLimits.events + projectLimits.visits,
+        premium: premium.premium_type > 0,
+        premium_type: premium.premium_type,
+        billing_start_at: userLimits.billing_start_at,
+        billing_expire_at: userLimits.billing_expire_at,
+        limit: userLimits.limit,
+        count: userLimits.events + userLimits.visits,
         subscription_status: StripeService.isDisabled() ? 'Disabled mode' : (subscription?.status ?? '?')
     }
 

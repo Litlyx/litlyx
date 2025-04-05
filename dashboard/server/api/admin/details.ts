@@ -1,8 +1,9 @@
 import { ProjectModel } from "@schema/project/ProjectSchema";
 import { ProjectCountModel } from "@schema/project/ProjectsCounts";
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
+import { UserLimitModel } from "@schema/UserLimitSchema";
 import { UserModel } from "@schema/UserSchema";
 import StripeService from '~/server/services/StripeService';
+import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 export default defineEventHandler(async event => {
     const userData = getRequestUser(event);
@@ -13,18 +14,20 @@ export default defineEventHandler(async event => {
     if (!project_id) return setResponseStatus(event, 400, 'ProjectId is required');
 
     const project = await ProjectModel.findById(project_id);
-    const limits = await ProjectLimitModel.findOne({ project_id });
+    const limits = await UserLimitModel.findOne({ user_id: userData.id });
     const counts = await ProjectCountModel.findOne({ project_id });
     const user = await UserModel.findOne({ project_id });
 
+    const premium = await PremiumModel.findOne({ user_id: userData.id });
+
     const subscription =
-        project?.subscription_id ?
-            await StripeService.getSubscription(project.subscription_id) : 'NONE';
+        premium?.subscription_id ?
+            await StripeService.getSubscription(premium.subscription_id) : 'NONE';
 
     const customer =
-        project?.customer_id ?
-            await StripeService.getCustomer(project.customer_id) : 'NONE';
+        premium?.customer_id ?
+            await StripeService.getCustomer(premium.customer_id) : 'NONE';
 
     return { project, limits, counts, user, subscription, customer }
-    
+
 });

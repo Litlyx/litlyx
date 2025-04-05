@@ -1,6 +1,7 @@
 import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { Redis } from "~/server/services/CacheService";
 import StripeService from '~/server/services/StripeService';
+import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 
 export type InvoiceData = {
@@ -15,13 +16,13 @@ export default defineEventHandler(async event => {
     const data = await getRequestData(event, []);
     if (!data) return;
 
-    const { project, pid } = data;
 
-    if (!project.customer_id) return [];
+    return await Redis.useCache({ key: `invoices:${data.user.id}`, exp: 10 }, async () => {
 
-    return await Redis.useCache({ key: `invoices:${pid}`, exp: 10 }, async () => {
-
-        const invoices = await StripeService.getInvoices(project.customer_id);
+        const premium = await PremiumModel.findOne({ user_id: data.user.id });
+        if (!premium) return [];
+        
+        const invoices = await StripeService.getInvoices(premium.customer_id);
         if (!invoices) return [];
 
         return invoices?.data.map(e => {

@@ -1,6 +1,6 @@
 import { sendMessageOnChat, updateChatStatus } from "~/server/services/AiService";
 import { getAiChatRemainings } from "./chats_remaining";
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
+import { UserLimitModel } from "@schema/UserLimitSchema";
 
 
 
@@ -8,16 +8,15 @@ export default defineEventHandler(async event => {
     const data = await getRequestData(event, [], ['AI']);
     if (!data) return;
 
-    const { pid } = data;
+    const { pid, user } = data;
 
     const { text, chat_id, timeOffset } = await readBody(event);
     if (!text) return setResponseStatus(event, 400, 'text parameter missing');
 
-    const chatsRemaining = await getAiChatRemainings(pid);
+    const chatsRemaining = await getAiChatRemainings(user.id);
     if (chatsRemaining <= 0) return setResponseStatus(event, 400, 'CHAT_LIMIT_REACHED');
 
-
-    await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { ai_messages: 1 } });
+    await UserLimitModel.updateOne({ user_id: user.id }, { $inc: { ai_messages: 1 } });
 
     const currentStatus: string[] = [];
 

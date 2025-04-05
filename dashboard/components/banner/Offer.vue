@@ -7,11 +7,7 @@ function goToUpgrade() {
     showDrawer('PRICING');
 }
 
-const { project } = useProject()
-
-const isPremium = computed(() => {
-    return project.value?.premium ?? false;
-});
+const { isPremium } = useLoggedUser()
 
 </script>
 

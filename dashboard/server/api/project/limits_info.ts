@@ -1,17 +1,15 @@
 
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
+import { UserLimitModel } from "@schema/UserLimitSchema";
 import { MAX_LOG_LIMIT_PERCENT } from '@data/broker/Limits';
 
 export default defineEventHandler(async event => {
 
-
-
-    const data = await getRequestDataOld(event);
+    const data = await getRequestData(event, [], []);
     if (!data) return;
 
-    const { project_id } = data;
+    const { user } = data;
 
-    const projectLimits = await ProjectLimitModel.findOne({ project_id });
+    const projectLimits = await UserLimitModel.findOne({ user_id: user.id });
     if (!projectLimits) return;
 
     const TOTAL_COUNT = projectLimits.events + projectLimits.visits;

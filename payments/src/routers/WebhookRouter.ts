@@ -1,5 +1,5 @@
 
-import { json, Router } from 'express';
+import { raw, Router } from 'express';
 import { sendJson } from '../Utils';
 import StripeService from '../services/StripeService';
 
@@ -8,7 +8,7 @@ import * as WebhookController from '../controllers/WebhookController'
 export const webhookRouter = Router();
 
 
-webhookRouter.get('/', json(), async (req, res) => {
+webhookRouter.post('/', raw({ type: 'application/json' }), async (req, res) => {
     try {
 
         const signature = req.header('stripe-signature');
@@ -26,7 +26,7 @@ webhookRouter.get('/', json(), async (req, res) => {
             const response = await WebhookController.onPaymentFailed(eventData);
             return sendJson(res, 200, response);
         }
-        
+
 
     } catch (ex) {
         res.status(500).json({ error: ex.message });

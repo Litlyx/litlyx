@@ -1,268 +1,270 @@
 
-import StripeService from '~/server/services/StripeService';
-import type Event from 'stripe';
-import { ProjectModel } from '@schema/project/ProjectSchema';
-import { PREMIUM_DATA, PREMIUM_PLAN, getPlanFromId, getPlanFromPrice, getPlanFromTag } from '@data/PREMIUM';
-import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
-import { EmailService } from '@services/EmailService'
-import { UserModel } from '@schema/UserSchema';
-import { EmailServiceHelper } from '~/server/services/EmailServiceHelper';
+// import StripeService from '~/server/services/StripeService';
+// import type Event from 'stripe';
+// import { ProjectModel } from '@schema/project/ProjectSchema';
+// import { PREMIUM_DATA, PREMIUM_PLAN, getPlanFromId, getPlanFromPrice, getPlanFromTag } from '@data/PREMIUM';
+// import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
+// import { EmailService } from '@services/EmailService'
+// import { UserModel } from '@schema/UserSchema';
+// import { EmailServiceHelper } from '~/server/services/EmailServiceHelper';
 
 
-async function addSubscriptionToProject(project_id: string, plan: PREMIUM_DATA, subscription_id: string, current_period_start: number, current_period_end: number) {
+// async function addSubscriptionToProject(project_id: string, plan: PREMIUM_DATA, subscription_id: string, current_period_start: number, current_period_end: number) {
 
-    await ProjectModel.updateOne({ _id: project_id }, {
-        premium: plan.ID != 0,
-        premium_type: plan.ID,
-        subscription_id,
-        premium_expire_at: current_period_end * 1000
-    });
+//     await ProjectModel.updateOne({ _id: project_id }, {
+//         premium: plan.ID != 0,
+//         premium_type: plan.ID,
+//         subscription_id,
+//         premium_expire_at: current_period_end * 1000
+//     });
 
-    await ProjectLimitModel.updateOne({ project_id }, {
-        events: 0,
-        visits: 0,
-        ai_messages: 0,
-        limit: plan.COUNT_LIMIT,
-        ai_limit: plan.AI_MESSAGE_LIMIT,
-        billing_start_at: current_period_start * 1000,
-        billing_expire_at: current_period_end * 1000,
-    }, { upsert: true })
+//     await ProjectLimitModel.updateOne({ project_id }, {
+//         events: 0,
+//         visits: 0,
+//         ai_messages: 0,
+//         limit: plan.COUNT_LIMIT,
+//         ai_limit: plan.AI_MESSAGE_LIMIT,
+//         billing_start_at: current_period_start * 1000,
+//         billing_expire_at: current_period_end * 1000,
+//     }, { upsert: true })
 
-}
+// }
 
 
 
-async function onPaymentFailed(event: Event.InvoicePaymentFailedEvent) {
+// async function onPaymentFailed(event: Event.InvoicePaymentFailedEvent) {
 
-    //TODO: Send emails
+//     //TODO: Send emails
 
-    if (event.data.object.attempt_count > 1) {
-        const customer_id = event.data.object.customer as string;
-        const project = await ProjectModel.findOne({ customer_id });
-        if (!project) return { error: 'CUSTOMER NOT EXIST' }
+//     if (event.data.object.attempt_count > 1) {
+//         const customer_id = event.data.object.customer as string;
+//         const project = await ProjectModel.findOne({ customer_id });
+//         if (!project) return { error: 'CUSTOMER NOT EXIST' }
 
-        const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
-        if (!allSubscriptions) return;
+//         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
+//         if (!allSubscriptions) return;
 
-        for (const subscription of allSubscriptions.data) {
-            await StripeService.deleteSubscription(subscription.id);
-        }
+//         for (const subscription of allSubscriptions.data) {
+//             await StripeService.deleteSubscription(subscription.id);
+//         }
 
-        const freeSub = await StripeService.createFreeSubscription(customer_id);
-        if (!freeSub) return;
+//         const freeSub = await StripeService.createFreeSubscription(customer_id);
+//         if (!freeSub) return;
 
-        await addSubscriptionToProject(
-            project._id.toString(),
-            getPlanFromTag('FREE'),
-            freeSub.id,
-            freeSub.current_period_start,
-            freeSub.current_period_end
-        )
+//         await addSubscriptionToProject(
+//             project._id.toString(),
+//             getPlanFromTag('FREE'),
+//             freeSub.id,
+//             freeSub.current_period_start,
+//             freeSub.current_period_end
+//         )
 
-        return { ok: true };
-    }
+//         return { ok: true };
+//     }
 
 
-}
+// }
 
 
-async function onPaymentOnetimeSuccess(event: Event.PaymentIntentSucceededEvent) {
-    const customer_id = event.data.object.customer as string;
-    const project = await ProjectModel.findOne({ customer_id });
-    if (!project) return { error: 'CUSTOMER NOT EXIST' }
+// async function onPaymentOnetimeSuccess(event: Event.PaymentIntentSucceededEvent) {
+//     const customer_id = event.data.object.customer as string;
+//     const project = await ProjectModel.findOne({ customer_id });
+//     if (!project) return { error: 'CUSTOMER NOT EXIST' }
 
-    if (event.data.object.status === 'succeeded') {
+//     if (event.data.object.status === 'succeeded') {
 
-        const PLAN = getPlanFromPrice(event.data.object.metadata.price, StripeService.testMode || false);
-        if (!PLAN) return { error: 'Plan not found' }
-        const dummyPlan = PLAN.ID + 3000;
+//         const PLAN = getPlanFromPrice(event.data.object.metadata.price, StripeService.testMode || false);
+//         if (!PLAN) return { error: 'Plan not found' }
+//         const dummyPlan = PLAN.ID + 3000;
 
-        const subscription = await StripeService.createOneTimeSubscriptionDummy(customer_id, dummyPlan);
-        if (!subscription) return { error: 'Error creating subscription' }
+//         const subscription = await StripeService.createOneTimeSubscriptionDummy(customer_id, dummyPlan);
+//         if (!subscription) return { error: 'Error creating subscription' }
 
-        const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
-        if (!allSubscriptions) return;
-        for (const subscription of allSubscriptions.data) {
-            if (subscription.id === subscription.id) continue;
-            await StripeService.deleteSubscription(subscription.id);
-        }
+//         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
+//         if (!allSubscriptions) return;
+//         for (const subscription of allSubscriptions.data) {
+//             if (subscription.id === subscription.id) continue;
+//             await StripeService.deleteSubscription(subscription.id);
+//         }
 
-        await addSubscriptionToProject(project._id.toString(), PLAN, subscription.id, subscription.current_period_start, subscription.current_period_end)
+//         await addSubscriptionToProject(project._id.toString(), PLAN, subscription.id, subscription.current_period_start, subscription.current_period_end)
 
 
-        const user = await UserModel.findOne({ _id: project.owner });
-        if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
+//         const user = await UserModel.findOne({ _id: project.owner });
+//         if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
 
-        setTimeout(() => {
-            const emailData = EmailService.getEmailServerInfo('purchase', { target: user.email, projectName: project.name });
-            EmailServiceHelper.sendEmail(emailData);
-        }, 1);
+//         setTimeout(() => {
+//             const emailData = EmailService.getEmailServerInfo('purchase', { target: user.email, projectName: project.name });
+//             EmailServiceHelper.sendEmail(emailData);
+//         }, 1);
 
-        return { ok: true };
-    }
+//         return { ok: true };
+//     }
 
-    return { received: true, warn: 'object status not succeeded' }
-}
+//     return { received: true, warn: 'object status not succeeded' }
+// }
 
-async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
+// async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
 
-    const customer_id = event.data.object.customer as string;
-    const project = await ProjectModel.findOne({ customer_id });
-    if (!project) return { error: 'CUSTOMER NOT EXIST' }
+//     const customer_id = event.data.object.customer as string;
+//     const project = await ProjectModel.findOne({ customer_id });
+//     if (!project) return { error: 'CUSTOMER NOT EXIST' }
 
 
-    if (event.data.object.status === 'paid') {
+//     if (event.data.object.status === 'paid') {
 
-        const subscription_id = event.data.object.subscription as string;
+//         const subscription_id = event.data.object.subscription as string;
 
-        const isNewSubscription = project.subscription_id != subscription_id;
+//         const isNewSubscription = project.subscription_id != subscription_id;
 
-        const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
-        if (!allSubscriptions) return;
+//         const allSubscriptions = await StripeService.getAllSubscriptions(customer_id);
+//         if (!allSubscriptions) return;
 
-        const currentSubscription = allSubscriptions.data.find(e => e.id === subscription_id);
-        if (!currentSubscription) return { error: 'SUBSCRIPTION NOT EXIST' }
+//         const currentSubscription = allSubscriptions.data.find(e => e.id === subscription_id);
+//         if (!currentSubscription) return { error: 'SUBSCRIPTION NOT EXIST' }
 
-        if (currentSubscription.status !== 'active') return { error: 'SUBSCRIPTION NOT ACTIVE' }
+//         if (currentSubscription.status !== 'active') return { error: 'SUBSCRIPTION NOT ACTIVE' }
 
-        for (const subscription of allSubscriptions.data) {
-            if (subscription.id === subscription_id) continue;
-            await StripeService.deleteSubscription(subscription.id);
-        }
+//         for (const subscription of allSubscriptions.data) {
+//             if (subscription.id === subscription_id) continue;
+//             await StripeService.deleteSubscription(subscription.id);
+//         }
 
-        const price = currentSubscription.items.data[0].price.id;
-        if (!price) return { error: 'Price not found' }
+//         const price = currentSubscription.items.data[0].price.id;
+//         if (!price) return { error: 'Price not found' }
 
-        const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
-        if (!PLAN) return { error: `Plan not found. Price: ${price}. TestMode: ${StripeService.testMode}` }
+//         const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
+//         if (!PLAN) return { error: `Plan not found. Price: ${price}. TestMode: ${StripeService.testMode}` }
 
-        await addSubscriptionToProject(project._id.toString(), PLAN, subscription_id, currentSubscription.current_period_start, currentSubscription.current_period_end)
+//         await addSubscriptionToProject(project._id.toString(), PLAN, subscription_id, currentSubscription.current_period_start, currentSubscription.current_period_end)
 
-        const user = await UserModel.findOne({ _id: project.owner });
-        if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
+//         const user = await UserModel.findOne({ _id: project.owner });
+//         if (!user) return { ok: false, error: 'USER NOT EXIST FOR PROJECT' + project.id }
 
-        setTimeout(() => {
-            if (PLAN.ID == 0) return;
-            const emailData = EmailService.getEmailServerInfo('purchase', { target: user.email, projectName: project.name });
-            EmailServiceHelper.sendEmail(emailData);
-        }, 1);
+//         setTimeout(() => {
+//             if (PLAN.ID == 0) return;
+//             const emailData = EmailService.getEmailServerInfo('purchase', { target: user.email, projectName: project.name });
+//             EmailServiceHelper.sendEmail(emailData);
+//         }, 1);
 
 
-        return { ok: true };
+//         return { ok: true };
 
 
-    }
-    return { received: true, warn: 'payment status not paid' }
-}
+//     }
+//     return { received: true, warn: 'payment status not paid' }
+// }
 
 
 
-async function onSubscriptionCreated(event: Event.CustomerSubscriptionCreatedEvent) {
+// async function onSubscriptionCreated(event: Event.CustomerSubscriptionCreatedEvent) {
 
-    // const project = await ProjectModel.findOne({ customer_id: event.data.object.customer });
-    // if (!project) return { error: 'CUSTOMER NOT EXIST' }
+//     // const project = await ProjectModel.findOne({ customer_id: event.data.object.customer });
+//     // if (!project) return { error: 'CUSTOMER NOT EXIST' }
 
-    // const price = event.data.object.items.data[0].price.id;
-    // if (!price) return { error: 'Price not found' }
+//     // const price = event.data.object.items.data[0].price.id;
+//     // if (!price) return { error: 'Price not found' }
 
-    // const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
-    // if (!PLAN) return { error: 'Plan not found' }
+//     // const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
+//     // if (!PLAN) return { error: 'Plan not found' }
 
-    // if (project.subscription_id != event.data.object.id) {
-    //     try {
-    //         await StripeService.deleteSubscription(project.subscription_id);
-    //     } catch (ex) { }
-    // }
+//     // if (project.subscription_id != event.data.object.id) {
+//     //     try {
+//     //         await StripeService.deleteSubscription(project.subscription_id);
+//     //     } catch (ex) { }
+//     // }
 
 
-    // if (event.data.object.status === 'active') {
-    //     await addSubscriptionToProject(
-    //         project._id.toString(),
-    //         PLAN,
-    //         event.data.object.id,
-    //         event.data.object.current_period_start,
-    //         event.data.object.current_period_end
-    //     );
-    // }
+//     // if (event.data.object.status === 'active') {
+//     //     await addSubscriptionToProject(
+//     //         project._id.toString(),
+//     //         PLAN,
+//     //         event.data.object.id,
+//     //         event.data.object.current_period_start,
+//     //         event.data.object.current_period_end
+//     //     );
+//     // }
 
 
 
-    return { ok: true }
-}
+//     return { ok: true }
+// }
 
-async function onSubscriptionDeleted(event: Event.CustomerSubscriptionDeletedEvent) {
+// async function onSubscriptionDeleted(event: Event.CustomerSubscriptionDeletedEvent) {
 
-    // const project = await ProjectModel.findOne({
-    //     customer_id: event.data.object.customer,
-    //     subscription_id: event.data.object.id
-    // });
+//     // const project = await ProjectModel.findOne({
+//     //     customer_id: event.data.object.customer,
+//     //     subscription_id: event.data.object.id
+//     // });
 
-    // if (!project) return { error: 'PROJECT WITH SUBSCRIPTION NOT FOUND' }
+//     // if (!project) return { error: 'PROJECT WITH SUBSCRIPTION NOT FOUND' }
 
-    // const targetCustomer = await StripeService.getCustomer(project.customer_id);
+//     // const targetCustomer = await StripeService.getCustomer(project.customer_id);
 
-    // let customer: Event.Customer;
+//     // let customer: Event.Customer;
 
-    // if (!targetCustomer.deleted) {
-    //     customer = targetCustomer;
-    // } else {
-    //     const user = await UserModel.findById(project._id, { email: 1 });
-    //     if (!user) return { error: 'User not found' }
-    //     const newCustomer = await StripeService.createCustomer(user.email);
-    //     customer = newCustomer;
-    // }
+//     // if (!targetCustomer.deleted) {
+//     //     customer = targetCustomer;
+//     // } else {
+//     //     const user = await UserModel.findById(project._id, { email: 1 });
+//     //     if (!user) return { error: 'User not found' }
+//     //     const newCustomer = await StripeService.createCustomer(user.email);
+//     //     customer = newCustomer;
+//     // }
 
-    // await StripeService.createFreeSubscription(customer.id);
+//     // await StripeService.createFreeSubscription(customer.id);
 
-    return { received: true }
-}
+//     return { received: true }
+// }
 
-async function onSubscriptionUpdated(event: Event.CustomerSubscriptionUpdatedEvent) {
+// async function onSubscriptionUpdated(event: Event.CustomerSubscriptionUpdatedEvent) {
 
-    // const project = await ProjectModel.findOne({
-    //     customer_id: event.data.object.customer,
-    // });
+//     // const project = await ProjectModel.findOne({
+//     //     customer_id: event.data.object.customer,
+//     // });
 
-    // if (!project) return { error: 'Project not found' }
+//     // if (!project) return { error: 'Project not found' }
 
-    // const price = event.data.object.items.data[0].price.id;
-    // if (!price) return { error: 'Price not found' }
+//     // const price = event.data.object.items.data[0].price.id;
+//     // if (!price) return { error: 'Price not found' }
 
-    // const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
-    // if (!PLAN) return { error: 'Plan not found' }
+//     // const PLAN = getPlanFromPrice(price, StripeService.testMode || false);
+//     // if (!PLAN) return { error: 'Plan not found' }
 
-    // if (event.data.object.status === 'active') {
-    //     await addSubscriptionToProject(
-    //         project._id.toString(),
-    //         PLAN,
-    //         event.data.object.id,
-    //         event.data.object.current_period_start,
-    //         event.data.object.current_period_end
-    //     );
-    // }
+//     // if (event.data.object.status === 'active') {
+//     //     await addSubscriptionToProject(
+//     //         project._id.toString(),
+//     //         PLAN,
+//     //         event.data.object.id,
+//     //         event.data.object.current_period_start,
+//     //         event.data.object.current_period_end
+//     //     );
+//     // }
 
-    return { ok: true }
-}
+//     return { ok: true }
+// }
 
 
 
 
 export default defineEventHandler(async event => {
 
-    const body = await readRawBody(event);
-    const signature = getHeader(event, 'stripe-signature') || '';
 
-    const eventData = StripeService.parseWebhook(body, signature);
-    if (!eventData) return;
+    return { error: 'NOT IMPLEMENTED ANYMORE' }
+    // const body = await readRawBody(event);
+    // const signature = getHeader(event, 'stripe-signature') || '';
 
-    // console.log('WEBHOOK FIRED', eventData.type);
+    // const eventData = StripeService.parseWebhook(body, signature);
+    // if (!eventData) return;
 
-    if (eventData.type === 'invoice.paid') return await onPaymentSuccess(eventData);
-    if (eventData.type === 'payment_intent.succeeded') return await onPaymentOnetimeSuccess(eventData);
-    if (eventData.type === 'invoice.payment_failed') return await onPaymentFailed(eventData);
-    if (eventData.type === 'customer.subscription.deleted') return await onSubscriptionDeleted(eventData);
-    if (eventData.type === 'customer.subscription.created') return await onSubscriptionCreated(eventData);
-    if (eventData.type === 'customer.subscription.updated') return await onSubscriptionUpdated(eventData);
+    // // console.log('WEBHOOK FIRED', eventData.type);
 
-    return { received: true }
+    // if (eventData.type === 'invoice.paid') return await onPaymentSuccess(eventData);
+    // if (eventData.type === 'payment_intent.succeeded') return await onPaymentOnetimeSuccess(eventData);
+    // if (eventData.type === 'invoice.payment_failed') return await onPaymentFailed(eventData);
+    // if (eventData.type === 'customer.subscription.deleted') return await onSubscriptionDeleted(eventData);
+    // if (eventData.type === 'customer.subscription.created') return await onSubscriptionCreated(eventData);
+    // if (eventData.type === 'customer.subscription.updated') return await onSubscriptionUpdated(eventData);
+
+    // return { received: true }
 });

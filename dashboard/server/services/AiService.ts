@@ -2,7 +2,6 @@
 
 import OpenAI from "openai";
 import { AiChatModel } from '@schema/ai/AiChatSchema';
-import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 
 import { AiEventsInstance } from '../ai/functions/AI_Events';
 import { AiVisitsInstance } from '../ai/functions/AI_Visits';
@@ -217,35 +216,6 @@ export async function sendMessageOnChat(text: string, pid: string, time_offset: 
         console.error(ex);
         return { content: ex.message, charts: [] };
     }
-
-    // let response = await openai.chat.completions.create({ model: OPENAI_MODEL, messages, n: 1, tools });
-
-    // const chartsData: string[][] = [];
-
-    // while ((response.choices[0].message.tool_calls?.length || 0) > 0) {
-    //     await addMessageToChat(response.choices[0].message, chat_id);
-    //     messages.push(response.choices[0].message);
-    //     if (response.choices[0].message.tool_calls) {
-
-    //         console.log('Tools to call', response.choices[0].message.tool_calls.length);
-    //         chartsData.push(getChartsInMessage(response.choices[0].message));
-
-    //         for (const toolCall of response.choices[0].message.tool_calls) {
-    //             const functionName = toolCall.function.name;
-    //             console.log('Calling tool function', functionName);
-    //             const functionToCall = functions[functionName];
-    //             const functionArgs = JSON.parse(toolCall.function.arguments);
-    //             const functionResponse = await functionToCall({ project_id: pid, ...functionArgs });
-    //             messages.push({ tool_call_id: toolCall.id, role: "tool", content: JSON.stringify(functionResponse) });
-    //             await addMessageToChat({ tool_call_id: toolCall.id, role: "tool", content: JSON.stringify(functionResponse) }, chat_id);
-    //         }
-    //     }
-    //     response = await openai.chat.completions.create({ model: OPENAI_MODEL, messages, n: 1, tools });
-    // }
-    // await addMessageToChat(response.choices[0].message, chat_id);
-    // await ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { ai_messages: 1 } })
-    // return { content: response.choices[0].message.content, charts: chartsData.filter(e => e.length > 0).flat() };
-
 
 }
 

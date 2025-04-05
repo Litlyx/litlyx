@@ -11,13 +11,13 @@ import { EmailService } from '../shared/services/EmailService';
 
 async function addSubscriptionToUser(user_id: string, plan: PLAN_DATA, subscription_id: string, current_period_start: number, current_period_end: number) {
 
-    await PremiumModel.updateOne({ _id: user_id }, {
+    await PremiumModel.updateOne({ user_id }, {
         premium_type: plan.ID,
         subscription_id,
         expire_at: current_period_end * 1000
     }, { upsert: true });
 
-    await UserLimitModel.updateOne({ _id: user_id }, {
+    await UserLimitModel.updateOne({ user_id }, {
         events: 0,
         visits: 0,
         ai_messages: 0,
@@ -31,9 +31,9 @@ async function addSubscriptionToUser(user_id: string, plan: PLAN_DATA, subscript
 
 export async function onPaymentFailed(event: Event.InvoicePaymentFailedEvent) {
 
-    
+
     if (event.data.object.attempt_count == 0) return { received: true, warn: 'attempt_count = 0' }
-    
+
     //TODO: Send emails
 
     const customer_id = event.data.object.customer as string;
@@ -70,7 +70,11 @@ export async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
     const databaseSubscription = premiumData.subscription_id;
 
     if (databaseSubscription != subscription_id) {
-        await StripeService.deleteSubscription(subscription_id);
+        try {
+            await StripeService.deleteSubscription(databaseSubscription);
+        } catch (ex) {
+            console.error(ex);
+        }
     }
 
     await addSubscriptionToUser(premiumData.user_id.toString(), plan, subscription_id, event.data.object.period_start, event.data.object.period_end);

@@ -6,7 +6,8 @@ definePageMeta({ layout: 'dashboard' });
 
 const { project } = useProject();
 
-const isPremium = computed(() => (project.value?.premium_type || 0) > 0);
+const { isPremium } = useLoggedUser();
+
 const selfhosted = useSelfhosted();
 const canDownload = computed(() => {
     if (selfhosted) return true;

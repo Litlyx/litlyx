@@ -1,7 +1,7 @@
 
 import { ProjectModel } from "@schema/project/ProjectSchema";
 import { ProjectCountModel } from "@schema/project/ProjectsCounts";
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
+import { UserLimitModel } from "@schema/UserLimitSchema";
 import { UserSettingsModel } from "@schema/UserSettings";
 import { AiChatModel } from "@schema/ai/AiChatSchema";
 import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
@@ -14,6 +14,7 @@ import { CountryBlacklistModel } from "~/shared/schema/shields/CountryBlacklistS
 import { BotTrafficOptionModel } from "~/shared/schema/shields/BotTrafficOptionSchema";
 import { TeamMemberModel } from "~/shared/schema/TeamMemberSchema";
 import { PasswordModel } from "~/shared/schema/PasswordSchema";
+import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 export default defineEventHandler(async event => {
 
@@ -22,21 +23,25 @@ export default defineEventHandler(async event => {
 
     const projects = await ProjectModel.find({ owner: userData.id });
 
-    const premiumProjects = projects.filter(e => { return e.premium && e.premium_type != 0 }).length;
-    if (premiumProjects > 0) return setResponseStatus(event, 400, 'Cannot delete an account with a premium project');
+    const premium = await PremiumModel.findOne({ user_id: userData.id });
+    if (!premium) return;
+
+    if (premium.premium_type > 0) return setResponseStatus(event, 400, 'Cannot delete an account with a premium project');
 
     const membersDeletation = await TeamMemberModel.deleteMany({ user_id: userData.id });
     const membersEmailDeletation = await TeamMemberModel.deleteMany({ email: userData.user.email });
 
     const passwordDeletation = await PasswordModel.deleteMany({ user_id: userData.id });
 
+    const limitdeletation = await UserLimitModel.deleteMany({ user_id: userData.id });
+
+    await StripeService.deleteCustomer(premium.customer_id);
+
     for (const project of projects) {
         const project_id = project._id;
-        await StripeService.deleteCustomer(project.customer_id);
         const projectDeletation = await ProjectModel.deleteOne({ _id: project_id });
         const userSettingsDeletation = await UserSettingsModel.deleteOne({ project_id });
         const countDeletation = await ProjectCountModel.deleteMany({ project_id });
-        const limitdeletation = await ProjectLimitModel.deleteMany({ project_id });
         const sessionsDeletation = await SessionModel.deleteMany({ project_id });
         const notifiesDeletation = await LimitNotifyModel.deleteMany({ project_id });
         const aiChatsDeletation = await AiChatModel.deleteMany({ project_id });

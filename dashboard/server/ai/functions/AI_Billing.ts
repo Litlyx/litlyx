@@ -1,5 +1,5 @@
 
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
+import { UserLimitModel } from "@schema/UserLimitSchema";
 import { AIPlugin } from "../Plugin";
 import { MAX_LOG_LIMIT_PERCENT } from "@data/broker/Limits";
 import { ProjectModel } from "@schema/project/ProjectSchema";
@@ -16,11 +16,11 @@ export class AiBilling extends AIPlugin<[
         super({
 
             'getInvoices': {
-                handler: async (data: { project_id: string }) => {
+                handler: async (data: { user_id: string }) => {
 
-                    const project = await ProjectModel.findOne({ _id: data.project_id });
+                    const project = await ProjectModel.findOne({ user_id: data.user_id });
                     if (!project) return { error: 'Project not found' };
-                    const invoices = await StripeService.getInvoices(project.customer_id);
+                    const invoices = await StripeService.getInvoices(data.user_id);
                     if (!invoices) return [];
 
                     return invoices?.data.map(e => {
@@ -45,46 +45,44 @@ export class AiBilling extends AIPlugin<[
             },
 
             'getBillingInfo': {
-                handler: async (data: { project_id: string }) => {
+                handler: async (data: { user_id: string }) => {
 
-                    const project = await ProjectModel.findOne({ _id: data.project_id });
-                    if (!project) return { error: 'Project not found' };
+                    return { error: 'NOT IMPLEMENTED YET' }
+                    // if (project.subscription_id === 'onetime') {
 
-                    if (project.subscription_id === 'onetime') {
+                    //     const projectLimits = await ProjectLimitModel.findOne({ project_id: data.project_id });
+                    //     if (!projectLimits) return { error: 'Limits not found' }
 
-                        const projectLimits = await ProjectLimitModel.findOne({ project_id: data.project_id });
-                        if (!projectLimits) return { error: 'Limits not found' }
+                    //     const result = {
+                    //         premium: project.premium,
+                    //         premium_type: project.premium_type,
+                    //         billing_start_at: projectLimits.billing_start_at,
+                    //         billing_expire_at: projectLimits.billing_expire_at,
+                    //         limit: projectLimits.limit,
+                    //         count: projectLimits.events + projectLimits.visits,
+                    //         subscription_status: StripeService.isDisabled() ? 'Disabled mode' : ('One time payment')
+                    //     }
 
-                        const result = {
-                            premium: project.premium,
-                            premium_type: project.premium_type,
-                            billing_start_at: projectLimits.billing_start_at,
-                            billing_expire_at: projectLimits.billing_expire_at,
-                            limit: projectLimits.limit,
-                            count: projectLimits.events + projectLimits.visits,
-                            subscription_status: StripeService.isDisabled() ? 'Disabled mode' : ('One time payment')
-                        }
+                    //     return result;
+                    // }
 
-                        return result;
-                    }
+                    // const subscription = await StripeService.getSubscription(project.subscription_id);
 
-                    const subscription = await StripeService.getSubscription(project.subscription_id);
-
-                    const projectLimits = await ProjectLimitModel.findOne({ project_id: data.project_id });
-                    if (!projectLimits) return { error: 'Limits not found' }
+                    // const projectLimits = await ProjectLimitModel.findOne({ project_id: data.project_id });
+                    // if (!projectLimits) return { error: 'Limits not found' }
 
 
-                    const result = {
-                        premium: project.premium,
-                        premium_type: project.premium_type,
-                        billing_start_at: projectLimits.billing_start_at,
-                        billing_expire_at: projectLimits.billing_expire_at,
-                        limit: projectLimits.limit,
-                        count: projectLimits.events + projectLimits.visits,
-                        subscription_status: StripeService.isDisabled() ? 'Disabled mode' : (subscription?.status ?? '?')
-                    }
+                    // const result = {
+                    //     premium: project.premium,
+                    //     premium_type: project.premium_type,
+                    //     billing_start_at: projectLimits.billing_start_at,
+                    //     billing_expire_at: projectLimits.billing_expire_at,
+                    //     limit: projectLimits.limit,
+                    //     count: projectLimits.events + projectLimits.visits,
+                    //     subscription_status: StripeService.isDisabled() ? 'Disabled mode' : (subscription?.status ?? '?')
+                    // }
 
-                    return result;
+                    // return result;
                 },
                 tool: {
                     type: 'function',
@@ -98,16 +96,17 @@ export class AiBilling extends AIPlugin<[
 
             'getLimits': {
                 handler: async (data: { project_id: string }) => {
-                    const projectLimits = await ProjectLimitModel.findOne({ project_id: data.project_id });
-                    if (!projectLimits) return { error: 'Project limits not found' };
-                    const TOTAL_COUNT = projectLimits.events + projectLimits.visits;
-                    const COUNT_LIMIT = projectLimits.limit;
-                    return {
-                        total: TOTAL_COUNT,
-                        limit: COUNT_LIMIT,
-                        limited: TOTAL_COUNT > COUNT_LIMIT * MAX_LOG_LIMIT_PERCENT,
-                        percent: Math.round(100 / COUNT_LIMIT * TOTAL_COUNT)
-                    }
+                    return { error: 'NOT IMPLEMENTED YET' }
+                    // const projectLimits = await ProjectLimitModel.findOne({ project_id: data.project_id });
+                    // if (!projectLimits) return { error: 'Project limits not found' };
+                    // const TOTAL_COUNT = projectLimits.events + projectLimits.visits;
+                    // const COUNT_LIMIT = projectLimits.limit;
+                    // return {
+                    //     total: TOTAL_COUNT,
+                    //     limit: COUNT_LIMIT,
+                    //     limited: TOTAL_COUNT > COUNT_LIMIT * MAX_LOG_LIMIT_PERCENT,
+                    //     percent: Math.round(100 / COUNT_LIMIT * TOTAL_COUNT)
+                    // }
                 },
                 tool: {
                     type: 'function',

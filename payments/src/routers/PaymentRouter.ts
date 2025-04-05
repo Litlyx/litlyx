@@ -4,6 +4,7 @@ import { getPlanFromId } from '../shared/data/PLANS';
 import StripeService from '../services/StripeService';
 import { sendJson } from '../Utils';
 import { PremiumModel } from '../shared/schema/PremiumSchema';
+import { Types } from 'mongoose';
 
 export const paymentRouter = Router();
 
@@ -20,7 +21,7 @@ paymentRouter.post('/create', json(), async (req, res) => {
         const plan = getPlanFromId(createPaymentData.plan_id);
         if (!plan) return sendJson(res, 400, { error: 'plan not found' });
 
-        const premiumData = await PremiumModel.findById(createPaymentData.user_id);
+        const premiumData = await PremiumModel.findOne({ user_id: createPaymentData.user_id });
         if (!premiumData) return sendJson(res, 400, { error: 'user not found' });
         if (!premiumData.customer_id) return sendJson(res, 400, { error: 'user have no customer_id' });
 

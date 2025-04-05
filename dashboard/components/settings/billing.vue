@@ -222,7 +222,7 @@ const { showDrawer } = useDrawer();
                             <div class="poppins"> Usage:</div>
                             <div class="flex items-center gap-2 md:gap-4 flex-col pt-4 md:pt-0 md:flex-row">
                                 <div class="grow w-full md:w-auto">
-                                    <UProgress :color="color" :min="0" :max="planData.limit" :value="planData.count">
+                                    <UProgress v-if="planData" :color="color" :min="0" :max="planData.limit" :value="planData.count">
                                     </UProgress>
                                 </div>
                                 <div class="poppins"> {{ percent }}</div>

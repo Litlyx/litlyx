@@ -4,6 +4,7 @@ import { UserModel } from "@schema/UserSchema";
 import { ADMIN_EMAILS } from '@data/ADMINS';
 
 import type { H3Event, EventHandlerRequest } from 'h3';
+import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 export type AuthContextLogged = {
     id: string,
@@ -30,7 +31,7 @@ async function authorizationMiddleware(event: H3Event<EventHandlerRequest>) {
     } else {
 
         const [type, token] = authorization.split(' ');
-        
+
         const valid = readUserJwt(token);
         if (!valid) return event.context.auth = { logged: false }
 
@@ -38,9 +39,15 @@ async function authorizationMiddleware(event: H3Event<EventHandlerRequest>) {
         if (!user) return event.context.auth = { logged: false };
 
         const roles: string[] = [];
-        
+
         if (ADMIN_EMAILS.includes(user.email)) {
             roles.push('ADMIN');
+        }
+
+        const premium = await PremiumModel.findOne({ user_id: user.id });
+
+        if ((premium?.premium_type || 0) > 0) {
+            roles.push('PREMIUM');
         }
 
         const authContext: AuthContext = {
@@ -49,11 +56,11 @@ async function authorizationMiddleware(event: H3Event<EventHandlerRequest>) {
                 email: user.email,
                 name: user.name,
                 picture: user.picture || `https://robohash.org/${user.email}?set=set4`,
-                roles
+                roles,
             },
             id: user._id.toString()
         }
-        
+
         event.context.auth = authContext;
 
     }
