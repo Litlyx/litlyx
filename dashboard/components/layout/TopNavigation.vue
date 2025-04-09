@@ -52,15 +52,6 @@ const { safeSnapshotDates } = useSnapshot();
                     Docs
                 </NuxtLink>
 
-
-                <div>
-                    <UTooltip :text="isDark ? 'Toggle light mode' : 'Toggle dark mode'">
-                        <i @click="isDark = !isDark"
-                            class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark"
-                            :class="isDark ? 'far fa-moon' : 'far fa-sun'"></i>
-                    </UTooltip>
-                </div>
-
             </div>
 
         </div>

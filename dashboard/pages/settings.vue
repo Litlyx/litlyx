@@ -6,10 +6,7 @@ const selfhosted = useSelfhosted();
 
 const items = [
     { label: 'General', slot: 'general', tab: 'general' },
-    { label: 'Domains', slot: 'domains', tab: 'domains' },
-    { label: 'Billing', slot: 'billing', tab: 'billing' },
-    { label: 'Codes', slot: 'codes', tab: 'codes' },
-    { label: 'Account', slot: 'account', tab: 'account' }
+    { label: 'Domains', slot: 'domains', tab: 'domains' }
 ]
 
 </script>
@@ -26,14 +23,14 @@ const items = [
             <template #domains>
                 <SettingsData :key="refreshKey"></SettingsData>
             </template>
-            <template #billing>
+            <!-- <template #billing>
                 <SettingsBilling v-if="!selfhosted" :key="refreshKey"></SettingsBilling>
                 <div class="flex popping text-[1.2rem] font-semibold justify-center mt-[20vh] text-lyx-lightmode-text dark:text-lyx-text"
                     v-if="selfhosted">
                     Billing disabled in self-host mode
                 </div>
-            </template>
-            <template #codes>
+            </template> -->
+            <!-- <template #codes>
                 <SettingsCodes v-if="!selfhosted" :key="refreshKey"></SettingsCodes>
                 <div class="flex popping text-[1.2rem] font-semibold justify-center mt-[20vh] text-lyx-lightmode-text dark:text-lyx-text"
                     v-if="selfhosted">
@@ -42,7 +39,7 @@ const items = [
             </template>
             <template #account>
                 <SettingsAccount :key="refreshKey"></SettingsAccount>
-            </template>
+            </template> -->
         </CustomTab>
 
     </div>

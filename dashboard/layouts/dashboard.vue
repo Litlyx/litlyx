@@ -27,7 +27,7 @@ const sections: Section[] = [
             // { label: 'Links (soon)', to: '#', icon: 'fal fa-globe-pointer', disabled: true },
             // { label: 'Integrations (soon)', to: '/integrations', icon: 'fal fa-cube', disabled: true },
 
-            { grow: true, label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
+            { label: 'Settings', to: '/settings', icon: 'fal fa-gear' },
             // {
             //     grow: true,
             //     label: 'Leave a Feedback', icon: 'fal fa-message',

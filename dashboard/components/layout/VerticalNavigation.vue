@@ -32,7 +32,7 @@ const { data: pendingInvites, refresh: refreshInvites } = useFetch('/api/project
     headers: useComputedHeaders({})
 });
 
-const { userRoles, setLoggedUser } = useLoggedUser();
+const { userRoles } = useLoggedUser();
 const { projectList } = useProject();
 
 const debugMode = process.dev;
@@ -92,28 +92,10 @@ async function generatePDF() {
     }
 }
 
-const { setToken } = useAccessToken();
-const router = useRouter();
 const { actions } = useProject();
 
 
 const modal = useModal();
-
-
-function onLogout() {
-    modal.open(DialogConfirmLogout, {
-        onSuccess() {
-            modal.close();
-            console.log('LOGOUT');
-            setToken('');
-            setLoggedUser(undefined);
-            router.push('/login');
-        },
-        onCancel() {
-            modal.close();
-        }
-    })
-}
 
 const { data: maxProjects } = useFetch("/api/user/max_projects", {
     headers: computed(() => {
@@ -149,12 +131,12 @@ function openPendingInvites() {
 </script>
 
 <template>
-    <div class="CVerticalNavigation border-solid border-[#D9D9E0] dark:border-[#202020] border-r-[1px] h-full w-[20rem] bg-lyx-lightmode-background dark:bg-lyx-background flex shadow-[1px_0_10px_#000000]"
+    <div class="CVerticalNavigation border-solid border-[#D9D9E0] dark:border-[#202020] border-r-[1px] h-full w-[16rem] bg-lyx-lightmode-background dark:bg-lyx-background flex shadow-[1px_0_10px_#000000]"
         :class="{
             'absolute top-0 w-full md:w-[20rem] z-[45] open': isOpen,
             'hidden lg:flex': !isOpen
         }">
-        <div class="py-4 px-2 gap-6 flex flex-col w-full">
+        <div class="py-4 pb-2 px-2 gap-6 flex flex-col w-full">
 
             <!-- <div class="flex px-2" v-if="!isPremium">
                 <LyxUiButton type="primary" class="w-full text-center text-[.8rem] font-medium" @click="pricingDrawer.visible.value = true;">
@@ -334,24 +316,12 @@ function openPendingInvites() {
                     </div>
                 </div>
 
-                <div class="bg-lyx-lightmode-widget dark:bg-[#202020] h-[1px] w-full px-4  mb-3"></div>
+                <LyxUiSeparator class="px-4 mb-2"></LyxUiSeparator>
 
-                <div class="flex justify-end px-2">
+                <div class="flex px-1 w-full">
 
-                    <div class="grow flex gap-3">
+                    <LayoutVerticalBottomMenu></LayoutVerticalBottomMenu>
 
-                        <NuxtLink to="/admin" v-if="userRoles.isAdmin.value"
-                            class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">
-                            <i class="far fa-cat"></i>
-                        </NuxtLink>
-                    </div>
-
-                    <UTooltip text="Logout" :popper="{ arrow: true, placement: 'top' }">
-                        <div @click="onLogout()"
-                            class="cursor-pointer hover:text-lyx-lightmode-text text-lyx-lightmode-text-dark dark:hover:text-lyx-text dark:text-lyx-text-dark">
-                            <i class="far fa-arrow-right-from-bracket scale-x-[-100%]"></i>
-                        </div>
-                    </UTooltip>
                 </div>
 
 
