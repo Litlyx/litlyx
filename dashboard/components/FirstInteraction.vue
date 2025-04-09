@@ -135,18 +135,17 @@ function reloadPage() {
                 </div>
                 <div>
                     <div>
-                        <CardTitled class="w-full h-full" title="Wordpress + Elementor"
-                            sub="Our WordPress plugin is coming soon!.">
+                        <CardTitled class="w-full h-full" title="Start with Wordpress." sub="Setup Litlyx analytics in 30 seconds on Wordpress.">
                             <template #header>
                                 <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
-                                    to="https://docs.litlyx.com">
+                                    to="https://docs.litlyx.com/techs/wordpress">
                                     Visit documentation
                                 </LyxUiButton>
                             </template>
 
                             <div class="flex flex-col items-end">
                                 <div class="justify-center w-full hidden xl:flex gap-3">
-                                    <a href="#">
+                                    <a href="https://docs.litlyx.com/techs/wordpress">
                                     <img class="cursor-pointer" :src="'tech-icons/wpel.png'" alt="Litlyx-Wordpress-Elementor">
                                     </a>
                                 </div>
