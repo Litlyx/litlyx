@@ -90,10 +90,8 @@ app.post('/send/welcome', express.json(), async (req, res) => {
 
 app.post('/send/purchase', express.json(), async (req, res) => {
     try {
-        console.log('PURCHASE EMAIL DISABLED')
-        return;
-        const { target, projectName } = req.body;
-        const ok = await EmailService.sendPurchaseEmail(target, projectName);
+        const { target } = req.body;
+        const ok = await EmailService.sendPurchaseEmail(target);
         res.json({ ok });
     } catch (ex) {
         res.status(500).json({ error: ex.message });
@@ -132,8 +130,8 @@ app.post('/send/anomaly/visits_events', express.json(), async (req, res) => {
 
 app.post('/send/limit/50', express.json(), async (req, res) => {
     try {
-        const { target, projectName } = req.body;
-        const ok = await EmailService.sendLimitEmail50(target, projectName);
+        const { target } = req.body;
+        const ok = await EmailService.sendLimitEmail50(target);
         res.json({ ok });
     } catch (ex) {
         res.status(500).json({ error: ex.message });
@@ -142,8 +140,8 @@ app.post('/send/limit/50', express.json(), async (req, res) => {
 
 app.post('/send/limit/90', express.json(), async (req, res) => {
     try {
-        const { target, projectName } = req.body;
-        const ok = await EmailService.sendLimitEmail90(target, projectName);
+        const { target } = req.body;
+        const ok = await EmailService.sendLimitEmail90(target);
         res.json({ ok });
     } catch (ex) {
         res.status(500).json({ error: ex.message });
@@ -152,8 +150,8 @@ app.post('/send/limit/90', express.json(), async (req, res) => {
 
 app.post('/send/limit/max', express.json(), async (req, res) => {
     try {
-        const { target, projectName } = req.body;
-        const ok = await EmailService.sendLimitEmailMax(target, projectName);
+        const { target } = req.body;
+        const ok = await EmailService.sendLimitEmailMax(target);
         res.json({ ok });
     } catch (ex) {
         res.status(500).json({ error: ex.message });

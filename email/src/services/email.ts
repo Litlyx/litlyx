@@ -62,7 +62,7 @@ export class EmailService {
         }
     }
 
-    static async sendLimitEmail50(target: string, projectName: string) {
+    static async sendLimitEmail50(target: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "⚡ You've reached 50% limit on Litlyx";
@@ -70,7 +70,6 @@ export class EmailService {
             sendSmtpEmail.to = [{ "email": target }];
 
             sendSmtpEmail.htmlContent = TEMPLATE.LIMIT_50_EMAIL
-                .replace(/\[Project Name\]/, projectName)
                 .toString();
 
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
@@ -81,14 +80,13 @@ export class EmailService {
         }
     }
 
-    static async sendLimitEmail90(target: string, projectName: string) {
+    static async sendLimitEmail90(target: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "⚡ You've reached 90% limit on Litlyx";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = TEMPLATE.LIMIT_90_EMAIL
-                .replace(/\[Project Name\]/, projectName)
                 .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
@@ -98,14 +96,13 @@ export class EmailService {
         }
     }
 
-    static async sendLimitEmailMax(target: string, projectName: string) {
+    static async sendLimitEmailMax(target: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "🚨 You've reached your limit on Litlyx!";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = TEMPLATE.LIMIT_MAX_EMAIL
-                .replace(/\[Project Name\]/, projectName)
                 .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;
@@ -130,14 +127,13 @@ export class EmailService {
         }
     }
 
-    static async sendPurchaseEmail(target: string, projectName: string) {
+    static async sendPurchaseEmail(target: string) {
         try {
             const sendSmtpEmail = new SendSmtpEmail();
             sendSmtpEmail.subject = "Thank You for Upgrading Your Litlyx Plan!";
             sendSmtpEmail.sender = { "name": "Litlyx", "email": "help@litlyx.com" };
             sendSmtpEmail.to = [{ "email": target }];
             sendSmtpEmail.htmlContent = TEMPLATE.PURCHASE_EMAIL
-                .replace(/\[Project Name\]/, projectName)
                 .toString();
             await this.apiInstance.sendTransacEmail(sendSmtpEmail);
             return true;

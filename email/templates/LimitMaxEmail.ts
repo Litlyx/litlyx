@@ -1,14 +1,9 @@
-export const LIMIT_MAX_EMAIL = `<!DOCTYPE html
-    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html dir="ltr" lang="en">
+export const LIMIT_MAX_EMAIL = `<!DOCTYPE html>
+<html>
 
 <head>
-    <link rel="preload" as="image" href="https://react-email-demo-lpdmf0ryo-resend.vercel.app/static/airbnb-logo.png" />
-    <link rel="preload" as="image"
-        href="https://react-email-demo-lpdmf0ryo-resend.vercel.app/static/airbnb-review-user.jpg" />
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
     <meta name="x-apple-disable-message-reformatting" />
-    <!--$-->
 </head>
 
 <body
@@ -42,11 +37,11 @@ export const LIMIT_MAX_EMAIL = `<!DOCTYPE html
                                             <tr style="width:100%">
                                                 <p
                                                     style="font-size:32px;line-height:1.3;margin:16px 0;font-weight:700;color:#484848">
-                                                    You’ve Reached Your Litlyx Project Limit on [Project Name]
+                                                    You’ve Reached Your Litlyx's Tracking Limits
                                                 </p>
                                                 <p
                                                     style="font-size:18px;line-height:1.4;margin:16px 0;color:#484848;padding:24px;background-color:#ffbb03;border-radius:4px">
-                                                    We noticed that Litlyx has stopped collecting data for your project.
+                                                  <strong>Litlyx has stopped collecting data for your project.</strong> 
                                                 </p>
 
                                                 <p>
@@ -62,14 +57,9 @@ export const LIMIT_MAX_EMAIL = `<!DOCTYPE html
                                                 <p>
                                                     If you need additional storage for data collection, consider
                                                     upgrading your plan to unlock more benefits and ensure uninterrupted
-                                                    service.
+                                                    service. You can find out more here: <a href="https://litlyx.com/pricing">Our pricing</a> 
                                                 </p>
-                                                <p style="font-weight: 700;">
-                                                    As a token of appreciation, we're offering you 25% off for life at
-                                                    checkout with the code LIT25.
-                                                </p>
-                                                Thank you for choosing Litlyx as your trusted analytics tool.
-                                                <p></p>
+                                              
 
                                                 <p>
                                                     If you have any questions or need assistance, feel free to reply to
@@ -82,8 +72,8 @@ export const LIMIT_MAX_EMAIL = `<!DOCTYPE html
                                                 </p>
 
                                                 <p>
-                                                    Antonio
-                                                    CEO | Litlyx
+                                                    Antonio,
+                                                    CEO at Litlyx
                                                 </p>
 
 
@@ -113,7 +103,7 @@ export const LIMIT_MAX_EMAIL = `<!DOCTYPE html
                                             <tr style="width:100%">
                                                 <p
                                                     style="font-size:14px;line-height:24px;margin:16px 0;color:#9ca299;margin-bottom:10px">
-                                                    2024 © Litlyx. All rights reserved.
+                                                    2025 © Litlyx. All rights reserved.
                                                     <br>
                                                     Litlyx S.R.L. - Viale Tirreno, 187 - 00141 Rome - P.IVA:
                                                     17814721001- REA: RM-1743194
@@ -134,5 +124,4 @@ export const LIMIT_MAX_EMAIL = `<!DOCTYPE html
 </body>
 
 </html>
-
 `

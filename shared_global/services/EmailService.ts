@@ -19,13 +19,13 @@ export type EmailServerInfo = { url: string, body: Record<string, any>, headers:
 type EmailData =
     | { template: 'confirm', data: { target: string, link: string } }
     | { template: 'welcome', data: { target: string } }
-    | { template: 'purchase', data: { target: string, projectName: string } }
+    | { template: 'purchase', data: { target: string } }
     | { template: 'reset_password', data: { target: string, newPassword: string } }
     | { template: 'anomaly_domain', data: { target: string, projectName: string, domains: string[] } }
     | { template: 'anomaly_visits_events', data: { target: string, projectName: string, data: any[] } }
-    | { template: 'limit_50', data: { target: string, projectName: string } }
-    | { template: 'limit_90', data: { target: string, projectName: string } }
-    | { template: 'limit_max', data: { target: string, projectName: string } }
+    | { template: 'limit_50', data: { target: string } }
+    | { template: 'limit_90', data: { target: string } }
+    | { template: 'limit_max', data: { target: string } }
     | { template: 'invite_project', data: { target: string, projectName: string, link: string } }
     | { template: 'invite_project_noaccount', data: { target: string, projectName: string, link: string } }
     | { template: 'brevolist_add', data: { email: string } }

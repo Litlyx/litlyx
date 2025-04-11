@@ -15,7 +15,7 @@ export async function checkLimitsForEmail(projectCounts: TUserLimit) {
         await LimitNotifyModel.create({ user_id, limit1: false, limit2: false, limit3: false })
     }
 
-    const owner = await UserModel.findById(project.owner);
+    const owner = await UserModel.findById(user_id);
     if (!owner) return;
 
     const userName = owner.given_name || owner.name || 'no_name';
@@ -25,7 +25,7 @@ export async function checkLimitsForEmail(projectCounts: TUserLimit) {
         if (hasNotifyEntry.limit3 === true) return;
 
         setImmediate(() => {
-            const emailData = EmailService.getEmailServerInfo('limit_max', { target: owner.email, userName });
+            const emailData = EmailService.getEmailServerInfo('limit_max', { target: owner.email });
             EmailServiceHelper.sendEmail(emailData);
         });
 
@@ -36,7 +36,7 @@ export async function checkLimitsForEmail(projectCounts: TUserLimit) {
         if (hasNotifyEntry.limit2 === true) return;
 
         setImmediate(() => {
-            const emailData = EmailService.getEmailServerInfo('limit_90', { target: owner.email, userName });
+            const emailData = EmailService.getEmailServerInfo('limit_90', { target: owner.email });
             EmailServiceHelper.sendEmail(emailData);
         });
 
@@ -47,7 +47,7 @@ export async function checkLimitsForEmail(projectCounts: TUserLimit) {
         if (hasNotifyEntry.limit1 === true) return;
 
         setImmediate(() => {
-            const emailData = EmailService.getEmailServerInfo('limit_50', { target: owner.email, userName });
+            const emailData = EmailService.getEmailServerInfo('limit_50', { target: owner.email });
             EmailServiceHelper.sendEmail(emailData);
         });
 

@@ -1,5 +1,6 @@
 
-export const CONFIRM_EMAIL = `<!DOCTYPE html>
+export const CONFIRM_EMAIL = `
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -35,7 +36,7 @@ export const CONFIRM_EMAIL = `<!DOCTYPE html>
         .button {
             display: inline-block;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #0a0a0a;
             color: #ffffff;
             text-decoration: none;
             border-radius: 5px;
@@ -61,7 +62,7 @@ export const CONFIRM_EMAIL = `<!DOCTYPE html>
         <p>We hope to hear from you soon!</p>
 
         <div class="footer">
-            <p>&copy; 2024 Litlyx. All rights reserved.</p>
+            <p>2025 &copy; Litlyx. All rights reserved.</p>
         </div>
     </div>
 </body>
