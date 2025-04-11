@@ -4,6 +4,7 @@ definePageMeta({ layout: 'dashboard' });
 
 <template>
     <div class="p-8">
+        <div class="font-semibold text-[1.3rem] pl-4"> Account </div>
         <SettingsAccount></SettingsAccount>
     </div>
 </template>

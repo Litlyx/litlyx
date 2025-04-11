@@ -19,4 +19,3 @@ helper.copy('schema/shields/AddressBlacklistSchema.ts');
 helper.copy('schema/shields/BotTrafficOptionSchema.ts');
 helper.copy('schema/shields/CountryBlacklistSchema.ts');
 helper.copy('schema/shields/DomainWhitelistSchema.ts');
-helper.copy('schema/shields/PageBlacklistSchema.ts');
