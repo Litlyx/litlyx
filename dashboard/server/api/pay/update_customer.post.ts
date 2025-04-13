@@ -1,19 +1,17 @@
-import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
-import StripeService from '~/server/services/StripeService';
-
+import { PaymentServiceHelper } from '~/server/services/PaymentServiceHelper';
+import { PremiumModel } from '~/shared/schema/PremiumSchema';
 
 export default defineEventHandler(async event => {
 
     const data = await getRequestData(event, []);
     if (!data) return;
 
-    const { project } = data;
-    
-    if (!project.customer_id) return setResponseStatus(event, 400, 'Project has no customer_id');
+    const premium = await PremiumModel.findOne({ user_id: data.user.id })
+    if (!premium) return;
 
     const body = await readBody(event);
-    const res = await StripeService.setCustomerInfo(project.customer_id, body);
 
-    return { ok: true, data: res }
+    return await PaymentServiceHelper.update_customer_info(data.user.id, body);
+
 
 });

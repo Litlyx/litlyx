@@ -1,5 +1,5 @@
 import { getPlanFromId } from "@data/PREMIUM";
-import StripeService from '~/server/services/StripeService';
+// import StripeService from '~/server/services/StripeService';
 
 
 export default defineEventHandler(async event => {
@@ -9,29 +9,30 @@ export default defineEventHandler(async event => {
 
     const { project, pid } = data;
 
-    const body = await readBody(event);
+    // const body = await readBody(event);
 
-    const { planId } = body;
+    // const { planId } = body;
 
-    const PLAN = getPlanFromId(planId);
+    // const PLAN = getPlanFromId(planId);
 
-    if (!PLAN) {
-        console.error('PLAN', planId, 'NOT EXIST');
-        return setResponseStatus(event, 400, 'Plan not exist');
-    }
+    // if (!PLAN) {
+    //     console.error('PLAN', planId, 'NOT EXIST');
+    //     return setResponseStatus(event, 400, 'Plan not exist');
+    // }
 
-    const checkout = await StripeService.createPayment(
-        StripeService.testMode ? PLAN.PRICE_TEST : PLAN.PRICE,
-        'https://dashboard.litlyx.com/payment_ok',
-        pid,
-        project.customer_id
-    );
+    // const checkout = await StripeService.createPayment(
+    //     StripeService.testMode ? PLAN.PRICE_TEST : PLAN.PRICE,
+    //     'https://dashboard.litlyx.com/payment_ok',
+    //     pid,
+    //     project.customer_id
+    // );
 
-    if (!checkout) {
-        console.error('Cannot create payment', { plan: PLAN });
-        return setResponseStatus(event, 400, 'Cannot create payment');
-    }
+    // if (!checkout) {
+    //     console.error('Cannot create payment', { plan: PLAN });
+    //     return setResponseStatus(event, 400, 'Cannot create payment');
+    // }
 
-    return checkout.url;
+    // return checkout.url;
+    return '';
 
 });

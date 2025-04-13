@@ -5255,8 +5255,8 @@ packages:
     peerDependencies:
       vue: ^3.2.0
 
-  vue3-google-signin@2.0.1:
-    resolution: {integrity: sha512-vZTlVrG56JERtqQ+6YI8e92wqfhAMDyNONCsLgKKXxzCNCWEfSkZcAvz7COm9V4bvzmGsebZ8KC3ljol2qsIcg==}
+  vue3-google-signin@2.1.1:
+    resolution: {integrity: sha512-RwlwyeCv8+PZjK35C/UyJN4/9MH+Fsz4bJDO7IjtmRuOaTMrvmMmI6SP5qkJgD7w9MIKOCj5rYVFMAL7+NCM0A==}
     peerDependencies:
       vue: ^3
 
@@ -9868,7 +9868,7 @@ snapshots:
     dependencies:
       '@nuxt/kit': 3.11.2(rollup@4.18.0)
       unimport: 3.7.2(rollup@4.18.0)
-      vue3-google-signin: 2.0.1(vue@3.4.27(typescript@5.4.2))
+      vue3-google-signin: 2.1.1(vue@3.4.27(typescript@5.4.2))
     transitivePeerDependencies:
       - rollup
       - supports-color
@@ -11525,7 +11525,7 @@ snapshots:
       vue-observe-visibility: 2.0.0-alpha.1(vue@3.4.27(typescript@5.4.2))
       vue-resize: 2.0.0-alpha.1(vue@3.4.27(typescript@5.4.2))
 
-  vue3-google-signin@2.0.1(vue@3.4.27(typescript@5.4.2)):
+  vue3-google-signin@2.1.1(vue@3.4.27(typescript@5.4.2)):
     dependencies:
       vue: 3.4.27(typescript@5.4.2)
 

@@ -1,8 +1,6 @@
-import { getUserProjectFromId } from "~/server/LIVE_DEMO_DATA";
 import { Redis } from "~/server/services/CacheService";
-import StripeService from '~/server/services/StripeService';
+import { PaymentServiceHelper } from "~/server/services/PaymentServiceHelper";
 import { PremiumModel } from "~/shared/schema/PremiumSchema";
-
 
 export type InvoiceData = {
     date: number,
@@ -21,11 +19,14 @@ export default defineEventHandler(async event => {
 
         const premium = await PremiumModel.findOne({ user_id: data.user.id });
         if (!premium) return [];
-        
-        const invoices = await StripeService.getInvoices(premium.customer_id);
-        if (!invoices) return [];
 
-        return invoices?.data.map(e => {
+        const [ok, invoicesOrError] = await PaymentServiceHelper.invoices_list(data.user.id);
+        if (!ok) {
+            console.error(invoicesOrError);
+            return [];
+        }
+
+        return invoicesOrError.invoices.map(e => {
             const result: InvoiceData = {
                 link: e.invoice_pdf || '',
                 id: e.number || '',
@@ -35,7 +36,6 @@ export default defineEventHandler(async event => {
             }
             return result;
         });
-
 
     });
 

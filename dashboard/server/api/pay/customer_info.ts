@@ -1,5 +1,5 @@
 
-import StripeService from '~/server/services/StripeService';
+import { PaymentServiceHelper } from '~/server/services/PaymentServiceHelper';
 import { PremiumModel } from '~/shared/schema/PremiumSchema';
 
 export default defineEventHandler(async event => {
@@ -10,9 +10,9 @@ export default defineEventHandler(async event => {
     const premium = await PremiumModel.findOne({ user_id: data.user.id })
     if (!premium) return;
 
-    const customer = await StripeService.getCustomer(premium.customer_id);
-    if (customer?.deleted) return;
+    const [ok, customerInfoOrError] = await PaymentServiceHelper.customer_info(data.user.id);
+    if (!ok) throw customerInfoOrError;
 
-    return customer?.address;
+    return customerInfoOrError;
 
 });

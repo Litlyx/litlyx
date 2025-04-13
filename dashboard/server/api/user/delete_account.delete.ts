@@ -6,7 +6,6 @@ import { UserSettingsModel } from "@schema/UserSettings";
 import { AiChatModel } from "@schema/ai/AiChatSchema";
 import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
 import { SessionModel } from "@schema/metrics/SessionSchema";
-import StripeService from "~/server/services/StripeService";
 import { UserModel } from "@schema/UserSchema";
 import { AddressBlacklistModel } from "~/shared/schema/shields/AddressBlacklistSchema";
 import { DomainWhitelistModel } from "~/shared/schema/shields/DomainWhitelistSchema";
@@ -36,7 +35,7 @@ export default defineEventHandler(async event => {
     const limitdeletation = await UserLimitModel.deleteMany({ user_id: userData.id });
     const notifiesDeletation = await LimitNotifyModel.deleteMany({ user_id: userData.id });
 
-    await StripeService.deleteCustomer(premium.customer_id);
+    // await StripeService.deleteCustomer(premium.customer_id);
 
     for (const project of projects) {
         const project_id = project._id;
@@ -51,11 +50,10 @@ export default defineEventHandler(async event => {
         const botTrafficOptionsDeletation = await BotTrafficOptionModel.deleteMany({ project_id });
         const countryBlacklistDeletation = await CountryBlacklistModel.deleteMany({ project_id });
         const domainWhitelistDeletation = await DomainWhitelistModel.deleteMany({ project_id });
-
-
-        const userDeletation = await UserModel.deleteOne({ _id: userData.id });
-
+    
     }
+
+    const userDeletation = await UserModel.deleteOne({ _id: userData.id });
 
     return { ok: true };
 

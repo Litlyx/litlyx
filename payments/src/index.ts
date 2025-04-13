@@ -17,6 +17,12 @@ console.log('Stripe started in', STRIPE_TESTMODE ? 'TESTMODE' : 'LIVEMODE');
 
 const app = express();
 
+
+app.use((req, res, next) => {
+    console.log(req.path);
+    next();
+})
+
 app.use('/webhook', webhookRouter);
 app.use('/payment', paymentRouter);
 

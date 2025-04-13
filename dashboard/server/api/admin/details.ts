@@ -2,7 +2,6 @@ import { ProjectModel } from "@schema/project/ProjectSchema";
 import { ProjectCountModel } from "@schema/project/ProjectsCounts";
 import { UserLimitModel } from "@schema/UserLimitSchema";
 import { UserModel } from "@schema/UserSchema";
-import StripeService from '~/server/services/StripeService';
 import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 export default defineEventHandler(async event => {
@@ -20,14 +19,18 @@ export default defineEventHandler(async event => {
 
     const premium = await PremiumModel.findOne({ user_id: userData.id });
 
-    const subscription =
-        premium?.subscription_id ?
-            await StripeService.getSubscription(premium.subscription_id) : 'NONE';
+    // const subscription =
+    //     premium?.subscription_id ?
+    //         await StripeService.getSubscription(premium.subscription_id) : 'NONE';
 
-    const customer =
-        premium?.customer_id ?
-            await StripeService.getCustomer(premium.customer_id) : 'NONE';
+    // const customer =
+    //     premium?.customer_id ?
+    //         await StripeService.getCustomer(premium.customer_id) : 'NONE';
 
-    return { project, limits, counts, user, subscription, customer }
+    return {
+        project, limits, counts, user,
+        subscription: '',
+        customer: ''
+    }
 
 });

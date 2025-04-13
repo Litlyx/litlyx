@@ -6,7 +6,6 @@ import { AiChatModel } from '@schema/ai/AiChatSchema';
 import { AiEventsInstance } from '../ai/functions/AI_Events';
 import { AiVisitsInstance } from '../ai/functions/AI_Visits';
 import { AiSessionsInstance } from '../ai/functions/AI_Sessions';
-import { AiBillingInstance } from '../ai/functions/AI_Billing';
 import { AiSnapshotInstance } from '../ai/functions/AI_Snapshots';
 import { AiComposableChartInstance } from '../ai/functions/AI_ComposableChart';
 
@@ -20,7 +19,6 @@ const tools: OpenAI.Chat.Completions.ChatCompletionTool[] = [
     ...AiVisitsInstance.getTools(),
     ...AiEventsInstance.getTools(),
     ...AiSessionsInstance.getTools(),
-    ...AiBillingInstance.getTools(),
     ...AiSnapshotInstance.getTools(),
     ...AiComposableChartInstance.getTools(),
 ]
@@ -30,7 +28,6 @@ const functions: any = {
     ...AiVisitsInstance.getHandlers(),
     ...AiEventsInstance.getHandlers(),
     ...AiSessionsInstance.getHandlers(),
-    ...AiBillingInstance.getHandlers(),
     ...AiSnapshotInstance.getHandlers(),
     ...AiComposableChartInstance.getHandlers()
 }

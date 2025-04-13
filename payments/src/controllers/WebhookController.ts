@@ -80,7 +80,10 @@ export async function onPaymentSuccess(event: Event.InvoicePaidEvent) {
         }
     }
 
-    await addSubscriptionToUser(premiumData.user_id.toString(), plan, subscription_id, event.data.object.period_start, event.data.object.period_end);
+    await addSubscriptionToUser(premiumData.user_id.toString(), plan, subscription_id,
+        event.data.object.lines.data[0].period.start,
+        event.data.object.lines.data[0].period.end
+    );
 
     setTimeout(() => {
         if (plan.ID == 0) return;

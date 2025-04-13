@@ -1,5 +1,4 @@
 import { UserLimitModel } from "@schema/UserLimitSchema";
-import StripeService from '~/server/services/StripeService';
 import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 export default defineEventHandler(async event => {
@@ -22,13 +21,11 @@ export default defineEventHandler(async event => {
             billing_expire_at: userLimits.billing_expire_at,
             limit: userLimits.limit,
             count: userLimits.events + userLimits.visits,
-            subscription_status: StripeService.isDisabled() ? 'Disabled mode' : ('One time payment')
+            subscription_status: 'One time'
         }
 
         return result;
     }
-
-    const subscription = await StripeService.getSubscription(premium.subscription_id);
 
     const userLimits = await UserLimitModel.findOne({ user_id: data.user.id });
     if (!userLimits) return setResponseStatus(event, 400, 'User limits not found');
@@ -41,7 +38,7 @@ export default defineEventHandler(async event => {
         billing_expire_at: userLimits.billing_expire_at,
         limit: userLimits.limit,
         count: userLimits.events + userLimits.visits,
-        subscription_status: StripeService.isDisabled() ? 'Disabled mode' : (subscription?.status ?? '?')
+        subscription_status: ''
     }
 
     return result;

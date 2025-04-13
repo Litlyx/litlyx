@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 import { Redis } from "~/server/services/CacheService";
-import StripeService from '~/server/services/StripeService';
 import { logger } from "./Logger";
 
 
@@ -12,16 +11,6 @@ let connection: mongoose.Mongoose;
 export default async () => {
 
     logger.info('[SERVER] Initializing');
-
-    if (config.STRIPE_SECRET) {
-        const TEST_MODE = config.MODE === 'TEST';
-        StripeService.init(config.STRIPE_SECRET, config.STRIPE_WH_SECRET, TEST_MODE);
-        logger.info('[STRIPE] Initialized');
-    } else {
-        StripeService.disable();
-        logger.warn('[STRIPE] No stripe key - Disabled mode');
-    }
-
 
     if (!connection || connection.connection.readyState == mongoose.ConnectionStates.disconnected) {
         logger.info('[DATABASE] Connecting');

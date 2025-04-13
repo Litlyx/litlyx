@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs';
 import type { SettingsTemplateEntry } from './Template.vue';
-import { getPlanFromId, PREMIUM_PLAN, type PREMIUM_TAG } from '@data/PREMIUM';
+import { getPlanFromId, PREMIUM_PLAN, type PLAN_TAG } from '@data/PREMIUM';
 
 const { projectId, isGuest } = useProject();
 
@@ -53,10 +53,10 @@ function openInvoice(link: string) {
     window.open(link, '_blank');
 }
 
-function getPremiumName(type: number) {
+function getTagName(type: number) {
 
     return Object.keys(PREMIUM_PLAN).map(e => ({
-        ...PREMIUM_PLAN[e as PREMIUM_TAG], name: e
+        ...PREMIUM_PLAN[e as PLAN_TAG], name: e
     })).find(e => e.ID == type)?.name;
 
 }
@@ -168,7 +168,7 @@ const { showDrawer } = useDrawer();
                                     </div>
                                     <div
                                         class="flex lato text-[.7rem] bg-transparent border-[#262626] border-[1px] px-[.6rem] rounded-sm">
-                                        {{ planData.premium ? getPremiumName(planData.premium_type) : 'FREE' }}
+                                        {{ planData.premium ? getTagName(planData.premium_type) : 'FREE' }}
                                     </div>
                                 </div>
                             </div>
@@ -186,9 +186,6 @@ const { showDrawer } = useDrawer();
                                     <UProgress color="green" :min="0" :max="100" :value="leftPercent"></UProgress>
                                 </div>
                                 <div class="poppins"> {{ daysLeft }} days left </div>
-                            </div>
-                            <div class="flex justify-center">
-                                Subscription: {{ planData.subscription_status }}
                             </div>
                         </div>
                     </div>
