@@ -17,11 +17,23 @@ console.log('Stripe started in', STRIPE_TESTMODE ? 'TESTMODE' : 'LIVEMODE');
 
 const app = express();
 
+const TOKEN = process.env.TOKEN;
+
+if (!TOKEN || TOKEN.length == 0) {
+    console.log('TOKEN not set');
+    process.exit();
+}
 
 app.use((req, res, next) => {
+    const token = req.header('x-litlyx-token');
+    if (token != TOKEN) {
+        res.status(403).json({ error: 'token not valid' });
+        return;
+    }
     console.log(req.path);
     next();
-})
+});
+
 
 app.use('/webhook', webhookRouter);
 app.use('/payment', paymentRouter);

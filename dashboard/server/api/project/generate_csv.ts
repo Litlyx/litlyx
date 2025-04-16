@@ -4,21 +4,12 @@ import { UserModel } from "@schema/UserSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { EventModel } from "~/shared/schema/metrics/EventSchema";
 
-const { SELFHOSTED } = useRuntimeConfig();
-
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, { requireSchema: false });
+    const data = await getRequestData(event, [], []);
     if (!data) return;
 
-    const { project, project_id, user } = data;
-
-
-    if (SELFHOSTED.toString() !== 'TRUE' && SELFHOSTED.toString() !== 'true') {
-        const PREMIUM_TYPE = project.premium_type;
-        if (PREMIUM_TYPE === 0) return setResponseStatus(event, 400, 'Project not premium');
-    }
-
+    const { project_id } = data;
 
     const { mode, slice } = getQuery(event);
 
@@ -82,12 +73,12 @@ export default defineEventHandler(async event => {
         const csvHeader = [
             "name",
             "session",
-            "metadata",            
+            "metadata",
             "website",
             "created_at",
         ];
 
-      
+
         const lines: any[] = [];
         eventsReportData.forEach(line => lines.push(line.toJSON()));
 

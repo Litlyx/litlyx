@@ -6,14 +6,6 @@ definePageMeta({ layout: 'dashboard' });
 
 const { project } = useProject();
 
-const { isPremium } = useLoggedUser();
-
-const selfhosted = useSelfhosted();
-const canDownload = computed(() => {
-    if (selfhosted) return true;
-    return isPremium.value;
-});
-
 const metricsInfo = ref<number>(0);
 
 const columns = [
@@ -111,17 +103,10 @@ function goToUpgrade() {
                 }" v-model="selectedTimeFrom" :options="options"></USelectMenu>
             </div>
 
-            <div v-if="canDownload" @click="downloadCSV()"
+            <div @click="downloadCSV()"
                 class="bg-[#57c78fc0] hover:bg-[#57c78fab] cursor-pointer text-text poppins font-semibold px-8 py-1 rounded-lg">
                 Download CSV
             </div>
-
-            <div v-if="!canDownload" @click="goToUpgrade()"
-                class="bg-[#57c78f46] hover:bg-[#57c78f42] flex gap-4 items-center cursor-pointer text-text poppins font-semibold px-8 py-2 rounded-lg">
-                <i class="far fa-lock"></i>
-                Upgrade plan for CSV
-            </div>
-
         </div>
 
 

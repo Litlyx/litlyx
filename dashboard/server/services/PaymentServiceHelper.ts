@@ -47,4 +47,8 @@ export class PaymentServiceHelper {
         return await this.send('/update_customer_info', { user_id, address });
     }
 
+    static async delete_customer(customer_id: string): PaymentServiceResponse<{ ok: true }> {
+        return await this.send('/delete_customer', { customer_id });
+    }
+
 }

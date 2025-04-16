@@ -14,6 +14,7 @@ import { BotTrafficOptionModel } from "~/shared/schema/shields/BotTrafficOptionS
 import { TeamMemberModel } from "~/shared/schema/TeamMemberSchema";
 import { PasswordModel } from "~/shared/schema/PasswordSchema";
 import { PremiumModel } from "~/shared/schema/PremiumSchema";
+import { PaymentServiceHelper } from "~/server/services/PaymentServiceHelper";
 
 export default defineEventHandler(async event => {
 
@@ -35,7 +36,7 @@ export default defineEventHandler(async event => {
     const limitdeletation = await UserLimitModel.deleteMany({ user_id: userData.id });
     const notifiesDeletation = await LimitNotifyModel.deleteMany({ user_id: userData.id });
 
-    // await StripeService.deleteCustomer(premium.customer_id);
+    await PaymentServiceHelper.delete_customer(premium.customer_id);
 
     for (const project of projects) {
         const project_id = project._id;

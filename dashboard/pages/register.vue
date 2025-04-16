@@ -61,7 +61,8 @@ async function registerAccount() {
                     Sign up
                 </div>
 
-                <div class="text-lyx-lightmode-text dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
+                <div
+                    class="text-lyx-lightmode-text dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
                     Track web analytics and custom events
                     with extreme simplicity in under 30 sec.
                     <br>
@@ -88,8 +89,8 @@ async function registerAccount() {
                             Password must be at least 6 chars long
                         </div>
                         <div class="flex justify-center mt-4 z-[100]">
-                            <LyxUiButton :disabled="!canRegister" @click="registerAccount()" class="text-center"
-                                type="primary">
+                            <LyxUiButton :disabled="!canRegister" @click="canRegister ? registerAccount() : ''"
+                                class="text-center" type="primary">
                                 Sign up
                             </LyxUiButton>
                         </div>

@@ -4,6 +4,7 @@ import { createUserJwt } from '~/server/AuthManager';
 import { UserModel } from '@schema/UserSchema';
 import { EmailService } from '@services/EmailService';
 import { EmailServiceHelper } from '~/server/services/EmailServiceHelper';
+import { PaymentServiceHelper } from '~/server/services/PaymentServiceHelper';
 
 const { GOOGLE_AUTH_CLIENT_SECRET, GOOGLE_AUTH_CLIENT_ID } = useRuntimeConfig()
 
@@ -38,7 +39,6 @@ export default defineEventHandler(async event => {
     const user = await UserModel.findOne({ email: payload.email });
 
     if (user) {
-        user.google_tokens = tokens as any;
         await user.save();
         return {
             error: false,
@@ -46,28 +46,28 @@ export default defineEventHandler(async event => {
         }
     }
 
-
     const newUser = new UserModel({
         email: payload.email,
         given_name: payload.given_name,
         name: payload.name,
         locale: payload.locale,
         picture: payload.picture,
-        google_tokens: tokens,
         created_at: Date.now()
     });
 
     const savedUser = await newUser.save();
 
+    const [ok, error] = await PaymentServiceHelper.create_customer(savedUser.id);
+    if (!ok) throw error;
 
     setImmediate(() => {
-        const emailData = EmailService.getEmailServerInfo('brevolist_add', { email: payload.email as string });
+        if (!payload.email) return;
+        const emailData = EmailService.getEmailServerInfo('brevolist_add', { email: payload.email });
         EmailServiceHelper.sendEmail(emailData);
     });
 
 
     setImmediate(() => {
-        console.log('SENDING WELCOME EMAIL TO', payload.email);
         if (!payload.email) return;
         const emailData = EmailService.getEmailServerInfo('welcome', { target: payload.email });
         EmailServiceHelper.sendEmail(emailData);

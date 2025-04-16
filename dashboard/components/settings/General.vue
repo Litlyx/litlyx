@@ -215,7 +215,7 @@ function copyProjectId() {
             </div>
         </template>
         <template #pdelete>
-            <div class="flex lg:justify-end" v-if="!isGuest">
+            <div class="flex lg:justify-end pb-30" v-if="!isGuest">
                 <LyxUiButton type="danger" @click="deleteProject()">
                     Delete project
                 </LyxUiButton>

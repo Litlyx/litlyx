@@ -38,13 +38,15 @@ async function main() {
         const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
         const devContent = ecosystemContent
             .replace("$REDIS_URL$", `${REDIS_URL_TESTMODE}`)
-            .replace("$MONGO_CONNECTION_STRING$", `${DATABASE_CONNECTION_STRING_TESTMODE}`);
+            .replace("$MONGO_CONNECTION_STRING$", `${DATABASE_CONNECTION_STRING_TESTMODE}`)
+            .replace("$DEV_MODE$", `true`);
         archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
     } else {
         const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
         const devContent = ecosystemContent
             .replace("$REDIS_URL$", `${REDIS_URL_PRODUCTION}`)
-            .replace("$MONGO_CONNECTION_STRING$", `${DATABASE_CONNECTION_STRING_PRODUCTION}`);
+            .replace("$MONGO_CONNECTION_STRING$", `${DATABASE_CONNECTION_STRING_PRODUCTION}`)
+            .replace("$DEV_MODE$", `false`);
         archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
     }
 

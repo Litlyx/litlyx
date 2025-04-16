@@ -147,3 +147,18 @@ paymentRouter.post('/update_customer_info', json(), async (req, res) => {
         res.status(500).json({ error: ex.message });
     }
 });
+
+
+export const ZBodyDeleteCustomer = z.object({
+    customer_id: z.string(),
+});
+
+paymentRouter.post('/delete_customer', json(), async (req, res) => {
+    try {
+        const deleteCustomerData = ZBodyDeleteCustomer.parse(req.body);
+        await StripeService.deleteCustomer(deleteCustomerData.customer_id);
+        return sendJson(res, 200, { ok: true });
+    } catch (ex) {
+        res.status(500).json({ error: ex.message });
+    }
+});
