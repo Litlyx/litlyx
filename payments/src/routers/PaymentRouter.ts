@@ -162,3 +162,29 @@ paymentRouter.post('/delete_customer', json(), async (req, res) => {
         res.status(500).json({ error: ex.message });
     }
 });
+
+
+export const ZBodyCreateSubscription = z.object({
+    user_id: z.string(),
+    plan_tag: z.string()
+});
+
+paymentRouter.post('/create_subscription', json(), async (req, res) => {
+    try {
+        const createSubscriptionData = ZBodyCreateSubscription.parse(req.body);
+
+        const premiumData = await PremiumModel.findOne({ user_id: createSubscriptionData.user_id });
+        if (!premiumData) return sendJson(res, 400, { error: 'user not found' });
+        if (!premiumData.customer_id) return sendJson(res, 400, { error: 'user have no customer_id' });
+
+        await StripeService.createSubscription(
+            premiumData.customer_id,
+            createSubscriptionData.plan_tag
+        );
+        return sendJson(res, 200, { ok: true });
+
+    } catch (ex) {
+        console.error(ex);
+        res.status(500).json({ error: ex.message });
+    }
+});

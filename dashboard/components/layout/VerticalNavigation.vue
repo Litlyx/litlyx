@@ -32,7 +32,7 @@ const { data: pendingInvites, refresh: refreshInvites } = useFetch('/api/project
     headers: useComputedHeaders({})
 });
 
-const { userRoles } = useLoggedUser();
+const { userRoles, isPremium } = useLoggedUser();
 const { projectList } = useProject();
 
 const debugMode = process.dev;
@@ -94,6 +94,9 @@ async function generatePDF() {
 
 const { actions } = useProject();
 
+const { showDrawer } = useDrawer();
+
+
 
 const modal = useModal();
 
@@ -137,13 +140,6 @@ function openPendingInvites() {
             'hidden lg:flex': !isOpen
         }">
         <div class="py-4 pb-2 px-2 gap-6 flex flex-col w-full">
-
-            <!-- <div class="flex px-2" v-if="!isPremium">
-                <LyxUiButton type="primary" class="w-full text-center text-[.8rem] font-medium" @click="pricingDrawer.visible.value = true;">
-                    Upgrade plan
-                </LyxUiButton>
-            </div> -->
-
 
             <div class="flex px-2 flex-col">
 
@@ -304,6 +300,16 @@ function openPendingInvites() {
 
                 <div class="grow"></div>
 
+                <LyxUiCard class="w-full mb-4" v-if="!isPremium">
+                    <div class="flex flex-col gap-3">
+                        <div class="text-center"> Upgrade to premium </div>
+                        <LyxUiButton type="primary" class="w-full text-center text-[.8rem] font-medium"
+                            @click="showDrawer('PRICING')">
+                            Upgrade
+                        </LyxUiButton>
+                    </div>
+                </LyxUiCard>
+
                 <div v-if="pendingInvites && pendingInvites.length > 0" @click="openPendingInvites()"
                     class="w-full bg-[#fbbf2422] p-4 rounded-lg text-[.9rem] flex flex-col justify-center cursor-pointer">
                     <div class="poppins font-medium dark:text-lyx-text text-lyx-lightmode-text">
@@ -316,13 +322,18 @@ function openPendingInvites() {
                     </div>
                 </div>
 
-                <LyxUiSeparator class="px-4 mb-2"></LyxUiSeparator>
+                <!-- <LyxUiSeparator class="px-4 mb-2"></LyxUiSeparator> -->
 
-                <div class="flex px-1 w-full">
-
+                <LyxUiCard class="flex py-1 px-1 w-full relative">
+                    <div class="absolute top-[-22%] right-0">
+                        <div @click="showDrawer('PRICING')"
+                            class="flex items-center gap-1 poppins text-[.5rem] bg-[#fbbe244f] outline outline-[1px] outline-[#fbbf24] px-3 py-[.12rem] rounded-sm">
+                            <i class="far fa-crown mb-[2px]"></i>
+                            <div>Premium</div>
+                        </div>
+                    </div>
                     <LayoutVerticalBottomMenu></LayoutVerticalBottomMenu>
-
-                </div>
+                </LyxUiCard>
 
 
 

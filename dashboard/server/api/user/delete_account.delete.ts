@@ -15,6 +15,8 @@ import { TeamMemberModel } from "~/shared/schema/TeamMemberSchema";
 import { PasswordModel } from "~/shared/schema/PasswordSchema";
 import { PremiumModel } from "~/shared/schema/PremiumSchema";
 import { PaymentServiceHelper } from "~/server/services/PaymentServiceHelper";
+import { VisitModel } from "~/shared/schema/metrics/VisitSchema";
+import { EventModel } from "~/shared/schema/metrics/EventSchema";
 
 export default defineEventHandler(async event => {
 
@@ -24,9 +26,8 @@ export default defineEventHandler(async event => {
     const projects = await ProjectModel.find({ owner: userData.id });
 
     const premium = await PremiumModel.findOne({ user_id: userData.id });
-    if (!premium) return;
 
-    if (premium.premium_type > 0) return setResponseStatus(event, 400, 'Cannot delete an account with a premium project');
+    if (premium && premium.premium_type > 0) return setResponseStatus(event, 400, 'Cannot delete an account with a premium project');
 
     const membersDeletation = await TeamMemberModel.deleteMany({ user_id: userData.id });
     const membersEmailDeletation = await TeamMemberModel.deleteMany({ email: userData.user.email });
@@ -36,24 +37,31 @@ export default defineEventHandler(async event => {
     const limitdeletation = await UserLimitModel.deleteMany({ user_id: userData.id });
     const notifiesDeletation = await LimitNotifyModel.deleteMany({ user_id: userData.id });
 
-    await PaymentServiceHelper.delete_customer(premium.customer_id);
+    if (premium) PaymentServiceHelper.delete_customer(premium.customer_id);
+
 
     for (const project of projects) {
         const project_id = project._id;
+
         const projectDeletation = await ProjectModel.deleteOne({ _id: project_id });
         const userSettingsDeletation = await UserSettingsModel.deleteOne({ project_id });
         const countDeletation = await ProjectCountModel.deleteMany({ project_id });
-        const sessionsDeletation = await SessionModel.deleteMany({ project_id });
-        const aiChatsDeletation = await AiChatModel.deleteMany({ project_id });
+
+        const sessionsDeletation = SessionModel.deleteMany({ project_id });
+        const visitsDeletation = VisitModel.deleteMany({ project_id });
+        const eventsDeletation = EventModel.deleteMany({ project_id });
+
+        const aiChatsDeletation = AiChatModel.deleteMany({ project_id });
 
         //Shields
-        const addressBlacklistDeletation = await AddressBlacklistModel.deleteMany({ project_id });
-        const botTrafficOptionsDeletation = await BotTrafficOptionModel.deleteMany({ project_id });
-        const countryBlacklistDeletation = await CountryBlacklistModel.deleteMany({ project_id });
-        const domainWhitelistDeletation = await DomainWhitelistModel.deleteMany({ project_id });
-    
+        const addressBlacklistDeletation = AddressBlacklistModel.deleteMany({ project_id });
+        const botTrafficOptionsDeletation = BotTrafficOptionModel.deleteMany({ project_id });
+        const countryBlacklistDeletation = CountryBlacklistModel.deleteMany({ project_id });
+        const domainWhitelistDeletation = DomainWhitelistModel.deleteMany({ project_id });
+
     }
 
+    const premiumDeletation = await PremiumModel.deleteOne({ user_id: userData.id });
     const userDeletation = await UserModel.deleteOne({ _id: userData.id });
 
     return { ok: true };

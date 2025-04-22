@@ -1,17 +1,13 @@
 import { getPlanFromId, PREMIUM_PLAN } from "@data/PREMIUM";
 import { canTryAppsumoCode, checkAppsumoCode, useAppsumoCode, useTryAppsumoCode } from "~/server/services/AppsumoService";
+import { PaymentServiceHelper } from "~/server/services/PaymentServiceHelper";
+import { PremiumModel } from "~/shared/schema/PremiumSchema";
 
 
 function getPlanToActivate(current_plan_id: number) {
     if (current_plan_id === PREMIUM_PLAN.FREE.ID) {
         return PREMIUM_PLAN.APPSUMO_INCUBATION;
     }
-    // if (current_plan_id === PREMIUM_PLAN.INCUBATION.ID) {
-    //     return PREMIUM_PLAN.APPSUMO_ACCELERATION;
-    // }
-    // if (current_plan_id === PREMIUM_PLAN.ACCELERATION.ID) {
-    //     return PREMIUM_PLAN.APPSUMO_GROWTH;
-    // }
     if (current_plan_id === PREMIUM_PLAN.APPSUMO_INCUBATION.ID) {
         return PREMIUM_PLAN.APPSUMO_ACCELERATION;
     }
@@ -38,13 +34,18 @@ export default defineEventHandler(async event => {
     const valid = await checkAppsumoCode(code);
     if (!valid) return setResponseStatus(event, 400, 'Code not valid');
 
-    // const currentPlan = getPlanFromId(project.premium_type);
-    // if (!currentPlan) return setResponseStatus(event, 400, 'Current plan not found');
-    // const planToActivate = getPlanToActivate(currentPlan.ID);
-    // if (!planToActivate) return setResponseStatus(event, 400, 'Cannot use code on current plan');
+    const currentPremiumData = await PremiumModel.findOne({ user_id: user.id });
+    if (!currentPremiumData) return setResponseStatus(event, 400, 'Error finding user');
 
-    // await StripeService.createSubscription(project.customer_id, planToActivate.ID);
+    const currentPlan = getPlanFromId(currentPremiumData.premium_type);
+    if (!currentPlan) return setResponseStatus(event, 400, 'Current plan not found');
 
-    // await useAppsumoCode(pid, code);
+    const planToActivate = getPlanToActivate(currentPlan.ID);
+    if (!planToActivate) return setResponseStatus(event, 400, 'Cannot use code on current plan');
+
+    const sub = await PaymentServiceHelper.create_subscription(user.id, planToActivate.TAG);
+    console.log(sub);
+
+    await useAppsumoCode(pid, code);
 
 });

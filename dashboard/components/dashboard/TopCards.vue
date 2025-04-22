@@ -70,27 +70,27 @@ const avgBouncingRate = computed(() => {
 
 function weightedAverage(data: number[]): number {
     if (data.length === 0) return 0;
-    
+
     // Compute median
     const sortedData = [...data].sort((a, b) => a - b);
     const middle = Math.floor(sortedData.length / 2);
-    const median = sortedData.length % 2 === 0 
-        ? (sortedData[middle - 1] + sortedData[middle]) / 2 
+    const median = sortedData.length % 2 === 0
+        ? (sortedData[middle - 1] + sortedData[middle]) / 2
         : sortedData[middle];
-    
+
     // Define a threshold (e.g., 3 times the median) to filter out extreme values
     const threshold = median * 3;
     const filteredData = data.filter(num => num <= threshold);
-    
+
     if (filteredData.length === 0) return median; // Fallback to median if all are removed
-    
+
     // Compute weights based on inverse absolute deviation from median
     const weights = filteredData.map(num => 1 / (1 + Math.abs(num - median)));
-    
+
     // Compute weighted sum and sum of weights
     const weightedSum = filteredData.reduce((sum, num, i) => sum + num * weights[i], 0);
     const sumOfWeights = weights.reduce((sum, weight) => sum + weight, 0);
-    
+
     return weightedSum / sumOfWeights;
 }
 const avgSessionDuration = computed(() => {
@@ -109,6 +109,9 @@ const avgSessionDuration = computed(() => {
     seconds += avg * 60;
     while (seconds >= 60) { seconds -= 60; minutes += 1; }
     while (minutes >= 60) { minutes -= 60; hours += 1; }
+
+
+    if (hours == 0 && minutes == 0 && seconds < 10) return `0m ~10s`
     return `${hours > 0 ? hours + 'h ' : ''}${minutes}m ${seconds.toFixed()}s`
 });
 

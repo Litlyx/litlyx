@@ -31,6 +31,10 @@ export class PaymentServiceHelper {
         return await this.send('/create_customer', { user_id });
     }
 
+    static async create_subscription(user_id: string, plan_tag: string): PaymentServiceResponse<{ ok: true }> {
+        return await this.send('/create_subscription', { user_id, plan_tag });
+    }
+
     static async create_payment(user_id: string, plan_id: number): PaymentServiceResponse<{ url: string }> {
         return await this.send('/create_payment', { user_id, plan_id });
     }

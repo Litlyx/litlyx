@@ -144,7 +144,7 @@ export const PREMIUM_PLAN: Record<PLAN_TAG, PLAN_DATA> = {
         COUNT_LIMIT: 50_000,
         AI_MESSAGE_LIMIT: 30,
         PRICE: 'price_1QIXwbB2lPUiVs9VKSsoksaU',
-        PRICE_TEST: '',
+        PRICE_TEST: 'price_1RBIUsB2lPUiVs9VojGan6WH',
         COST: 0,
         TAG: 'APPSUMO_INCUBATION'
     },
@@ -153,7 +153,7 @@ export const PREMIUM_PLAN: Record<PLAN_TAG, PLAN_DATA> = {
         COUNT_LIMIT: 150_000,
         AI_MESSAGE_LIMIT: 100,
         PRICE: 'price_1QIXxRB2lPUiVs9VrjaVRoOl',
-        PRICE_TEST: '',
+        PRICE_TEST: 'price_1RBIV5B2lPUiVs9VKQyxvhst',
         COST: 0,
         TAG: 'APPSUMO_ACCELERATION'
     },
@@ -162,7 +162,7 @@ export const PREMIUM_PLAN: Record<PLAN_TAG, PLAN_DATA> = {
         COUNT_LIMIT: 500_000,
         AI_MESSAGE_LIMIT: 3_000,
         PRICE: 'price_1QIXy8B2lPUiVs9VQBOUPAoE',
-        PRICE_TEST: '',
+        PRICE_TEST: 'price_1RBIVFB2lPUiVs9VsMoldAu3',
         COST: 0,
         TAG: 'APPSUMO_GROWTH'
     },

@@ -24,6 +24,8 @@ if (!TOKEN || TOKEN.length == 0) {
     process.exit();
 }
 
+app.use('/webhook', webhookRouter);
+
 app.use((req, res, next) => {
     const token = req.header('x-litlyx-token');
     if (token != TOKEN) {
@@ -34,8 +36,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
-app.use('/webhook', webhookRouter);
 app.use('/payment', paymentRouter);
 
 const port = parseInt(process.env.PORT);

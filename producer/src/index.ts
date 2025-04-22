@@ -16,6 +16,7 @@ const streamName = requireEnv('STREAM_NAME');
 import DeprecatedRouter from "./deprecated";
 import { isAllowedToLog } from "./controller";
 import { connectDatabase } from "./shared/services/DatabaseService";
+
 app.use('/v1', DeprecatedRouter);
 
 app.post('/event', express.json(jsonOptions), async (req, res) => {

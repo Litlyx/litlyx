@@ -153,22 +153,21 @@ class StripeService {
     //     return false;
     // }
 
-    // async createSubscription(customer_id: string, planId: number) {
-    //     if (this.disabledMode) return;
-    //     if (!this.stripe) throw Error('Stripe not initialized');
+    async createSubscription(customer_id: string, planTag: string) {
+        if (!this.stripe) throw Error('Stripe not initialized');
 
-    //     const PLAN = getPlanFromId(planId);
-    //     if (!PLAN) throw Error('Plan not found');
+        const PLAN_DATA = getPlanFromTag(planTag as any);
+        if (!PLAN_DATA) throw Error('Plan not found');
 
-    //     const subscription = await this.stripe.subscriptions.create({
-    //         customer: customer_id,
-    //         items: [
-    //             { price: this.testMode ? PLAN.PRICE_TEST : PLAN.PRICE, quantity: 1 }
-    //         ],
-    //     });
+        const subscription = await this.stripe.subscriptions.create({
+            customer: customer_id,
+            items: [
+                { price: this.testMode ? PLAN_DATA.PRICE_TEST : PLAN_DATA.PRICE, quantity: 1 }
+            ],
+        });
 
-    //     return subscription;
-    // }
+        return subscription;
+    }
 
     // async createOneTimeSubscriptionDummy(customer_id: string, planId: number) {
     //     if (this.disabledMode) return;
