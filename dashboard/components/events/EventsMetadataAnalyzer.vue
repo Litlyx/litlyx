@@ -72,7 +72,7 @@ const canSearch = computed(() => {
 <template>
 
 
-    <CardTitled title="Event metadata analyzer" sub="Filter events metadata fields to analyze them" class="w-full p-4">
+    <CardTitled title="Analyze event metadata" sub="Filter events metadata fields to analyze them" class="w-full p-4">
 
         <div class="">
 

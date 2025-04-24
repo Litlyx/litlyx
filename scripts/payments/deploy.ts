@@ -45,7 +45,7 @@ async function main() {
     } else {
         const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
         const devContent = ecosystemContent
-            .replace(DATABASE_CONNECTION_STRING_PRODUCTION, `${DATABASE_CONNECTION_STRING_PRODUCTION}`)
+            .replace("$MONGO_CONNECTION_STRING$", `${DATABASE_CONNECTION_STRING_PRODUCTION}`)
             .replace("$STRIPE_PRIVATE_KEY$", `${STRIPE_PRIVATE_KEY_PRODUCTION}`)
             .replace("$STRIPE_WEBHOOK_SECRET$", `${STRIPE_WEBHOOK_SECRET_PRODUCTION}`)
             .replace("$STRIPE_TESTMODE$", `false`);

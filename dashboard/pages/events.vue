@@ -53,8 +53,17 @@ const eventsData = await useFetch(`/api/data/count`, {
         </LyxUiCard>
 
 
-        <div>
-            <BarCardEvents :key="refreshKey"></BarCardEvents>
+        <div class="flex gap-6 flex-col xl:flex-row xl:h-full">
+
+            <BarCardEvents class="xl:flex-[4]" :key="refreshKey"></BarCardEvents>
+
+
+            <CardTitled :key="refreshKey" class="p-4 xl:flex-[2] w-full h-full" title="Top events"
+                sub="Displays key events.">
+                <DashboardEventsChart class="w-full"> </DashboardEventsChart>
+            </CardTitled>
+
+
         </div>
 
         <div class="flex gap-6 flex-col xl:flex-row xl:h-full">
@@ -72,11 +81,6 @@ const eventsData = await useFetch(`/api/data/count`, {
                     <EventsStackedBarChart :slice="(selectLabelsAvailable[selectedLabelIndex].value as any)">
                     </EventsStackedBarChart>
                 </div>
-            </CardTitled>
-
-            <CardTitled :key="refreshKey" class="p-4 xl:flex-[2] w-full h-full" title="Top events"
-                sub="Displays key events.">
-                <DashboardEventsChart class="w-full"> </DashboardEventsChart>
             </CardTitled>
 
         </div>

@@ -5,6 +5,7 @@ import { PassThrough } from 'node:stream';
 import { ProjectModel } from "@schema/project/ProjectSchema";
 import { VisitModel } from '@schema/metrics/VisitSchema';
 import { EventModel } from '@schema/metrics/EventSchema';
+import { ReportCustomizationModel, TReportCustomization } from '~/shared/schema/report/ReportCustomizationSchema';
 
 
 type PDFGenerationData = {
@@ -18,7 +19,7 @@ type PDFGenerationData = {
     topCountries: string[],
     topReferrers: string[],
     avgGrowthText: string,
-
+    customization?: TReportCustomization
 }
 
 function formatNumberK(value: string | number, decimals: number = 1) {
@@ -37,14 +38,26 @@ const resourcePath = process.env.MODE === 'TEST' ? './public/pdf/' : './.output/
 function createPdf(data: PDFGenerationData) {
 
     const pdf = new pdfkit({ size: 'A4', margins: { top: 50, bottom: 50, left: 50, right: 50 }, });
-    pdf.fillColor('#ffffff').rect(0, 0, pdf.page.width, pdf.page.height).fill('#000000');
 
-    pdf.font(resourcePath + 'pdf_fonts/Poppins-Bold.ttf').fontSize(16).fillColor('#ffffff');
+    let bgColor = '#0A0A0A';
+    let textColor = 'FFFFFF';
+    let logo = data.customization?.logo ?? resourcePath + 'pdf_images/logo.png'
 
-    pdf.text(`Project name: ${data.projectName}`, { align: 'left' }).moveDown(LINE_SPACING);
+    if (data.customization?.bg) {
+        bgColor = data.customization.bg === 'white' ? '#FFFFFF' : '#0A0A0A';
+        textColor = data.customization.bg === 'white' ? '#000000' : '#FFFFFF';
+    }
+
+
+
+    pdf.fillColor(bgColor).rect(0, 0, pdf.page.width, pdf.page.height).fill(bgColor);
+
+    pdf.font(resourcePath + 'pdf_fonts/Poppins-Bold.ttf').fontSize(16).fillColor(textColor);
+
+    pdf.text(`${data.projectName}`, { align: 'center' }).moveDown(LINE_SPACING);
     pdf.text(`Timeframe name: ${data.snapshotName}`, { align: 'left' }).moveDown(LINE_SPACING);
 
-    pdf.font(resourcePath + 'pdf_fonts/Poppins-Regular.ttf').fontSize(12).fillColor('#ffffff')
+    pdf.font(resourcePath + 'pdf_fonts/Poppins-Regular.ttf').fontSize(12).fillColor(textColor)
 
     pdf.text(`Total visits: ${data.totalVisits}`, { align: 'left' }).moveDown(LINE_SPACING);
     pdf.text(`Average visits per day: ${data.avgVisitsDay}`, { align: 'left' }).moveDown(LINE_SPACING);
@@ -71,10 +84,11 @@ function createPdf(data: PDFGenerationData) {
 
     pdf.font(resourcePath + 'pdf_fonts/Poppins-Regular.ttf')
         .fontSize(10)
-        .fillColor('#ffffff')
+        .fillColor(textColor)
         .text('Created with Litlyx.com', 50, 760, { align: 'center' });
 
-    pdf.image(resourcePath + 'pdf_images/logo.png', 460, 700, { width: 100 });
+
+    pdf.image(logo, 460, 700, { width: 100 });
 
     pdf.end();
     return pdf;
@@ -147,6 +161,8 @@ export default defineEventHandler(async event => {
         { $limit: 3 }
     ]);
 
+    const customization = await ReportCustomizationModel.findOne({ project_id: project._id });
+
     const pdf = createPdf({
         projectName: project.name,
         snapshotName: snapshotHeader || 'NO_NAME',
@@ -157,7 +173,8 @@ export default defineEventHandler(async event => {
         topDevice: topDevice,
         topDomain: topDomain,
         topCountries: topCountries.map(e => e._id),
-        topReferrers: topReferrers.map(e => e._id)
+        topReferrers: topReferrers.map(e => e._id),
+        customization: customization?.toJSON() as TReportCustomization
     });
 
     const passThrough = new PassThrough();

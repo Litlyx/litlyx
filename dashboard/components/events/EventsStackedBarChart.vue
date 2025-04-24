@@ -74,7 +74,7 @@ onMounted(async () => {
         </div>
         <AdvancedStackedBarChart v-if="!eventsStackedData.pending.value && !errorData.errored"
             :datasets="eventsStackedData.data.value?.datasets || []"
-            :labels="eventsStackedData.data.value?.labels || []">
+            :labels="eventsStackedData.data.value?.labels || []" legendPosition="bottom">
         </AdvancedStackedBarChart>
         <div v-if="errorData.errored" class="flex items-center justify-center py-8 h-full">
             {{ errorData.text }}

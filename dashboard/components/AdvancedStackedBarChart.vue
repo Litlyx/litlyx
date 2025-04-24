@@ -6,6 +6,7 @@ registerChartComponents();
 const props = defineProps<{
     datasets: any[],
     labels: string[],
+    legendPosition?: "left" | "top" | "right" | "bottom" | "center" | "chartArea"
 }>();
 
 const chartOptions = ref<ChartOptions<'bar'>>({
@@ -40,7 +41,7 @@ const chartOptions = ref<ChartOptions<'bar'>>({
     plugins: {
         legend: {
             display: true,
-            position: 'right',
+            position: props.legendPosition ?? 'right',
         },
         title: { display: false },
         tooltip: {

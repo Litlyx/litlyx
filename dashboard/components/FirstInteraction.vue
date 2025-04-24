@@ -84,23 +84,8 @@ function reloadPage() {
 
                 <div class="flex gap-6 xl:flex-row flex-col">
 
-                    <div class="h-full w-full">
-                        <CardTitled class="h-full w-full xl:min-w-[400px] xl:h-[35rem]" title="Quick setup tutorial"
-                            sub="Quickly Set Up Litlyx in 30 Seconds!">
 
-                            <div class="flex items-center justify-center h-full w-full">
-
-                                <iframe class="w-full h-full min-h-[400px]"
-                                    src="https://www.youtube.com/embed/LInFoNLJ-CI?si=a97HVXpXFDgFg2Yp" title="Litlyx"
-                                    frameborder="0"
-                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                            </div>
-
-                        </CardTitled>
-                    </div>
-
-                    <div class="flex flex-col gap-6">
+                    <div class="flex gap-4">
 
                         <div class="w-full">
                             <CardTitled title="Quick Integration"
@@ -135,27 +120,6 @@ function reloadPage() {
                 </div>
                 <div>
                     <div>
-                        <CardTitled class="w-full h-full" title="Start with Wordpress." sub="Setup Litlyx analytics in 30 seconds on Wordpress.">
-                            <template #header>
-                                <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
-                                    to="https://docs.litlyx.com/techs/wordpress">
-                                    Visit documentation
-                                </LyxUiButton>
-                            </template>
-
-                            <div class="flex flex-col items-end">
-                                <div class="justify-center w-full hidden xl:flex gap-3">
-                                    <a href="https://docs.litlyx.com/techs/wordpress">
-                                    <img class="cursor-pointer" :src="'tech-icons/wpel.png'" alt="Litlyx-Wordpress-Elementor">
-                                    </a>
-                                </div>
-
-                            </div>
-                        </CardTitled>
-                    </div>
-                </div>
-                <div>
-                    <div>
                         <CardTitled class="w-full h-full" title="Modules"
                             sub="Get started with your favorite framework.">
                             <template #header>
@@ -168,34 +132,84 @@ function reloadPage() {
                             <div class="flex flex-col items-end">
                                 <div class="justify-center w-full hidden xl:flex gap-3">
                                     <a href="https://docs.litlyx.com/techs/js" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/js.png'" alt="Litlyx-Javascript-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/js.png'"
+                                            alt="Litlyx-Javascript-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/nuxt" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/nuxt.png'" alt="Litlyx-Nuxt-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/nuxt.png'"
+                                            alt="Litlyx-Nuxt-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/next" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/next.png'" alt="Litlyx-Next-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/next.png'"
+                                            alt="Litlyx-Next-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/react" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/react.png'" alt="Litlyx-React-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/react.png'"
+                                            alt="Litlyx-React-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/vue" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/vue.png'" alt="Litlyx-Vue-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/vue.png'"
+                                            alt="Litlyx-Vue-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/angular" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/angular.png'" alt="Litlyx-Angular-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/angular.png'"
+                                            alt="Litlyx-Angular-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/python" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/py.png'" alt="Litlyx-Python-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/py.png'"
+                                            alt="Litlyx-Python-Analytics">
                                     </a>
                                     <a href="https://docs.litlyx.com/techs/serverless" target="_blank">
-                                    <img class="cursor-pointer" :src="'tech-icons/serverless.png'" alt="Litlyx-Serverless-Analytics">
+                                        <img class="cursor-pointer" :src="'tech-icons/serverless.png'"
+                                            alt="Litlyx-Serverless-Analytics">
                                     </a>
                                 </div>
 
                             </div>
                         </CardTitled>
                     </div>
+                </div>
+
+                <div class="flex gap-4 w-full">
+
+
+                    <CardTitled class="w-full h-full" title="Start with Wordpress."
+                        sub="Setup Litlyx analytics in 30 seconds on Wordpress.">
+                        <!-- <template #header>
+                                    <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
+                                        to="https://docs.litlyx.com/techs/wordpress">
+                                        Visit documentation
+                                    </LyxUiButton>
+                                </template> -->
+
+                        <div class="flex flex-col items-end">
+                            <div class="justify-center w-full hidden xl:flex gap-3">
+                                <a href="https://docs.litlyx.com/techs/wordpress">
+                                    <img class="cursor-pointer" :src="'tech-icons/wpel.png'"
+                                        alt="Litlyx-Wordpress-Elementor">
+                                </a>
+                            </div>
+                        </div>
+                    </CardTitled>
+
+                    <CardTitled class="w-full h-full" title="Start with Shopify."
+                        sub="Setup Litlyx analytics in 30 seconds on Shopify.">
+                        <!-- <template #header>
+                                    <LyxUiButton @click="Lit.event('no_visit_goto_docs')" type="secondary"
+                                        to="https://docs.litlyx.com/techs/shopify">
+                                        Visit documentation
+                                    </LyxUiButton>
+                                </template> -->
+
+                        <div class="flex flex-col items-end">
+                            <div class="justify-center w-full hidden xl:flex gap-3">
+                                <a href="https://docs.litlyx.com/techs/wordpress">
+                                    <img class="cursor-pointer" :src="'tech-icons/shopify.png'" alt="Litlyx-Shopify">
+                                </a>
+                            </div>
+                        </div>
+                    </CardTitled>
+
                 </div>
             </div>
         </div>
