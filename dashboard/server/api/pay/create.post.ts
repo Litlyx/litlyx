@@ -1,4 +1,4 @@
-import { getPlanFromId } from "@data/PREMIUM";
+import { getPlanFromId } from "@data/PLANS";
 // import StripeService from '~/server/services/StripeService';
 
 

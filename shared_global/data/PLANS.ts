@@ -34,8 +34,8 @@ export type PLAN_DATA = {
 export const PREMIUM_PLAN: Record<PLAN_TAG, PLAN_DATA> = {
     FREE: {
         ID: 0,
-        COUNT_LIMIT: 5_000,
-        AI_MESSAGE_LIMIT: 10_000,
+        COUNT_LIMIT: 10_000,
+        AI_MESSAGE_LIMIT: 10,
         PRICE: 'price_1POKCMB2lPUiVs9VLe3QjIHl',
         PRICE_TEST: 'price_1PNbHYB2lPUiVs9VZP32xglF',
         COST: 0,

@@ -1,5 +1,6 @@
 
 import z from 'zod';
+import { PremiumModel } from '~/shared/schema/PremiumSchema';
 import { ReportCustomizationModel } from "~/shared/schema/report/ReportCustomizationSchema";
 
 const ZUpdateCustomizationBody = z.object({
@@ -10,6 +11,11 @@ const ZUpdateCustomizationBody = z.object({
 export default defineEventHandler(async event => {
     const data = await getRequestData(event, []);
     if (!data) return;
+
+
+    const premium = await PremiumModel.findOne({ user_id: data.user.id });
+    if (!premium) return createError({ status: 400, message: 'Not premium' });
+    if (premium.premium_type == 0) return createError({ status: 400, message: 'Not premium' });
 
     const body = await readBody(event);
 

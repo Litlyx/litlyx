@@ -73,25 +73,6 @@ async function deleteSnapshot(close: () => any) {
     close();
 }
 
-async function generatePDF() {
-
-    try {
-        const res = await $fetch<Blob>('/api/project/generate_pdf', {
-            headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'x-snapshot-name': snapshot.value.name } }).value,
-            responseType: 'blob'
-        });
-
-        const url = URL.createObjectURL(res);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `Report.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
-    } catch (ex: any) {
-        alert(ex.message);
-    }
-}
-
 const { actions } = useProject();
 
 const { showDrawer } = useDrawer();
@@ -254,12 +235,6 @@ function openPendingInvites() {
                         </UPopover>
 
                     </div>
-                </div>
-
-                <div class="w-full flex mt-4">
-                    <LyxUiButton @click="generatePDF()" type="outline" class="w-full text-center text-[.8rem]">
-                        Export report
-                    </LyxUiButton>
                 </div>
 
             </div>

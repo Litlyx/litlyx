@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 
 import type { TAdminProject } from '~/server/api/admin/projects';
-import { getPlanFromId } from '~/shared/data/PREMIUM';
+import { getPlanFromId } from '~/shared/data/PLANS';
 
 
 import { AdminDialogProjectDetails } from '#components';

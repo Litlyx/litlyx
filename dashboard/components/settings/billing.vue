@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs';
 import type { SettingsTemplateEntry } from './Template.vue';
-import { getPlanFromId, PREMIUM_PLAN, type PLAN_TAG } from '@data/PREMIUM';
+import { getPlanFromId, PREMIUM_PLAN, type PLAN_TAG } from '@data/PLANS';
 
 const { projectId, isGuest } = useProject();
 

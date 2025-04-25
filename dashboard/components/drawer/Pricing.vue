@@ -196,7 +196,7 @@ function getPricingsData() {
         <div class="flex justify-between items-center mt-10 flex-col xl:flex-row">
             <div class="flex flex-col gap-2">
                 <div class="poppins text-[1.1rem] text-lyx-lightmode-text dark:text-yellow-400 mb-2">
-                    *Plan upgrades are applicable exclusively to this project(workspace).
+                    *Plan upgrades are applied to account level.
                 </div>
                 <div class="poppins text-[2rem] font-semibold">
                     Do you need help ?

@@ -1,4 +1,4 @@
-import { getPlanFromId, PREMIUM_PLAN } from "@data/PREMIUM";
+import { getPlanFromId, PREMIUM_PLAN } from "@data/PLANS";
 import { canTryAppsumoCode, checkAppsumoCode, useAppsumoCode, useTryAppsumoCode } from "~/server/services/AppsumoService";
 import { PaymentServiceHelper } from "~/server/services/PaymentServiceHelper";
 import { PremiumModel } from "~/shared/schema/PremiumSchema";

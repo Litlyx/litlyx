@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { TAdminProject } from '~/server/api/admin/projects';
 
-import { PREMIUM_PLAN, getPlanFromId } from '@data/PREMIUM'
+import { PREMIUM_PLAN, getPlanFromId } from '@data/PLANS'
 import { useSelectMenuStyle } from '~/composables/ui/useSelectMenuStyle';
 
 import { sub, format, isSameDay, type Duration, startOfDay, endOfDay } from 'date-fns'

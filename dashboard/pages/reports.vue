@@ -6,6 +6,9 @@ definePageMeta({ layout: 'dashboard' });
 const customization = ref<any>();
 
 const { snapshot } = useSnapshot();
+const { showDrawer } = useDrawer();
+
+const { isPremium } = useLoggedUser()
 
 onMounted(async () => {
     const res = await $fetch('/api/report/customization', {
@@ -26,7 +29,11 @@ async function updateCustomization() {
     })
 }
 
+const generating = ref<boolean>(false);
+
 async function generateReport(type: number) {
+    if (generating.value === true) return;
+    generating.value = true;
     try {
         const res = await $fetch<Blob>(`/api/project/generate_pdf?type=${type}`, {
             headers: useComputedHeaders({
@@ -46,6 +53,8 @@ async function generateReport(type: number) {
     } catch (ex: any) {
         alert(ex.message);
     }
+
+    generating.value = false;
 }
 
 
@@ -66,22 +75,32 @@ function onFileSelected(e: string) {
     <div class="p-6">
         <div class="flex flex-col gap-4">
             <CardTitled class="w-full h-full" title="Choose a report" sub="Select a report type">
-                <div style="height: 18rem;" class="w-full flex gap-4">
-                    <LyxUiCard>
-                        <div @click="generateReport(1)" class="cursor-pointer hover:text-lyx-text-darker">
-                            Easy report
+                <div class="w-full flex gap-4 h-[18rem]">
+                    <LyxUiCard class="flex-1 h-full">
+                        <div @click="generateReport(1)"
+                            :class="{ 'cursor-pointer hover:text-lyx-text-darker': !generating }"
+                            class="flex justify-center items-center text-[1.2rem] h-full">
+                            <div v-if="!generating"> Easy report </div>
+                            <div v-if="generating" class="flex justify-center pb-8 text-[1.2rem]">
+                                <i class="fas fa-loader animate-spin"></i>
+                            </div>
                         </div>
                     </LyxUiCard>
-                    <LyxUiCard>
-                        <div @click="generateReport(1)" class="cursor-pointer hover:text-lyx-text-darker">
-                            Product report
+                    <LyxUiCard class="flex-1 h-full">
+                         <div class="flex justify-center items-center text-[1.2rem] h-full">
+                            <div class="text-gray-400">(coming soon)</div>
                         </div>
                     </LyxUiCard>
                 </div>
             </CardTitled>
             <div class="flex gap-4">
-                <CardTitled class="w-full h-full" title="Customize theme" sub="Choose the report colors">
-                    <div v-if="customization" style="height: 18rem;" class="w-full flex gap-2">
+                <CardTitled class="w-full h-full relative" title="Customize theme" sub="Choose the report colors">
+                    <div v-if="!isPremium" @click="showDrawer('PRICING')"
+                        class="absolute w-full h-full top-0 left-0 bg-black/80 rounded-lg flex items-center justify-center gap-1">
+                        <div class="text-amber-300"> <i class="far fa-lock"></i> </div>
+                        <div class="text-amber-300"> Premium only </div>
+                    </div>
+                    <div v-if="customization" class="w-full flex gap-2 h-[18rem]">
                         <div @click="selectColor('white')"
                             class="flex items-center justify-center rounded-lg bg-white border-solid border-[1px] border-gray-200 cursor-pointer w-[4rem] h-[2rem]">
                             <i v-if="customization.bg == 'white'" class="fas fa-check text-blue-600"></i>
@@ -92,7 +111,12 @@ function onFileSelected(e: string) {
                         </div>
                     </div>
                 </CardTitled>
-                <CardTitled class="w-full h-full" title="Customize logo" sub="Upload your logo">
+                <CardTitled class="w-full h-full relative" title="Customize logo" sub="Upload your logo">
+                    <div v-if="!isPremium" @click="showDrawer('PRICING')"
+                        class="absolute w-full h-full top-0 left-0 bg-black/80 rounded-lg flex items-center justify-center gap-1">
+                        <div class="text-amber-300"> <i class="far fa-lock"></i> </div>
+                        <div class="text-amber-300"> Premium only </div>
+                    </div>
                     <div v-if="customization" style="height: 18rem;" class="w-full flex gap-4">
                         <img v-if="customization.logo" :src="customization.logo" class="w-[256px] h-[256px]">
                         <div class="flex h-[10rem]">

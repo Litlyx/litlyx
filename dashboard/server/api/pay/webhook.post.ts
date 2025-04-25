@@ -2,7 +2,7 @@
 // import StripeService from '~/server/services/StripeService';
 // import type Event from 'stripe';
 // import { ProjectModel } from '@schema/project/ProjectSchema';
-// import { PREMIUM_DATA, PREMIUM_PLAN, getPlanFromId, getPlanFromPrice, getPlanFromTag } from '@data/PREMIUM';
+// import { PREMIUM_DATA, PREMIUM_PLAN, getPlanFromId, getPlanFromPrice, getPlanFromTag } from '@data/PLANS';
 // import { ProjectLimitModel } from '@schema/project/ProjectsLimits';
 // import { EmailService } from '@services/EmailService'
 // import { UserModel } from '@schema/UserSchema';

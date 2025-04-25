@@ -91,6 +91,10 @@ type ElaborateResponseCallbacks = {
     onChatId?: (chat_id: string) => any
 }
 
+export function getInstance() {
+    return openai;
+}
+
 async function elaborateResponse(messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[], pid: string, time_offset: number, chat_id: string, callbacks?: ElaborateResponseCallbacks) {
 
     console.log('[ELABORATING RESPONSE]');

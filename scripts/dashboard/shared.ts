@@ -11,7 +11,7 @@ helper.copy('services/EmailService.ts');
 
 
 helper.create('data');
-helper.copy('data/PREMIUM.ts');
+helper.copy('data/PLANS.ts');
 helper.copy('data/ADMINS.ts');
 
 helper.create('data/broker');

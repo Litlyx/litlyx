@@ -1,6 +1,5 @@
 
 
-import { UserModel } from "@schema/UserSchema";
 import { VisitModel } from "@schema/metrics/VisitSchema";
 import { EventModel } from "~/shared/schema/metrics/EventSchema";
 

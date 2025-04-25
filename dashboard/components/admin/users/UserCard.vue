@@ -2,7 +2,7 @@
 
 import type { TAdminProject } from '~/server/api/admin/projects';
 import type { TAdminUser } from '~/server/api/admin/users';
-import { getPlanFromId } from '~/shared/data/PREMIUM';
+import { getPlanFromId } from '~/shared/data/PLANS';
 
 import { AdminDialogProjectDetails } from '#components';
 
