@@ -203,7 +203,7 @@ function reloadPage() {
 
                         <div class="flex flex-col items-end">
                             <div class="justify-center w-full hidden xl:flex gap-3">
-                                <a href="https://docs.litlyx.com/techs/wordpress">
+                                <a href="https://docs.litlyx.com/techs/shopify">
                                     <img class="cursor-pointer" :src="'tech-icons/shopify.png'" alt="Litlyx-Shopify">
                                 </a>
                             </div>

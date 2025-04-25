@@ -8,7 +8,7 @@ type PaymentServiceResponse<T> = Promise<OkResponse<T> | ErrorResponse>
 
 export class PaymentServiceHelper {
 
-    static BASE_URL = 'https://test-payments.litlyx.com/payment';
+    static BASE_URL = 'https://payments.litlyx.com/payment';
 
     private static async send(endpoint: string, body: Record<string, any>): PaymentServiceResponse<any> {
         try {
@@ -22,6 +22,9 @@ export class PaymentServiceHelper {
             })
             return [true, res];
         } catch (ex: any) {
+            console.log('---')
+            console.log(ex.response?._data);
+            console.log('---')
             console.error(ex);
             return [false, ex];
         }

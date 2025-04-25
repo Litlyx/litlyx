@@ -17,7 +17,7 @@ definePageMeta({ layout: 'none' });
             </div>
 
             <div class="poppins">
-                We hope Lilyx can help you make better metrics-driven decision to help your business.
+                We hope Litlyx can help you make better metrics-driven decision to help your business.
             </div>
 
             <NuxtLink to="/?just_logged=true" class="text-accent mt-10 bg-menu px-6 py-2 rounded-lg hover:bg-black font-semibold poppins cursor-pointer">

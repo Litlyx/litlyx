@@ -41,7 +41,7 @@ export const ZBodyCreatePayment = z.object({
     plan_id: z.number()
 });
 
-paymentRouter.post('/create', json(), async (req, res) => {
+paymentRouter.post('/create_payment', json(), async (req, res) => {
     try {
         const createPaymentData = ZBodyCreatePayment.parse(req.body);
 
