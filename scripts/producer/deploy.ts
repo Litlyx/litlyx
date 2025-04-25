@@ -46,7 +46,7 @@ async function main() {
         const devContent = ecosystemContent
             .replace("$REDIS_URL$", `${REDIS_URL_PRODUCTION}`)
             .replace("$MONGO_CONNECTION_STRING$", `${DATABASE_CONNECTION_STRING_PRODUCTION}`)
-            .replace("$DEV_MODE$", `true`);
+            .replace("$DEV_MODE$", `false`);
         archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
     }
 

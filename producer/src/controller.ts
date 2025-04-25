@@ -610,8 +610,6 @@ function isBot(userAgent: string) {
 
 export async function isAllowedToLog(project_id: string, website: string, ip: string, userAgent: string) {
 
-    console.log({ userAgent });
-
     const blacklistData = await AddressBlacklistModel.find({ project_id }, { address: 1 });
     for (const blacklistedData of blacklistData) {
         if (blacklistedData.address == ip) return false;
