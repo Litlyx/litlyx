@@ -326,7 +326,7 @@ function openPendingInvites() {
 
                 <LyxUiCard class="flex py-1 px-1 w-full relative">
                     <div class="absolute top-[-22%] right-0">
-                        <div @click="showDrawer('PRICING')"
+                        <div v-if="isPremium" @click="showDrawer('PRICING')"
                             class="flex items-center gap-1 poppins text-[.5rem] bg-[#fbbe244f] outline outline-[1px] outline-[#fbbf24] px-3 py-[.12rem] rounded-sm">
                             <i class="far fa-crown mb-[2px]"></i>
                             <div>Premium</div>
