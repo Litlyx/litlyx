@@ -111,3 +111,11 @@ body {
 * {
   font-family: 'Nunito', var(--font-sans);
 }
+
+.rotating-thing {
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  opacity: 0.15;
+  background: radial-gradient(51.24% 31.29% at 50% 50%, rgb(51, 58, 232) 0%, rgba(51, 58, 232, 0) 100%);
+  animation: 12s linear 0s infinite normal none running spin;
+}

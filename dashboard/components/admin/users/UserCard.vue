@@ -4,13 +4,13 @@ import type { TAdminProject } from '~/server/api/admin/projects';
 import type { TAdminUser } from '~/server/api/admin/users';
 import { getPlanFromId } from '~/shared/data/PLANS';
 
-import { AdminDialogProjectDetails } from '#components';
+import { AdminDialogUserDetails } from '#components';
 
 const { openDialogEx } = useCustomDialog();
 
-function showProjectDetails(pid: string) {
-    openDialogEx(AdminDialogProjectDetails, {
-        params: { pid }
+function showUserDetails(user_id: string) {
+    openDialogEx(AdminDialogUserDetails, {
+        params: { user_id }
     })
 }
 
@@ -31,33 +31,10 @@ const props = defineProps<{ user: TAdminUser }>();
         </div>
 
         <div class="flex gap-5 justify-center">
-            <div class="font-medium">
+            <div class="font-medium hover:text-blue-400 cursor-pointer" @click="showUserDetails(user._id.toString())">
                 {{ user.email }}
             </div>
         </div>
-
-        <LyxUiSeparator class="my-2" />
-
-        <div class="flex flex-col text-[.9rem]">
-            <div class="flex gap-2" v-for="project of user.projects">
-                <div class="text-lyx-text-darker">
-                    {{ new Date(project.created_at).toLocaleDateString('it-IT') }}
-                </div>
-                <UTooltip :text="`PRICE_ID: ${project.premium_type}`">
-                    <div class="font-medium text-lyx-text-dark">
-                        {{ getPlanFromId(project.premium_type)?.TAG?.replace('APPSUMO', 'AS') ?? 'ERROR' }}
-                    </div>
-                </UTooltip>
-
-                <div @click="showProjectDetails(project._id.toString())"
-                    class="ml-1 hover:text-lyx-primary cursor-pointer">
-                    {{ project.name }}
-                </div>
-
-            </div>
-
-        </div>
-
 
     </div>
 

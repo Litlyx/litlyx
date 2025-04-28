@@ -79,6 +79,7 @@ const items = computed(() => {
             {
                 label: 'Admin',
                 icon: 'far fa-cat',
+                to: '/admin'
             },
             {
                 label: 'Logout',

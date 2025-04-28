@@ -10,35 +10,17 @@ import { sub, format, isSameDay, type Duration, startOfDay, endOfDay } from 'dat
 const page = ref<number>(1);
 
 const ordersList = [
-    { label: 'created_at -->', id: '{ "created_at": 1 }' },
-    { label: 'created_at <--', id: '{ "created_at": -1 }' },
+    { label: 'Older', id: '{ "created_at": 1 }' },
+    { label: 'Newer', id: '{ "created_at": -1 }' },
 
-    { label: 'active -->', id: '{ "last_log_at": 1 }' },
-    { label: 'active <--', id: '{ "last_log_at": -1 }' },
+    { label: 'Less active', id: '{ "last_log_at": 1 }' },
+    { label: 'More active', id: '{ "last_log_at": -1 }' },
 
-    { label: 'visits -->', id: '{ "visits": 1 }' },
-    { label: 'visits <--', id: '{ "visits": -1 }' },
+    { label: 'Less usage', id: '{ "limit_total": 1 }' },
+    { label: 'More usage', id: '{ "limit_total": -1 }' },
 
-    { label: 'events -->', id: '{ "events": 1 }' },
-    { label: 'events <--', id: '{ "events": -1 }' },
-
-    { label: 'sessions -->', id: '{ "sessions": 1 }' },
-    { label: 'sessions <--', id: '{ "sessions": -1 }' },
-
-    { label: 'usage total -->', id: '{ "limit_total": 1 }' },
-    { label: 'usage total <--', id: '{ "limit_total": -1 }' },
-
-    { label: 'usage visits -->', id: '{ "limit_visits": 1 }' },
-    { label: 'usage visits <--', id: '{ "limit_visits": -1 }' },
-
-    { label: 'usage events -->', id: '{ "limit_events": 1 }' },
-    { label: 'usage events <--', id: '{ "limit_events": -1 }' },
-
-    { label: 'usage ai -->', id: '{ "limit_ai_messages": 1 }' },
-    { label: 'usage ai <--', id: '{ "limit_ai_messages": -1 }' },
-
-    { label: 'plan -->', id: '{ "premium_type": 1 }' },
-    { label: 'plan <--', id: '{ "premium_type": -1 }' },
+    { label: 'Smaller plan', id: '{ "premium_type": 1 }' },
+    { label: 'Bigger plan', id: '{ "premium_type": -1 }' },
 
 ]
 
@@ -190,7 +172,7 @@ const { uiMenu } = useSelectMenuStyle();
 
 
         <div
-            class="cursor-default flex justify-center flex-wrap gap-6 mb-[4rem] mt-4 overflow-auto h-full pt-6 pb-[8rem]">
+            class="cursor-default flex justify-center flex-wrap gap-6 mb-[4rem] mt-4 overflow-auto h-full pt-6 pb-[20rem]">
 
             <AdminOverviewProjectCard v-if="!pendingProjects" :key="project._id.toString()" :project="project"
                 class="w-[26rem]" v-for="project of projectsInfo?.projects" />

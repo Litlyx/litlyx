@@ -137,7 +137,7 @@ const { uiMenu } = useSelectMenuStyle();
 
 
         <div
-            class="cursor-default flex justify-center flex-wrap gap-6 mb-[4rem] mt-4 overflow-auto h-full pt-6 pb-[8rem]">
+            class="cursor-default flex justify-center flex-wrap gap-6 mb-[4rem] mt-4 overflow-auto h-full pt-6 pb-[16rem]">
 
             <AdminUsersUserCard v-if="!pendingUsers" :key="user._id.toString()" :user="user" class="w-[26rem]"
                 v-for="user of usersInfo?.users" />

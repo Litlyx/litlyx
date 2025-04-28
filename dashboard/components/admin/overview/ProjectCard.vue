@@ -3,18 +3,17 @@
 import type { TAdminProject } from '~/server/api/admin/projects';
 import { getPlanFromId } from '~/shared/data/PLANS';
 
-
-import { AdminDialogProjectDetails } from '#components';
+import { AdminDialogUserDetails } from '#components';
 
 const { openDialogEx } = useCustomDialog();
 
-function showProjectDetails(pid: string) {
-    openDialogEx(AdminDialogProjectDetails, {
-        params: { pid }
+function showUserDetails(user_id: string) {
+    openDialogEx(AdminDialogUserDetails, {
+        params: { user_id }
     })
 }
 
-const props = defineProps<{ project: TAdminProject }>();
+const props = defineProps<{ project: TAdminProject & { domains?: string[] } }>();
 
 
 const logBg = computed(() => {
@@ -69,9 +68,9 @@ const usageAiLabel = computed(() => {
         </div>
 
         <div class="flex gap-4 justify-center  text-[.9rem]">
-            <UTooltip :text="`PRICE_ID: ${project.premium_type}`">
+            <UTooltip :text="`PRICE_ID: ${project.premium[0].premium_type}`">
                 <div class="font-medium text-lyx-text-dark">
-                    {{ getPlanFromId(project.premium_type)?.TAG?.replace('APPSUMO', 'AS') ?? 'ERROR' }}
+                    {{ getPlanFromId(project.premium[0].premium_type)?.TAG?.replace('APPSUMO', 'AS') ?? 'ERROR' }}
                 </div>
             </UTooltip>
             <div class="text-lyx-text-darker">
@@ -79,9 +78,11 @@ const usageAiLabel = computed(() => {
             </div>
         </div>
 
-        <div class="flex gap-5 justify-center">
-            <div @click="showProjectDetails(project._id.toString())" class="font-medium hover:text-lyx-primary cursor-pointer">
-                {{ project.name }}
+        <div class="flex flex-col items-center py-1">
+            <div class="text-center"> {{ project.name }} </div>
+            <div v-if="project.user" @click="showUserDetails(project.premium[0].user_id.toString())"
+                class="font-medium hover:text-lyx-primary cursor-pointer text-center">
+                {{ project.user[0].email }}
             </div>
         </div>
 
@@ -128,6 +129,13 @@ const usageAiLabel = computed(() => {
 
         </div>
 
+        <LyxUiSeparator class="my-2" />
+
+        <div v-if="project.domains" class="flex flex-wrap gap-4">
+            <div v-for="domain of project.domains" class="hover:text-gray-200 cursor-pointer">
+                {{ domain }}
+            </div>
+        </div>
     </div>
 </template>
 

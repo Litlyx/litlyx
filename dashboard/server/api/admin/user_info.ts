@@ -1,64 +1,33 @@
 import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
+import { VisitModel } from "~/shared/schema/metrics/VisitSchema";
+import { TUser, UserModel } from "~/shared/schema/UserSchema";
 import { TPremium } from "~/shared/schema/PremiumSchema";
-import { TUser } from "~/shared/schema/UserSchema";
+import { Types } from "mongoose";
+import { TAdminProject } from "./projects";
 
-
-type ExtendedProject = {
-    user: [TUser],
-    premium: [TPremium],
-    counts: [{
-        events: number,
-        visits: number,
-        sessions: number
-    }],
-    visits: number,
-    events: number,
-    sessions: number,
-    limit_visits: number,
-    limit_events: number,
-    limit_max: number,
-    limit_ai_messages: number,
-    limit_ai_max: number,
-    limit_total: number,
-    last_log_at: string
+export type TAdminUserInfo = {
+    user: TUser,
+    projects: (TAdminProject & { domains: string[] })[],
+    premium: TPremium
 }
 
-export type TAdminProject = TProject & ExtendedProject;
 
-function addFieldsFromArray(data: { fieldName: string, projectedName: string, arrayName: string }[]) {
-    const content: Record<string, any> = {};
-    data.forEach(e => {
-        content[e.projectedName] = {
-            "$ifNull": [{ "$getField": { "field": e.fieldName, "input": { "$arrayElemAt": [`$${e.arrayName}`, 0] } } }, 0]
-        }
-    });
-    return content;
-}
+async function getProjects(user_id: string) {
 
-export default defineEventHandler(async event => {
-
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return;
-    if (!userData.user.roles.includes('ADMIN')) return;
-
-    const { page, limit, sortQuery, filterQuery, filterFrom, filterTo } = getQuery(event);
-
-    const pageNumber = parseInt(page as string);
-    const limitNumber = parseInt(limit as string);
-
-    const matchQuery = {
-        ...JSON.parse(filterQuery as string),
-        created_at: {
-            $gte: new Date(filterFrom as string),
-            $lte: new Date(filterTo as string)
-        }
+    function addFieldsFromArray(data: { fieldName: string, projectedName: string, arrayName: string }[]) {
+        const content: Record<string, any> = {};
+        data.forEach(e => {
+            content[e.projectedName] = {
+                "$ifNull": [{ "$getField": { "field": e.fieldName, "input": { "$arrayElemAt": [`$${e.arrayName}`, 0] } } }, 0]
+            }
+        });
+        return content;
     }
 
-    const count = await ProjectModel.countDocuments(matchQuery);
 
     const projects = await ProjectModel.aggregate([
         {
-            $match: matchQuery
+            $match: { owner: new Types.ObjectId(user_id) }
         },
         {
             $lookup: {
@@ -74,14 +43,6 @@ export default defineEventHandler(async event => {
                 localField: "_id",
                 foreignField: "project_id",
                 as: "counts"
-            }
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "owner",
-                foreignField: "_id",
-                as: "user"
             }
         },
         {
@@ -121,14 +82,40 @@ export default defineEventHandler(async event => {
         },
         { $unset: 'counts' },
         { $unset: 'limits' },
-        { $sort: JSON.parse(sortQuery as string) },
-        { $skip: pageNumber * limitNumber },
-        { $limit: limitNumber }
     ]);
 
-    return {
-        count,
-        projects: projects as TAdminProject[]
-    };
+    return projects as TAdminProject[];
+}
+
+export default defineEventHandler(async event => {
+
+    const userData = getRequestUser(event);
+    if (!userData?.logged) return;
+    if (!userData.user.roles.includes('ADMIN')) return;
+
+    const { user_id } = getQuery(event);
+
+    const result: any = {}
+
+    result.user = await UserModel.findOne({ _id: user_id });
+    result.projects = await getProjects(user_id as string);
+
+
+    const promises: any[] = [];
+
+    for (const project of result.projects) {
+        promises.push(new Promise<void>(async resolve => {
+            const domains = await VisitModel.aggregate([
+                { $match: { project_id: (project as TAdminProject)._id } },
+                { $group: { _id: '$website', } }
+            ]);
+            project.domains = domains.map(e => e._id);
+            resolve();
+        }));
+    }
+
+    await Promise.all(promises);
+
+    return result as TAdminUserInfo;
 
 });

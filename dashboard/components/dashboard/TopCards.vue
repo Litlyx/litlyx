@@ -8,7 +8,7 @@ const { snapshot, safeSnapshotDates, snapshotDuration } = useSnapshot()
 
 const chartSlice = computed(() => {
     if (snapshotDuration.value <= 3) return 'hour' as Slice;
-    if (snapshotDuration.value <= 31 * 3) return 'day' as Slice;
+    if (snapshotDuration.value <= 31 * 2) return 'day' as Slice;
     return 'month' as Slice;
 });
 

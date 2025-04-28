@@ -1,6 +1,16 @@
 <script lang="ts" setup>
 
-const { data: feedbacks, pending: pendingFeedbacks } = useFetch<any[]>(() => `/api/admin/feedbacks`, signHeaders());
+const { data: feedbacks, pending: pendingFeedbacks, refresh } = useFetch<any[]>(() => `/api/admin/feedbacks`, signHeaders());
+
+
+async function deleteFeedback(id: string) {
+    await $fetch('/api/admin/delete_feedback', {
+        method: 'DELETE',
+        headers: useComputedHeaders({ custom: { 'Content-Type': 'application/json' } }).value,
+        body: JSON.stringify({ id })
+    });
+    refresh();
+}
 
 </script>
 
@@ -13,11 +23,19 @@ const { data: feedbacks, pending: pendingFeedbacks } = useFetch<any[]>(() => `/a
             <div v-if="feedbacks" class="flex flex-col-reverse gap-4 px-20">
                 <div class="flex flex-col text-center outline outline-[1px] outline-lyx-widget-lighter p-4 gap-2"
                     v-for="feedback of feedbacks">
-                    <div class="flex flex-col gap-1">
-                        <div class="text-lyx-text-dark"> {{ feedback.user[0]?.email || 'DELETED USER' }} </div>
-                        <div class="text-lyx-text-dark"> {{ feedback.project[0]?.name || 'DELETED PROJECT' }} </div>
+                    <div>
+                        <div class="flex flex-col gap-1 items-center">
+                            <div class="text-lyx-text-dark"> {{ feedback.user[0]?.email || 'DELETED USER' }} </div>
+                            <div class="text-lyx-text-dark flex gap-2 items-center">
+                                <div>{{ feedback.project[0]?.name || 'DELETED PROJECT' }}</div>
+                                <div @click="deleteFeedback(feedback._id.toString())" class="hover:text-red-200"><i
+                                        class="fas fa-trash"></i></div>
+                            </div>
+
+                        </div>
+                        {{ feedback.text }}
                     </div>
-                    {{ feedback.text }}
+
                 </div>
             </div>
 
