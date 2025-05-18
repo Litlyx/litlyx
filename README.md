@@ -9,7 +9,7 @@
 
 #
 <p align="center">
-  Litlys is a modern, developer-friendly, cookie-free analytics tool.<br>
+  Litlyx is a modern, developer-friendly, cookie-free analytics tool.<br>
   Setup takes less than 30 seconds! Completely self-hostable with docker.<br>
   Alternative to Google Analytics, Matomo, Umami, Plausible & Simple Analytics.
 </p>
