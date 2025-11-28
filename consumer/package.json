@@ -1,31 +1,33 @@
 {
   "dependencies": {
+    "@trpc/client": "11.2.0",
     "axios": "^1.7.9",
     "express": "^4.19.2",
+    "mmdb-lib": "^3.0.1",
     "mongoose": "^8.9.5",
     "redis": "^4.7.0",
     "ua-parser-js": "^1.0.37"
   },
   "devDependencies": {
+    "@trpc/server": "11.2.0",
     "@types/express": "^5.0.0",
-    "@types/node": "^20.12.13",
+    "@types/node": "^20.16.5",
     "@types/ua-parser-js": "^0.7.39",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.8.3"
   },
   "name": "consumer",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
-    "dev": "node scripts/start_dev.js",
-    "dev_prod": "node scripts/start_dev_prod.js",
-    "compile": "tsc",
+    "dev:test": "ts-node ../scripts/consumer/run_local.ts --testmode",
+    "dev:prod": "ts-node ../scripts/consumer/run_local.ts --production",
+    "compile": "pnpm run shared && tsc",
+    "compile-only": "tsc",
     "build": "npm run compile && npm run create_db",
     "create_db": "cd scripts && ts-node create_database.ts",
-    "docker-build": "docker build -t litlyx-consumer -f Dockerfile ../",
-    "docker-inspect": "docker run -it litlyx-consumer sh",
-    "workspace:shared": "ts-node ../scripts/consumer/shared.ts",
-    "workspace:deploy": "ts-node ../scripts/consumer/deploy.ts"
+    "shared": "ts-node ../scripts/consumer/shared.ts",
+    "deploy": "ts-node ../scripts/consumer/deploy.ts"
   },
   "keywords": [],
   "author": "Emily",

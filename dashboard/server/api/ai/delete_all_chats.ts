@@ -1,13 +1,14 @@
 
-import { AiChatModel } from "@schema/ai/AiChatSchema";
+import { AiNewChatModel } from "~/shared/schema/ai/AiNewChatSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, [], ['AI']);
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid');
+    const { project_id } = ctx;
 
-    const { project_id } = data;
+    const chat = await AiNewChatModel.updateMany({ project_id }, { deleted: true });
+    if (!chat) return;
 
-    const result = await AiChatModel.updateMany({ project_id }, { deleted: true });
-    return result.modifiedCount > 0;
+    return chat;
+
 });

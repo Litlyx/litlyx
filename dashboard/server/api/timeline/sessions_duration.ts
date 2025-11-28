@@ -1,55 +1,21 @@
-import { SessionModel } from "@schema/metrics/SessionSchema";
-import { Redis } from "~/server/services/CacheService";
-import { executeAdvancedTimelineAggregation, fillAndMergeTimelineAggregationV2 } from "~/server/services/TimelineService";
 
+import { durationController } from "~/server/controllers/DurationController";
+import { Redis } from "~/server/services/CacheService";
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['SLICE', 'DOMAIN', 'RANGE'], ['WEB']);
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid', 'domain', 'range', 'slice', 'permission:webAnalytics', 'flag:allowShare');
 
-    const { pid, from, to, slice, project_id, domain } = data;
+    const { pid, project_id, domain, from, to, slice } = ctx;
 
     const cacheKey = `timeline:sessions_duration:${pid}:${slice}:${from}:${to}:${domain}`;
     const cacheExp = 60;
 
-    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
-        const timelineData = await executeAdvancedTimelineAggregation({
-            projectId: project_id,
-            model: SessionModel,
-            from, to, slice,
-            domain,
-            customGroup: {
-                duration: { $sum: '$duration' }
-            },
-            customProjection: {
-                count: { $divide: ["$duration", "$count"] }
-            },
-            customQueries: [
-                {
-                    index: 1,
-                    query: {
-                        "$lookup": {
-                            "from": "visits",
-                            "localField": "session",
-                            "foreignField": "session",
-                            "as": "visits",
-                            "pipeline": [{ "$limit": 1 }]
-                        }
-                    },
-                },
-                {
-                    index: 2,
-                    query: {
-                        "$match": {
-                            "visits.0": { "$exists": true }
-                        }
-                    }
-                }
-            ]
-        });
-        const timelineFilledMerged = fillAndMergeTimelineAggregationV2(timelineData, slice, from, to);
-        return timelineFilledMerged;
+    if (getHeader(event, 'x-dev') === 'true') await Redis.del(cacheKey);
 
+    return await Redis.useCache(cacheKey, cacheExp, async () => {
+        const { data, time } = await durationController.executeDynamic({ project_id: project_id.toString(), from, to, slice, domain });
+        setHeader(event, 'x-time', time.toFixed());
+        return data;
     });
 
 

@@ -1,31 +1,37 @@
 <script lang="ts" setup>
+import { TrashIcon } from 'lucide-vue-next';
 
-const { data: feedbacks, pending: pendingFeedbacks } = useFetch<any[]>(() => `/api/admin/feedbacks`, signHeaders());
+
+const { data: feedbacks, refresh } = useAuthFetch('/api/admin/feedbacks');
+
+async function deleteFeedback(feedback_id: string) {
+    const sure = confirm('Are you sure to delete the feedback ?');
+    if (!sure) return;
+    await useAuthFetch(`/api/admin/feedbacks_delete?id=${feedback_id}`);
+    refresh();
+}
 
 </script>
 
 <template>
-    <div class="mt-6 h-full">
+    <div class="flex flex-col gap-4 h-full overflow-y-auto">
 
-        <div
-            class="cursor-default flex justify-center flex-wrap gap-6 mb-[4rem] mt-4 overflow-auto h-full pt-6 pb-[8rem]">
-
-            <div v-if="feedbacks" class="flex flex-col-reverse gap-4 px-20">
-                <div class="flex flex-col text-center outline outline-[1px] outline-lyx-widget-lighter p-4 gap-2"
-                    v-for="feedback of feedbacks">
-                    <div class="flex flex-col gap-1">
-                        <div class="text-lyx-text-dark"> {{ feedback.user[0]?.email || 'DELETED USER' }} </div>
-                        <div class="text-lyx-text-dark"> {{ feedback.project[0]?.name || 'DELETED PROJECT' }} </div>
-                    </div>
+        <Card v-for="feedback of feedbacks?.toReversed()">
+            <CardHeader>
+                <div class="flex gap-4 justify-center text-muted-foreground">
+                    <div> {{ feedback.user_id?.email ?? 'USER_DELETED' }} </div>
+                    <div> Project: {{ feedback.project_id }} </div>
+                </div>
+                <CardAction>
+                    <TrashIcon @click="deleteFeedback((feedback as any)._id.toString())" class="size-5"></TrashIcon>
+                </CardAction>
+            </CardHeader>
+            <CardContent>
+                <div class="whitespace-pre-wrap">
                     {{ feedback.text }}
                 </div>
-            </div>
+            </CardContent>
+        </Card>
 
-
-            <div v-if="pendingFeedbacks"> Loading...</div>
-
-        </div>
     </div>
 </template>
-
-<style scoped lang="scss"></style>

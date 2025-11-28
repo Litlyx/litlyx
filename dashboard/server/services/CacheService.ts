@@ -3,18 +3,7 @@ import { createClient } from 'redis';
 
 const runtimeConfig = useRuntimeConfig();
 
-export const DATA_EXPIRE_TIME = 30;
-export const TIMELINE_EXPIRE_TIME = 60;
-export const COUNTS_EXPIRE_TIME = 10;
-
-export const COUNTS_SESSIONS_EXPIRE_TIME = 60 * 3;
-
-export const EVENT_NAMES_EXPIRE_TIME = 60;
-
-export const EVENT_METADATA_FIELDS_EXPIRE_TIME = 30;
-
-type UseCacheV2Callback<T> = (noStore: () => void, updateExp: (value: number) => void) => Promise<T>
-
+type UseCacheCallback<T> = (noStore: () => void, updateExp: (value: number) => void) => Promise<T>
 
 export class Redis {
 
@@ -56,18 +45,7 @@ export class Redis {
         await this.client.del(key);
     }
 
-    static async useCache<T extends any>(options: { key: string, exp: number }, action: (noStore: () => void) => Promise<T>): Promise<T> {
-        const cached = await this.get<T>(options.key);
-        if (cached) return cached;
-        let storeResult = true;
-        const noStore = () => storeResult = false;
-        const result = await action(noStore);
-        if (!storeResult) return result;
-        await this.set(options.key, result, options.exp);
-        return result;
-    }
-
-    static async useCacheV2<T extends any>(key: string, exp: number, callback: UseCacheV2Callback<T>) {
+    static async useCache<T extends any>(key: string, exp: number, callback: UseCacheCallback<T>) {
         const cached = await this.get<T>(key);
         if (cached) return cached;
         let expireValue = exp;

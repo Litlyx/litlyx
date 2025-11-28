@@ -1,129 +1,81 @@
 <script setup lang="ts">
 
-definePageMeta({ layout: 'dashboard' });
+import ActionableChart from '~/components/complex/ActionableChart.vue';
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import GuidedSetup from '~/components/complex/GuidedSetup.vue';
+import LineDataNew from '~/components/complex/LineDataNew.vue';
+import { RefreshCwIcon } from 'lucide-vue-next';
+
+definePageMeta({ layout: 'sidebar' });
 
 
-const route = useRoute();
-const { project, projectList, projectId } = useProject();
+const projectStore = useProjectStore();
 
-const justLogged = computed(() => route.query.just_logged);
-const jwtLogin = computed(() => route.query.jwt_login as string);
+const { insight, insightRefresh, insightStatus } = useInsight();
 
-const { token, setToken } = useAccessToken();
-
-const { refreshingDomains } = useDomain();
-const { permission, canSeeWeb, canSeeEvents } = usePermission();
-
-onMounted(async () => {
-
-    if (jwtLogin.value) {
-        setToken(jwtLogin.value);
-        const user = await $fetch<any>('/api/user/me', { headers: { 'Authorization': 'Bearer ' + token.value } })
-        const loggedUser = useLoggedUser();
-        loggedUser.user = user;
-    }
-
-    if (justLogged.value) { setTimeout(() => { location.href = '/' }, 500) }
-
-})
-
-const firstInteraction = useFetch<boolean>('/api/project/first_interaction', {
-    lazy: true, headers: useComputedHeaders({ useSnapshotDates: false })
-});
-
-const showDashboard = computed(() => project.value && firstInteraction.data.value);
-
-const selfhosted = useSelfhosted();
 
 </script>
 
 <template>
 
-    <div v-if="!canSeeWeb" class="h-full w-full flex mt-[20vh] justify-center">
-        <div> You need webAnalytics permission to view this page </div>
+
+    <Unauthorized v-if="projectStore.permissions?.webAnalytics === false" authorization="webAnalytics">
+    </Unauthorized>
+
+    <div v-if="projectStore.permissions?.webAnalytics && !projectStore.firstInteraction && !isSelfhosted()">
+        <GuidedSetup />
     </div>
 
-    <div v-if="canSeeWeb && refreshingDomains">
-        <div class="w-full flex justify-center items-center mt-[20vh]">
-            <i class="fas fa-spinner text-[2rem] text-accent animate-[spin_1s_linear_infinite] duration-500"></i>
-        </div>
-    </div>
-
-    <div v-if="canSeeWeb && !refreshingDomains" class="dashboard w-full h-full overflow-y-auto overflow-x-hidden pb-[7rem] md:pt-4 lg:pt-0">
-
-        <div v-if="showDashboard">
-
-            <div class="w-full px-4 py-2 gap-2 flex flex-col">
-                <BannerLimitsInfo v-if="!selfhosted" :key="refreshKey"></BannerLimitsInfo>
-            </div>
-
-            <div>
-                <DashboardTopSection :key="refreshKey"></DashboardTopSection>
-                <DashboardTopCards :key="refreshKey"></DashboardTopCards>
-            </div>
+    <div v-else class="flex flex-col gap-4 poppins">
 
 
-            <div class="mt-6 px-6 flex gap-6 flex-col 2xl:flex-row w-full">
-                <DashboardActionableChart v-if="canSeeWeb && canSeeEvents" :key="refreshKey"></DashboardActionableChart>
-                <LyxUiCard v-else class="flex justify-center w-full py-4">
-                    You need events permission to view this widget
-                </LyxUiCard>
-            </div>
+
+        <Card v-if="!isSelfhosted()">
+            <CardContent class="flex items-center">
+                <img class="w-5 h-auto mr-4" :src="'ai/pixel-boy.png'">
+                <div v-if="insightStatus === 'success'"> {{ insight }} </div>
+                <div v-else> Generating your insight... </div>
+                <div class="grow"></div>
+                <RefreshCwIcon v-if="insightStatus === 'success'" @click="insightRefresh()"
+                    class="size-5 hover:rotate-45 transition-all duration-150"></RefreshCwIcon>
+            </CardContent>
+        </Card>
 
 
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
-                    <div class="flex-1">
-                        <BarCardReferrers :key="refreshKey"></BarCardReferrers>
-                    </div>
-                    <div class="flex-1">
-                        <BarCardPages :key="refreshKey"></BarCardPages>
-                    </div>
-                </div>
-            </div>
+        <Accordion type="single" collapsible class="relative lg:hidden border rounded-xl px-5 bg-card">
 
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
-                    <div class="flex-1">
-                        <BarCardGeolocations :key="refreshKey"></BarCardGeolocations>
-                    </div>
-                    <div class="flex-1">
-                        <BarCardDevices :key="refreshKey"></BarCardDevices>
-                    </div>
-                </div>
-            </div>
+            <AccordionItem value=" top-cards">
 
-
-            <div class="flex w-full justify-center mt-6 px-6">
-                <div class="flex w-full gap-6 flex-col xl:flex-row">
-                    <div class="flex-1">
-                        <BarCardBrowsers :key="refreshKey"></BarCardBrowsers>
-                    </div>
-                    <div class="flex-1">
-                        <BarCardOperatingSystems :key="refreshKey"></BarCardOperatingSystems>
-                    </div>
-                </div>
-            </div>
-
+                <AccordionTrigger class="text-md">
+                    Top Charts
+                </AccordionTrigger>
+                <AccordionContent>
+                    <DashboardTopCards class="grid grid-cols-2" />
+                </AccordionContent>
+            </AccordionItem>
+        </Accordion>
+        <div class="hidden lg:block">
+            <DashboardTopCards />
         </div>
 
-        <FirstInteraction v-if="!justLogged" :refresh-interaction="firstInteraction.refresh"
-            :first-interaction="(firstInteraction.data.value || false)"></FirstInteraction>
 
-        <div class="text-text/85 mt-8 ml-8 poppis text-[1.2rem]"
-            v-if="projectList && projectList.length == 0 && !justLogged">
-            Create your first project...
+
+         <ActionableChart></ActionableChart>
+
+        <div class="flex w-full justify-center">
+            <div class="flex w-full gap-4 flex-col xl:flex-row">
+                <LineDataNew class="flex-1" type="referrers" select />
+                <LineDataNew class="flex-1" type="pages" select />
+            </div>
         </div>
 
-        <div v-if="justLogged" class="text-[2rem] w-full h-full flex items-center justify-center">
-            <div
-                class="backdrop-blur-[1px] z-[20] left-0 top-0 w-full h-full flex items-center justify-center font-bold rockmann absolute">
-                <i class="fas fa-spinner text-[2rem] text-[#727272] animate-[spin_1s_linear_infinite] duration-500"></i>
+        <div class="flex w-full justify-center">
+            <div class="flex w-full gap-4 flex-col xl:flex-row">
+                <LineDataNew class="flex-1" type="countries" select />
+                <LineDataNew class="flex-1" type="devices" select />
             </div>
         </div>
 
     </div>
-
 </template>
-
-<style scoped lang="scss"></style>

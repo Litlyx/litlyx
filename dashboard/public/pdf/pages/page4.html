@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      font-family: "Poppins";
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="w-dvw h-dvh p-8 flex flex-col">
+    <div class="font-bold text-4xl"> Acquisition Channels </div>
+    <div class="w-full h-[2px] bg-black mt-3"></div>
+    <div class="bg-white w-full p-8">
+      <p class="text-sm text-gray-700 mb-6">
+        This section analyzes where your visitors are coming from. By understanding which channels
+        drive the most traffic, you can identify strengths, weaknesses, and opportunities for growth
+      </p>
+      <h2 class="font-semibold mb-2">Top Referrers</h2>
+      <div class="flex justify-between items-start mb-6">
+        <ul class="list-disc list-inside text-sm text-gray-800 space-y-1">
+          <li>%REFERRER_0%</li>
+          <li>%REFERRER_1%</li>
+          <li>%REFERRER_2%</li>
+          <li>%REFERRER_3%</li>
+          <li>%REFERRER_4%</li>
+        </ul>
+      </div>
+      <p class="text-sm text-gray-700 mb-8">
+      💡 Insight: %AI_0%
+      </p>
+      <h3 class="font-semibold mb-2">1. UTM Source (where the traffic originated)</h3>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+        <li>%UTMSOURCE_0%</li>
+        <li>%UTMSOURCE_1%</li>
+        <li>%UTMSOURCE_2%</li>
+      </ul>
+      <p class="italic text-sm text-gray-600 mb-6">
+        💡 %AI_1%
+      </p>
+      <h3 class="font-semibold mb-2">2. UTM Campaign (specific marketing campaigns)</h3>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+        <li>%UTMCAMPAIGN_0%</li>
+        <li>%UTMCAMPAIGN_1%</li>
+        <li>%UTMCAMPAIGN_2%</li>
+      </ul>
+      <p class="italic text-sm text-gray-600 mb-6">
+        💡 %AI_2%
+      </p>
+      <h3 class="font-semibold mb-2">3. UTM Medium (marketing channel type)</h3>
+      <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+        <li>%UTMMEDIUM_0%</li>
+        <li>%UTMMEDIUM_1%</li>
+        <li>%UTMMEDIUM_2%</li>
+      </ul>
+      <p class="italic text-sm text-gray-600 mb-6">
+        💡 %AI_3%
+      </p>
+    </div>
+    <div class="grow"></div>
+    <div class="flex justify-between items-center">
+      <div class="text-2xl">4/9</div>
+    <img class="w-10" src="%LOGO%">
+    </div>
+  </div>
+</body>
+
+</html>

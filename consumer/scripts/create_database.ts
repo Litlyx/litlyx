@@ -32,5 +32,10 @@ function createCountryDatabase() {
 
 }
 
-createIpDatabase();
-createCountryDatabase();
+
+// createIpDatabaseCities();
+// createIpDatabase();
+
+
+
+fs.copyFileSync('./GeoLite2-City.mmdb', '../dist/cities.mmdb');

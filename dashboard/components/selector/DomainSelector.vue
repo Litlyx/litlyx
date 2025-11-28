@@ -1,51 +1,86 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 
-const { domainList, domain, setActiveDomain, refreshDomains, refreshingDomains } = useDomain();
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar'
 
-function onChange(e: string) {
-    setActiveDomain(e);
-}
+import { ChevronsUpDown, Settings } from 'lucide-vue-next'
+
+const domainStore = useDomainStore();
+
+
+const filterDomains = ref<string>('');
+const domainsFiltered = computed(() => {
+    if (filterDomains.value.length == 0) return domainStore.domains;
+    return domainStore.domains.filter(e => e.name.includes(filterDomains.value));
+})
+
+const { containerProps, wrapperProps, list } = useVirtualList(domainsFiltered, { itemHeight: 36 });
+
+
+const { isMobile } = useSidebar()
+
+const router = useRouter();
+
+
+
 </script>
 
 <template>
-    <div class="flex gap-2">
-        <USelectMenu :uiMenu="{
-            select: 'bg-lyx-lightmode-widget-light !ring-lyx-lightmode-widget dark:!bg-lyx-widget-light !shadow-none focus:!ring-lyx-widget-lighter dark:!ring-lyx-widget-lighter',
-            base: '!bg-lyx-lightmode-widget dark:!bg-lyx-widget w-max',
-            option: {
-                base: 'z-[990] hover:!bg-lyx-lightmode-widget-light dark:hover:!bg-lyx-widget-lighter cursor-pointer',
-                active: '!bg-lyx-lightmode-widget-light dark:!bg-lyx-widget-lighter'
-            },
-            input: 'z-[999] !bg-lyx-lightmode-widget dark:!bg-lyx-widget-light'
-        }" class="w-full" searchable searchable-placeholder="Search domain..." v-if="domainList" @change="onChange"
-            :value="domain" :loading="refreshingDomains" value-attribute="_id" :options="domainList">
+    <SidebarMenu>
+        <SidebarMenuItem>
+            <Skeleton v-if="!domainStore.activeDomain" class="w-full h-12 px-2"></Skeleton>
+            <DropdownMenu v-if="domainStore.activeDomain">
+                <DropdownMenuTrigger as-child>
+                    <SidebarMenuButton size="lg"
+                        class="px-4 cursor-pointer data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
+                        <!-- <div
+                            class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
+                            <Cat></Cat>
+                        </div> -->
+                        <div class="grid flex-1 text-left text-sm leading-tight">
+                            <span v-if="domainStore.activeDomain" class="truncate font-medium">
+                                {{ domainStore.activeDomain.name }}
+                            </span>
+                            <!-- <span v-if="snapshotStore.from && snapshotStore.to" class="truncate text-xs text-gray-400">
+                                {{ new Date(snapshotStore.from).toLocaleDateString() }} to {{ new Date(snapshotStore.to).toLocaleDateString() }}
+                            </span> -->
+                        </div>
+                        <ChevronsUpDown class="ml-auto" />
+                    </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent class="w-[23rem] rounded-lg" align="start"
+                    :side="isMobile ? 'bottom' : 'right'" :side-offset="4">
 
-            <template #option="{ option, active, selected }">
-                <div class="flex items-center gap-2">
-                    <div>
-                        <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
-                    </div>
-                    <div> {{ option._id }} </div>
-                </div>
-            </template>
+                    <DropdownMenuLabel class="text-xs text-gray-500 dark:text-gray-400">
+                        Domains
+                    </DropdownMenuLabel>
 
-            <template #label="e">
-                <div class="flex items-center gap-2">
-                    <div>
-                        <img class="h-5 bg-black rounded-full" :src="'/logo_32.png'" alt="Litlyx logo">
+                    <div class="my-2">
+                        <Input v-model="filterDomains" placeholder="Filter Domains" @keydown.stop type="text"></Input>
                     </div>
-                    <div>
-                        {{ refreshingDomains ? 'Loading...' : (domain || '-') }}
-                    </div>
-                </div>
-            </template>
-        </USelectMenu>
 
-        <UTooltip text="Manage domains">
-            <NuxtLink to="/settings?tab=domains"
-                class="flex items-center hover:rotate-[60deg] transition-all duration-200 ease-in-out cursor-pointer">
-                <i class="far fa-gear"></i>
-            </NuxtLink>
-        </UTooltip>
-    </div>
+                    <div v-bind="containerProps" class="max-h-[20rem]">
+                        <div class="flex flex-col" v-bind="wrapperProps">
+                            <DropdownMenuItem class="h-[36px]" v-for="item in list" :key="item.data.name"
+                                :class="{ 'bg-sidebar-accent/50': item.data.name === domainStore.activeDomain.name }"
+                                @click="domainStore.setActive(item.data._id.toString())">
+                                {{ item.data.name }}
+                            </DropdownMenuItem>
+                        </div>
+                    </div>
+
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem class="gap-2 p-2" @click="router.push('/settings?tab=domains')">
+                        <div
+                            class="flex size-6 items-center justify-center rounded-md border border-gray-200 bg-transparent dark:border-gray-800">
+                            <Settings class="size-4" />
+                        </div>
+                        <div class="font-medium">
+                            Manage domains
+                        </div>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </SidebarMenuItem>
+    </SidebarMenu>
 </template>

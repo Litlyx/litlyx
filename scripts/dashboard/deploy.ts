@@ -4,6 +4,8 @@ import path from 'path';
 import child from 'child_process';
 import { createZip } from '../helpers/zip-helper';
 import { DeployHelper } from '../helpers/deploy-helper';
+import { getEcosystemContent } from '../.config';
+import prettier from 'prettier';
 
 const TMP_PATH = path.join(__dirname, '../../tmp');
 const LOCAL_PATH = path.join(__dirname, '../../dashboard');
@@ -25,13 +27,17 @@ async function main() {
 
 
     if (!SKIP_BUILD) {
-        console.log('Building');
+        console.log(`[${new Date().toLocaleTimeString('it-IT')}] Building`);
+        child.execSync(`cd ${LOCAL_PATH} && pnpm run build`);
+
         if (MODE === 'testmode') {
-            child.execSync(`cd ${LOCAL_PATH} && pnpm run build`);
+            child.execSync(`cd ${LOCAL_PATH} && pnpm run build:test`);
+        } else if (MODE === 'testlive') {
+            child.execSync(`cd ${LOCAL_PATH} && pnpm run build:testlive`);
         } else if (MODE === 'production') {
             child.execSync(`cd ${LOCAL_PATH} && pnpm run build:prod`);
-
         }
+
     }
 
     fs.rmSync(path.join(LOCAL_PATH, '.env'), { force: true });
@@ -40,7 +46,9 @@ async function main() {
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/.output', '/.output');
 
-    archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
+    const ecosystemContentRaw = getEcosystemContent('dashboard', 3010, 'cluster', 1, './.output/server/index.mjs', {});
+    const ecosystemContent = await prettier.format(ecosystemContentRaw, { parser: 'babel' });
+    archive.append(Buffer.from(ecosystemContent), { name: '/ecosystem.config.js' });
 
     await archive.finalize();
 

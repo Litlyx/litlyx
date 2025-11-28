@@ -1,0 +1,29 @@
+{
+  "name": "emails",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev:prod": "ts-node ../scripts/emails/run_local.ts --production",
+    "dev:test": "ts-node ../scripts/emails/run_local.ts --testmode",
+    "shared": "ts-node ../scripts/emails/shared.ts",
+    "deploy": "ts-node ../scripts/emails/deploy.ts",
+    "build": "tsc"
+  },
+  "keywords": [],
+  "author": "Emily",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@getbrevo/brevo": "^2.2.0",
+    "@trpc/server": "11.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "mongoose": "^8.15.0",
+    "zod": "3.24.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.18",
+    "@types/express": "^5.0.2",
+    "@types/node": "^22.15.19"
+  }
+}

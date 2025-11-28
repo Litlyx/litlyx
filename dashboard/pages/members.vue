@@ -1,212 +1,241 @@
 <script setup lang="ts">
-import { DialogPermissionManager } from '#components';
+
+import { DialogManagePermissions } from '#components';
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import { Settings, TrashIcon, UserIcon, UserPlus, UserX } from 'lucide-vue-next';
+import KickUser from '~/components/dialog/KickUser.vue';
+import type { MemberWithPermissions } from '~/server/api/members/list';
 import type { TPermission } from '~/shared/schema/TeamMemberSchema';
 
-const { projectId, isGuest } = useProject();
+const projectStore = useProjectStore();
 
-definePageMeta({ layout: 'dashboard' });
+definePageMeta({ layout: 'sidebar' });
 
-const columns = [
-    { key: 'me', label: '' },
-    { key: 'email', label: 'Email' },
-    { key: 'permission', label: 'Permission' },
-    { key: 'pending', label: 'Status' },
-    { key: 'action', label: 'Actions' },
-]
+const { data: members, error: membersError, refresh: membersRefresh } = useAuthFetch<MemberWithPermissions[]>('api/members/list');
 
-const { data: members, refresh: refreshMembers } = useFetch('/api/project/members/list', {
-    headers: useComputedHeaders({ useSnapshotDates: false })
-});
+const premium = usePremiumStore();
+const dialog = useDialog();
+const open = ref<boolean>(false);
 
-const showAddMember = ref<boolean>(false);
+async function kickUser(email: string) {
+    open.value = false;
+    dialog.open({
+        body: KickUser,
+        title: 'Remove User from Workspace',
+        props: {
+            email
+        },
+        async onSuccess(data, close) {
+            await useCatch({
+                toast: true,
+                async action() {
+                    return await useAuthFetchSync<void>('/api/members/kick', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: { email }
+                    });
+                },
+                async onSuccess(_, toast) {
+                    toast('Member kicked', { description: 'Member kicked successfully', position: 'top-right' });
+                    await membersRefresh();
+                }
+            });
 
-const addMemberEmail = ref<string>("");
-
-const { createErrorAlert } = useAlert();
-
-async function kickMember(email: string) {
-    const sure = confirm('Are you sure to kick ' + email + ' ?');
-    if (!sure) return;
-    try {
-        await $fetch('/api/project/members/kick', {
-            method: 'POST',
-            ...signHeaders({
-                'Content-Type': 'application/json',
-                'x-pid': projectId.value ?? ''
-            }),
-            body: JSON.stringify({ email }),
-            onResponseError({ request, response, options }) {
-                createErrorAlert('Error', response.statusText);
-            }
-        });
-
-        refreshMembers();
-    } catch (ex: any) { }
+            close();
+        }
+    })
 }
 
-async function addMember() {
+const email = ref<string>('');
 
-    if (addMemberEmail.value.length === 0) return;
+async function addUser() {
 
-    try {
-
-        showAddMember.value = false;
-
-        await $fetch('/api/project/members/add', {
-            method: 'POST',
-            ...signHeaders({
-                'Content-Type': 'application/json',
-                'x-pid': projectId.value ?? ''
-            }),
-            body: JSON.stringify({ email: addMemberEmail.value }),
-            onResponseError({ request, response, options }) {
-                createErrorAlert('Error', response.statusText);
-            }
-        });
-
-        addMemberEmail.value = '';
-
-        refreshMembers();
-
-    } catch (ex: any) { }
-
+    await useCatch({
+        toast: true,
+        async action() {
+            return await useAuthFetchSync<void>('/api/members/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: { email: email.value }
+            });
+        },
+        async onSuccess(_, toast) {
+            toast('Member invited', { description: 'Member invited successfully', position: 'top-right' });
+            await membersRefresh();
+            email.value = '';
+        }
+    });
 
 }
 
 
-const modal = useModal();
+async function showManagePermission(member: MemberWithPermissions) {
+    dialog.open({
+        body: DialogManagePermissions,
+        props: { member },
+        title: 'Manage permissions',
+        description: 'Choose what this member can do on this project.',
+        onSuccess(data, close) {
+            editPermissions(member, data);
+            close();
+        },
+    })
+}
 
-function openPermissionManagerDialog(member_id: string) {
-    modal.open(DialogPermissionManager, {
-        preventClose: true,
-        member_id,
-        onSuccess: () => {
-            modal.close();
-            refreshMembers();
+async function editPermissions(member: MemberWithPermissions, permissions: TPermission) {
+    await useCatch({
+        toast: true,
+        async action() {
+            return await useAuthFetchSync<void>('/api/members/edit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: { member_id: member.id, ...permissions }
+            });
         },
-        onCancel: () => {
-            modal.close();
-            refreshMembers();
-        },
+        async onSuccess(_, toast) {
+            toast('Permissions updated', { description: 'Permissions updated successfully', position: 'top-right' });
+            await membersRefresh();
+        }
     });
 }
 
-function permissionToString(permission: TPermission) {
-    const result: string[] = [];
-    if (permission.webAnalytics) result.push('w');
-    if (permission.events) result.push('e');
-    if (permission.ai) result.push('a');
-    if (permission.domains.includes('All domains')) {
-        result.push('+');
-    } else {
-        result.push(permission.domains.length.toString());
-    }
-    return result.join('');
-}
-
-async function leaveProject() {
-    try {
-        await $fetch('/api/project/members/leave', {
-            headers: useComputedHeaders({}).value
-        });
-        location.reload();
-    } catch (ex: any) {
-        alert(ex.message);
-    }
-
-}
 </script>
 
 <template>
-    <div class="p-6 pt-10">
 
-        <div v-if="!isGuest" class="flex flex-col gap-8">
+    <Unauthorized v-if="projectStore.isActiveProjectGuest || [0, 7006, 8001, 8002].includes(premium.planInfo?.ID ?? -1)" authorization="PLAN or AUTH">
+    </Unauthorized>
 
-            <div class="flex flex-col">
-                <div class="flex gap-4 items-center">
-                    <LyxUiInput class="px-4 py-1 w-full" placeholder="Add a new member" v-model="addMemberEmail">
-                    </LyxUiInput>
-                    <LyxUiButton @click="addMember" type="secondary"> Add </LyxUiButton>
+    <div v-else class="flex flex-col gap-2 poppins">
+
+
+        <Card>
+            <CardHeader>
+                <CardTitle>
+                    Workspace Members <span class="text-[10px] text-muted-foreground">({{`${members?.length ?? 0}/${premium.planInfo?.features.members}`  }})</span>
+                </CardTitle>
+                <CardDescription>
+                    Manage the members of your workspace
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div class="flex flex-col">
+                    <div class="flex items-center gap-4">
+                        <Input v-model="email" placeholder="Email"></Input>
+                        <ProButton @action="addUser()" v-if="members" :disabled="email.length < 5" title="Add Member"
+                            :locked="members.length >= (premium.planInfo?.features.members ?? 0)">
+                            <UserPlus />
+                        </ProButton>
+                    </div>
+                    <div class="poppins text-[.8rem] text-muted-foreground pl-1 pt-[.5rem]">
+                        We will send an invitation email to the user you wish to add to this project.
+                    </div>
                 </div>
-                <div class="poppins text-[.8rem] mt-2 dark:text-lyx-text-dark">
-                    We will send an invitation email to the user you wish to add to this project.
-                </div>
-            </div>
 
-            <div>
-                <UTable :rows="members || []" :columns="columns">
+                <div class="my-15"></div>
 
-                    <template #me-data="e">
-                        <i v-if="e.row.me" class="far fa-user text-lyx-lightmode-text dark:text-lyx-text"></i>
-                        <i v-if="!e.row.me"></i>
-                    </template>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead class="w-[5%]"> </TableHead>
+                            <TableHead class="w-[25%]"> Email </TableHead>
+                            <TableHead class="w-[20%]">Pemissions</TableHead>
+                            <TableHead class="w-[35%]"> Domains </TableHead>
+                            <TableHead class="w-[8%]">Status</TableHead>
+                            <TableHead class="w-[12%]"> Actions </TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        <TableRow v-for="member of members" class="h-[2rem]">
+                            <TableCell>
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger>
+                                            <UserIcon class="size-4" v-if="member.me"></UserIcon>
+                                        </TooltipTrigger>
+                                        <TooltipContent side="right">
+                                            <p>Owner</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </TableCell>
+                            <TableCell>
+                                {{ member.email }}
+                            </TableCell>
+                            <TableCell>
+                                <div class="flex gap-4">
+                                    <div class="flex items-center gap-[.3rem]">
+                                        <div :class="{ 'bg-green-400': member.permission.webAnalytics, 'bg-red-400': !member.permission.webAnalytics }"
+                                            class="size-3 mt-[2px] rounded-full"></div>
+                                        <div> web </div>
+                                    </div>
+                                    <div class="flex items-center gap-[.3rem]">
+                                        <div :class="{ 'bg-green-400': member.permission.events, 'bg-red-400': !member.permission.events }"
+                                            class="size-3 mt-[2px] rounded-full"></div>
+                                        <div> events </div>
+                                    </div>
+                                    <div class="flex items-center gap-[.3rem]">
+                                        <div :class="{ 'bg-green-400': member.permission.ai, 'bg-red-400': !member.permission.ai }"
+                                            class="size-3 mt-[2px] rounded-full"></div>
+                                        <div> ai </div>
+                                    </div>
+                                </div>
+                            </TableCell>
+                            <TableCell>
+                                <div v-if="member.permission.domains.includes('*')"
+                                    class="border-solid border-[2px] w-fit rounded-md px-2 py-[.2rem]">
+                                    ALL DOMAINS
+                                </div>
+                                <div v-else-if="Array.isArray(member.permission.domains) && member.permission.domains.length === 0"
+                                    class="border-dashed border-[2px] w-fit rounded-md px-2 py-[.2rem]">
+                                    NO DOMAINS
+                                </div>
+                                <div v-else class="flex gap-2 flex-wrap">
+                                    <div v-for="domain of member.permission.domains"
+                                        class="border-solid border-[2px] w-fit rounded-md px-2 py-[.2rem]">
+                                        {{ domain }}
+                                    </div>
+                                </div>
 
-                    <template #email-data="e">
-                        <div class="text-lyx-lightmode-text dark:text-lyx-text">
-                            {{ e.row.email }}
-                        </div>
-                    </template>
+                            </TableCell>
+                            <TableCell>
+                                <Badge class="w-full" v-if="!member.me"
+                                    :class="member.pending ? 'border-amber-400 bg-amber-300 text-amber-800' : 'border-green-400 bg-green-300 text-green-800'">
+                                    {{ member.pending ? 'Pending' : 'Accepted' }}</Badge>
+                            </TableCell>
+                            <TableCell class="flex gap-2">
+                                <TooltipProvider >
+                                    <Tooltip v-if="!member.me && member.role === 'GUEST'">
+                                        <TooltipTrigger> <Button @click="showManagePermission(member)" class="size-7"
+                                                size="icon" variant="outline">
+                                                <Settings class="size-4" />
 
-                    <template #pending-data="e">
-                        <div class="text-lyx-lightmode-text dark:text-lyx-text">
-                            {{ e.row.pending ? 'Pending' : 'Accepted' }}
-                        </div>
-                    </template>
+                                            </Button></TooltipTrigger>
+                                        <TooltipContent side="bottom">
+                                            <p>Manage permissions</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                                <TooltipProvider v-if="!member.me">
+                                    <Tooltip>
+                                        <TooltipTrigger> <Button @click="kickUser(member.email)" class="size-7"
+                                                size="icon" variant="destructive">
+                                                <UserX class="size-4" />
 
-                    <template #permission-data="e">
-                        <div class="text-lyx-lightmode-text dark:text-lyx-text flex gap-2">
-                            <div v-if="e.row.role !== 'OWNER' && !isGuest">
-                                <LyxUiButton class="!px-2" type="secondary"
-                                    @click="openPermissionManagerDialog(e.row.id.toString())">
-                                    <UTooltip text="Manage permissions">
-                                        <i class="far fa-gear"></i>
-                                    </UTooltip>
-                                </LyxUiButton>
-                            </div>
+                                            </Button></TooltipTrigger>
+                                        <TooltipContent side="bottom">
+                                            <p>Remove from Workspace</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
 
-                            <div class="flex gap-2 flex-wrap">
-                                <UBadge variant="outline" size="sm" color="yellow"
-                                    v-if="!e.row.permission.webAnalytics && !e.row.permission.events && !e.row.permission.ai && e.row.permission.domains.length == 0">
-                                    No permission given
-                                </UBadge>
-                                <UBadge variant="outline" size="sm" v-if="e.row.permission.webAnalytics"
-                                    label="Analytics"> </UBadge>
-                                <UBadge variant="outline" size="sm" v-if="e.row.permission.events" label="Events">
-                                </UBadge>
-                                <UBadge variant="outline" size="sm" v-if="e.row.permission.ai" label="AI"> </UBadge>
-                                <UBadge variant="outline" color="blue" size="sm"
-                                    v-if="e.row.permission.domains.includes('All domains')" label="All domains">
-                                </UBadge>
-
-                                <UBadge variant="outline" size="sm" color="blue"
-                                    v-if="!e.row.permission.domains.includes('All domains')"
-                                    v-for="domain of e.row.permission.domains" :label="domain"> </UBadge>
-
-
-                            </div>
-                        </div>
-                    </template>
-
-
-                    <template #action-data="e" v-if="!isGuest">
-                        <div @click="kickMember(e.row.email)" v-if="e.row.role != 'OWNER'"
-                            class="text-red-500 hover:bg-black/20 cursor-pointer outline outline-[1px] outline-red-500 px-3 py-1 rounded-lg text-center">
-                            Remove
-                        </div>
-                    </template>
-
-                </UTable>
-
-            </div>
-
-        </div>
-
-        <div v-if="isGuest" class="flex flex-col gap-8 mt-[10vh]">
-            <div class="flex flex-col gap-4 items-center">
-                <div class="text-[1.2rem]"> Leave this project </div>
-                <LyxUiButton @click="leaveProject()" type="primary"> Leave </LyxUiButton>
-            </div>
-        </div>
+                            </TableCell>
+                        </TableRow>
+                    </TableBody>
+                </Table>
+            </CardContent>
+        </Card>
 
     </div>
+
 </template>

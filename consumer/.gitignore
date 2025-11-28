@@ -1,9 +1,5 @@
 
 node_modules
-
-ecosystem.config.cjs
-ecosystem.config.js
-
 scripts/start_dev.js
 scripts/start_dev_prod.js
 dist

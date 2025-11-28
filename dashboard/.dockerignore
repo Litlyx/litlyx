@@ -1,0 +1,8 @@
+node_modules
+ecosystem.config.js
+dist
+.gitignore
+.env*
+.output
+.nuxt
+README.md

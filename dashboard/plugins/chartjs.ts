@@ -1,10 +1,17 @@
 
 import { Chart, registerables } from 'chart.js';
-import annotaionPlugin from 'chartjs-plugin-annotation';
 import 'chartjs-chart-funnel';
-
 import { FunnelController, FunnelChart, TrapezoidElement } from 'chartjs-chart-funnel';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 export default defineNuxtPlugin(() => {
-    Chart.register(...registerables, annotaionPlugin, FunnelController, FunnelChart, TrapezoidElement);
+    Chart.register(
+        ...registerables,
+        FunnelController, FunnelChart, TrapezoidElement, ChartDataLabels
+    );
+
+    Chart.defaults.set('plugins.datalabels', {
+        display: false,
+    });
+
 })

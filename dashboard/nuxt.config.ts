@@ -1,35 +1,11 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite'
 
 import { fileURLToPath } from 'node:url';
 
-const gooleSignInConfig: any = {
-  googleSignIn: {
-    clientId: process.env.GOOGLE_AUTH_CLIENT_ID || 'NONE'
-  }
-}
-
 export default defineNuxtConfig({
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    }
-  },
-
-  colorMode: {
-    preference: 'dark',
-  },
-
-  devtools: {
-    enabled: false
-  },
-
-  pages: true,
+  compatibilityDate: '2024-11-01',
+  devtools: { enabled: true },
   ssr: false,
-  css: [
-    '~/assets/main.css',
-    '~/assets/scss/main.scss',
-  ],
   alias: {
     '@schema': fileURLToPath(new URL('./shared/schema', import.meta.url)),
     '@services': fileURLToPath(new URL('./shared/services', import.meta.url)),
@@ -38,49 +14,76 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
-    REDIS_URL: process.env.REDIS_URL,
-    REDIS_USERNAME: process.env.REDIS_USERNAME,
-    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+
+    BASE_URL: process.env.BASE_URL,
+
+    EMAIL_TRPC_URL: process.env.EMAIL_TRPC_URL,
+    EMAIL_SECRET: process.env.EMAIL_SECRET,
+
+    PAYMENT_TRPC_URL: process.env.PAYMENT_TRPC_URL,
+    PAYMENT_SECRET: process.env.PAYMENT_SECRET,
+
     AI_ORG: process.env.AI_ORG,
     AI_PROJECT: process.env.AI_PROJECT,
     AI_KEY: process.env.AI_KEY,
-    EMAIL_SECRET: process.env.EMAIL_SECRET,
-    AUTH_JWT_SECRET: process.env.AUTH_JWT_SECRET,
-    GOOGLE_AUTH_CLIENT_ID: process.env.GOOGLE_AUTH_CLIENT_ID,
-    GOOGLE_AUTH_CLIENT_SECRET: process.env.GOOGLE_AUTH_CLIENT_SECRET,
-    GITHUB_AUTH_CLIENT_ID: process.env.GITHUB_AUTH_CLIENT_ID,
-    GITHUB_AUTH_CLIENT_SECRET: process.env.GITHUB_AUTH_CLIENT_SECRET,
-    STRIPE_SECRET: process.env.STRIPE_SECRET,
-    STRIPE_WH_SECRET: process.env.STRIPE_WH_SECRET,
-    STRIPE_SECRET_TEST: process.env.STRIPE_SECRET_TEST,
-    STRIPE_WH_SECRET_TEST: process.env.STRIPE_WH_SECRET_TEST,
-    NOAUTH_USER_EMAIL: process.env.NOAUTH_USER_EMAIL,
-    NOAUTH_USER_PASS: process.env.NOAUTH_USER_PASS,
-    MODE: process.env.MODE || 'NONE',
-    SELFHOSTED: process.env.SELFHOSTED || 'FALSE',
+
+    REDIS_URL: process.env.REDIS_URL,
+    REDIS_USERNAME: process.env.REDIS_USERNAME,
+    REDIS_PASSWORD: process.env.REDIS_PASSWORD,
+    RESET_PASSWORD_SECRET: process.env.RESET_PASSWORD_SECRET,
+
+    ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD,
+    LICENSE_KEY: process.env.LICENSE_KEY,
+
     public: {
-      AUTH_MODE: process.env.AUTH_MODE,
-      GITHUB_CLIENT_ID: process.env.GITHUB_AUTH_CLIENT_ID || 'NONE',
-      SELFHOSTED: process.env.SELFHOSTED || 'FALSE',
+      SELFHOSTED: process.env.SELFHOSTED,
+      AI_ENABLED: process.env.AI_ENABLED
+    },
+
+    MODE: process.env.MODE,
+    oauth: {
+      google: {
+        clientId: process.env.GOOGLE_AUTH_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_AUTH_CLIENT_SECRET,
+        redirectURL: process.env.GOOGLE_AUTH_REDIRECT_URI
+      }
     }
-
   },
-
-  nitro: {
-    plugins: ['~/server/init.ts']
+  auth: { hash: { scrypt: {} } },
+  components: {
+    dirs: [
+      { path: '~/components/global', global: true },
+      { path: '~/components', ignore: ['complex/**'] }
+    ],
   },
-
-  plugins: [
-    { src: '~/plugins/chartjs.ts', mode: 'client' }
+  modules: [
+    '@nuxtjs/color-mode',
+    'shadcn-nuxt',
+    'nuxt-auth-utils',
+    '@pinia/nuxt',
+    '@nuxt/icon',
+    '@nuxtjs/mdc',
+    '@vueuse/nuxt'
   ],
-
-  ...gooleSignInConfig,
-  modules: ['@nuxt/ui', 'nuxt-vue3-google-signin'],
-
-  devServer: {
-    host: '0.0.0.0',
+  shadcn: {
+    componentDir: './components/ui',
+    prefix: ''
   },
-
-  components: true,
-  compatibilityDate: '2024-11-16'
+  colorMode: {
+    classSuffix: ''
+  },
+  devServer: {
+    host: '0.0.0.0'
+  },
+  css: [
+    '~/assets/css/main.css',
+    '~/assets/scss/main.scss',
+    '~/assets/css/tailwind.css',
+  ],
+  vite: {
+    plugins: [
+      tailwindcss(),
+    ]
+  },
 })

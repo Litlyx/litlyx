@@ -1,226 +1,152 @@
-<script lang="ts" setup>
-import type { TApiSettings } from '@schema/ApiSettingsSchema';
-import type { SettingsTemplateEntry } from './Template.vue';
+<script setup lang="ts">
+import { toast } from 'vue-sonner';
+import { CopyIcon, LoaderCircle, Trash } from 'lucide-vue-next';
+import DeleteProject from '../dialog/DeleteProject.vue';
 
-const { project, actions, projectList, isGuest, projectId } = useProject();
+const projectStore = useProjectStore();
 
-const { createErrorAlert, createAlert } = useAlert();
-
-const entries: SettingsTemplateEntry[] = [
-    { id: 'pname', title: 'Name', text: 'Project name' },
-    { id: 'api', title: 'ApiKeys', text: 'Manage your authorization token' },
-    { id: 'pid', title: 'Id', text: 'Project id' },
-    { id: 'pscript', title: 'Script', text: 'Universal javascript integration' },
-    { id: 'pdelete', title: 'Delete', text: 'Delete current project' },
-]
-
-const projectNameInputVal = ref<string>(project.value?.name || '');
-
-const apiKeys = ref<TApiSettings[]>([]);
-
-const newApiKeyName = ref<string>('');
-
-async function updateApiKeys() {
-    newApiKeyName.value = '';
-    apiKeys.value = await $fetch<TApiSettings[]>('/api/keys/get_all', signHeaders({
-        'x-pid': project.value?._id.toString() ?? ''
-    }));
-}
-
-async function createApiKey() {
-    try {
-        const res = await $fetch<TApiSettings>('/api/keys/create', {
-            method: 'POST', ...signHeaders({
-                'Content-Type': 'application/json',
-                'x-pid': project.value?._id.toString() ?? ''
-            }),
-            body: JSON.stringify({ name: newApiKeyName.value })
-        });
-        apiKeys.value.push(res);
-        newApiKeyName.value = '';
-    } catch (ex: any) {
-        createErrorAlert('Error', ex.message, 10000);
-    }
-}
-
-async function deleteApiKey(api_id: string) {
-    try {
-        const res = await $fetch<TApiSettings>('/api/keys/delete', {
-            method: 'DELETE', ...signHeaders({
-                'Content-Type': 'application/json',
-                'x-pid': project.value?._id.toString() ?? ''
-            }),
-            body: JSON.stringify({ api_id })
-        });
-        newApiKeyName.value = '';
-        await updateApiKeys();
-    } catch (ex: any) {
-        createErrorAlert('Error', ex.message, 10000);
-    }
-
-}
-
-onMounted(() => {
-    updateApiKeys();
-});
-
-watch(project, () => {
-    projectNameInputVal.value = project.value?.name || "";
-    updateApiKeys();
-});
-
-const canChange = computed(() => {
-    if (project.value?.name == projectNameInputVal.value) return false;
-    if (projectNameInputVal.value.length === 0) return false;
-    return true;
-});
-
-
-async function changeProjectName() {
-    await $fetch("/api/project/change_name", {
-        method: 'POST',
-        ...signHeaders({
-            'Content-Type': 'application/json',
-            'x-pid': project.value?._id.toString() ?? ''
-        }),
-        body: JSON.stringify({ name: projectNameInputVal.value })
-    });
-    location.reload();
-}
-
+const { open } = useDialog();
 
 const router = useRouter();
 
-async function deleteProject() {
-    if (!project.value) return;
-    const sure = confirm(`Are you sure to delete the project ${project.value.name} ?`);
-    if (!sure) return;
+const currentProjectName = ref<string>(projectStore.activeProject?.name ?? 'ERROR_LOADING_PROJECT_NAME');
 
-    try {
-
-        await $fetch('/api/project/delete', {
-            method: 'DELETE',
-            ...signHeaders({
-                'Content-Type': 'application/json',
-                'x-pid': project.value?._id.toString() ?? ''
-            }),
-            body: JSON.stringify({ project_id: project.value._id.toString() })
-        });
-
-
-        await actions.refreshProjectsList()
-
-        const firstProjectId = projectList.value?.[0]?._id.toString();
-        if (firstProjectId) {
-            await actions.setActiveProject(firstProjectId);
-            router.push('/')
-        }
-
-
-    } catch (ex: any) {
-        createErrorAlert('Error', ex.message);
-    }
-
-
-}
-
-function copyScript() {
-    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-
-
-    const createScriptText = () => {
-        return [
-            '<script defer ',
-            `data-project="${projectId.value}" `,
-            'src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></',
-            'script>'
-        ].join('')
-    }
-
-    navigator.clipboard.writeText(createScriptText());
-    createAlert('Success', 'Script copied successfully.', 'far fa-circle-check', 5000);
-}
+const scriptValue = [
+    '<',
+    'script defer data-workspace="',
+    projectStore.activeProject?._id.toString(),
+    '" src="https://cdn.jsdelivr.net/npm/litlyx-js@latest/browser/litlyx.js"></',
+    'script>'
+]
 
 
 function copyProjectId() {
-    if (!navigator.clipboard) alert('You can\'t copy in HTTP');
-    navigator.clipboard.writeText(projectId.value || '');
-    createAlert('Success', 'Project id copied successfully.', 'far fa-circle-check', 5000);
+    if (!navigator.clipboard) return toast('Error', { position: 'top-right', description: 'Error copying' });
+    navigator.clipboard.writeText(projectStore.activeProject?._id.toString() ?? 'ERROR_COPYING_WORKSPACE_ID');
+    return toast.info('Success', { position: 'top-right', description: 'The workspace id has been copied to your clipboard' });
+}
+
+function copyScript() {
+    if (!navigator.clipboard) return toast('Error', { position: 'top-right', description: 'Error copying' });
+    navigator.clipboard.writeText(scriptValue.join(''));
+    return toast.info('Success', { position: 'top-right', description: 'The workspace script has been copied to your clipboard' });
+}
+
+const changing = ref<boolean>(false);
+
+async function changeProjectName() {
+    changing.value = true;
+    await new Promise(e => setTimeout(e, 1000));
+    await useCatch({
+        toast: true,
+        toastTitle: 'Error changing name',
+        async action() {
+            await useAuthFetchSync('/api/project/change_name', {
+                method: 'POST',
+                headers: { 'ContentType': 'application/json' },
+                body: { name: currentProjectName.value }
+            })
+        },
+        async onSuccess(_, showToast) {
+            showToast('Name changed', { position: 'top-right', description: 'Workspace name changed' });
+            await projectStore.fetchProjects();
+            currentProjectName.value = projectStore.activeProject?.name ?? 'ERROR_LOADING_WORKSPACE_NAME'
+        },
+    })
+    changing.value = false;
 }
 
 
+async function showDeleteProjectDialog() {
+    if (!projectStore.pid) return;
+    if (!projectStore.activeProject) return;
+    await open({
+        body: DeleteProject,
+        title: 'Delete workspace',
+        props: {
+            project_id: projectStore.pid,
+            project_name: projectStore.activeProject.name
+        },
+        onSuccess(_, close) {
+            close();
+            deleteProject();
+        },
+    })
+}
+
+async function deleteProject() {
+    await useCatch({
+        toast: true,
+        toastTitle: 'Error during deletation',
+        async action() {
+            await useAuthFetchSync('/api/project/delete', {
+                method: 'DELETE'
+            })
+        },
+        async onSuccess(_, showToast) {
+            showToast('Workspace deleted', { description: 'Workspace deleted successfully' });
+            await projectStore.fetchProjects();
+            router.push('/');
+        },
+    })
+}
 
 </script>
 
-
 <template>
-    <SettingsTemplate :entries="entries" :key="project?.name || 'NONE'">
-        <template #pname>
-            <div class="flex flex-col gap-2">
-                <div class="flex items-center gap-4">
-                    <LyxUiInput class="w-full px-4 py-2" :disabled="isGuest" v-model="projectNameInputVal"></LyxUiInput>
-                    <LyxUiButton v-if="!isGuest" @click="changeProjectName()" :disabled="!canChange" type="primary">
-                        Change
-                    </LyxUiButton>
-                </div>
-                <div v-if="isGuest" class="text-lyx-text-darker"> *Guests cannot change project name </div>
-            </div>
-        </template>
-        <template #api>
-            <div class="flex flex-col gap-2" v-if="apiKeys && apiKeys.length < 5">
-                <div class="flex items-center gap-4">
-                    <LyxUiInput class="grow px-4 py-2" :disabled="isGuest" placeholder="ApiKeyName"
-                        v-model="newApiKeyName">
-                    </LyxUiInput>
-                    <LyxUiButton v-if="!isGuest" @click="createApiKey()" :disabled="newApiKeyName.trim().length < 3"
-                        type="primary">
-                        <i class="far fa-plus"></i>
-                    </LyxUiButton>
-                </div>
-                <div v-if="isGuest" class="text-lyx-text-darker"> *Guests cannot manage api keys </div>
-            </div>
-            <LyxUiCard v-if="apiKeys && apiKeys.length > 0" class="w-full flex flex-col gap-4 items-center mt-4">
-                <div v-for="apiKey of apiKeys" class="flex flex-col w-full">
+    <Card>
+        <CardContent class="grid grid-cols-1 gap-4">
 
-                    <div class="flex gap-8 items-center">
-                        <div class="grow">Name: {{ apiKey.apiName }}</div>
-                        <div>{{ apiKey.apiKey }}</div>
-                        <div class="flex justify-end" v-if="!isGuest">
-                            <i class="far fa-trash cursor-pointer" @click="deleteApiKey(apiKey._id.toString())"></i>
-                        </div>
-                    </div>
+            <div class="py-4 flex flex-col gap-3">
+                <Label> Workspace name </Label>
+                <div class="flex gap-4 relative">
+                    <Input class="poppins h-12 pr-[6.5rem]" v-model="currentProjectName"></Input>
+                    <Button @click="changeProjectName()"
+                        :disabled="changing || currentProjectName === projectStore.activeProject?.name"
+                        class="absolute right-1.5 top-1.5 rounded">
+                        <span v-if="changing">
+                            <LoaderCircle class="size-5 animate-[spin_1s_ease-in-out_infinite] duration-500">
+                            </LoaderCircle>
+                        </span>
+                        <span v-else> Change </span>
+                    </Button>
+                </div>
+            </div>
+<div class="bg-muted dark:bg-muted/40 w-full h-full rounded-md">
+            <div class="p-4 flex flex-col gap-3 ">
+                <Label> Workspace id </Label>
+                <div class="flex gap-4 relative">
+                    <Input class="poppins h-12 bg-white dark:bg-black" :default-value="projectStore.activeProject?._id.toString()" readonly></Input>
+                    <Button @click="copyProjectId()"variant="ghost" class="absolute right-1.5 top-1.5">
+                        <CopyIcon class="size-4"/>
+                    </Button>
+                </div>
+            </div>
 
+            <div class="p-4 flex flex-col gap-3">
+                <Label> Script </Label>
+                <div class="flex gap-4 items-center relative">
+                    <Textarea class="w-full poppins resize-none bg-white dark:bg-black" :default-value="scriptValue.join('')"
+                        readonly></Textarea>
+                    <Button @click="copyScript()" variant="ghost" class="absolute right-1.5 top-1.5">
+                        <CopyIcon class="size-4"/>
+                   
+                    </Button>
                 </div>
-            </LyxUiCard>
-        </template>
-        <template #pid>
-            <LyxUiCard class="w-full flex items-center">
-                <div class="grow">{{ project?._id.toString() }}</div>
-                <div><i class="far fa-copy" @click="copyProjectId()"></i></div>
-            </LyxUiCard>
-        </template>
-        <template #pscript>
-            <LyxUiCard class="w-full flex items-center">
-                <div class="grow">
-                    {{ `
-                    <script defer data-project="${project?._id}"
-                        src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>` }}
-                </div>
-                <div class="hidden lg:flex"><i class="far fa-copy" @click="copyScript()"></i></div>
-            </LyxUiCard>
-            <div class="flex justify-end w-full">
-                <LyxUiButton type="outline" class="flex lg:hidden mt-4">
-                    Copy script
-                </LyxUiButton>
             </div>
-        </template>
-        <template #pdelete>
-            <div class="flex lg:justify-end" v-if="!isGuest">
-                <LyxUiButton type="danger" @click="deleteProject()">
-                    Delete project
-                </LyxUiButton>
-            </div>
-            <div v-if="isGuest"> *Guests cannot delete project </div>
-        </template>
-    </SettingsTemplate>
+</div>
+
+
+
+
+        </CardContent>
+
+        <CardFooter>
+                <Button :disabled="projectStore.projects.filter(e => !e.guest).length <= 1"
+                    @click="showDeleteProjectDialog" variant="destructive">
+                    <Trash></Trash>
+                    Delete workspace
+                </Button>
+        </CardFooter>
+    </Card>
 </template>

@@ -1,26 +1,23 @@
-import { SessionModel } from "@schema/metrics/SessionSchema";
+
+import { sessionController } from "~/server/controllers/SessionController";
 import { Redis } from "~/server/services/CacheService";
-import { executeTimelineAggregation } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['SLICE', 'DOMAIN', 'RANGE', 'OFFSET'], ['WEB']);
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid', 'domain', 'range', 'slice', 'permission:webAnalytics', 'flag:allowShare');
 
-    const { pid, from, to, slice, project_id, timeOffset, domain } = data;
+    const { pid, project_id, domain, from, to, slice } = ctx;
 
     const cacheKey = `timeline:sessions:${pid}:${slice}:${from}:${to}:${domain}`;
-    const cacheExp = 60;
+    const cacheExp = 20;
 
-    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
-        const timelineData = await executeTimelineAggregation({
-            projectId: project_id,
-            model: SessionModel,
-            from, to, slice, timeOffset, domain
-        });
-        return timelineData;
+    if (getHeader(event, 'x-dev') === 'true') await Redis.del(cacheKey);
+
+    return await Redis.useCache(cacheKey, cacheExp, async () => {
+        const { data, time } = await sessionController.executeDynamic({ project_id: project_id.toString(), from, to, slice, domain });
+        setHeader(event, 'x-time', time.toFixed());
+        return data;
     });
-
 
 
 

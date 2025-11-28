@@ -1,31 +1,21 @@
+import { FeedbackModel, TFeedback } from "~/shared/schema/FeedbackSchema";
 
-import { FeedbackModel } from '@schema/FeedbackSchema';
+export type PopulatedFeedback = Omit<TFeedback, 'user_id'> & {
+    user_id?: { email?: string };
+}
 
 export default defineEventHandler(async event => {
+    const ctx = await getRequestContext(event, 'admin');
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return;
-    if (!userData.user.roles.includes('ADMIN')) return;
-
-    const feedbacks = await FeedbackModel.aggregate([
-        {
-            $lookup: {
-                from: 'users',
-                localField: 'user_id',
-                foreignField: '_id',
-                as: 'user'
-            }
+    const feedbacks = await FeedbackModel.find({}, {}, {
+        populate: {
+            path: 'user_id',
+            model: 'users',
+            select: 'email'
         },
-        {
-            $lookup: {
-                from: 'projects',
-                localField: 'project_id',
-                foreignField: '_id',
-                as: 'project'
-            }
-        },
-    ])
+        lean: true
+    });
 
-    return feedbacks;
+    return feedbacks as any as PopulatedFeedback[];
 
 });

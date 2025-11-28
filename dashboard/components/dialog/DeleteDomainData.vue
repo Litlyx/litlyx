@@ -1,84 +1,19 @@
 <script lang="ts" setup>
-import type { ButtonType } from '../LyxUi/Button.vue';
 
-const emit = defineEmits(['success', 'cancel'])
-
-const props = defineProps<{
-    buttonType: ButtonType,
-    message: string,
-    deleteData: { isAll: boolean, visits: boolean, sessions: boolean, events: boolean, domain: string }
-}>();
-
-const isDone = ref<boolean>(false);
-const canDelete = ref<boolean>(false);
-
-async function deleteData() {
-
-    try {
-        if (props.deleteData.isAll) {
-            await $fetch('/api/settings/delete_all', {
-                method: 'DELETE',
-                headers: useComputedHeaders({ useSnapshotDates: false }).value,
-            })
-        } else {
-            await $fetch('/api/settings/delete_domain', {
-                method: 'DELETE',
-                headers: useComputedHeaders({ useSnapshotDates: false, custom: { 'Content-Type': 'application/json' } }).value,
-                body: JSON.stringify({
-                    domain: props.deleteData.domain,
-                    visits: props.deleteData.visits,
-                    sessions: props.deleteData.sessions,
-                    events: props.deleteData.events,
-                })
-            })
-        }
-    } catch (ex) {
-        alert('Something went wrong');
-        console.error(ex);
-    }
-
-    isDone.value = true;
-}
+const emits = defineEmits<{ (event: 'confirm'): void }>();
+const props = defineProps<{ data: { domain: string } }>();
+const { close } = useDialog();
 
 </script>
 
 <template>
-    <UModal :ui="{
-        strategy: 'override',
-        overlay: {
-            background: 'bg-lyx-background/85'
-        },
-        background: 'bg-lyx-lightmode-widget dark:bg-lyx-widget',
-        ring: 'border-solid border-[1px] border-[#262626]'
-    }">
-        <div class="h-full flex flex-col gap-2 p-4">
-
-            <div class="font-semibold text-[1.2rem]"> {{ isDone ? "Data Deletion Scheduled" : "Are you sure ?" }}</div>
-
-            <div v-if="!isDone">
-                {{ message }}
-            </div>
-
-            <div v-if="isDone">
-                Your data deletion request is being processed and will be reflected in your project dashboard within a
-                few minutes.
-            </div>
-
-            <div class="grow"></div>
-
-            <div v-if="!isDone">
-                <UCheckbox v-model="canDelete" label="Confirm data delete"></UCheckbox>
-            </div>
-
-            <div v-if="!isDone" class="flex justify-end gap-2">
-                <LyxUiButton type="secondary" @click="emit('cancel')"> Cancel </LyxUiButton>
-                <LyxUiButton :disabled="!canDelete" @click="canDelete ? deleteData() : () => { }" :type="buttonType">
-                    Confirm </LyxUiButton>
-            </div>
-
-            <div v-if="isDone" class="flex justify-end w-full">
-                <LyxUiButton type="secondary" @click="emit('success')"> Dismiss </LyxUiButton>
-            </div>
+    <div class="flex flex-col gap-4">
+        <div>
+            Are you sure to delete data from domain {{ props.data.domain }}?
         </div>
-    </UModal>
+        <div class="flex justify-end gap-2">
+            <Button variant="secondary" @click="close()"> Back </Button>
+            <Button variant="destructive" @click="emits('confirm')"> Delete </Button>
+        </div>
+    </div>
 </template>

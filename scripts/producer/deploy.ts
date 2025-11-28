@@ -4,7 +4,8 @@ import path from 'path';
 import child from 'child_process';
 import { createZip } from '../helpers/zip-helper';
 import { DeployHelper } from '../helpers/deploy-helper';
-import { REMOTE_HOST_TESTMODE } from '../.config';
+import prettier from 'prettier';
+import { getEcosystemContent, PRODUCER } from '../.config';
 
 const TMP_PATH = path.join(__dirname, '../../tmp');
 const LOCAL_PATH = path.join(__dirname, '../../producer');
@@ -30,18 +31,19 @@ async function main() {
     }
 
 
-    console.log('Creting zip file');
+    console.log('Creating zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/dist', '/dist');
 
-    if (MODE === 'testmode') {
-        const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
-        const REDIS_URL = ecosystemContent.match(/REDIS_URL: ["'](.*?)["']/)[1];
-        const devContent = ecosystemContent.replace(REDIS_URL, `redis://${REMOTE_HOST_TESTMODE}`);
-        archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
-    } else {
-        archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
-    }
+
+    const envObject =
+        MODE === 'testmode' ? PRODUCER.getEnv_TESTMODE() :
+            MODE === 'testlive' ? PRODUCER.getEnv_TESTLIVE() :
+                PRODUCER.getEnv_PRODUCTION();
+
+    const ecosystemContentRaw = getEcosystemContent('producer', 3000, 'cluster', 1, './dist/index.js', envObject);
+    const ecosystemContent = await prettier.format(ecosystemContentRaw, { parser: 'babel' });
+    archive.append(Buffer.from(ecosystemContent), { name: '/ecosystem.config.js' });
 
 
     archive.file(LOCAL_PATH + '/package.json', { name: '/package.json' });

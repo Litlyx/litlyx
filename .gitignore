@@ -1,11 +1,4 @@
-steps
-PROCESS_EVENT
-**/node_modules/
-docker
-dev
-docker-compose.admin.yml
-full_reload.sh
-build-all.sh
-tmp
-ecosystem.config.js
+node_modules
 todo
+tmp
+cluster

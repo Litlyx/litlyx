@@ -2,6 +2,7 @@
 	"dependencies": {
 		"cors": "^2.8.5",
 		"express": "^4.19.2",
+		"mongoose": "^8.12.1",
 		"redis": "^4.7.0"
 	},
 	"devDependencies": {
@@ -16,12 +17,11 @@
 	"main": "dist/index.js",
 	"scripts": {
 		"dev": "node scripts/start_dev.js",
-		"compile": "tsc",
+		"compile": "pnpm run shared && tsc",
+		"compile-only": "tsc",
 		"build": "npm run compile",
-		"docker-build": "docker build -t litlyx-producer -f Dockerfile ../",
-		"docker-inspect": "docker run -it litlyx-producer sh",
-		"workspace:shared": "ts-node ../scripts/producer/shared.ts",
-		"workspace:deploy": "ts-node ../scripts/producer/deploy.ts"
+		"shared": "ts-node ../scripts/producer/shared.ts",
+		"deploy": "ts-node ../scripts/producer/deploy.ts"
 	},
 	"keywords": [],
 	"author": "Emily",

@@ -1,10 +1,15 @@
 {
     "compilerOptions": {
-        "module": "NodeNext",
-        "target": "ESNext"
+        "module": "nodenext",
+        "target": "esnext",
+        "skipLibCheck": true,
+        "moduleResolution": "nodenext"
     },
     "include": [
-        "./**/*.ts"
+        "schema/**/*.ts",
+        "services/**/*.ts",
+        "data/**/*.ts",
+        "utils/**/*.ts"
     ],
     "exclude": [
         "node_modules"

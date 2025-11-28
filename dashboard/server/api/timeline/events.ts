@@ -1,22 +1,22 @@
+
 import { EventModel } from "@schema/metrics/EventSchema";
 import { Redis } from "~/server/services/CacheService";
 import { executeTimelineAggregation } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['SLICE', 'DOMAIN', 'RANGE', 'OFFSET'], ['EVENTS']);
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid', 'domain', 'range', 'slice','permission:webAnalytics', 'flag:allowShare');
 
-    const { pid, from, to, slice, project_id, timeOffset, domain } = data;
+    const { pid, project_id, domain, from, to, slice } = ctx;
 
     const cacheKey = `timeline:events:${pid}:${slice}:${from}:${to}:${domain}`;
     const cacheExp = 60;
 
-    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
+    return await Redis.useCache(cacheKey, cacheExp, async () => {
         const timelineData = await executeTimelineAggregation({
             projectId: project_id,
             model: EventModel,
-            from, to, slice, timeOffset, domain
+            from, to, slice, domain
         });
         return timelineData;
     });

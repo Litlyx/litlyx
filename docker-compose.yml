@@ -1,115 +1,87 @@
+#For privacy reasons please change all data with your personal one known only by you!
 services:
   mongo:
     image: mongo
-    environment:
-      # Change with your database username
-      MONGO_INITDB_ROOT_USERNAME: litlyx
-      # Change with your database password
-      MONGO_INITDB_ROOT_PASSWORD: litlyx
-    # Uncomment to expose database
-    # ports:
-    #   - 27017:27017
-    volumes:
-      - mongo-data:/data/db
-
-  cache:
-    image: redis:alpine
     restart: always
-    # Uncomment to expose redis
-    # ports:
-    #   - "6379:6379"
-    # Change with "--requirepass YOUR_REDIS_PASSWORD"
-    command: redis-server --save 20 1 --loglevel warning --requirepass litlyx
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: mongo_password_here
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    image: redis:7
+    restart: always
+    command: ["redis-server", "--requirepass", "redis_password_here"]
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_USERNAME: default
+      REDIS_PASSWORD: redis_password_here
+    volumes:
+      - redis_data:/data
 
   producer:
     image: litlyx/litlyx-producer
-    restart: always
     ports:
-      - "3099:3099"
+      - "3001:3001"
     environment:
-      PORT: "3099"
-      REDIS_URL: "redis://cache"
-      REDIS_USERNAME: "default"
-      # Change with your redis password
-      REDIS_PASSWORD: "litlyx"
-      STREAM_NAME: "LITLYX"
-    build:
-      dockerfile: ./producer/Dockerfile
+      - PORT=3001
+      - DEV_MODE=false
+      - EMAIL_TRPC_URL=none
+      - MONGO_CONNECTION_STRING=mongodb://root:mongo_password_here@mongo:27017/Litlyx?authSource=admin
+      - STREAM_NAME=LITLYX_STREAM
+      - REDIS_URL=redis://redis:6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=redis_password_here
+    depends_on:
+      - mongo
+      - redis
 
   consumer:
     image: litlyx/litlyx-consumer
-    restart: always
-    ports:
-      - "3011:3031"
     environment:
-      PORT: "3031"
-      # Optional - Used to send welcome and quota emails
-      # EMAIL_SERVICE: "Brevo"      
-      # BREVO_API_KEY: ""
-      # Change "litlyx:litlyx" with "mongodb://YOUR_MONGO_USERNAME:YOUR_MONGO_PASSWORD"
-      MONGO_CONNECTION_STRING: "mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin"
-      REDIS_URL: "redis://cache"
-      REDIS_USERNAME: "default"
-       # Change with your redis password
-      REDIS_PASSWORD: "litlyx"
-      STREAM_NAME: "LITLYX"
-      GROUP_NAME: "DATABASE"
-    build:
-      dockerfile: ./consumer/Dockerfile 
+      - DEV_MODE=false
+      - EMAIL_TRPC_URL=none
+      - EMAIL_SECRET=none
+      - MONGO_CONNECTION_STRING=mongodb://root:mongo_password_here@mongo:27017/Litlyx?authSource=admin
+      - STREAM_NAME=LITLYX_STREAM
+      - REDIS_URL=redis://redis:6379
+      - REDIS_USERNAME=default
+      - REDIS_PASSWORD=redis_password_here
+      - GROUP_NAME=DATABASE
+    depends_on:
+      - mongo
+      - redis
 
   dashboard:
     image: litlyx/litlyx-dashboard
-    restart: always
     ports:
       - "3000:3000"
     environment:
-      NUXT_PORT: "3000"
-      # Change "litlyx:litlyx" with "mongodb://YOUR_MONGO_USERNAME:YOUR_MONGO_PASSWORD"
-      NUXT_MONGO_CONNECTION_STRING: 'mongodb://litlyx:litlyx@mongo:27017/SimpleMetrics?readPreference=primaryPreferred&authSource=admin'
-      NUXT_REDIS_URL: "redis://cache"
-      NUXT_REDIS_USERNAME: "default"
-      # Change with your redis password
-      NUXT_REDIS_PASSWORD: "litlyx"
+      - NUXT_LICENSE_KEY=YOUR_LICENSE_KEY_HERE
+      - NUXT_MONGO_CONNECTION_STRING=mongodb://root:mongo_password_here@mongo:27017/Litlyx?authSource=admin
+      - NUXT_REDIS_URL=redis://redis:6379
+      - NUXT_REDIS_USERNAME=default
+      - NUXT_REDIS_PASSWORD=redis_password_here
+      - NUXT_BASE_URL=http://127.0.0.1:3000
+      - NUXT_SESSION_PASSWORD=jwt_secret_here_for_authentication
+      - NUXT_ADMIN_EMAIL=test@admin.admin
+      - NUXT_ADMIN_PASSWORD=passwordadmin
+      - NUXT_PUBLIC_SELFHOSTED=true
+      - NUXT_PUBLIC_AI_ENABLED=false # change to TRUE if you've provided AI keys down below
+      # NUXT_AI_ORG=your_openai_org_id
+      # NUXT_AI_PROJECT=your_openai_project_id
+      # NUXT_AI_KEY=your_openai_api_key
 
-      # Optional - Used for Lit, the AI analyst
-      # NUXT_AI_ORG: 'OPEN_AI_ORGANIZATION'
-      # NUXT_AI_PROJECT: 'OPEN_AI_PROJECT'
-      # NUXT_AI_KEY: 'OPEN_AI_KEY'
-
-      # Optional - Used to send welcome and quota emails
-      # NUXT_EMAIL_SERVICE: "Brevo"      
-      # NUXT_BREVO_API_KEY: ""
-
-      # Change with your jwt secret
-      NUXT_AUTH_JWT_SECRET: "litlyx_jwt_secret"
-
-      # Optional - Used to register / login via google
-      # NUXT_GOOGLE_AUTH_CLIENT_ID: ""
-      # NUXT_GOOGLE_AUTH_CLIENT_SECRET: ""
-
-      # NO_AUTH or GOOGLE
-      NUXT_PUBLIC_AUTH_MODE: 'NO_AUTH'
-
-      # Credentials to login in NO_AUTH mode
-      NUXT_NOAUTH_USER_EMAIL: 'default@user.com'
-      NUXT_NOAUTH_USER_PASS: "litlyx123"
-
-      NUXT_SELFHOSTED: 'true'
-      NUXT_PUBLIC_SELFHOSTED: 'true'
-
-      # Optional - Used for tests
-      # NUXT_STRIPE_SECRET_TEST: ""
-      # NUXT_STRIPE_WH_SECRET_TEST: ""
-
-      # Optional - Stripe secret - Used to change plans of the projects
-      # NUXT_STRIPE_SECRET: ""
-      # NUXT_STRIPE_WH_SECRET: ""
-
-    build:
-      dockerfile: ./dashboard/Dockerfile 
-      #args:
-        # Optional - Used to register / login via google
-        # GOOGLE_AUTH_CLIENT_ID: ""
+    depends_on:
+      - mongo
+      - redis
+      - producer
+      - consumer
 
 volumes:
-  mongo-data:
+  mongo_data:
+  redis_data:

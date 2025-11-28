@@ -2,6 +2,7 @@ import { Router, json } from "express";
 import { createSessionHash, getIPFromRequest } from "./utils";
 import { requireEnv } from "./shared/utils/requireEnv";
 import { RedisStreamService } from "./shared/services/RedisStreamService";
+import { isAllowedToLog } from "./controller";
 
 const router = Router();
 
@@ -14,6 +15,10 @@ router.post('/keep_alive', json(jsonOptions), async (req, res) => {
     try {
         const ip = getIPFromRequest(req);
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
+
+        const allowed = await isAllowedToLog(req.body.pid, req.body.website, ip, req.body.userAgent);
+        if (!allowed) return res.sendStatus(400);
+
         await RedisStreamService.addToStream(streamName, {
             ...req.body, _type: 'keep_alive', sessionHash, ip,
             instant: req.body.instant + '',
@@ -31,6 +36,9 @@ router.post('/metrics/push', json(jsonOptions), async (req, res) => {
     try {
         const ip = getIPFromRequest(req);
         const sessionHash = createSessionHash(req.body.website, ip, req.body.userAgent);
+
+        const allowed = await isAllowedToLog(req.body.pid, req.body.website, ip, req.body.userAgent);
+        if (!allowed) return res.sendStatus(400);
 
         const { type } = req.body;
 

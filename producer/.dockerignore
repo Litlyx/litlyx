@@ -1,0 +1,4 @@
+node_modules
+ecosystem.config.js
+dist
+.gitignore

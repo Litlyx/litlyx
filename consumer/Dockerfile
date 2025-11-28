@@ -1,17 +1,18 @@
 
-FROM node:21-alpine as base
-
+FROM node:22-alpine as builder
 RUN npm i -g pnpm
-
 WORKDIR /home/app
-
-COPY --link ./consumer/package.json ./consumer/pnpm-lock.yaml ./consumer/
-
-WORKDIR /home/app/consumer
+COPY ./package*.json .
 RUN pnpm install
+COPY . .
+RUN pnpm run compile-only
+RUN pnpm run create_db
 
-COPY --link ../consumer ./
+FROM node:22-alpine
+WORKDIR /home/app
+RUN npm i -g pnpm
+COPY package*.json ./
+RUN pnpm install
+COPY --from=builder  /home/app/dist .
 
-RUN pnpm run build
-
-CMD ["node", "/home/app/consumer/dist/index.js"]
+CMD ["node", "/home/app/index.js"]

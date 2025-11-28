@@ -2,14 +2,13 @@
 import dayjs from 'dayjs';
 import * as fns from 'date-fns';
 
-export type Slice = keyof typeof slicesData;
 
-const slicesData = {
-    hour: {},
-    day: {},
-    week: {},
-    month: {},
-    year: {}
+const slices = ['hour', 'day', 'week', 'month', 'year'] as const;
+
+export type Slice = typeof slices[number];
+
+export function isValidSlice(slice: string): asserts slice is Slice {
+    if (!slices.includes(slice as any)) throw Error('Slice not valid');
 }
 
 const startOfFunctions: { [key in Slice]: (date: Date) => Date } = {
@@ -30,16 +29,22 @@ const endOfFunctions: { [key in Slice]: (date: Date) => Date } = {
 
 class DateService {
 
-    public slicesData = slicesData;
-
-    getChartLabelFromISO(iso: string, offset: number, slice: Slice) {
-        const date = new Date(new Date(iso).getTime() + offset * 1000 * 60);
+    getChartLabelFromISO(timestamp: number, slice: Slice) {
+        const date = new Date(timestamp);
         if (slice === 'hour') return fns.format(date, 'HH:mm');
         if (slice === 'day') return fns.format(date, 'dd/MM');
         if (slice === 'week') return fns.format(date, 'dd/MM');
         if (slice === 'month') return fns.format(date, 'MMMM');
         if (slice === 'year') return fns.format(date, 'YYYY');
-        return iso;
+        return date.toISOString();
+    }
+
+    public sliceAvailabilityMap: Record<Slice, [number, number]> = {
+        hour: [0, 3],
+        day: [2, 31 * 2],
+        week: [0, 0],
+        month: [31 * 2, 365 * 4],
+        year: [365, 365 * 20]
     }
 
     canUseSlice(from: string | number | Date, to: string | number | Date, slice: Slice) {
@@ -80,7 +85,6 @@ class DateService {
         return fn(date);
     }
 
-
     getGranularityData(slice: Slice, dateField: string) {
 
         const dateFromParts: Record<string, any> = {};
@@ -102,74 +106,6 @@ class DateService {
         }
 
         return { dateFromParts, granularity }
-    }
-
-    /**
-    * @deprecated interal to generateDateSlices
-    */
-    prepareDateRange(from: string, to: string, slice: Slice) {
-
-        let fromDate = dayjs(from).minute(0).second(0).millisecond(0);
-        let toDate = dayjs(to).minute(0).second(0).millisecond(0);
-
-        switch (slice) {
-            case 'day':
-                fromDate = fromDate.hour(0);
-                toDate = toDate.hour(0);
-                break;
-            case 'hour':
-                break;
-        }
-
-        return {
-            from: fromDate.toDate(),
-            to: toDate.toDate()
-        }
-    }
-
-    /**
-    * @deprecated interal to generateDateSlices
-    */
-    createBetweenDates(from: string, to: string, slice: Slice) {
-        let start = dayjs(from);
-        const end = dayjs(to);
-        const filledDates: dayjs.Dayjs[] = [];
-        while (start.isBefore(end) || start.isSame(end)) {
-            filledDates.push(start);
-            start = start.add(1, slice);
-        }
-        return { dates: filledDates, from, to };
-    }
-
-    /**
-     * @deprecated use generateDateSlices
-     */
-    fillDates(dates: string[], slice: Slice) {
-        const allDates: dayjs.Dayjs[] = [];
-        const firstDate = dayjs(dates.at(0));
-        const lastDate = dayjs(dates.at(-1));
-        let currentDate = firstDate.clone();
-
-        allDates.push(currentDate);
-
-        while (currentDate.isBefore(lastDate, slice)) {
-            currentDate = currentDate.add(1, slice);
-            allDates.push(currentDate);
-        }
-
-        return allDates;
-    }
-
-    /**
-     * @deprecated use mergeDates
-     */
-    mergeFilledDates<T extends Record<string, any>, K extends keyof T>(dates: dayjs.Dayjs[], items: T[], dateField: K, slice: Slice, fillData: Omit<T, K>) {
-        const result = new Array<T>();
-        for (const date of dates) {
-            const item = items.find(e => dayjs(e[dateField]).isSame(date, slice));
-            result.push(item ?? { ...fillData, [dateField]: date.format() } as T);
-        }
-        return result;
     }
 
     generateDateSlices(slice: Slice, fromDate: Date, toDate: Date) {

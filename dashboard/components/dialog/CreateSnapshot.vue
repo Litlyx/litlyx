@@ -1,30 +1,23 @@
 <script lang="ts" setup>
 
-const { closeDialog } = useCustomDialog();
+import type { DateRange } from 'reka-ui'
+import { Button } from '@/components/ui/button'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { RangeCalendar } from '@/components/ui/range-calendar'
+import { CalendarIcon } from 'lucide-vue-next'
+import { CalendarDate, DateFormatter, getLocalTimeZone } from '@internationalized/date'
 
-import { sub, format, isSameDay, type Duration, startOfDay, endOfDay } from 'date-fns'
 
-const ranges = [
-    { label: 'Last 7 days', duration: { days: 7 } },
-    { label: 'Last 14 days', duration: { days: 14 } },
-    { label: 'Last 30 days', duration: { days: 30 } },
-    { label: 'Last 3 months', duration: { months: 3 } },
-    { label: 'Last 6 months', duration: { months: 6 } },
-    { label: 'Last year', duration: { years: 1 } }
-]
-const selected = ref<{ start: Date, end: Date }>({ start: sub(new Date(), { days: 14 }), end: new Date() })
-
-function isRangeSelected(duration: Duration) {
-    return isSameDay(selected.value.start, sub(new Date(), duration)) && isSameDay(selected.value.end, new Date())
-}
-
-function selectRange(duration: Duration) {
-    selected.value = { start: sub(new Date(), duration), end: new Date() }
-}
+const emits = defineEmits<{
+    (event: 'confirm', data: { name: string, color: string, from: string, to: string }): void
+}>();
+const { close } = useDialog();
 
 const currentColor = ref<string>("#5680F8");
 
-const colorpicker = ref<HTMLInputElement | null>(null);
+const colorpicker = useTemplateRef<HTMLInputElement>('colorpicker');
+
+const snapshotName = ref<string>("");
 
 function showColorPicker() {
     colorpicker.value?.click();
@@ -34,83 +27,64 @@ function onColorChange() {
     currentColor.value = colorpicker.value?.value || '#000000';
 }
 
-const snapshotName = ref<string>("");
+const value = ref<DateRange>({
+    start: new CalendarDate(new Date().getFullYear(), new Date().getUTCMonth(), 1),
+    end: new CalendarDate(new Date().getFullYear(), new Date().getUTCMonth(), new Date().getDate())
+}) as Ref<DateRange>;
 
-const { updateSnapshots, snapshot, snapshots } = useSnapshot();
-const { createAlert } = useAlert()
+const canCreate = computed(() => {
+    return snapshotName.value.trim().length > 2 && snapshotName.value.trim().length < 22 && value.value.start && value.value.end
+})
 
-async function confirmSnapshot() {
-    await $fetch("/api/snapshot/create", {
-        method: 'POST',
-        headers: useComputedHeaders({ useSnapshotDates: false }).value,
-        body: JSON.stringify({
-            name: snapshotName.value,
-            color: currentColor.value,
-            from: startOfDay(selected.value.start),
-            to: endOfDay(selected.value.end)
-        })
-    });
+const df = new DateFormatter('en-US', { dateStyle: 'medium' })
 
-    await updateSnapshots();
-    closeDialog();
-    createAlert('Timeframe created', 'Timeframe created successfully', 'far fa-circle-check', 5000);
-    const newSnapshot = snapshots.value.at(-1);
-    if (newSnapshot) snapshot.value = newSnapshot;
-
-}
+const popoverOpen = ref<boolean>(false);
 
 </script>
 
 <template>
-    <div class="w-full h-full flex flex-col">
+    <div class="flex flex-col gap-4">
 
-        <div class="poppins text-center text-lyx-lightmode-text dark:text-lyx-text">
-            Create a timeframe
-        </div>
-
-        <div class="mt-10 flex items-center gap-2">
-            <div :style="`background-color: ${currentColor};`" @click="showColorPicker"
-                class="w-6 h-6 rounded-full aspect-[1/1] relative cursor-pointer">
+        <div class="relative flex items-center gap-2">
+            <div @click="showColorPicker" :style="`background-color:${currentColor};`"
+                class="absolute left-2 shrink-0 size-4 rounded-full">
                 <input @input="onColorChange" ref="colorpicker" class="relative w-0 h-0 z-[-100]" type="color">
             </div>
-            <div class="grow">
-                <LyxUiInput placeholder="Timeframe name" v-model="snapshotName" class="px-4 py-1 w-full"></LyxUiInput>
-            </div>
+            <Input v-model="snapshotName" class="pl-7" placeholder="Timeframe name"></Input>
         </div>
 
-        <div class="mt-4 justify-center flex w-full">
-            <UPopover class="w-full" :popper="{ placement: 'bottom' }">
-                <UButton class="w-full" color="primary" variant="solid">
-                    <div class="flex items-center justify-center w-full gap-2">
-                        <i class="i-heroicons-calendar-days-20-solid"></i>
-                        {{ selected.start.toLocaleDateString() }} - {{ selected.end.toLocaleDateString() }}
-                    </div>
-                </UButton>
-                <template #panel="{ close }">
-                    <div class="flex items-center sm:divide-x divide-gray-200 dark:divide-gray-800">
-                        <div class="hidden sm:flex flex-col py-4">
-                            <UButton v-for="(range, index) in ranges" :key="index" :label="range.label" color="gray"
-                                variant="ghost" class="rounded-none px-6"
-                                :class="[isRangeSelected(range.duration) ? 'bg-gray-100 dark:bg-gray-800' : 'hover:bg-gray-50 dark:hover:bg-gray-800/50']"
-                                truncate @click="selectRange(range.duration)" />
-                        </div>
+        <Popover v-model:open="popoverOpen">
+            <PopoverTrigger as-child>
+                <Button variant="outline">
+                    <CalendarIcon class="mr-2 h-4 w-4" />
+                    <template v-if="value.start">
+                        <template v-if="value.end">
+                            {{ df.format(value.start.toDate(getLocalTimeZone())) }} - {{
+                                df.format(value.end.toDate(getLocalTimeZone())) }}
+                        </template>
 
-                        <DatePicker v-model="selected" @close="close" />
-                    </div>
-                </template>
-            </UPopover>
+                        <template v-else>
+                            {{ df.format(value.start.toDate(getLocalTimeZone())) }}
+                        </template>
+                    </template>
+                    <template v-else>
+                        Pick a date
+                    </template>
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent class="w-auto p-4 flex flex-col items-end relative z-[90]">
+                <RangeCalendar v-model="value" initial-focus :number-of-months="2"
+                    @update:start-value="(startDate) => value.start = startDate" />
+                <Button @click="popoverOpen = false;"> Confirm </Button>
+            </PopoverContent>
+        </Popover>
+
+        <div class="flex justify-end gap-2">
+            <Button variant="secondary" @click="close()"> Back </Button>
+            <Button :disabled="!canCreate"
+                @click="(value.start && value.end) ? emits('confirm', { name: snapshotName, color: currentColor, from: value.start.toString(), to: value.end.toString() }) : null">
+                Create
+            </Button>
         </div>
-
-        <div class="grow"></div>
-        <div class="flex items-center justify-around gap-4">
-            <LyxUiButton @click="closeDialog()" type="secondary" class="w-full text-center">
-                Cancel
-            </LyxUiButton>
-            <LyxUiButton @click="confirmSnapshot()" type="primary" class="w-full text-center"
-                :disabled="snapshotName.trim().length == 0">
-                Confirm
-            </LyxUiButton>
-        </div>
-
     </div>
 </template>

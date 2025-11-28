@@ -1,104 +1,69 @@
 <script lang="ts" setup>
-import EventsFunnelChart from '~/components/events/EventsFunnelChart.vue';
-import DateService, { type Slice } from '@services/DateService';
 
-definePageMeta({ layout: 'dashboard' });
+import EventsStackedChart from '~/components/complex/EventsStackedChart.vue';
+import EventDoughnutChart from '~/components/complex/EventDoughnutChart.vue';
+import EventsUserFlow from '~/components/complex/EventsUserFlow.vue';
+import EventsMetadataAnalyzer from '~/components/complex/EventsMetadataAnalyzer.vue';
+import EventsFunnelChart from '~/components/complex/EventsFunnelChart.vue';
+import LineDataNew from '~/components/complex/LineDataNew.vue';
 
-const { permission, canSeeEvents } = usePermission();
+definePageMeta({ layout: 'sidebar' });
 
-const { snapshotDuration } = useSnapshot();
+const { data: events } = useAuthFetch<{ _id: string, count: number }[]>('/api/data/events', { headers: { 'x-limit': '9999999' } });
 
-const selectedLabelIndex = ref<number>(1);
-
-const selectLabels: { label: string, value: Slice }[] = [
-    { label: 'Hour', value: 'hour' },
-    { label: 'Day', value: 'day' },
-    { label: 'Month', value: 'month' },
-];
-
-const selectLabelsAvailable = computed<{ label: string, value: Slice, disabled: boolean }[]>(() => {
-    return selectLabels.map(e => {
-        return { ...e, disabled: !DateService.canUseSliceFromDays(snapshotDuration.value, e.value)[0] }
-    });
-})
-
-const eventsData = await useFetch(`/api/data/count`, {
-    headers: useComputedHeaders({ custom: { 'x-schema': 'events' } }),
-    lazy: true
-});
+const { permissions } = useProjectStore();
 
 </script>
 
-
 <template>
 
-    <div v-if="!canSeeEvents" class="h-full w-full flex mt-[20vh] justify-center">
-        <div> You need events permission to view this page </div>
-    </div>
+    <Unauthorized v-if="permissions?.events === false" authorization="Guest user limitation Events">
+    </Unauthorized>
 
-    <div v-if="canSeeEvents" class="w-full h-full overflow-y-auto pb-20 p-6 gap-6 flex flex-col">
-
-
-        <LyxUiCard class="w-full flex justify-between items-center lg:flex-row flex-col gap-6 lg:gap-0">
-            <div class="flex flex-col gap-1">
-                <div>
-                    Total events: {{ eventsData.data.value?.[0]?.count || '0' }}
+    <div v-else class="flex flex-col gap-4 poppins">
+        <div class="bg-gradient-to-r from-violet-500/20 to-transparent rounded-md">
+            <div class=" m-[1px] p-4 rounded-md flex justify-between">
+                <div class="flex items-center">
+                    <div>
+                        <Badge class="h-8 bg-gray-100 dark:bg-white/20 text-black dark:text-white text-md font-normal">
+                            <span v-if="events">Total events: {{events.reduce((a, e) => a + e.count, 0)}}</span>
+                            <Loader v-else class="h-8" />
+                        </Badge>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <LyxUiButton type="secondary" target="_blank" to="https://docs.litlyx.com/custom-events">
-                    Trigger your first event
-                </LyxUiButton>
-            </div>
-        </LyxUiCard>
-
-
-        <div>
-            <BarCardEvents :key="refreshKey"></BarCardEvents>
-        </div>
-
-        <div class="flex gap-6 flex-col xl:flex-row xl:h-full">
-
-            <CardTitled :key="refreshKey" class="p-4 xl:flex-[4] w-full h-full" title="Events"
-                sub="Events stacked bar chart.">
-                <template #header>
-
-                    <SelectButton class="w-fit" @changeIndex="selectedLabelIndex = $event"
-                        :currentIndex="selectedLabelIndex" :options="selectLabelsAvailable">
-                    </SelectButton>
-
-                </template>
-                <div class="h-full">
-                    <EventsStackedBarChart :slice="(selectLabelsAvailable[selectedLabelIndex].value as any)">
-                    </EventsStackedBarChart>
+                <div class="flex gap-4">
+                    <NuxtLink to="/raw_events"><Button variant="outline">Raw Data</Button></NuxtLink>
+                    <NuxtLink to="https://docs.litlyx.com/custom-events" target="_blank">
+                        <Button> Trigger your first event </Button>
+                    </NuxtLink>
                 </div>
-            </CardTitled>
 
-            <CardTitled :key="refreshKey" class="p-4 xl:flex-[2] w-full h-full" title="Top events"
-                sub="Displays key events.">
-                <DashboardEventsChart class="w-full"> </DashboardEventsChart>
-            </CardTitled>
+            </div>
+        </div>
 
+        <div class="flex flex-col xl:flex-row xl:h-full gap-4">
+            <LineDataNew class="xl:flex-[4]" type="events" />
+            <EventDoughnutChart class="p-4 xl:flex-[2] w-full h-full"></EventDoughnutChart>
+        </div>
+
+        <div class="flex">
+            <EventsStackedChart class="w-full"></EventsStackedChart>
+        </div>
+
+
+        <div class="flex">
+            <EventsFunnelChart></EventsFunnelChart>
         </div>
 
 
 
         <div class="flex">
-            <EventsFunnelChart :key="refreshKey" class="w-full"></EventsFunnelChart>
+            <EventsUserFlow></EventsUserFlow>
         </div>
-
-
 
         <div class="flex">
-            <EventsUserFlow :key="refreshKey"></EventsUserFlow>
+            <EventsMetadataAnalyzer></EventsMetadataAnalyzer>
         </div>
-
-
-        <div class="flex">
-            <EventsMetadataAnalyzer :key="refreshKey"></EventsMetadataAnalyzer>
-        </div>
-
-
 
     </div>
 </template>

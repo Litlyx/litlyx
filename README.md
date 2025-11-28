@@ -4,14 +4,14 @@
 </p>
 
 <h4 align="center">
-📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Join Discord</a> 🌐 <a href="https://litlyx.com">Website</a>  🔥 <a href="https://dashboard.litlyx.com">Try Litlyx Cloud. It's Free forever.</a> 
+📚 <a href="https://docs.litlyx.com">Docs</a> 👾 <a href="https://discord.gg/9cQykjsmWX">Discord</a> 🌐 <a href="https://litlyx.com">Website</a>  🔥 <a href="https://dashboard.litlyx.com">Cloud</a> 
 </h4>
 
 #
 <p align="center">
-  Litlys is a modern, developer-friendly, cookie-free analytics tool.<br>
-  Setup takes less than 30 seconds! Completely self-hostable with docker.<br>
-  Alternative to Google Analytics, Matomo, Umami, Plausible & Simple Analytics.
+  <strong>Litlys is the easiest analytics tool you will ever use. It is fast, modern and completely cookie free.</strong><br>
+  Install in under <strong>30 seconds</strong>. Self host with Docker or use our hosted cloud.<br>
+  A powerful alternative to Google Analytics 4, Posthog and Mixpanel.
 </p>
 
 #
@@ -19,24 +19,25 @@
 <br />
 
 <p align="center">
-  <img src="assets/dashboard-clip.png"/>
+  <img src="assets/d.png"/>
 </p>
 
 #
 
 ## Get Started on our Cloud Version
 
-Sign-up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then simply use your `project_id` to connect Litlyx to your website.
+Sign up on [Litlyx.com](https://dashboard.litlyx.com) and create a project. Then use your `workspace_id` to connect Litlyx to your website.
 
 ## Universal Installation
 
 ```html
-<script defer data-project="your_project_id" src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js"></script>
+<script defer data-workspace = "workspace_id" 
+src = "https://cdn.jsdelivr.net/npm/litlyx-js@latest/browser/litlyx.js"></script>
 ```
 
-Importing Litlyx with a direct script instantly starts tracking `Visits`, `Top Pages`, `Bouncing Rate`,  `Real-Time Online Users`, `Unique Visitors`, `Countries`, and `Average Session Duration`.
+This minimal setup is all you need to start tracking visitors on your website or web apps with ease.
 
-# All Javascript Runtimes
+# Intergrate with everything
 
 You can install Litlyx using `npm`, `pnpm` or any modern package managers:
 
@@ -44,37 +45,35 @@ You can install Litlyx using `npm`, `pnpm` or any modern package managers:
 npm i litlyx-js
 ```
 
-Litlyx natively works with all JavaScript / TypeScript frameworks. You can use Litlyx in all WordPress Websites by injecting JS code using a third party plug-in. 
+Litlyx works with all modern JavaScript and TypeScript frameworks. You can also use Litlyx on any WordPress website by injecting the script with a third party plugin.
 
-<p align="center">
-  <img src="assets/tech.png" />
-</p>
+<p align="center"> <img src="assets/icons.png" /> </p>
 
 # Import using a package manager
 
-First, Import litlyx-js library into your code:
+First, import the litlyx-js library:
 
 ```js
 import { Lit } from 'litlyx-js';
 ```
 
-Once imported, you need to initialize Litlyx:
+Then initialize Litlyx:
 
 ```js
-Lit.init('your_project_id');
+Lit.init('your_workspace_id');
 ```
 
-After initialization, Litlyx will automatically track web analytics such as `Page visits`, `Real-Time Online Users`, `Unique Vistors`, and many more.
+Once initialized, Litlyx automatically tracks page visits, real time users, unique visitors and much more.
 
-# Track Custom Events (Actions)
+# Track Custom Events
 
-You aren't just limited to the built-in KPIs. With Litlyx, you can create your own events to track in your project.
+You can track your own custom events with Litlyx.
 
 ```js
 Lit.event('click_on_buy_item');
 ```
+If you need more detailed information, you can add `metadata`:
 
-If you want more specific tracking, you can use the `metadata` field, like this:
 
 ```js
 Lit.event('click_on_buy_item', {
@@ -86,18 +85,17 @@ Lit.event('click_on_buy_item', {
 });
 ```
 
-Litlyx makes it easy for you to tailor your analytics to your project's needs.
-
+Litlyx makes it easy to adapt your analytics to your project.
 
 # Fire Your First Event with cURL
 
-Want to quickly see how Litlyx works with events? Use the cURL command below to send a test event. Just replace the `project_id` with your actual project ID in your terminal.
+Use the command below to send a test event. Replace `workspace_id` with your project ID.
 
 ```bash
 curl -X POST "https://broker.litlyx.com/event" \
   -H "Content-Type: application/json" \
   -d '{
-    "pid": "project_id",
+    "pid": "workspace_id",
     "name": "testEvent1",
     "metadata": "{\"test\": \"something\"}",
     "website": "something",
@@ -107,27 +105,34 @@ curl -X POST "https://broker.litlyx.com/event" \
 
 # Self-hosting with docker
 
-To self-host the Litlyx dashboard, first **clone** this repository. (Litlyx's Docker images are hosted on DockerHub). 
+To self host the Litlyx dashboard, first clone this repository. Litlyx Docker images are hosted on DockerHub.
 
-Then run the following command:
+Run the following command:
+
 ```bash
 docker-compose up
 ```
 
-at localhost:3000 you will see your own instance of the Litlyx Dashboard.
+At localhost:3000 you will see your own instance of the Litlyx dashboard.
 
 ## Forward data to your self-hosted instance with script tag
 
 To forward your data on your self-hosted instance, you need to set up the following variables: `data-host`, `data-port`,  `data-secure`(`true` if it is HTTPS or `false` if it is HTTP).
 
 ```html
-<script defer data-project="your_project_id" 
+<script defer data-project="your_workspace_id" 
         data-host="your-host-name" 
         data-port="your-port" 
         data-secure="true/false"
         src="https://cdn.jsdelivr.net/gh/litlyx/litlyx-js/browser/litlyx.js">
 </script>
 ```
+
+# Unlock the full power of Litlyx self hosting
+
+Litlyx self hosting gives you the freedom to use the full platform for free.  
+If you want to scale to more client seats, you can choose one of our lifetime plans available in the [pricing](https://litlyx.com/pricing) section.
+
 
 # Read our docs
 
@@ -152,6 +157,8 @@ If you want to contribute to Litlyx's development, reach out to us on [Discord](
   <img src="https://contrib.rocks/image?repo=litlyx/litlyx" />
 </a>
 
-# License
+# Support or Business Inquiries
+For any support, write to help@litlyx.com. We are happy to assist you.
 
+# License
 Litlyx is licensed under the [Apache 2.0](/LICENSE) license.

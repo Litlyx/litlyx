@@ -1,29 +1,17 @@
-import { VisitModel } from "@schema/metrics/VisitSchema";
+import { visitController } from "~/server/controllers/VisitController";
 import { Redis } from "~/server/services/CacheService";
-import { executeAdvancedTimelineAggregation } from "~/server/services/TimelineService";
 
 export default defineEventHandler(async event => {
-
-    const data = await getRequestData(event, ['SLICE', 'DOMAIN', 'RANGE', 'OFFSET'], ['WEB']);
-    if (!data) return;
-
-    const { pid, from, to, slice, project_id, timeOffset, domain } = data;
-
+    const ctx = await getRequestContext(event, 'pid', 'domain', 'range', 'slice', 'permission:webAnalytics', 'flag:allowShare');
+    const { pid, project_id, domain, from, to, slice } = ctx;
     const cacheKey = `timeline:visits:${pid}:${slice}:${from}:${to}:${domain}`;
     const cacheExp = 20;
-
-    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
-        const timelineData = await executeAdvancedTimelineAggregation({
-            projectId: project_id,
-            model: VisitModel,
-            from, to, slice, timeOffset, domain
-        });
-
-        return timelineData;
-
+    if (getHeader(event, 'x-dev') === 'true') await Redis.del(cacheKey);
+    return await Redis.useCache(cacheKey, cacheExp, async () => {
+        const { data, time } = await visitController.executeDynamic({ project_id: project_id.toString(), from, to, slice, domain });
+        setHeader(event, 'x-time', time.toFixed());
+        return data;
     });
-
-
 
 
 });

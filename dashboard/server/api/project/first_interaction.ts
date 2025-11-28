@@ -1,20 +1,16 @@
-import { EventModel } from "@schema/metrics/EventSchema";
-import { VisitModel } from "@schema/metrics/VisitSchema";
+import { EventModel } from "~/shared/schema/metrics/EventSchema";
+import { VisitModel } from "~/shared/schema/metrics/VisitSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, {
-        requireSchema: false,
-        allowLitlyx: false,
-        requireSlice: false
-    });
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid', 'permission:webAnalytics');
 
-    const { project_id } = data;
-    const hasEvent = await EventModel.exists({ project_id });
-    if (hasEvent) return true;
-    const hasVisit = await VisitModel.exists({ project_id });
-    if (hasVisit) return true;
+    const { project_id } = ctx;
+
+    const hasEvents = await EventModel.exists({ project_id });
+    if (hasEvents) return true;
+    const hasVisits = await VisitModel.exists({ project_id });
+    if (hasVisits) return true;
 
     return false;
 

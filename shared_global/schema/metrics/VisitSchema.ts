@@ -8,10 +8,19 @@ export type TVisit = {
 
     continent: string,
     country: string,
+    region: string,
+    city: string,
 
     session: string,
     flowHash: string,
     device: string,
+
+    utm_medium: string,
+    utm_source: string,
+    utm_term: string,
+    utm_campaign: string,
+    utm_content: string,
+
 
     website: string,
     page: string,
@@ -28,18 +37,29 @@ const VisitSchema = new Schema<TVisit>({
 
     continent: { type: String },
     country: { type: String },
+    region: { type: String },
+    city: { type: String },
 
-    session: { type: String, index: true },
-    flowHash: { type: String },
+    session: { type: String },
+    flowHash: { type: String, index: true },
     device: { type: String },
 
-    website: { type: String, required: true, index: true },
+    utm_medium: { type: String },
+    utm_source: { type: String },
+    utm_term: { type: String },
+    utm_campaign: { type: String },
+    utm_content: { type: String },
+
+    website: { type: String, required: true },
     page: { type: String, required: true },
     referrer: { type: String, required: true },
     created_at: { type: Date, default: () => Date.now() },
 })
 
 VisitSchema.index({ project_id: 1, created_at: -1 });
+VisitSchema.index({ _id: 1, project_id: 1 });
+VisitSchema.index({ project_id: 1, website: 1 });
+VisitSchema.index({ project_id: 1, session: 1, created_at: 1, });
 
 export const VisitModel = model<TVisit>('visits', VisitSchema);
 

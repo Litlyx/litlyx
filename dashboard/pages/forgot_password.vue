@@ -1,150 +1,77 @@
 <script setup lang="ts">
+const email = ref<string>();
+const email_confirm = ref<string>();
+const colorMode = useColorMode()
 
-definePageMeta({ layout: 'none' });
+const canReset = computed(() => {
+    if (!email.value) return false;
+    if (!email.value.includes('@')) return false;
+    if (!email.value.includes('.')) return false;
+    if (email.value.length == 0) return false;
+    if (email.value != email_confirm.value) return false;
+    return true;
+})
 
-const email = ref<string>("");
-
-const emailSended = ref<boolean>(false);
-
-const { createAlert } = useAlert();
-
-async function resetPassword() {
-
-    try {
-        const res = await $fetch('/api/user/password/reset', {
-            headers: { 'Content-Type': 'application/json' },
-            method: 'POST',
-            body: JSON.stringify({ email: email.value })
-        })
-
-        if (!res) throw Error('No response');
-
-        if (res.error) return createAlert('Error', res.message, 'far fa-triangle-exclamation', 5000);
-        emailSended.value = true;
-        return createAlert('Success', 'Email sent', 'far fa-circle-check', 5000);
-
-    } catch (ex) {
-        console.error(ex);
-        createAlert('Error', 'Internal error', 'far fa-triangle-exclamation', 5000);
-    }
-
-
-
+async function sendForgotPasswordEmail() {
+    await useCatch({
+        toast: true,
+        toastTitle: 'Error during request',
+        async action() {
+            await useAuthFetchSync('/api/user/forgot_password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: { email: email.value }
+            });
+            email.value = '';
+            email_confirm.value = '';
+        },
+        onSuccess(_, showToast) {
+            showToast('Success', { description: 'An email was sent to reset the password.' })
+        },
+    });
 }
 
 </script>
 
-
 <template>
-
-    <div class="home w-full h-full">
-
-        <div class="flex h-full">
-
-            <div class="flex-1 flex flex-col items-center pt-20 xl:pt-[22vh]">
-
-                <div class="rotating-thing absolute top-0"></div>
-
-                <div class="mb-8 bg-black rounded-xl">
-                    <img class="w-[5rem]" :src="'logo.png'">
-                </div>
-
-                <div class="text-lyx-lightmode-text dark:text-lyx-text text-[2.2rem] font-bold poppins">
-                    Reset password
-                </div>
-
-                <div class="text-lyx-lightmode-text dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
-                    Enter your user account's verified email address and we will send you a temporary password.
-                </div>
-
-                <div class="mt-12">
-
-                    <div v-if="!emailSended" class="flex flex-col gap-2 z-[110]">
-
-
-                        <div class="flex flex-col gap-4 z-[100] w-[20vw] min-w-[20rem]">
-                            <LyxUiInput class="px-3 py-2" placeholder="Email" v-model="email"></LyxUiInput>
-                        </div>
-
-                        <div class="flex justify-center mt-4">
-                            <LyxUiButton @click="resetPassword()" class="text-center z-[110]" type="primary">
-                                Reset password
-                            </LyxUiButton>
-                        </div>
-
-                        <NuxtLink to="/login"
-                            class="mt-4 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[110]">
-                            Go back
-                        </NuxtLink>
-
-
-                    </div>
-
-
-                    <div v-if="emailSended" class="mt-12 flex flex-col text-center text-[1.1rem] z-[100]">
-                        <div>
-                            Check your email inbox.
-                        </div>
-                        <RouterLink tag="div" to="/login"
-                            class="mt-6 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[110]">
-                            Go back
-                        </RouterLink>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <div class="grow flex-1 items-center justify-center hidden lg:flex">
-
-                <!-- <GlobeSvg></GlobeSvg> -->
-
-                <img :src="'image-bg.png'" class="h-full py-6">
-
-            </div>
+    <div class="flex justify-center h-dvh items-center ">
+  <div class='flex flex-col gap-6 max-w-[80dvw] md:max-w-[60dvw]'>
+      <div class="flex flex-col gap-6">
+        <div class="flex flex-col items-center gap-4">
+          <div class="flex items-center gap-2 font-medium">
+            <img :src="colorMode.value==='dark' ? '/logo-white.svg' : '/logo-black.svg'" class="h-16">
+          </div>
+          <div class="text-center text-sm">
+            Have an account?
+            <NuxtLink to="/login" class="underline underline-offset-4">
+              Sign in
+            </NuxtLink>
+          </div>
         </div>
-
-
-        <!-- <div class="flex flex-col items-center justify-center mt-40 gap-20">
-            <div class="google-login text-gray-700" :class="{ disabled: !isReady }" @click="login">
-                <div class="icon">
-                    <i class="fab fa-google"></i>
+            <div>
+                <Label class="text-lg"> Reset Your Password </Label>
+                <div class="text-muted-foreground">
+                    Please enter your email address below to which we can send you instructions.
                 </div>
-                <div> Continua con Google </div>
             </div>
-        </div> -->
 
+            <div class="flex flex-col gap-2">
+                <Label>Email</Label>
+                <Input v-model="email"></Input>
+                <div class="my-2"></div>
+                <Label>Confirm Email</Label>
+                <Input v-model="email_confirm"></Input>
+                <Button @click="sendForgotPasswordEmail()" :disabled="!canReset" class="mt-4"> Send Instructions
+                </Button>
+            </div>
+
+      </div>
+    <div
+      class="text-muted-foreground *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+      By clicking continue, you agree to our <a href="https://litlyx.com/terms-of-service" target="_blank"> Terms of
+        Service</a>
+      and <a href="https://litlyx.com/privacy-policy" target="_blank">Privacy Policy</a>.
     </div>
-
+  </div></div>
 </template>
 
-
-
-<style scoped lang="scss">
-.rotating-thing {
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    opacity: 0.15;
-    background: radial-gradient(51.24% 31.29% at 50% 50%, rgb(51, 58, 232) 0%, rgba(51, 58, 232, 0) 100%);
-    animation: 12s linear 0s infinite normal none running spin;
-}
-
-.google-login {
-    cursor: pointer;
-    font-weight: bold;
-    background-color: #fcefed;
-    padding: 1rem 2rem;
-    border-radius: 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-
-    &.disabled {
-        filter: brightness(50%);
-    }
-
-    i {
-        font-size: 1.5rem;
-    }
-}
-</style>

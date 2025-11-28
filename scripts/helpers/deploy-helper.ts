@@ -4,25 +4,33 @@ import { NodeSSH } from 'node-ssh'
 import fs from 'fs-extra';
 import { REMOTE_HOST_PRODUCTION, REMOTE_HOST_TESTMODE, IDENTITY_FILE } from '../.config'
 
+
+export const MODES_ARRAY = ['production', 'testmode', 'testlive'] as const;
+
+export type MODE = typeof MODES_ARRAY[number];
+
 export class DeployHelper {
 
     private static scpClient: ScpClient;
     private static sshClient: NodeSSH;
 
-    static getMode() {
-        const argvMode = process.argv[2]
-        if (argvMode != '--production' && argvMode != '--testmode') {
-            console.error('use --production or --testmode');
+    static getMode(): MODE {
+        const argvMode = process.argv[2];
+        if (!argvMode) {
+            console.error('use', MODES_ARRAY.map(e => `--${e}`).join(' or '));
             process.exit(0);
         }
-        const MODE = argvMode === '--production' ? 'production' : 'testmode';
-        return MODE;
+        const mode = argvMode.replace('--', '');
+        if (!MODES_ARRAY.includes(mode as any)) {
+            console.error('use', MODES_ARRAY.map(e => `--${e}`).join(' or '));
+            process.exit(0);
+        }
+        return mode as MODE;
     }
 
     static getArgAt(index: number) {
         return process.argv[3 + index];
     }
-
 
     static async connect() {
         this.scpClient = await Client({

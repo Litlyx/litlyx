@@ -12,7 +12,6 @@ node_modules
 # Logs
 logs
 *.log
-winston-*.ndjson
 
 # Misc
 .DS_Store
@@ -24,20 +23,6 @@ winston-*.ndjson
 .env.*
 !.env.example
 
-# Test reports
-*.report.txt
+# Shared files
 
-# PDF
-out.pdf
-
-# TESTS - TO REMOVE
-tests
-
-# EXPLAINS MONGODB
-explains
-
-#Ecosystem
-ecosystem.config.cjs
-ecosystem.config.js
-
-shared
+/shared

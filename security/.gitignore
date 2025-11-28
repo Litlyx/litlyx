@@ -1,8 +1,0 @@
-node_modules
-static
-ecosystem.config.cjs
-dist
-start_dev.js
-package-lock.json
-build_all.bat
-.env

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="w-dvw h-dvh p-8 flex flex-col">
+        <div class="font-bold text-4xl"> Engagement Analysis </div>
+        <div class="w-full h-[2px] bg-black mt-3"></div>
+        <p class="text-sm text-gray-700 mb-6 mt-4">
+            This section explores how users engage with your website: which pages attract the most
+            attention, where users disengage, and how long they stay on average. These insights reveal
+            what content works and what needs improvement.
+        </p>
+        <h3 class="font-semibold mb-2">Top 5 Most Viewed Pages</h3>
+        <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+            <li>%PAGE_0%</li>
+            <li>%PAGE_1%</li>
+            <li>%PAGE_2%</li>
+            <li>%PAGE_3%</li>
+            <li>%PAGE_4%</li>
+        </ul>
+        <h3 class="font-semibold mb-2">Top Entry Pages (where users land first)</h3>
+        <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+            <li>%ENTRY_PAGE_0%</li>
+            <li>%ENTRY_PAGE_1%</li>
+            <li>%ENTRY_PAGE_2%</li>
+            <li>%ENTRY_PAGE_3%</li>
+            <li>%ENTRY_PAGE_4%</li>
+        </ul>
+        <h3 class="font-semibold mb-2">Top Exit Pages (where users leave the site)</h3>
+        <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+            <li>%EXIT_PAGE_0%</li>
+            <li>%EXIT_PAGE_1%</li>
+            <li>%EXIT_PAGE_2%</li>
+            <li>%EXIT_PAGE_3%</li>
+            <li>%EXIT_PAGE_4%</li>
+        </ul>
+        <div class="grow"></div>
+        <div class="flex justify-between items-center">
+            <div class="text-2xl">6/9</div>
+          <img class="w-10" src="%LOGO%">
+        </div>
+    </div>
+</body>
+
+</html>

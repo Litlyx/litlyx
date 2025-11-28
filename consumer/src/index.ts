@@ -6,15 +6,16 @@ import { ProjectModel } from "./shared/schema/project/ProjectSchema";
 import { VisitModel } from "./shared/schema/metrics/VisitSchema";
 import { SessionModel } from "./shared/schema/metrics/SessionSchema";
 import { EventModel } from "./shared/schema/metrics/EventSchema";
-import { lookup } from './lookup';
 import { UAParser } from 'ua-parser-js';
 import { checkLimits } from './LimitChecker';
 import express from 'express';
 
-import { ProjectLimitModel } from './shared/schema/project/ProjectsLimits';
 import { ProjectCountModel } from './shared/schema/project/ProjectsCounts';
 import { metricsRouter } from './Metrics';
-
+import { UserLimitModel } from './shared/schema/UserLimitSchema';
+import { TrcpInstance } from './trpc';
+import { PremiumModel } from './shared/schema/PremiumSchema';
+import { lookupIP } from './lookup';
 
 const app = express();
 
@@ -22,17 +23,28 @@ app.use('/metrics', metricsRouter);
 
 app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`));
 
+
+TrcpInstance.init(requireEnv('EMAIL_TRPC_URL'), requireEnv('EMAIL_SECRET'));
+
 connectDatabase(requireEnv('MONGO_CONNECTION_STRING'));
 main();
 
 const CONSUMER_NAME = `CONSUMER_${process.env.NODE_APP_INSTANCE || 'DEFAULT'}`
 
+
+async function getProjectOwner(pid: string) {
+    const ownerData = await ProjectModel.findOne({ _id: pid }, { owner: 1 });
+    return ownerData.owner;
+}
+
 async function main() {
+
+    console.log('Consumer started');
 
     await RedisStreamService.connect();
 
     const stream_name = requireEnv('STREAM_NAME');
-    const group_name = requireEnv('GROUP_NAME') as any; // Checks are inside "startReadingLoop"
+    const group_name = requireEnv('GROUP_NAME') as any; // Checks are inside "startReadingLoop"    
 
     await RedisStreamService.startReadingLoop({
         stream_name, group_name, consumer_name: CONSUMER_NAME
@@ -51,22 +63,34 @@ async function processStreamEntry(data: Record<string, string>) {
 
         const { pid, sessionHash } = data;
 
-        const project = await ProjectModel.exists({ _id: pid });
-        if (!project) return;
+        const owner = await getProjectOwner(pid);
+        if (!owner) return;
 
-        const canLog = await checkLimits(pid);
-        if (!canLog) return;
+
+        const premiumData = await PremiumModel.findOne({ user_id: owner }, { payment_failed: 1, premium_type: 1, created_at: 1 });
+        if (!premiumData) return;
+        if (premiumData.payment_failed === true) return;
+
+        if (premiumData.premium_type !== 7999) {
+            const canLog = await checkLimits(owner.toString());
+            if (!canLog) return;
+        }
+
+        if (premiumData.premium_type === 7999 &&
+            (Date.now() > new Date(premiumData.created_at).getTime() + (1000 * 60 * 60 * 24 * 14) + (1000 * 60 * 60 * 24 * 30))
+        ) return;
 
         if (eventType === 'event') {
-            await process_event(data, sessionHash);
+            await process_event(data, sessionHash, owner.toString());
         } else if (eventType === 'keep_alive') {
-            await process_keep_alive(data, sessionHash);
+            await process_keep_alive(data, sessionHash, owner.toString());
         } else if (eventType === 'visit') {
-            await process_visit(data, sessionHash);
+            await process_visit(data, sessionHash, owner.toString());
         }
 
     } catch (ex: any) {
         console.error('ERROR PROCESSING STREAM EVENT', ex.message);
+        console.error(ex);
     }
 
     const duration = Date.now() - start;
@@ -75,18 +99,30 @@ async function processStreamEntry(data: Record<string, string>) {
 
 }
 
-async function process_visit(data: Record<string, string>, sessionHash: string) {
+async function process_visit(data: Record<string, string>, sessionHash: string, user_id: string) {
 
     const { pid, ip, website, page, referrer, userAgent, flowHash, timestamp } = data;
 
-    let referrerParsed;
-    try {
-        referrerParsed = new URL(referrer);
-    } catch (ex) {
-        referrerParsed = { hostname: referrer };
-    }
+    const referrerParsed = { hostname: referrer };
 
-    const geoLocation = lookup(ip);
+    let utm_campaign: string | undefined = undefined;
+    let utm_content: string | undefined = undefined;
+    let utm_medium: string | undefined = undefined;
+    let utm_source: string | undefined = undefined;
+    let utm_term: string | undefined = undefined;
+
+    try {
+        const url = new URL(referrer);
+        referrerParsed.hostname = url.hostname
+        utm_campaign = url.searchParams.get('utm_campaign') ?? undefined;
+        utm_content = url.searchParams.get('utm_content') ?? undefined;
+        utm_medium = url.searchParams.get('utm_medium') ?? undefined;
+        utm_source = url.searchParams.get('utm_source') ?? undefined;
+        utm_term = url.searchParams.get('utm_term') ?? undefined;
+    } catch (ex) { }
+
+
+    const geoLocation = lookupIP(ip);
 
     const userAgentParsed = UAParser(userAgent);
 
@@ -100,17 +136,22 @@ async function process_visit(data: Record<string, string>, sessionHash: string) 
             device: device ? device : (userAgentParsed.browser.name ? 'desktop' : undefined),
             session: sessionHash,
             flowHash,
-            continent: geoLocation[0],
-            country: geoLocation[1],
+            continent: geoLocation ? geoLocation.continent.code : undefined,
+            country: geoLocation ? geoLocation.country.iso_code : undefined,
+
+            region: (geoLocation && geoLocation.subdivisions && geoLocation.subdivisions.length > 0) ? geoLocation.subdivisions[0]?.iso_code : undefined,
+            city: (geoLocation && geoLocation.subdivisions && geoLocation.subdivisions.length > 1) ? geoLocation.subdivisions[1]?.iso_code : undefined,
+
+            utm_campaign, utm_content, utm_medium, utm_source, utm_term,
             created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } }, { upsert: true }),
-        ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'visits': 1 } })
+        UserLimitModel.updateOne({ user_id }, { $inc: { 'visits': 1 } })
     ]);
 
 }
 
-async function process_keep_alive(data: Record<string, string>, sessionHash: string) {
+async function process_keep_alive(data: Record<string, string>, sessionHash: string, user_id: string) {
 
     const { pid, instant, flowHash, timestamp, website } = data;
 
@@ -137,7 +178,7 @@ async function process_keep_alive(data: Record<string, string>, sessionHash: str
 
 }
 
-async function process_event(data: Record<string, string>, sessionHash: string) {
+async function process_event(data: Record<string, string>, sessionHash: string, user_id: string) {
 
     const { name, metadata, pid, flowHash, timestamp, website } = data;
 
@@ -155,7 +196,7 @@ async function process_event(data: Record<string, string>, sessionHash: string) 
             created_at: new Date(parseInt(timestamp))
         }),
         ProjectCountModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } }, { upsert: true }),
-        ProjectLimitModel.updateOne({ project_id: pid }, { $inc: { 'events': 1 } })
+        UserLimitModel.updateOne({ user_id }, { $inc: { 'events': 1 } })
     ]);
 
 

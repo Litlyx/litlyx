@@ -2,11 +2,10 @@ import { ProjectModel, TProject } from "@schema/project/ProjectSchema";
 
 export default defineEventHandler(async event => {
 
-    const userData = getRequestUser(event);
-    if (!userData?.logged) return [];
-
-
-    const userProjects = await ProjectModel.find({ owner: userData.id });
-    return userProjects.map(e => e.toJSON()) as TProject[];
+    const ctx = await getRequestContext(event);
+    const { user_id } = ctx;
+    
+    const projects = await ProjectModel.find({ owner: user_id });
+    return projects.map(e => e.toJSON()) as TProject[];
 
 });

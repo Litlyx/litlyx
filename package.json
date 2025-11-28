@@ -7,14 +7,22 @@
     "dashboard:clear-logs": "ts-node scripts/dashboard/clear-logs.ts",
     "dashboard:shared": "ts-node scripts/dashboard/shared.ts",
     "dashboard:deploy": "ts-node scripts/dashboard/deploy.ts",
-    
+    "dashboard:docker": "docker build -t litlyx-dashboard ./dashboard",
+    "dashboard:inspect": "docker run -it litlyx-dashboard sh",
+
     "producer:shared": "ts-node scripts/producer/shared.ts",
     "producer:deploy": "ts-node scripts/producer/deploy.ts",
-
+    "producer:docker": "docker build -t litlyx-producer ./producer",
+    "producer:inspect": "docker run -it litlyx-producer sh",
+    
     "consumer:shared": "ts-node scripts/consumer/shared.ts",
     "consumer:deploy": "ts-node scripts/consumer/deploy.ts",
+    "consumer:docker": "docker build -t litlyx-consumer ./consumer",
+    "consumer:inspect": "docker run -it litlyx-consumer sh",
 
-    "email:deploy": "ts-node scripts/email/deploy.ts"
+    "payments:shared": "ts-node scripts/payments/shared.ts",
+    "payments:deploy": "ts-node scripts/payments/deploy.ts",
+    "emails:deploy": "ts-node scripts/emails/deploy.ts"
   },
   "keywords": [],
   "author": "Emily",

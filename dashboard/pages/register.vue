@@ -1,174 +1,166 @@
 <script setup lang="ts">
 
-definePageMeta({ layout: 'none' });
+const router = useRouter();
 
-import { Lit } from 'litlyx-js';
+const loading = ref<boolean>(false);
 
-const emailSended = ref<boolean>(false);
+async function register(event: { email: string, password: string }) {
 
-const email = ref<string>("");
-const password = ref<string>("");
-const passwordConfirm = ref<string>("");
+    loading.value = true;
 
-const canRegister = computed(() => {
-    if (email.value.length == 0) return false;
-    if (!email.value.includes('@')) return false;
-    if (!email.value.includes('.')) return false;
-    if (password.value !== passwordConfirm.value) return false;
-    if (password.value.length < 6) return false;
-    return true;
-});
+    await useCatch({
+        toast: true,
+        toastTitle: 'Error during login',
+        async action() {
+            await useAuthFetchSync('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: event,
+            })
+        },
+        onSuccess(_, showToast) {
+            showToast('Registration completed', {
+                description: 'Registration completed, check your inbox to confirm your account',
+                position: 'top-right'
+            });
+            router.push('/');
+        },
+    })
 
-async function registerAccount() {
-
-    try {
-        const res = await $fetch<any>('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email: email.value, password: password.value })
-        });
-        if (res.error === true) return alert(res.message);
-
-        Lit.event('email_signup');
-
-        emailSended.value = true;
-    } catch (ex) {
-        alert('Something went wrong');
-    }
+    loading.value = false;
 
 }
 
+async function oauth(provider: 'google') {
+    location.href = `/api/auth/${provider}/authenticate`;
+}
+
+const bgRef = ref<HTMLElement | null>(null)
+
+onMounted(() => {
+    const bg = bgRef.value
+    if (!bg || window.innerWidth < 768) return
+
+    let mouseX = 0
+    let mouseY = 0
+    let currentX = 0
+    let currentY = 0
+
+    const lerp = (start: number, end: number, amt: number) => start + (end - start) * amt
+
+    const handleMouseMove = (e: MouseEvent) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 2 // range: -1 to 1
+        const y = (e.clientY / window.innerHeight - 0.5) * 2
+        mouseX = x * 20 // max 20px offset
+        mouseY = y * 20
+    }
+
+    const animate = () => {
+        currentX = lerp(currentX, mouseX, 0.1)
+        currentY = lerp(currentY, mouseY, 0.1)
+
+        if (bg) {
+            bg.style.transform = `translate(${currentX}px, ${currentY}px) scale(1.1)`
+        }
+
+        requestAnimationFrame(animate)
+    }
+
+    document.addEventListener('mousemove', handleMouseMove)
+    animate()
+
+    onUnmounted(() => {
+        document.removeEventListener('mousemove', handleMouseMove)
+    })
+})
+
+function getRandomPercent(min: number, max: number): string {
+    return `${Math.random() * (max - min) + min}%`;
+}
+
+function getRandomSeconds(min: number, max: number): string {
+    return `${Math.random() * (max - min) + min}s`;
+}
+
+const totalStars = 6;
+
+const stars = ref(
+    Array.from({ length: totalStars }).map(() => ({
+        top: getRandomPercent(20, 70),     // da 20% a 70% in verticale
+        left: getRandomPercent(65, 90),    // solo nella zona destra
+        delay: getRandomSeconds(0, 8),
+        duration: getRandomSeconds(8, 12)
+    }))
+);
 </script>
 
-
 <template>
+    <div class="relative flex overflow-hidden min-h-svh flex-col items-center justify-center">
+        <!-- Sfondo dinamico ingrandito -->
+        <div ref="bgRef" class="absolute inset-0 -z-10 w-full h-full overflow-hidden">
+            <img src="/planet.png" alt="bg"
+                class="w-full h-full object-cover object-bottom scale-120 pointer-events-none" />
 
-    <div class="home w-full h-full">
-
-        <div class="flex h-full bg-lyx-lightmode-background dark:bg-lyx-background">
-
-            <div class="flex-1 flex flex-col items-center pt-20 xl:pt-[22vh]">
-
-                <!-- <div class="rotating-thing absolute top-0"></div> -->
-
-                <div class="mb-8 bg-black rounded-xl">
-                    <img class="w-[5rem]" :src="'logo.png'">
-                </div>
-
-                <div class="text-lyx-lightmode-text dark:text-lyx-text text-[2.2rem] font-bold poppins">
-                    Sign up
-                </div>
-
-                <div class="text-lyx-lightmode-text dark:text-lyx-text/80 text-[1.2rem] font-light text-center w-[70%] poppins mt-2">
-                    Track web analytics and custom events
-                    with extreme simplicity in under 30 sec.
-                    <br>
-                    <!-- <div class="font-bold poppins mt-4">
-                        Start for Free now! Up to 3k visits/events monthly.
-                    </div> -->
-                </div>
-
-                <div v-if="!emailSended" class="mt-12">
-
-                    <div class="flex flex-col gap-2">
-
-                        <div class="flex flex-col gap-4 z-[100] w-[20vw] min-w-[20rem]">
-                            <LyxUiInput class="px-3 py-2" placeholder="Email" v-model="email">
-                            </LyxUiInput>
-                            <LyxUiInput class="px-3 py-2" placeholder="Password" v-model="password" type="password">
-                            </LyxUiInput>
-                            <LyxUiInput class="px-3 py-2" placeholder="Confirm password" v-model="passwordConfirm"
-                                type="password">
-                            </LyxUiInput>
-                        </div>
-
-                        <div class="text-lyx-text-darker text-end text-[.8rem]">
-                            Password must be at least 6 chars long
-                        </div>
-                        <div class="flex justify-center mt-4 z-[100]">
-                            <LyxUiButton :disabled="!canRegister" @click="registerAccount()" class="text-center"
-                                type="primary">
-                                Sign up
-                            </LyxUiButton>
-                        </div>
-
-                        <RouterLink to="/login"
-                            class="mt-4 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer z-[100]">
-                            Go back to login
-                        </RouterLink>
-
-
-                    </div>
-
-                </div>
-
-                <div v-if="emailSended" class="mt-12 flex flex-col text-center text-[1.1rem] z-[100]">
-                    <div>
-                        We sent you a confirm email.
-                    </div>
-                    <div>
-                        Please check your inbox to confirm your account and complete your registration.
-                    </div>
-                    <RouterLink tag="div" to="/login"
-                        class="mt-6 text-center text-lyx-lightmode-text dark:text-lyx-text-dark underline cursor-pointer">
-                        Go back
-                    </RouterLink>
-                </div>
-
-                <div v-if="!emailSended"
-                    class="text-[.9rem] poppins mt-5 xl:mt-20 text-lyx-lightmode-text dark:text-lyx-text-dark text-center relative z-[2]">
-                    By continuing you are accepting
-                    <br>
-                    our
-                    <a class="underline" href="https://litlyx.com/terms" target="_blank">Terms of Service</a> and
-                    <a class="underline" href="https://litlyx.com/privacy" target="_blank">Privacy Policy</a>.
-                </div>
-
-
-            </div>
-
-            <div class="grow flex-1 items-center justify-center hidden lg:flex">
-
-                <!-- <GlobeSvg></GlobeSvg> -->
-
-                <img :src="'image-bg.png'" class="h-full py-6">
-
-            </div>
+            <!-- Stelle generate dinamicamente -->
+            <div v-for="(star, index) in stars" :key="index" class="twinkle-star" :style="{
+                top: star.top,
+                left: star.left,
+                animationDelay: star.delay,
+                animationDuration: star.duration
+            }"></div>
         </div>
 
-    </div>
+        <!-- Contenuto sopra -->
+        <div class="flex flex-col items-center justify-center gap-6 p-6 md:p-10 relative z-10">
+            <div
+                class="w-full max-w-sm px-4 py-4 bg-violet-400/20 backdrop-blur-xl rounded-xl border border-violet-400/40 shadow-xl shadow-violet-400/10">
+                <AuthRegisterForm :loading="loading" @submit="register($event)" @oauth="oauth($event)" />
+            </div>
 
+            <div
+                class="!text-violet-100/80 *:[a]:hover:text-primary text-center text-xs text-balance *:[a]:underline *:[a]:underline-offset-4">
+                By clicking continue, you agree to our
+                <a href="https://litlyx.com/terms-of-service" target="_blank">Terms of Service</a>
+                and
+                <a href="https://litlyx.com/privacy-policy" target="_blank">Privacy Policy</a>.
+            </div>
+        </div>
+    </div>
 </template>
 
-
-
-<style scoped lang="scss">
-.rotating-thing {
-    height: 100%;
-    aspect-ratio: 1 / 1;
-    opacity: 0.15;
-    background: radial-gradient(51.24% 31.29% at 50% 50%, rgb(51, 58, 232) 0%, rgba(51, 58, 232, 0) 100%);
-    animation: 12s linear 0s infinite normal none running spin;
+<style scoped>
+.twinkle-star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 6px 1px white;
+    opacity: 0;
+    animation-name: twinkle;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }
 
-.google-login {
-    cursor: pointer;
-    font-weight: bold;
-    background-color: #fcefed;
-    padding: 1rem 2rem;
-    border-radius: 1rem;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-
-    &.disabled {
-        filter: brightness(50%);
+@keyframes twinkle {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
     }
 
-    i {
-        font-size: 1.5rem;
+    5% {
+        opacity: 1;
+        transform: scale(1.4);
+    }
+
+    10% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.8);
     }
 }
 </style>

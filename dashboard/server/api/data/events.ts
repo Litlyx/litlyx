@@ -4,22 +4,23 @@ import { Redis } from "~/server/services/CacheService";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['DOMAIN', 'RANGE'], ['EVENTS']);
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid', 'domain', 'range', 'limit', 'permission:events');
 
-    const { pid, from, to, project_id, limit, domain } = data;
+    const { pid, project_id, domain, from, to, limit } = ctx;
 
     const cacheKey = `events:${pid}:${limit}:${from}:${to}:${domain}`;
     const cacheExp = 20;
 
-    return await Redis.useCacheV2(cacheKey, cacheExp, async () => {
+    return await Redis.useCache(cacheKey, cacheExp, async () => {
+
+        const websiteMatch = domain ? { website: domain } : {};
 
         const result = await EventModel.aggregate([
             {
                 $match: {
                     project_id,
                     created_at: { $gte: new Date(from), $lte: new Date(to) },
-                    website: domain
+                    ...websiteMatch
                 }
             },
             { $group: { _id: "$name", count: { $sum: 1, } } },

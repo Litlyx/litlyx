@@ -1,27 +1,51 @@
-import { EventModel } from "@schema/metrics/EventSchema";
-import { Redis, TIMELINE_EXPIRE_TIME } from "~/server/services/CacheService";
+import { Redis } from "~/server/services/CacheService";
 import { executeAdvancedTimelineAggregation } from "~/server/services/TimelineService";
+import { EventModel } from "~/shared/schema/metrics/EventSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestData(event, ['RANGE', 'SLICE', 'DOMAIN'], ['EVENTS']);
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid', 'domain', 'range', 'slice', 'permission:events');
 
-    const { from, to, slice, project_id, timeOffset, domain } = data;
+    const { pid, project_id, domain, from, to, slice } = ctx;
 
-    return await Redis.useCache({ key: `timeline:events_stacked:${project_id}:${slice}:${from || 'none'}:${to || 'none'}:${domain}`, exp: TIMELINE_EXPIRE_TIME }, async () => {
+    const cacheKey = `timeline:events_stacked:${pid}:${slice}:${from}:${to}:${domain}`;
+    const cacheExp = 60;
 
-        const timelineStackedEvents = await executeAdvancedTimelineAggregation<{ name: String }>({
-            model: EventModel,
+    return await Redis.useCache(cacheKey, cacheExp, async () => {
+
+        const timelineData = await executeAdvancedTimelineAggregation({
             projectId: project_id,
-            from, to, slice,
-            customProjection: { name: "$_id.name" },
-            customIdGroup: { name: '$name' },
-            timeOffset,
-            domain
-        })
+            model: EventModel,
+            from, to, slice, domain,
+            customIdGroup: {
+                event: '$name'
+            },
+            customProjection: {
+                events: 1
+            },
+            customQueries: [
+                {
+                    index: 2, query: {
+                        $group: {
+                            _id: {
+                                date: "$_id.date"
+                            },
+                            events: {
+                                $push: {
+                                    name: "$_id.event",
+                                    count: "$count"
+                                }
+                            }
+                        }
+                    }
+                }
+            ]
+        });
 
-        return timelineStackedEvents.filter(e => e.name != undefined);
+        return timelineData;
+
     });
+
+
 
 });

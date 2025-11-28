@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <style>
+    * {
+      font-family: "Poppins";
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="w-dvw h-dvh p-8 flex flex-col">
+    <div class="font-bold text-4xl"> Acquisition Channels </div>
+    <div class="w-full h-[2px] bg-black mt-3"></div>
+    <h3 class="font-semibold mb-2 mt-4">4. UTM Term (keywords used, usually for paid search)</h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+      <li>%UTMTERM_0%</li>
+      <li>%UTMTERM_1%</li>
+      <li>%UTMTERM_2%</li>
+    </ul>
+    <p class="italic text-sm text-gray-600 mb-6">
+      💡 %AI_0%
+    </p>
+
+
+    <h3 class="font-semibold mb-2">5. UTM Content (specific creative or ad variations)</h3>
+    <ul class="list-disc list-inside text-sm text-gray-800 space-y-1 mb-2">
+      <li>%UTMCONTENT_0%</li>
+      <li>%UTMCONTENT_1%</li>
+      <li>%UTMCONTENT_2%</li>
+    </ul>
+    <p class="italic text-sm text-gray-600 mb-6">
+           💡 %AI_1%
+    </p>
+
+
+    <h3 class="font-semibold mb-2">Total Referrers</h3>
+    <div class="overflow-x-auto mb-6">
+      <table class="table-auto w-full border border-gray-300 text-sm text-left">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="border px-3 py-2">Referrer</th>
+            <th class="border px-3 py-2">Visits</th>
+            <th class="border px-3 py-2">Distribution %</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="border px-3 py-2">%REFERRER_0_NAME%</td>
+            <td class="border px-3 py-2">%REFERRER_0_COUNT%</td>
+            <td class="border px-3 py-2">%REFERRER_0_PERCENT%</td>
+          </tr>
+          <tr>
+            <td class="border px-3 py-2">%REFERRER_1_NAME%</td>
+            <td class="border px-3 py-2">%REFERRER_1_COUNT%</td>
+            <td class="border px-3 py-2">%REFERRER_1_PERCENT%</td>
+          </tr>
+          <tr>
+            <td class="border px-3 py-2">%REFERRER_2_NAME%</td>
+            <td class="border px-3 py-2">%REFERRER_2_COUNT%</td>
+            <td class="border px-3 py-2">%REFERRER_2_PERCENT%</td>
+          </tr>
+          <tr>
+            <td class="border px-3 py-2">%REFERRER_3_NAME%</td>
+            <td class="border px-3 py-2">%REFERRER_3_COUNT%</td>
+            <td class="border px-3 py-2">%REFERRER_3_PERCENT%</td>
+          </tr>
+          <tr>
+            <td class="border px-3 py-2">%REFERRER_4_NAME%</td>
+            <td class="border px-3 py-2">%REFERRER_4_COUNT%</td>
+            <td class="border px-3 py-2">%REFERRER_4_PERCENT%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="grow"></div>
+    <div class="flex justify-between items-center">
+      <div class="text-2xl">5/9</div>
+    <img class="w-10" src="%LOGO%">
+    </div>
+  </div>
+</body>
+
+</html>

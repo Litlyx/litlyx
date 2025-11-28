@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="w-dvw h-dvh p-8 flex flex-col">
+        <div class="font-bold text-4xl"> Quick Metrics Overview </div>
+        <div class="w-full h-[2px] bg-black mt-3"></div>
+
+
+        <p class="text-sm text-gray-700 max-w-4xl mb-8 mt-4">
+            %AI_0%
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="bg-white shadow rounded-lg p-6 text-center">
+                <div class="text-gray-600 text-sm font-medium mb-1">Total Visits</div>
+                <div class="text-3xl font-bold">%VISITS%</div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6 text-center">
+                <div class="text-gray-600 text-sm font-medium mb-1">Unique Visitors</div>
+                <div class="text-3xl font-bold">%SESSIONS%</div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6 text-center">
+                <div class="text-gray-600 text-sm font-medium mb-1">Bounce Rate</div>
+                <div class="text-3xl font-bold">%BOUNCING_RATE%</div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6 text-center">
+                <div class="text-gray-600 text-sm font-medium mb-1">Avg. Session Duration</div>
+                <div class="text-3xl font-bold">%SESSION_DURATION%</div>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="text-gray-600 text-sm font-medium mb-2">Most Visited Pages</div>
+                <ul class="text-sm text-gray-800 space-y-1">
+                    <li>%PAGE_0%</li>
+                    <li>%PAGE_1%</li>
+                    <li>%PAGE_2%</li>
+                </ul>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="text-gray-600 text-sm font-medium mb-2">Top 3 Countries</div>
+                <ul class="text-sm text-gray-800 space-y-1">
+                    <li>%COUNTRY_0%</li>
+                    <li>%COUNTRY_1%</li>
+                    <li>%COUNTRY_2%</li>
+                </ul>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="text-gray-600 text-sm font-medium mb-2">Most Used Devices</div>
+                <ul class="text-sm text-gray-800 space-y-1">
+                    <li>%DEVICE_0%</li>
+                    <li>%DEVICE_1%</li>
+                    <li>%DEVICE_2%</li>
+                </ul>
+            </div>
+
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="text-gray-600 text-sm font-medium mb-2">Top Traffic Sources</div>
+                <ul class="text-sm text-gray-800 space-y-1">
+                    <li>%REFERRER_0%</li>
+                    <li>%REFERRER_1%</li>
+                    <li>%REFERRER_2%</li>
+                </ul>
+            </div>
+        </div>
+        <div class="grow"></div>
+        <div class="flex justify-between items-center">
+            <div class="text-2xl">2/9</div>
+          <img class="w-10" src="%LOGO%">
+        </div>
+    </div>
+</body>
+
+</html>

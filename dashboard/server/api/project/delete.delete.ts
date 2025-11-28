@@ -1,43 +1,41 @@
+
 import { ProjectModel } from "@schema/project/ProjectSchema";
 import { ProjectCountModel } from "@schema/project/ProjectsCounts";
-import { ProjectLimitModel } from "@schema/project/ProjectsLimits";
-import { SessionModel } from "@schema/metrics/SessionSchema";
-import { LimitNotifyModel } from "@schema/broker/LimitNotifySchema";
-import StripeService from '~/server/services/StripeService';
+import { UserSettingsModel } from "@schema/UserSettings";
 import { AiChatModel } from "@schema/ai/AiChatSchema";
+import { SessionModel } from "@schema/metrics/SessionSchema";
+import { AddressBlacklistModel } from "~/shared/schema/shields/AddressBlacklistSchema";
+import { DomainWhitelistModel } from "~/shared/schema/shields/DomainWhitelistSchema";
+import { CountryBlacklistModel } from "~/shared/schema/shields/CountryBlacklistSchema";
+import { BotTrafficOptionModel } from "~/shared/schema/shields/BotTrafficOptionSchema";
+import { VisitModel } from "~/shared/schema/metrics/VisitSchema";
+import { EventModel } from "~/shared/schema/metrics/EventSchema";
 
 export default defineEventHandler(async event => {
 
-    const data = await getRequestDataOld(event, { requireSchema: false, allowGuests: false, allowLitlyx: false });
-    if (!data) return;
+    const ctx = await getRequestContext(event, 'pid');
 
-    const { project, user, project_id } = data;
+    const { project_id } = ctx;
 
-    const projects = await ProjectModel.countDocuments({ owner: user.id });
-    if (projects == 1) return setResponseStatus(event, 400, 'Cannot delete last project');
-
-    if (project.premium === true) return setResponseStatus(event, 400, 'Cannot delete premium project');
-
-    if (project.customer_id) {
-        await StripeService.deleteCustomer(project.customer_id);
-    }
-
-    const projectDeletation = ProjectModel.deleteOne({ _id: project_id });
+    const projectDeletation = await ProjectModel.deleteOne({ _id: project_id });
+    const userSettingsDeletation = await UserSettingsModel.deleteOne({ project_id });
+    
     const countDeletation = ProjectCountModel.deleteMany({ project_id });
-    const limitdeletation = ProjectLimitModel.deleteMany({ project_id });
+
     const sessionsDeletation = SessionModel.deleteMany({ project_id });
-    const notifiesDeletation = LimitNotifyModel.deleteMany({ project_id });
+    const visitsDeletation = VisitModel.deleteMany({ project_id });
+    const eventsDeletation = EventModel.deleteMany({ project_id });
+
     const aiChatsDeletation = AiChatModel.deleteMany({ project_id });
 
-    const results = await Promise.all([
-        projectDeletation,
-        countDeletation,
-        limitdeletation,
-        sessionsDeletation,
-        notifiesDeletation,
-        aiChatsDeletation
-    ])
+    //Shields
+    const addressBlacklistDeletation = AddressBlacklistModel.deleteMany({ project_id });
+    const botTrafficOptionsDeletation = BotTrafficOptionModel.deleteMany({ project_id });
+    const countryBlacklistDeletation = CountryBlacklistModel.deleteMany({ project_id });
+    const domainWhitelistDeletation = DomainWhitelistModel.deleteMany({ project_id });
 
-    return { data: results };
+
+    return { ok: true };
+
 
 });

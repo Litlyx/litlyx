@@ -15,7 +15,7 @@ const EventSchema = new Schema<TEvent>({
     name: { type: String, required: true, index: 1 },
     metadata: Schema.Types.Mixed,
     session: { type: String, index: 1 },
-    flowHash: { type: String },
+    flowHash: { type: String, index: 1 },
     website: { type: String, index: 1 },
     created_at: { type: Date, default: () => Date.now(), index: true },
 })

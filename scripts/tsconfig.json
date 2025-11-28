@@ -1,7 +1,8 @@
 {
     "compilerOptions": {
         "module": "NodeNext",
-        "target": "ESNext"
+        "target": "ESNext",
+        "skipLibCheck": true
     },
     "include": [
         "./**/*.ts"

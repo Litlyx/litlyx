@@ -4,7 +4,8 @@ import path from 'path';
 import child from 'child_process';
 import { createZip } from '../helpers/zip-helper';
 import { DeployHelper } from '../helpers/deploy-helper';
-import { DATABASE_CONNECTION_STRING_PRODUCTION, DATABASE_CONNECTION_STRING_TESTMODE, REMOTE_HOST_TESTMODE } from '../.config';
+import { CONSUMER, getEcosystemContent } from '../.config';
+import prettier from 'prettier';
 
 const TMP_PATH = path.join(__dirname, '../../tmp');
 const LOCAL_PATH = path.join(__dirname, '../../consumer');
@@ -26,25 +27,27 @@ async function main() {
 
     if (!SKIP_BUILD) {
         console.log('Building');
-        child.execSync(`cd ${LOCAL_PATH} && pnpm run build`);
+        try {
+            child.execSync(`cd ${LOCAL_PATH} && pnpm run build`);
+        } catch (ex) {
+            console.error(ex.stdout.toString());
+            process.exit(1);
+        }
     }
 
 
-    console.log('Creting zip file');
+    console.log('Creating zip file');
     const archive = createZip(TMP_PATH + '/' + ZIP_NAME);
     archive.directory(LOCAL_PATH + '/dist', '/dist');
 
-    if (MODE === 'testmode') {
-        const ecosystemContent = fs.readFileSync(LOCAL_PATH + '/ecosystem.config.js', 'utf8');
-        const REDIS_URL = ecosystemContent.match(/REDIS_URL: ["'](.*?)["']/)[1];
-        const devContent = ecosystemContent
-            .replace(REDIS_URL, `redis://${REMOTE_HOST_TESTMODE}`)
-            .replace(DATABASE_CONNECTION_STRING_PRODUCTION, `redis://${DATABASE_CONNECTION_STRING_TESTMODE}`);
-        archive.append(Buffer.from(devContent), { name: '/ecosystem.config.js' });
-    } else {
-        archive.file(LOCAL_PATH + '/ecosystem.config.js', { name: '/ecosystem.config.js' })
-    }
+    const envObject =
+        MODE === 'testmode' ? CONSUMER.getEnv_TESTMODE() :
+            MODE === 'testlive' ? CONSUMER.getEnv_TESTLIVE() :
+                CONSUMER.getEnv_PRODUCTION();
 
+    const ecosystemContentRaw = getEcosystemContent('consumer', 3031, 'cluster', 2, './dist/consumer/src/index.js', envObject);
+    const ecosystemContent = await prettier.format(ecosystemContentRaw, { parser: 'babel' });
+    archive.append(Buffer.from(ecosystemContent), { name: '/ecosystem.config.js' });
 
     archive.file(LOCAL_PATH + '/package.json', { name: '/package.json' });
     archive.file(LOCAL_PATH + '/pnpm-lock.yaml', { name: '/pnpm-lock.yaml' });

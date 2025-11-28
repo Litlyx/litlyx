@@ -1,25 +1,14 @@
 
-FROM node:21-alpine AS base
-
-FROM base AS build
-
+FROM node:22-alpine as builder
 RUN npm i -g pnpm
-
 WORKDIR /home/app
-
-COPY --link ./dashboard/package.json ./dashboard/pnpm-lock.yaml ./dashboard/
-
-WORKDIR /home/app/dashboard
+COPY ./package*.json .
 RUN pnpm install
+COPY . .
+RUN pnpm run build
 
-COPY --link ./dashboard ./
-
-RUN pnpm run build:compose
-
-FROM node:21-alpine AS production
-
+FROM node:22-alpine
 WORKDIR /home/app
+COPY --from=builder  /home/app/.output .
 
-COPY --from=build /home/app/dashboard/.output /home/app/.output
-
-CMD ["node", "/home/app/.output/server/index.mjs"]
+CMD ["node", "/home/app/server/index.mjs"]

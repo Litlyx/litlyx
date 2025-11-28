@@ -8,5 +8,8 @@
 		"glob": "^11.0.0",
 		"node-scp": "^0.0.23",
 		"node-ssh": "^13.2.0"
+	},
+	"dependencies": {
+		"prettier": "^3.5.3"
 	}
 }
