@@ -22,7 +22,9 @@
 
     "payments:shared": "ts-node scripts/payments/shared.ts",
     "payments:deploy": "ts-node scripts/payments/deploy.ts",
-    "emails:deploy": "ts-node scripts/emails/deploy.ts"
+    "emails:deploy": "ts-node scripts/emails/deploy.ts",
+    
+    "prepare-docker": "ts-node scripts/dashboard/shared.ts && ts-node scripts/producer/shared.ts && ts-node scripts/consumer/shared.ts"
   },
   "keywords": [],
   "author": "Emily",

@@ -107,7 +107,13 @@ curl -X POST "https://broker.litlyx.com/event" \
 
 To self host the Litlyx dashboard, first clone this repository. Litlyx Docker images are hosted on DockerHub.
 
-Run the following command:
+Run the following commands in order:
+
+```bash
+npm run docker-prepare #use your favourite package manager like pnpm, bun, etc...
+```
+
+and than:
 
 ```bash
 docker-compose up

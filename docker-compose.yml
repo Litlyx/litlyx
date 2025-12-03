@@ -24,7 +24,7 @@ services:
       - redis_data:/data
 
   producer:
-    image: litlyx/litlyx-producer
+    build: ./producer
     ports:
       - "3001:3001"
     environment:
@@ -41,7 +41,7 @@ services:
       - redis
 
   consumer:
-    image: litlyx/litlyx-consumer
+    build: ./consumer
     environment:
       - DEV_MODE=false
       - EMAIL_TRPC_URL=none
@@ -57,7 +57,7 @@ services:
       - redis
 
   dashboard:
-    image: litlyx/litlyx-dashboard
+    build: ./dashboard
     ports:
       - "3000:3000"
     environment:
